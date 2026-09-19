@@ -3,25 +3,40 @@
 This is a bounded engineering experiment for the existing 1.2B KDA/GQA candidate at 4K.
 Training completed all 800 steps / 104,857,600 tokens in **2.27 hours**. Final validation loss was
 **3.379**, steady throughput **13,595 tokens/s**, and peak allocated memory **19.3 GiB**.
-Export and tokenizer checks passed after inspected recovery. The remote endpoint subsequently
-became unavailable; access was restored on September 19 and the disk survived. The interrupted
-evaluation had only 84 GSM8K outputs and no complete result. A fresh, separate development
-evaluation is now running from the same export, alongside resumed checkpoint backups.
-Complete checkpoints 100, 200, 300 and 800 are verified locally, including the final model and optimizer.
-The final export has been reconstructed and verified on CPU from retained inputs. The
-[execution receipt](h100-run.json) retains measurements and the original export failure.
-The original eight-hour watcher ended at **2026-09-19 04:11 UTC** without observing restored access.
-Its last successful remote observation before the outage was September 18 at 20:57 UTC.
-Terminal states/logs and backup receipts are preserved in a hashed local evidence snapshot.
-Checkpoints 400–700, the remote export backup and complete capability outputs remain unconfirmed;
-the CPU reconstruction is a separate verified artifact. The original execution deadline has
-expired. After the user restarted one H100, a **new four-hour evaluation reservation** was bound
-through **09:59:06 UTC on September 19**; the original reservation was not reused. No training or
-export regeneration is needed. The evaluator has no resume support, so the prior 84 rows remain
-separate and the complete frozen partition is rerun. Existing backup/grading services and the
-bounded milestone watcher were resumed without duplicates. Provider billing remains unknown;
-21 prior conservative hours + 6 original hours + 4 restored-session hours are reservation records,
-not the actual bill. [h100-run.json](h100-run.json) binds the preserved files and new launch.
+Export and tokenizer checks passed after inspected recovery. After a provider restart, the complete
+fresh development evaluation finished on **September 19 at 08:10:56 UTC**, followed by local
+sandboxed code grading. The prior interrupted 84 GSM8K rows are preserved and excluded.
+The [reconciled development receipt](development-result.json) verifies all **2,619 tasks**, the
+protocol/model identities, 18 remote-export file hashes and every aggregate metric.
+
+| Development metric | Correct / evaluated | Result |
+| --- | ---: | ---: |
+| GSM8K strict exact match | 0 / 253 | 0.00% |
+| GSM8K flexible extraction | 1 / 253 | 0.40% |
+| IFEval strict prompt accuracy | 12 / 101 | 11.88% |
+| IFEval strict instruction accuracy | 37 / 152 | 24.34% |
+| HumanEval+ custom compiled tests, pass@1 | 0 / 33 | 0.00% |
+| ARC-Challenge normalized accuracy | 44 / 222 | 19.82% |
+| HellaSwag normalized accuracy | 530 / 2,010 | 26.37% |
+
+These are frozen custom development subsets, not full official leaderboard scores. The base used
+4K context, BF16, greedy one-sample decoding without chat/SFT. Pipeline status `pass` means scoring
+completed, not that a model-quality gate passed. The model remains weak; these results alone do not
+isolate architecture, corpus or training-scale effects. No final-test partition was evaluated.
+
+Evaluation took **7,642.15 seconds (2.12 hours)**; supervisor wall time was 7,643.51 seconds.
+GSM8K generation consumed 5,470.00 seconds, IFEval 1,082.45 and code 715.42. Output caps were
+1,024 / 512 / 1,024 respectively. Returned-text retokenization was at or above those limits for
+252/253, 101/101 and 31/33 rows, but it cannot establish exact original-token cap hits or EOS.
+All 33 code executions failed (24 AssertionError, nine KeyError); none timed out. The existing local
+sandbox control passed before grading. No generated code was re-executed during reconciliation.
+
+The final model/optimizer and reconstructed export remain verified locally. The backup worker now
+reports all eight checkpoints and remote export verified; final backup evidence closeout is a
+separate milestone. Do not interpret this evaluation acknowledgement as a provider shutdown notice.
+The [execution receipt](h100-run.json) preserves original failures, recovery and the new results.
+The restored evaluation used a new four-hour reservation ending at 09:59:06 UTC, without retraining
+or export regeneration. The 21 + 6 + 4 conservative reserved hours are not an actual provider bill.
 A separate H100 timing experiment completed 48 production
 steps on real pilot data with the 800-step learning-rate schedule. This is an engineering learning
 and timing check, not a model-quality result or an architecture comparison.

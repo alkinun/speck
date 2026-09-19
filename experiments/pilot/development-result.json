@@ -1,0 +1,226 @@
+{
+  "format": "speck_pilot_evaluation_reconciliation",
+  "format_version": 1,
+  "status": "pass",
+  "scope": "Complete frozen development evaluation only; backup closeout is separate.",
+  "remote_phases": {
+    "development": {
+      "launch_error": null,
+      "rank_returncodes": [
+        0
+      ],
+      "returncode": 0,
+      "supervised_wall_seconds": 7643.508127013221,
+      "termination": "exited"
+    },
+    "export": {
+      "launch_error": null,
+      "rank_returncodes": [
+        0
+      ],
+      "returncode": 0,
+      "reused_from": "recovery-offline-export-attempt2",
+      "supervised_wall_seconds": 39.72274313122034,
+      "termination": "exited"
+    }
+  },
+  "remote_finished_utc": "2026-09-19T08:10:56.215025+00:00",
+  "evaluation_wall_seconds": 7642.149477826431,
+  "supervised_gpu_hours": 2.1231984054897395,
+  "grading_finished_unix": 1789805496.6355777,
+  "protocol_sha256": "ebec8286caa8ebf732422312f34c0887b6a4da146810c99e4b83e54628ea2bf4",
+  "source_checkpoint": {
+    "directory": "/workspace/pilot-runs/80ffc9d0f93d4dc8a71adf4c616cbb24/checkpoints",
+    "metadata_sha256": "b6246ce13ffc1625bb01e8b26baaa2ac0311ccbff9c0a14eb9332b2c7bd43f2a",
+    "model_sha256": "2647161d45e6a9ff444e2668c2ce3b59dcf0d942c632f53d7e259db06d52b935",
+    "optimizer_sha256": "e4e542086647559a7bbc94190523582867121c85adc02ceafb9b2f769b50a11c",
+    "step": 800
+  },
+  "export_files_rehashed": 18,
+  "total_tasks": 2619,
+  "metrics": {
+    "gsm8k": {
+      "exact_match,flexible-extract": {
+        "correct": 1,
+        "denominator": 253,
+        "score": 0.003952569169960474
+      },
+      "exact_match,strict-match": {
+        "correct": 0,
+        "denominator": 253,
+        "score": 0.0
+      }
+    },
+    "ifeval": {
+      "inst_level_loose_acc,none": {
+        "correct": 40,
+        "denominator": 152,
+        "score": 0.2631578947368421
+      },
+      "inst_level_strict_acc,none": {
+        "correct": 37,
+        "denominator": 152,
+        "score": 0.24342105263157895
+      },
+      "prompt_level_loose_acc,none": {
+        "correct": 14,
+        "denominator": 101,
+        "score": 0.13861386138613863
+      },
+      "prompt_level_strict_acc,none": {
+        "correct": 12,
+        "denominator": 101,
+        "score": 0.1188118811881188
+      }
+    },
+    "humanevalplus": {
+      "compiled_plus_pass@1": {
+        "correct": 0,
+        "denominator": 33,
+        "score": 0.0
+      }
+    },
+    "arc_challenge": {
+      "acc": {
+        "correct": 36,
+        "denominator": 222,
+        "score": 0.16216216216216217
+      },
+      "acc_norm": {
+        "correct": 44,
+        "denominator": 222,
+        "score": 0.1981981981981982
+      }
+    },
+    "hellaswag": {
+      "acc": {
+        "correct": 545,
+        "denominator": 2010,
+        "score": 0.27114427860696516
+      },
+      "acc_norm": {
+        "correct": 530,
+        "denominator": 2010,
+        "score": 0.263681592039801
+      }
+    }
+  },
+  "per_benchmark_timing": {
+    "gsm8k": {
+      "tasks": 253,
+      "wall_seconds_sum": 5469.996407357976,
+      "generation_cap": 1024,
+      "returned_text_retokenized_sum": 258807,
+      "returned_text_retokenized_min": 258,
+      "returned_text_retokenized_max": 1026,
+      "retokenized_at_or_above_cap": 252
+    },
+    "ifeval": {
+      "tasks": 101,
+      "wall_seconds_sum": 1082.4508705567569,
+      "generation_cap": 512,
+      "returned_text_retokenized_sum": 51901,
+      "returned_text_retokenized_min": 512,
+      "returned_text_retokenized_max": 514,
+      "retokenized_at_or_above_cap": 101
+    },
+    "humanevalplus": {
+      "tasks": 33,
+      "wall_seconds_sum": 715.4193102121353,
+      "generation_cap": 1024,
+      "returned_text_retokenized_sum": 32959,
+      "returned_text_retokenized_min": 568,
+      "returned_text_retokenized_max": 1025,
+      "retokenized_at_or_above_cap": 31
+    },
+    "arc_challenge": {
+      "tasks": 222,
+      "wall_seconds_sum": 43.85005514882505,
+      "generation_cap": 0,
+      "returned_text_retokenized_sum": 0,
+      "returned_text_retokenized_min": 0,
+      "returned_text_retokenized_max": 0,
+      "retokenized_at_or_above_cap": null
+    },
+    "hellaswag": {
+      "tasks": 2010,
+      "wall_seconds_sum": 317.67055762186646,
+      "generation_cap": 0,
+      "returned_text_retokenized_sum": 0,
+      "returned_text_retokenized_min": 0,
+      "returned_text_retokenized_max": 0,
+      "retokenized_at_or_above_cap": null
+    }
+  },
+  "code_execution_status_counts": {
+    "failed": 33
+  },
+  "code_execution_error_counts": {
+    "KeyError": 9,
+    "AssertionError": 24
+  },
+  "code_execution_seconds_sum": 2.2021979589480907,
+  "peak_allocated_bytes": 2771840512,
+  "decoding": {
+    "chat": false,
+    "thinking_mode": false,
+    "samples": 1,
+    "temperature": 0,
+    "max_context_tokens": 4096
+  },
+  "boundaries": [
+    "status pass means evaluation pipeline completed, not a capability quality gate",
+    "compiled_plus_pass@1 is the custom compiled-test metric, not official leaderboard HumanEval+",
+    "returned_text_tokens is retokenized decoded text, not original generated token IDs; exact cap hits/EOS cannot be recovered from this field",
+    "old 84 GSM8K rows are excluded; no final-test content was loaded; no generated code re-executed",
+    "supervised evaluation time excludes previous interrupted work, export, setup, transfer and provider idle billing"
+  ],
+  "worker_backup_status_observed": "complete",
+  "whole_pilot_closeout": false,
+  "artifacts": {
+    "grading-state.json": {
+      "bytes": 2306,
+      "sha256": "697c8bb1a66a4d5718f8d7b36131271ddf03155f3340d744fc42b48bc9a0994d"
+    },
+    "grading-handoff-hashes.json": {
+      "bytes": 567,
+      "sha256": "e3df531430ea905c0b00ae933426e6ab88c74cc8a855d08b3007224ccddaf5ee"
+    },
+    "graded-development/result.json": {
+      "bytes": 6916,
+      "sha256": "30fb828261ea906475560783f5f1ce064b4ec41464118174bfd6e13423b40cec"
+    },
+    "graded-development/executions.json": {
+      "bytes": 4413,
+      "sha256": "deebd342aae738f51056563cdd64c9708390c19d04bb2ad2b95e55c44c8aa07e"
+    },
+    "grading-handoff/development-restored-20260919/result.json": {
+      "bytes": 5888,
+      "sha256": "76880289588897c95edd8f5cfbdde251503a821f04091d82b3b633492603da54"
+    },
+    "grading-handoff/development-restored-20260919/outputs.jsonl": {
+      "bytes": 2288982,
+      "sha256": "c7084316199c2d5b461240f0f5f1a345efbe7190b1060c10b7ef81f3da4468ec"
+    },
+    "grading-handoff/prepared.json": {
+      "bytes": 227313,
+      "sha256": "d8bbed10ee7bbbacd81cbc55b4da6bd5c6a4132f41a11cc3ec35fd3c8db77ecd"
+    },
+    "remote-ledger/80ffc9d0f93d4dc8a71adf4c616cbb24/recovery-after-restart-20260919/result.json": {
+      "bytes": 1840,
+      "sha256": "a74b76f576cc08a62093c20c2d994ffd78ea551806de93c5a0436f78f45e9032"
+    },
+    "remote-ledger/80ffc9d0f93d4dc8a71adf4c616cbb24/recovery-after-restart-20260919/phases.json": {
+      "bytes": 433,
+      "sha256": "55827c51251533aad5046254bb2ffd016bd6ed35d5e22669f1d269f62b928303"
+    },
+    "local-code-grading.log": {
+      "bytes": 6916,
+      "sha256": "3a14466f73d043569a9e4efd1590496d9bf4ecbc8a89a086bdb007bc149beb6d"
+    },
+    "evaluation-complete-20260919/verify.py": {
+      "bytes": 7744,
+      "sha256": "4f4e63ce19ce521e0482e4e7f0b5b94c7d9cc1cd434e4be7c1e594da3b2022e0"
+    }
+  }
+}

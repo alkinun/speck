@@ -5,6 +5,14 @@ one complete development partition. The earlier H100 rehearsal and timing runs a
 separately. No final-test evaluation, SFT, architecture change, microbatch-four trial, or automatic
 retry is included. The implementation is `scripts.pilot_rental`.
 
+**Latest evaluation milestone (2026-09-19):** full development generation and isolated local code
+grading are complete. [Verified results](../experiments/pilot/development-result.json) cover all
+2,619 tasks: GSM8K strict 0/253, code compiled pass@1 0/33, IFEval strict prompts 12/101,
+ARC normalized 44/222 and HellaSwag normalized 530/2,010. The 105M-token base remains weak;
+scorer completion is not a capability success. Evaluation took 2.12 H100 hours. The backup worker
+reports completion, but final backup closeout and its acknowledgement remain separate.
+The narrative below preserves the launch/recovery history; it is not a live running-state claim.
+
 The [local readiness receipt](../experiments/pilot/rental-readiness.json) records the built archive,
 source commit and validation. Relocation and offline grader checks passed locally. The complete
 GPU workflow completed training, then failed offline export template enumeration. The

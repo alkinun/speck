@@ -72,7 +72,7 @@
   },
   "attempt_id": "80ffc9d0f93d4dc8a71adf4c616cbb24",
   "backup": {
-    "boundary": "All eight complete checkpoints are still required locally. Remote step100 weights and marker were reclaimed only after both copies were verified; its complete local copy remains.",
+    "boundary": "Worker reports all eight checkpoints and remote export verified; complete backup milestone still needs final evidence closeout. Existing historically verified_steps retained as historical record.",
     "checkpoint_300_partial_retained": false,
     "checkpoint_400_partial_retained": true,
     "final_checkpoint_prioritized": true,
@@ -80,15 +80,25 @@
       "path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/remote-checkpoint-100-reclaim.json",
       "sha256": "70f578636e5ee4a42e8cc19d890bef7d8e6f98e94da53148652b9a5ede643c0e"
     },
-    "status": "resumed_after_provider_restart",
+    "status": "worker_reports_complete_final_closeout_pending",
     "verified_steps": [
       100,
       200,
       300,
       800
+    ],
+    "verified_steps_reported_by_worker": [
+      100,
+      200,
+      300,
+      400,
+      500,
+      600,
+      700,
+      800
     ]
   },
-  "code_grading": "Deferred to local isolated runner because provider blocks namespaces; same frozen tasks and tests.",
+  "code_grading": "Complete in local isolated runner: all 33 frozen development tasks graded; 0 passed. Prior deferred source result preserved.",
   "connection_incident": {
     "artifacts": {
       "backup-journal.log": {
@@ -737,10 +747,11 @@
     },
     "volume_survived": true,
     "whole_pilot_complete": false,
-    "worker_state": "Existing backup and local grading services resumed only after inspecting failure states; existing milestone watcher rearmed for four hours. All three active."
+    "worker_state": "Evaluation and local code grading complete; backup worker reports complete. Final backup closeout/acknowledgement remains separate.",
+    "evaluation_completed_utc": "2026-09-19T08:10:56.215025+00:00"
   },
   "session_deadline_seconds": 21600,
-  "status": "evaluation_restarted_after_provider_restart",
+  "status": "evaluation_complete_backup_closeout_pending",
   "training_evidence": {
     "checkpoints/metadata_000800.json": {
       "bytes": 68147,
@@ -1068,6 +1079,144 @@
     "portable_suite_passed": 739,
     "portable_suite_skipped": 10,
     "restoration_20260919": "95 retained remote small-file hashes and19helper-file hashes matched downloaded copies. Protocol/prepared/export-source identities and clean implementation commit checked before launch. New helpers syntax-checked; no production implementation change or full-suite rerun.",
-    "single_worker_environment_control": "Real supervisor subprocess verifies rank variables are removed before development evaluation."
+    "single_worker_environment_control": "Real supervisor subprocess verifies rank variables are removed before development evaluation.",
+    "evaluation_complete": "Rehashed four handoff files and all 18 remote-export files; verified source checkpoint/phase/protocol identities, exact unique development IDs for all 2,619 tasks, every aggregate metric, and 33 sandbox execution records. No new inference or code grading."
+  },
+  "development_evaluation": {
+    "receipt_path": "/mnt/speck-data/speck/h100-pilot-execution-20260918/evaluation-complete-20260919/receipt.json",
+    "receipt_sha256": "c4f8b7e8226d9063398c33eec92d864488f3d1527a572816b29cb12b07d1ba69",
+    "status": "complete",
+    "pipeline_status": "pass",
+    "whole_pilot_complete": false,
+    "metrics": {
+      "gsm8k": {
+        "exact_match,flexible-extract": {
+          "correct": 1,
+          "denominator": 253,
+          "score": 0.003952569169960474
+        },
+        "exact_match,strict-match": {
+          "correct": 0,
+          "denominator": 253,
+          "score": 0.0
+        }
+      },
+      "ifeval": {
+        "inst_level_loose_acc,none": {
+          "correct": 40,
+          "denominator": 152,
+          "score": 0.2631578947368421
+        },
+        "inst_level_strict_acc,none": {
+          "correct": 37,
+          "denominator": 152,
+          "score": 0.24342105263157895
+        },
+        "prompt_level_loose_acc,none": {
+          "correct": 14,
+          "denominator": 101,
+          "score": 0.13861386138613863
+        },
+        "prompt_level_strict_acc,none": {
+          "correct": 12,
+          "denominator": 101,
+          "score": 0.1188118811881188
+        }
+      },
+      "humanevalplus": {
+        "compiled_plus_pass@1": {
+          "correct": 0,
+          "denominator": 33,
+          "score": 0.0
+        }
+      },
+      "arc_challenge": {
+        "acc": {
+          "correct": 36,
+          "denominator": 222,
+          "score": 0.16216216216216217
+        },
+        "acc_norm": {
+          "correct": 44,
+          "denominator": 222,
+          "score": 0.1981981981981982
+        }
+      },
+      "hellaswag": {
+        "acc": {
+          "correct": 545,
+          "denominator": 2010,
+          "score": 0.27114427860696516
+        },
+        "acc_norm": {
+          "correct": 530,
+          "denominator": 2010,
+          "score": 0.263681592039801
+        }
+      }
+    },
+    "total_tasks": 2619,
+    "wall_seconds": 7642.149477826431,
+    "supervised_gpu_hours": 2.1231984054897395,
+    "finished_utc": "2026-09-19T08:10:56.215025+00:00",
+    "peak_allocated_bytes": 2771840512,
+    "protocol_sha256": "ebec8286caa8ebf732422312f34c0887b6a4da146810c99e4b83e54628ea2bf4",
+    "result_sha256": "30fb828261ea906475560783f5f1ce064b4ec41464118174bfd6e13423b40cec",
+    "outputs_sha256": "c7084316199c2d5b461240f0f5f1a345efbe7190b1060c10b7ef81f3da4468ec",
+    "interpretation": "Weak capability from frozen 105M-token base; pipeline completion is not a quality gate. No SFT, no final partition, no architectural/data causal conclusion.",
+    "timing_and_caps": {
+      "gsm8k": {
+        "tasks": 253,
+        "wall_seconds_sum": 5469.996407357976,
+        "generation_cap": 1024,
+        "returned_text_retokenized_sum": 258807,
+        "returned_text_retokenized_min": 258,
+        "returned_text_retokenized_max": 1026,
+        "retokenized_at_or_above_cap": 252
+      },
+      "ifeval": {
+        "tasks": 101,
+        "wall_seconds_sum": 1082.4508705567569,
+        "generation_cap": 512,
+        "returned_text_retokenized_sum": 51901,
+        "returned_text_retokenized_min": 512,
+        "returned_text_retokenized_max": 514,
+        "retokenized_at_or_above_cap": 101
+      },
+      "humanevalplus": {
+        "tasks": 33,
+        "wall_seconds_sum": 715.4193102121353,
+        "generation_cap": 1024,
+        "returned_text_retokenized_sum": 32959,
+        "returned_text_retokenized_min": 568,
+        "returned_text_retokenized_max": 1025,
+        "retokenized_at_or_above_cap": 31
+      },
+      "arc_challenge": {
+        "tasks": 222,
+        "wall_seconds_sum": 43.85005514882505,
+        "generation_cap": 0,
+        "returned_text_retokenized_sum": 0,
+        "returned_text_retokenized_min": 0,
+        "returned_text_retokenized_max": 0,
+        "retokenized_at_or_above_cap": null
+      },
+      "hellaswag": {
+        "tasks": 2010,
+        "wall_seconds_sum": 317.67055762186646,
+        "generation_cap": 0,
+        "returned_text_retokenized_sum": 0,
+        "returned_text_retokenized_min": 0,
+        "returned_text_retokenized_max": 0,
+        "retokenized_at_or_above_cap": null
+      }
+    },
+    "boundaries": [
+      "status pass means evaluation pipeline completed, not a capability quality gate",
+      "compiled_plus_pass@1 is the custom compiled-test metric, not official leaderboard HumanEval+",
+      "returned_text_tokens is retokenized decoded text, not original generated token IDs; exact cap hits/EOS cannot be recovered from this field",
+      "old 84 GSM8K rows are excluded; no final-test content was loaded; no generated code re-executed",
+      "supervised evaluation time excludes previous interrupted work, export, setup, transfer and provider idle billing"
+    ]
   }
 }
