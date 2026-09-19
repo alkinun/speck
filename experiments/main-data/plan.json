@@ -5,7 +5,8 @@
   "status": "working_preparation_targets_not_launch_manifest",
   "model": {
     "parameters": 1195884576,
-    "architecture": "existing 24-layer KDA/GQA hybrid",
+    "architecture": "selected 1.2B all-active 24-layer KDA/GQA hybrid with dense SwiGLU",
+    "moe_in_scope": false,
     "tokenizer": "frozen Mistral 32K",
     "final_behavior": "always thinking"
   },

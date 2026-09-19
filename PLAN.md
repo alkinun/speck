@@ -30,9 +30,9 @@ The [main data working plan](experiments/main-data/README.md) now sets concrete 
 measurement-based budget-fit scenario; a provisional 8B context extension; and 1.5M unique
 thinking/agent conversations within a 1–2M range. The existing 500K conversations are starting stock.
 The [competitive strategy](docs/competitive.md) separates this budget fit from release quality:
-retain 1.2B as the first from-scratch candidate, measure runtime headroom, and require matched
-task/efficiency evidence before a competitive flagship claim. Model size and token horizon remain
-subject to this evidence; pretrained adaptation is excluded by the clarified program objective.
+select the existing 1.2B-total, all-active model for the flagship, measure runtime headroom, and
+require matched task/efficiency evidence before a competitive claim. The token horizon remains
+subject to measured cost; model-size sweeps and MoE investigation are outside this program.
 
 The immediate deliverable is a reproducible training baseline. The first flagship release includes
 identified base/assistant checkpoints and a companion [technical report](docs/report.md). The previous
@@ -43,8 +43,9 @@ claim still requires its own evidence.
 
 ## Starting point
 
-- Keep the existing 1.2B-class, 24-layer KDA/GQA hybrid as the first candidate: 18 recurrent layers,
-  six global-attention layers, width 2048, tied embeddings, SwiGLU, sigmoid KDA gates, and NoPE globals.
+- Ship the selected 1.2B-total, all-active, 24-layer KDA/GQA model: 18 recurrent layers, six global
+  layers, width 2048, tied embeddings, dense SwiGLU throughout, sigmoid KDA gates and NoPE globals.
+  No MoE candidate or architecture-comparison run is planned; the 91-hour comparison is for data.
 - Reuse the frozen Mistral 32K tokenizer. The model reserves three extra chat-role IDs (32,003 rows).
   Check its fingerprint when reusing cached data; do not retrain a tokenizer.
 - Begin at 4K context. Use BF16 activations with existing FP32 parameter/optimizer storage and
@@ -58,8 +59,9 @@ claim still requires its own evidence.
   initial serialization and tool protocol; reasoning budgets and learned behavior still need an
   evaluated recipe. The sibling project's retained stock supplies the finite rehearsal.
 
-These are starting choices that reuse working code. None proves an advantage over a dense model.
-Change one only when a measured failure or capability comparison justifies the work.
+The model topology is selected; runtime, training recipe and context extension still need
+qualification. Report a measured need for any structural departure before changing this choice.
+The H100 pilot does not establish an architectural advantage over conventional attention models.
 
 ## Immediate order of work
 

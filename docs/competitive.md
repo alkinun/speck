@@ -1,7 +1,8 @@
 # Competitive release strategy — 2026-09-19
 
 Status: strategy and proposed release gates, not measured Speck capability or a new launch.
-Keep the current 1.2B KDA/GQA candidate for SpeckLabs' first from-scratch release program.
+The selected flagship is the existing 1.2B-total, all-active KDA/GQA model with dense feed-forward
+layers. MoE investigation and architectural comparison arms are outside this release program.
 The user clarified that developing our own pretraining capability is essential; pretrained
 adaptation is not an alternative first-release route.
 A 100B budget-fit projection is not evidence that the result will be competitive. The desired
@@ -32,15 +33,11 @@ so its non-embedding count is approximately 1.130B, unlike some nominally simila
 
 The clarified objective is to develop SpeckLabs' first architecture and competitive flagship,
 including its pretraining and post-training. The [architecture program](architecture-program.md)
-sets the starting hypothesis and distinct token/FLOP/runtime efficiency measurements. The
-latest MoE investigation prioritizes one dense-FFN versus interleaved-MoE comparison while holding
-attention fixed; the all-GQA control is deferred to avoid multiplying experiments. Open reporting and reusable infrastructure support this objective; they are not
-substitutes for model quality. Treat the current hybrid as a candidate we can improve, not a frozen
-architecture whose only open question is how many tokens to train.
-
-Keep 1.2B as the initial from-scratch flagship candidate; no evidence currently justifies shrinking it to
-improve target-task performance at fixed compute. Equally, larger capacity does not prove superiority
-over a smaller model trained longer. Do not select a size to enter an easier comparison bracket.
+records the selected 1.2B all-active design and distinct token/FLOP/runtime efficiency measurements.
+The user has closed the MoE branch of investigation to focus this program on one model. Optimize
+and qualify that model, improve its data, and establish useful thinking/code/tool performance.
+The 91-hour bounded comparison remains a data study, not an architecture competition. Open reporting
+and reusable infrastructure support the flagship objective; model quality still requires evidence.
 
 The current 5,000-total-GPU-hour allowance does not support a confident broad best-in-class release
 claim. A narrow competitive product is a hypothesis to test: reliable Python/JavaScript/TypeScript
@@ -79,8 +76,8 @@ horizon, measured budget reallocation or more compute; it cannot justify a quali
    broad parity requires broad results. Passing a schema or nominal context limit is insufficient.
 4. Assess the optimized runtime, eligible corpus and bounded learning evidence together. An early
    checkpoint comparison can reject a poor route but cannot promise the final ranking. Charge
-   qualification/comparison work to existing reservations. Prioritize one costed architecture control
-   rather than a broad sweep; it competes with the existing data comparison for the same envelope.
+   runtime qualification and the bounded data comparison to their existing reservations. Keep the
+   selected architecture fixed; no MoE or all-GQA comparison arm is planned.
 
 ## SpeckLabs first-step objective
 
@@ -97,7 +94,7 @@ comparable quality, context and output conditions. More tokens/s or a larger con
 does not establish either kind of advantage. The current hybrid must earn efficiency claims through
 measurement; its global-attention layers still require a growing cache at longer context.
 
-Keep 1.2B as the initial model, the working data recipe and always-thinking post-training target.
+Keep the selected 1.2B all-active model, working data recipe and always-thinking post-training target.
 Freeze the final token horizon after profiling, supply qualification and bounded learning evidence.
 Do not automatically shrink to maximize token count, enlarge to imply capacity, or make 100B/400B
 an unconditional release threshold. Phase reservations may be revised from measured needs while
@@ -113,7 +110,7 @@ Design this run to inform the next allocation: retain intermediate model/optimiz
 source-wise loss, capability versus tokens/compute, length-dependent runtime and memory, and
 recovery/distributed measurements. Freeze checkpoint/evaluation cadence before launch; do not
 return to frequent progress polling. One 1.2B run supplies a learning curve, not a parameter-scaling
-law. A larger model or future MoA design needs separate controlled evidence and a new budget.
+law. A future larger model needs separate controlled evidence and a new budget.
 A tenfold compute increase must be divided among size, tokens, data work and post-training; it
 cannot be promised as a tenfold token or quality increase.
 
