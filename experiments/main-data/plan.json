@@ -95,11 +95,12 @@
         "eligible_unique_token_preparation_target": 37500000000,
         "candidate_sources": [
           "HuggingFaceTB/stack-edu",
-          "openbmb/UltraData-Code:L2"
+          "openbmb/UltraData-Code:L2",
+          "HuggingFaceCode/stack-v3-train"
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "qualification_priority": "30B proposed exposure / 37.5B unique preparation; 0.477B retained tokens before eligibility. Inventories and four application origins/notices recovered. Frozen stratified preflight: 138 files / 459615 tokens across 11 languages and 72 strata; 30 conservative content flags, 31 sample family holds, exact replay. Complete origin/source-use and semantic-quality assessment on this sample with separate natural-code and verified-exercise gates before weighted yield estimates or bulk expansion. UltraData-Code lineage holds remain."
+        "qualification_priority": "30B proposed exposure / 37.5B unique preparation; 0.477B retained tokens before eligibility. Complete the frozen 138-file Stack-Edu origin/source-use and semantic-quality audit; 31 sample family holds remain. Stack v3 at 8f3f25d86e44fd691428131efd17af75d4716499 is an additional candidate: bounded origins/transformations reviewed, broader 16-shard repository sample frozen and metadata-priced in experiments/corpus-audit/stack-v3-sampling.json. No eligible yield or admission; keep natural-code and verified-exercise gates separate. UltraData-Code lineage holds remain."
       },
       {
         "id": "checked_code",

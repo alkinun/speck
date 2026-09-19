@@ -1,0 +1,87 @@
+{
+  "format": "speck_stack_v3_repository_sampling_protocol",
+  "format_version": 1,
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "dcbdcd763ee169c2785bac7b316fc6eeb1262e9b",
+  "status": "selection_frozen_footer_pricing_complete_content_acquisition_not_started",
+  "dataset": "HuggingFaceCode/stack-v3-train",
+  "revision": "8f3f25d86e44fd691428131efd17af75d4716499",
+  "seed": "speck-stack-v3-repository-sample-v1-20260919",
+  "inventory": {
+    "path": "/mnt/speck-data/speck/data-qualification-20260919/stack-v3/current-inventory.json",
+    "sha256": "3dee258080040f91b8cbe19457ed243222172fd6977c4a07b7cb2085daf6ac19",
+    "shards": 8192
+  },
+  "primary_selection": {
+    "shard_strata": "Sort immutable inventory by (compressed bytes,path); four equally sized bands of 2048 shards",
+    "shards_per_stratum": 4,
+    "rule": "Lowest SHA256(seed:shard:path) in each band; ties by path. Within each shard take the row group with lowest SHA256(seed:group:path:row_group_index); ties by index.",
+    "selected_shards": 16,
+    "selected_row_groups": 16,
+    "overlap_with_prior_two_probe_shards": 0,
+    "row_inclusion": "For a row in shard i with Gi row groups: (4/2048)*(1/Gi). Retain Gi and inverse factor 512*Gi for each row; unequal row-group sizes must not be ignored."
+  },
+  "repository_selection": {
+    "unit": "Repository row; preserve shard/group/row ordinal plus repo_path and commit_id. If repository/commit keys repeat, hold selection for frame reconciliation instead of silently collapsing or resampling.",
+    "strata": "Actual retained file count (0-1,2-10,11-100,>100) x file license composition (all permissive,mixed,none permissive). Missing/unrecognized license labels count as not-labeled-permissive metadata for stratification only; preserve the unresolved label, not a rights decision.",
+    "per_stratum": 4,
+    "max_repositories": 48,
+    "rule": "Within each nonempty observed-frame stratum, take min(4,Nh) lowest SHA256(seed:repo:shard_path:group_index:row_index), tie by row identity. Record Nh,nh and factor Nh/nh.",
+    "language_coverage": "Record language and practical-role coverage and missing lanes; do not substitute examples to fill a desired language result."
+  },
+  "file_selection": {
+    "per_repository": 2,
+    "max_files": 96,
+    "rule": "Take min(2,F) lowest SHA256(seed:file:shard_path:group_index:row_index:file_index), tie by file index. Record F,f and factor F/f. Retain complete selected content externally.",
+    "max_review_text_bytes_per_file": 2097152,
+    "oversized": "Keep selection and denominator; mark not reviewed under the cap. No truncation presented as whole-file review and no replacement."
+  },
+  "review": {
+    "natural_code": "Intact useful content, practical role, language/length, source identity, notice applicability, redaction effects, source-family/benchmark flags and unresolved outcomes. Do not require independent executable tests for all natural source code.",
+    "states": [
+      "not_assessed",
+      "unresolved",
+      "hold",
+      "pass"
+    ],
+    "verified_exercises": "Separate gate; metadata, parsing or self-generated tests do not establish verified-exercise supply.",
+    "token_counts": "Frozen Mistral model dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055; count actual selected text plus BOS/EOS and disclose serialization. Separate eligible tokens from observed tokens."
+  },
+  "resource_bounds": {
+    "metadata_range_bytes": 8388608,
+    "footer_bytes_each": 262144,
+    "corpus_range_bytes": 1073741824,
+    "row_group_compressed_bytes": 67108864,
+    "row_group_uncompressed_column_bytes": 536870912,
+    "concurrent_row_group_decodes": 1,
+    "automatic_network_retries": 0,
+    "gpu_hours": 0,
+    "corpus_execution": false,
+    "scope": "Prices cover selected Parquet ranges only. Original-source/notice requests and detailed review CPU time must be bounded and recorded separately; no full-release download."
+  },
+  "cost": {
+    "all_priced_compressed_bytes": 534796546,
+    "corpus_row_groups_acquired": 0,
+    "groups_within_caps": 16,
+    "metadata_bytes": 1048576,
+    "priced_groups": 16,
+    "selected_rows": 29347,
+    "selected_shards": 16,
+    "within_cap_compressed_bytes": 534796546
+  },
+  "failure_and_inference": {
+    "policy": "Never replace unavailable, oversized, malformed, held or failed selections. Preserve expected row counts from footers and report acquired rows and censored/unresolved rows separately. Content/hash mismatch invalidates the affected artifact.",
+    "weights": "Retain primary factor 512*Gi, conditional repository factor Nh/nh and file factor F/f. Simple sample file/pass proportions are not release yield. Weight token outcomes directly; do not multiply a file pass rate by corpus tokens.",
+    "limits": "Account for shard/repository clustering and tiny strata; no full-release eligible-yield estimate while source-use, exclusions or censored coverage remain unresolved. Do not pool the earlier diagnostic probes as fresh random observations."
+  },
+  "evidence": {
+    "directory": "/mnt/speck-data/speck/data-qualification-20260919/stack-v3-sampling",
+    "manifest_sha256": "73b3f6fca25c87b1b512583c0da49ace263162157783d049900d4f75f713e011",
+    "offline_replay_identical": true,
+    "integrity": "Pinned HTTPS footer ranges and cached SHA256 checked; complete publisher shard hashes not verified."
+  },
+  "next": "Acquire only the 16 frozen row-group ranges within these caps; record complete frame metadata and freeze repository/file selections before semantic review.",
+  "training_admitted": false,
+  "source_use_approved": false,
+  "eligible_tokens_established": 0
+}

@@ -12,6 +12,8 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
   The [origin follow-up](../corpus-audit/stack-v3-origins.json) links twelve originals to pinned Git
   blobs and characterizes their transformations and ancestor notices. Source-use applicability,
   exclusions and eligible yield remain unresolved. This is separate from the frozen retained-stock audit.
+  The [broader sampling protocol](../corpus-audit/stack-v3-sampling.json) freezes sixteen groups
+  costing 510.02 MiB and a maximum 48-repository / 96-file review; content acquisition has not begun.
 - The [expansion packet](../corpus-audit/code-expansion.json) pins both candidate inventories,
   verifies one new Python metadata shard and recovers 16 blobs. Thirteen length-matched files
   contain 9,541 tokens; four content flags and unresolved eligibility prevent admission. The

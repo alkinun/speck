@@ -428,11 +428,25 @@ configuration values. No code execution, benchmark exclusion or training admissi
 
 The same frame also exposes concentration: one repository supplies 15,967 of 47,826 files;
 the 1,841 `permissive` entries come from 42 repositories, with 1,024 from one repository.
-Next cost a broader sample with repository strata, explicit byte caps and failed selections retained.
 Do not extrapolate source-use or quality yield from these two row groups. The follow-up's artifacts
 and replay script are in `/mnt/speck-data/speck/data-qualification-20260919/stack-v3-origins`;
 all selections and results replay identically offline. Keep source comparisons separate from
 serialization; the frozen retained-Stack-Edu audit and working mixture remain unchanged.
+
+The [broader sampling protocol](../experiments/corpus-audit/stack-v3-sampling.json) is now frozen
+and priced from Parquet footers. It selects four shards from each of four inventory-size bands,
+then one row group per shard. The sixteen groups contain **29,347 declared repository rows** and
+require **534,796,546 compressed bytes (510.02 MiB)**, all within the caps. Footer reads used 1 MiB;
+the content ranges have not been acquired. No prior probe shards overlap this selection.
+
+After acquisition, stratify repository rows by retained file count and license-label composition;
+select at most four rows in each of twelve strata, then two files per selected repository: at most
+48 repositories / 96 files. Record language/role gaps without replacing selections. Preserve
+unequal row-group selection factors and conditional repository/file factors; failed or oversized
+selections remain unresolved in their original denominators. No eligible-yield estimate follows
+from incomplete source-use or exclusion checks. Content acquisition has a 1 GiB cap, 64 MiB per
+group, and one group decoded at a time; metadata and source-origin work are separately accounted.
+Next acquire the exact sixteen ranges, reconcile the observed frame and freeze review selections.
 
 ## Data work to do next
 

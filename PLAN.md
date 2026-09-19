@@ -90,8 +90,10 @@ historical; do not repeat the completed pilot because a preparation document sti
    The 0.477B retained tokens cannot supply 30B natural-code exposure; close scalable supply
    feasibility before bulk acquisition or packing. The [Stack v3 probe](docs/coding.md#stack-v3-feasibility--2026-09-19)
    and origin follow-up characterize the current pin and twelve selected transformations/notices.
-   Cost broader sampling with repository strata and byte caps; retain original/consumed identities
-   and pending source-use decisions. The retained-stock audit and training admission remain unchanged.
+   The [broader sample](experiments/corpus-audit/stack-v3-sampling.json) is frozen and footer-priced:
+   sixteen groups / 510.02 MiB. Acquire those exact ranges within the caps, then reconcile repository
+   strata and freeze at most 48 repositories / 96 files for review. Retain original/consumed identities,
+   failed selections and pending source-use decisions. The retained-stock audit remains unchanged.
    The [web extraction review](experiments/corpus-audit/web-filter-validation.json)
    keeps flags review-only and the HQ cutoff unchanged. Resolve web source use, family/near-duplicate
    exclusions and usable tokens; acquire DCLM originals only for a concrete coverage question.

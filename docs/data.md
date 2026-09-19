@@ -113,6 +113,9 @@ The origin follow-up links twelve originals to pinned Git blobs and characterize
 redaction and notebook transformations. Source-use applicability remains pending; labels alone are
 insufficient. Repository concentration requires broader stratification before any yield estimate.
 Keep source and serialization comparisons separate; this probe establishes no eligible supply.
+The [broader protocol](../experiments/corpus-audit/stack-v3-sampling.json) now fixes sixteen
+row-group ranges costing 510.02 MiB and a repository-stratified review capped at 96 files.
+Only footer metadata has been read; content acquisition and review remain next.
 
 The [September 18 reopen](../experiments/pilot/supply.json) verifies all shard hashes and every document-index span for the five
 retained token stocks used by the pilot. It counts the larger local `document-token-stock-v2`

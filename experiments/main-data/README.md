@@ -58,7 +58,7 @@ mid-training weights separately and update aggregate bank exposures if a staged 
 | --- | ---: | ---: | ---: | --- |
 | Selected broad natural web | 25% | 25B | 31.25B | Natural Ultra-FineWeb English; bind scored/HQ path and threshold after the bounded audit |
 | Independent web coverage | 5% | 5B | 6.25B | FineWeb-Edu and/or DCLM; select allocation after overlap and coverage measurements |
-| Natural code, tests and documentation | 30% | 30B | 37.5B | Qualified Stack-Edu and source-resolved UltraData-Code L2; preserve practical and multilingual coverage |
+| Natural code, tests and documentation | 30% | 30B | 37.5B | Stack-Edu, source-resolved UltraData-Code L2, and Stack v3 under qualification; preserve practical and multilingual coverage |
 | Checked code explanations, exercises and repair | 5% | 5B | 6.25B | Qualified natural-code derivatives; UltraData-Code L3 only if lineage and independent checks succeed |
 | Selected natural math / worked solutions | 20% | 20B | 25B | UltraData-Math L2, FineMath 4+, Nemotron-CC-Math `4plus`; source allocation follows comparative audit |
 | Refined math explanations / derivations | 5% | 5B | 6.25B | Qualified UltraData-Math L3 and verified derivatives |
