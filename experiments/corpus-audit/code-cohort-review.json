@@ -1,0 +1,71 @@
+{
+  "format": "speck_common_code_cohort_review",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "e0fd4f981c857001f0672f6f9568deabb882ffb1",
+  "status": "bounded_common_review_complete_full_cohort_eligibility_pending",
+  "input_receipts": {
+    "experiments/corpus-audit/code-yield-result.json": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94",
+    "experiments/corpus-audit/stack-v3-broader.json": "e9aa292f1ba99d072c7a5f318bcc46d17d522daddcf9db96b1b2618d1a284d2b"
+  },
+  "selection": {
+    "original_files": 218,
+    "full_read_files": 24,
+    "full_read_tokens": 18609,
+    "shared_language_labels": 6,
+    "rule": "Two seeded selections per cohort/language among unheld files <=4096 tokens; no substitutions. Original cohorts/weights preserved; 194 files outside this reading batch.",
+    "separate_transformation_check": "All ten supplied-text identity mismatches in the fixed Stack v3 cohort"
+  },
+  "cohorts": {
+    "stack_edu": {
+      "original_files": 138,
+      "full_read_files": 12,
+      "origin_requests_files": 12,
+      "git_verified_original_files": 11,
+      "files_with_verified_ancestor_notices": 10
+    },
+    "stack_v3": {
+      "original_files": 80,
+      "full_read_files": 12,
+      "origin_requests_files": 18,
+      "git_verified_original_files": 17,
+      "files_with_verified_ancestor_notices": 11
+    }
+  },
+  "transformations": {
+    "placeholder_spans_only": 9,
+    "original_unavailable": 1,
+    "syntax_damage": "opipoy/file-locker: locker.py original parses under CPython 3.14.6; consumed text fails at line 49 after expression redaction. Kept on content hold; no original substitution."
+  },
+  "findings": [
+    "Both batches contain practical code/tests/docs with dependency or environment requirements.",
+    "Static review records instructional/edge-case concerns, weak test coverage, a notice requiring review, and two low-information Stack v3 documents; no comparative quality rate follows.",
+    "One Stack-Edu repository lookup and one pinned Stack v3 original returned 404; failures remain in denominators.",
+    "At 30% natural-code exposure, 476774847 retained tokens cap a one-pass baseline at 1.589B total tokens before exclusions/validation and other bank limits. Cost ceilings do not establish this supply."
+  ],
+  "acquisition": {
+    "api_requests": 38,
+    "automatic_retries": 0,
+    "response_bytes": 3817467,
+    "unique_requests": 91,
+    "wall_seconds": 23.7858
+  },
+  "evidence": {
+    "directory": "/mnt/speck-data/speck/data-qualification-20260919/code-cohort-review",
+    "manifest_sha256": "505e79d1397d6a00b2036ed89970bd4f66129078b7613f2471c3f59a01dfb64d",
+    "artifacts": 227,
+    "network_disabled_replay_identical": true,
+    "mutated_copied_cache_rejected": true
+  },
+  "boundaries": [
+    "Assistant full-text review is not independent annotation or correctness certification.",
+    "Pinned source/notice bytes do not establish intended-use approval, complete family exclusions or eligible yield.",
+    "Semantic judgments are recorded inputs to replay, not independently reproduced judgments.",
+    "No corpus execution, benchmark scoring, training admission or GPU work."
+  ],
+  "next": "Continue the remaining original records and resolve notices/families; validate a transformation-aware content rule before any bulk Stack v3 packing. Cost a finite baseline/candidate inventory from eligible tokens; do not infer yield or a winner from this restricted batch.",
+  "eligible_yield_estimate": null,
+  "source_ranking": null,
+  "training_admitted": false,
+  "eligible_tokens_established": 0,
+  "gpu_hours": 0
+}

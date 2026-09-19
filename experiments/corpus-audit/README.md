@@ -352,5 +352,8 @@ The separate [Stack v3 preflight](stack-v3-broader.json) completes the
 [frozen broader acquisition](stack-v3-sampling.json): sixteen groups, 29,347 repository rows and
 a fixed 80-file review cohort. Four files trigger content flags and eight have known-family holds.
 Its external manifest binds acquisition, selection and screen artifacts with exact offline replay.
-The [coding guide](../../docs/coding.md#stack-v3-feasibility--2026-09-19) records limitations and
-the common review required for the fixed Stack v3 and Stack-Edu cohorts before estimating yield.
+The [common review](code-cohort-review.json) adds 24 full-text readings and 30 bounded origin
+checks, with 28 Git-verified originals. Nine Stack v3 transformations are explained; one breaks
+Python syntax and one original is unavailable. All original cohorts and weights remain intact.
+The [coding guide](../../docs/coding.md#common-cohort-review) records findings and remaining gates.
+No source ranking or eligible-yield estimate follows from this restricted batch.

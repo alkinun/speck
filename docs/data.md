@@ -104,12 +104,13 @@ acquired sixteen groups, reconciling 29,347 repository rows / 379,942 entries, t
 remain unresolved. Earlier Stack v3 origin checks explain twelve selected transformations, not
 all supplied-text mismatches or source-use applicability.
 
-Assess both fixed cohorts with common source-use, semantic-quality and exclusion criteria, retaining
-sampling factors, identity distinctions and review costs. The [qualification packet](../experiments/main-data/QUALIFICATION.md)
-owns remaining exclusions and source comparison requirements. Content acquisition and screening
-are complete for these cohorts; comparable review and eligible supply remain open. Keep source
-selection separate from repository serialization, and qualify finite experimental arms before
-bulk acquisition or packing.
+The [common review](../experiments/corpus-audit/code-cohort-review.json) now covers 24 complete texts
+across six shared languages, with 28 of 30 requested originals verified against Git blobs. Nine
+Stack v3 mismatches are placeholder transformations, including one that breaks Python syntax;
+one original is unavailable. This restricted batch establishes no source ranking or eligible yield.
+Continue remaining records and source-use/family checks in the
+[qualification packet](../experiments/main-data/QUALIFICATION.md), retaining original sampling factors.
+Validate transformation effects before bulk packing; keep source and serialization contrasts separate.
 
 The [September 18 reopen](../experiments/pilot/supply.json) verifies all shard hashes and every document-index span for the five
 retained token stocks used by the pilot. It counts the larger local `document-token-stock-v2`

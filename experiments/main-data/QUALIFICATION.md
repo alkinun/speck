@@ -7,6 +7,13 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
 
 ## Completed preparation
 
+- The [common cohort review](../corpus-audit/code-cohort-review.json) reads 24 full texts / 18,609
+  tokens, selected deterministically from six shared languages and currently unheld <=4K files.
+  It verifies 28 of 30 requested originals and ancestor notices for 21 files. Nine Stack v3
+  transformations are explained; one breaks Python syntax, and one original is unavailable.
+  A separate Stack-Edu repository lookup returned 404. The original 218-file cohorts stay intact;
+  194 records are outside this reading batch. No eligible yield, source ranking or admission follows.
+
 - The [Stack v3 feasibility probe](../corpus-audit/stack-v3-feasibility.json) inventories two
   revisions and samples 2,699 repository rows / 47,826 files from the current corrected pin.
   The [origin follow-up](../corpus-audit/stack-v3-origins.json) links twelve originals to pinned Git
@@ -110,24 +117,24 @@ a fresh blind evaluation set.
 
 ## Next bounded data packet
 
-Reuse retained packets and current receipts rather than repeating the same spot checks. The web
-diagnosis, full retained-code census, bundle follow-up and initial expansion inventory/probe are
-complete. The [application-origin review](../corpus-audit/code-application-origins.json) now resolves
-all four source revisions/notices; its single direct test link is stale and no example is verified.
-The [stratified protocol](../corpus-audit/code-yield-plan.json) is now frozen and its offline recovery
-and content screen complete. Next assess this sample’s origins/notices, source use, semantic quality
-and unresolved families, keeping natural-code and checked-exercise gates separate. Only completed
-gates support a weighted yield estimate; 107 no-family-hit sample files remain unresolved. Apply
-the same criteria to the fixed 80-file Stack v3 cohort, preserving each sample's design and weights.
-The proposed code horizon needs substantially more qualified supply. The next deliverable is a
-comparison of the fixed cohorts, with each selected record's immutable identity, source/notice
-evidence, intended-use status, intactness/practical role, transformation effects, family holds and
-measured tokens/cost. Keep pass, hold and unresolved outcomes distinct; no-hit does not mean pass.
-Report each cohort against its own sampling frame and weights. The Stack-Edu retained-stock and
-Stack v3 release samples do not support a naive comparison of raw pass percentages or pooled yield.
-Use those findings to choose a finite candidate inventory for the
-[proposed study](README.md#research-before-the-main-run); training quality still requires that
-controlled study. Remaining source comparisons are:
+Reuse retained packets and current receipts. The first common reading batch is complete; continue
+the remaining unheld records with the same origin/notice, intended-use, content and family gates.
+Held records stay in their original denominators; do not replace them or expose held-out task text.
+The external assessment retains every original identity/weight, observed token count, existing
+hold and unresolved outcome. Resolve conservative matches and source-family links before admission;
+natural code does not require independent tests, while claimed verified exercises do.
+
+The redaction-induced syntax failure requires a transformation-aware content check with explicit
+positive/negative controls before adopting a general filter. Preserve original notices and consumed
+identities; do not repair samples by silently restoring redacted source text. A parser success is not
+proof of behavioral equivalence or correctness, and low-information examples need a declared
+selection rule rather than ad hoc removal.
+
+Report each cohort against its own sampling frame and weights. The retained Stack-Edu and release
+Stack v3 samples do not support raw pass-percentage comparisons or pooled eligible yield.
+Use completed gates to prepare finite candidate inventories for the
+[proposed study](README.md#research-before-the-main-run); the current partial review cannot select a
+corpus winner or supply the full confirmation horizon. Remaining source comparisons are:
 
 | Lane | Candidates | Required comparison |
 | --- | --- | --- |

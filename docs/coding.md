@@ -175,7 +175,7 @@ The [broader protocol](../experiments/corpus-audit/stack-v3-sampling.json) is no
 | Acquisition | All 16 frozen row groups, one per shard; four shards per size band; 510.02 MiB, no failed groups or retries |
 | Reconciled frame | 29,347 repository rows / 379,942 file entries; no duplicate repository/commit keys or declared-count mismatches |
 | Fixed review cohort | 44 repositories / 80 files across 11 nonempty strata and 24 language labels |
-| Token/identity preflight | 133,211 Mistral tokens with BOS/EOS; three files exceed 4K; ten supplied-text/content-ID mismatches remain unexplained |
+| Token/identity preflight | 133,211 Mistral tokens with BOS/EOS; three files exceed 4K; ten supplied-text/content-ID mismatches, with follow-up below |
 | Exclusion screen | 22 benchmark lanes; four content-flagged files; eight files held through known repository/fork families |
 | Reproducibility | Exact network-disabled replay; a deliberately corrupted cached range is rejected |
 
@@ -192,10 +192,44 @@ equivalence with useful semantics. Artifacts, selection, acquisition/replay driv
 under `/mnt/speck-data/speck/data-qualification-20260919/stack-v3-broader`; the receipt binds their
 manifest. Earlier probe/origin artifacts and the frozen retained-Stack-Edu audit remain unchanged.
 
-**Next:** assess the fixed 80-file Stack v3 and 138-file retained-Stack-Edu cohorts with common
-origin/notice, intended-use, semantic-quality and exclusion criteria. Report coverage gaps,
-unresolved outcomes and review/acquisition costs with their original sampling factors. Qualify
-finite experiment arms before bulk packing; source and serialization contrasts remain separate.
+## Common cohort review
+
+The [review receipt](../experiments/corpus-audit/code-cohort-review.json) binds all 218 original
+records and their sampling factors. A frozen first batch selects two currently unheld, <=4K files
+per cohort in Java, JavaScript, Markdown, Python, Rust and Shell: **24 full texts / 18,609 tokens**.
+This length/language/hold-restricted assistant review is not independent annotation or a yield sample.
+
+| Follow-up | Stack-Edu | Stack v3 |
+| --- | ---: | ---: |
+| Full supplied texts reviewed | 12 | 12 |
+| Originals requested, including the separate transformation check | 12 | 18 |
+| Originals verified against pinned Git blobs | 11 | 17 |
+| Files with verified ancestor-notice evidence | 10 | 11 |
+
+One Stack-Edu repository lookup and one pinned Stack v3 file returned 404; neither was replaced.
+A matching Stack-Edu revision need not be its original crawl revision. Notice presence is not an
+intended-use decision. Original/consumed identities, notices, failures and all review observations
+remain external, bound by the receipt; cached replay is byte-identical and copied-cache corruption
+is rejected.
+
+Nine of the ten Stack v3 mismatches are explained by placeholder substitutions. In
+`opipoy/file-locker: locker.py`, the original parses under CPython 3.14.6 but the supplied text
+fails at line 49 because redaction changed executable expressions. Keep that representation on hold;
+do not silently restore redacted originals. Explanation of a transformation does not establish
+semantic preservation. The tenth original remains unavailable.
+
+Both batches contain practical modules, tests and documentation needing repository or environment
+context. Static observations also include instructional/edge-case defects, incomplete test coverage,
+a proprietary/confidential-looking template header requiring notice review, a link directory and a
+project stub. These are individual findings, not comparable corpus defect rates or a source ranking.
+No code ran, verified exercise was established or training data admitted.
+
+**Next:** review remaining unheld records without replacing held selections, resolve notices and family
+exclusions, and validate a transformation-aware content rule on fixed controls before bulk packing.
+Keep natural-code eligibility separate from independent exercise verification. The retained 0.477B
+code stock supports at most **1.59B total one-pass tokens at 30% natural code**, before exclusions,
+validation and other bank constraints. Qualified supply must set the experiment horizon alongside
+runtime cost; longer confirmation runs need more eligible baseline data.
 
 ## First comparison to prepare
 

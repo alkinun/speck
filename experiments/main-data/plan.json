@@ -143,7 +143,7 @@
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "qualification_priority": "30B proposed exposure / 37.5B unique preparation; 0.477B retained tokens before eligibility. Complete the frozen 138-file Stack-Edu origin/source-use and semantic-quality audit; 31 sample family holds remain. Stack v3 at 8f3f25d86e44fd691428131efd17af75d4716499 is an additional candidate: bounded origins/transformations reviewed; all sixteen frozen groups acquired and an 80-file cohort screened in experiments/corpus-audit/stack-v3-broader.json. Four content flags, eight known-family holds; common source-use/content review remains next. No eligible yield or admission; keep natural-code and verified-exercise gates separate. UltraData-Code lineage holds remain."
+        "qualification_priority": "30B proposed exposure / 37.5B unique preparation; 0.477B retained tokens before eligibility. Fixed cohorts: 138 Stack-Edu files and 80 Stack v3 files at 8f3f25d86e44fd691428131efd17af75d4716499. Common review in experiments/corpus-audit/code-cohort-review.json reads 24 files and verifies 28 of 30 requested originals. Nine Stack v3 transformations explained, including one syntax-damaging redaction; one original unavailable. Continue remaining records, source-use/family gates and transformation-aware checks. No eligible yield or admission. At 30% natural code the retained stock bounds one-pass total exposure at 1.59B before joint eligibility; qualify more baseline supply or shorten study horizons. Keep natural-code/exercise gates separate; UltraData-Code lineage holds remain."
       },
       {
         "id": "checked_code",

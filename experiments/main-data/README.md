@@ -208,7 +208,10 @@ Code acquisition is a critical feasibility gate. The [Stack-Edu card](https://hu
 provides content locators rather than the actual files, so fetching and qualifying source bytes must
 be included. [UltraData-Code](https://huggingface.co/datasets/openbmb/UltraData-Code) is an additional
 candidate, subject to the existing lineage hold. Publisher corpus sizes and tokenizer counts do
-not establish our eligible supply. The natural-code 16-file cohort qualifies the process, not scale.
+not establish our eligible supply. The retained 0.477B natural-code tokens bound a one-pass
+baseline at 1.59B total tokens with a 30% natural-code share, before exclusions, validation and other
+banks. Even the proposed short studies need additional qualified baseline supply or shorter common
+horizons; their hour caps do not imply that 1.85B/4.17B-token arms are available.
 
 At uint16, 100B training token IDs occupy **200GB decimal**; the 125B preparation bank occupies
 250GB. These are alternative inventories, not automatically two distinct copies to sum.
@@ -336,9 +339,10 @@ separates inputs available for detailed design from the requirements for launchi
    FineWeb-Edu using the existing sampler; report content coverage, overlap and eligible tokens.
 2. Use the [completed practical checks](../corpus-audit/practical-code-checks.json) and
    [qualification packet](QUALIFICATION.md) to finish broader exclusions and family separation.
-   Assess the fixed 138-file Stack-Edu and 80-file Stack v3 cohorts with common source-use/content
-   criteria; acquisition and screening are complete. Compare viable coverage, yield and costs,
-   then qualify finite experiment arms before bulk packing. No examples are admitted.
+   Continue the fixed 138-file Stack-Edu and 80-file Stack v3 cohorts after the
+   [24-file common review](../corpus-audit/code-cohort-review.json). Resolve source-use/family gates
+   and validate transformation-aware content checks; one redaction breaks executable syntax.
+   Qualify finite experiment arms from eligible supply before bulk packing. No examples are admitted.
 3. Compare natural/refined math and educational candidates, keeping claimed checked solutions
    distinct from merely well-formed text. Measure source overlap and complete-document lengths.
 4. Audit the retained SFT stock and long-source gaps against the 1.5M task/length targets. Build a
