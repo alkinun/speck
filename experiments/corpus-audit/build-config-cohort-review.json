@@ -1,0 +1,138 @@
+{
+  "format": "speck_build_config_cohort_review",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "d744ab096bb780326ea422d89ef3e745abdc407c",
+  "status": "fixed_unheld_shell_build_configuration_reading_complete_eligibility_pending",
+  "input_receipt": {
+    "path": "experiments/corpus-audit/typed-language-cohort-review.json",
+    "sha256": "5a5bacc20b922e5e2d0ccd429768975b282120000380f610f5ef916ae50347b3"
+  },
+  "selection_rule": "Every remaining unheld Shell, CMake, Git Config, JSON, YAML, Dockerfile and Makefile record in the fixed cohorts, at all lengths; no substitutions.",
+  "summary": {
+    "cohorts": {
+      "stack_edu": {
+        "new_full_read_files": 11,
+        "new_full_read_tokens": 30224
+      },
+      "stack_v3": {
+        "new_full_read_files": 13,
+        "new_full_read_tokens": 6608
+      }
+    },
+    "corpus_execution": false,
+    "cumulative_common_full_read_files": 101,
+    "cumulative_common_full_read_tokens": 159514,
+    "eligible_tokens_established": 0,
+    "eligible_yield_estimate": null,
+    "family_held_files": 43,
+    "gpu_hours": 0,
+    "languages": {
+      "CMake": {
+        "held_files": 0,
+        "original_files": 2,
+        "unheld_full_read_files": 2
+      },
+      "Dockerfile": {
+        "held_files": 0,
+        "original_files": 1,
+        "unheld_full_read_files": 1
+      },
+      "Git Config": {
+        "held_files": 0,
+        "original_files": 1,
+        "unheld_full_read_files": 1
+      },
+      "JSON": {
+        "held_files": 1,
+        "original_files": 3,
+        "unheld_full_read_files": 2
+      },
+      "Makefile": {
+        "held_files": 0,
+        "original_files": 1,
+        "unheld_full_read_files": 1
+      },
+      "Shell": {
+        "held_files": 0,
+        "original_files": 16,
+        "unheld_full_read_files": 16
+      },
+      "YAML": {
+        "held_files": 0,
+        "original_files": 5,
+        "unheld_full_read_files": 5
+      }
+    },
+    "network_requests": 0,
+    "new_family_holds": 0,
+    "new_full_read_files": 24,
+    "new_full_read_tokens": 36832,
+    "new_origin_checks": 0,
+    "observed_roles": {
+      "authored_configuration": {
+        "files": 8,
+        "tokens": 3539
+      },
+      "generated_build_metadata": {
+        "files": 2,
+        "tokens": 1052
+      },
+      "localization_text": {
+        "files": 2,
+        "tokens": 705
+      },
+      "shell_logic": {
+        "files": 12,
+        "tokens": 31536
+      }
+    },
+    "original_files": 218,
+    "remaining_unheld_outside_common_full_reads": 76,
+    "reused_git_verified_origins_for_this_batch": 1,
+    "reused_unavailable_origin_outcomes_for_this_batch": 1,
+    "source_ranking": null,
+    "training_admitted": false
+  },
+  "findings": [
+    "Observed roles in this batch: twelve shell scripts, eight authored configurations, two generated build files and two localization files. These are assistant annotations of the selected texts, not corpus-wide proportions or admission decisions.",
+    "A DynamoDB setup script ignores its template-path option inside embedded Python; a VM helper captures a background PID before launching the intended process; a service-manager test asserts an earlier listing instead of the new result.",
+    "A variant-processing script has an inverted compressed-header branch and early exits that omit saved indels. These are static control-flow observations, not domain-validated biological results.",
+    "Cloud scenario completion and script test filenames do not establish independent correctness oracles. External services, fixtures, platform contracts and embedded shell blocks remain unverified.",
+    "Generated dependency maps, an installed collection test driver and a library build wrapper require upstream/dependency attribution distinct from host repositories. Paths/version literals alone do not verify lineage.",
+    "An image-cache script accepts a matching header filename without checking cached image presence or integrity. The paired Dockerfile and monitoring configuration pairs provide same-repository context, not runtime validation."
+  ],
+  "evidence": {
+    "directory": "/mnt/speck-data/speck/data-qualification-20260919/build-config-cohort-review",
+    "manifest_sha256": "2740e2473b9867b5b4a8cf09297a156d26c8b9d2f115d52a4bdcd1cff4955342",
+    "artifacts": 9,
+    "bytes": 294522,
+    "network_disabled_replay_identical": true,
+    "negative_controls": [
+      "changed_consumed_identity",
+      "rewritten_original_language_label",
+      "missing_selection",
+      "held_selection_substitution"
+    ]
+  },
+  "reused_origin_evidence": [
+    {
+      "repository": "jhurray/dotfiles",
+      "path": "dotfiles/.gitconfig",
+      "status": "git_blob_verified",
+      "note": "Reuses the original receipt; consumed redactions retained and no recovered notice."
+    },
+    {
+      "repository": "gokberkgunduzz/thesis-project",
+      "path": "prometheus/prometheus.yml",
+      "status": "pinned_source_unavailable",
+      "note": "Earlier failure preserved; no new lookup or substitute original."
+    }
+  ],
+  "boundaries": [
+    "Full static assistant reading, not independent annotation or behavioral verification. No corpus scripts, tests, shell blocks, configuration commands, builds, containers or cloud actions executed.",
+    "One previously verified origin and one unavailable-origin outcome reused from the manifest-bound initial review. No new origin checks or notice/source-use resolution.",
+    "All 218 original identities, token counts, language labels and sampling weights retained; all 43 family holds preserved. No automatic language relabeling, role filter, replacement selection or new family hold.",
+    "No network requests, eligible yield, training admission, source ranking or GPU work. Exact replay verifies bookkeeping and recorded inputs, not the independence or correctness of semantic judgments."
+  ],
+  "next": "Finish the remaining 76 unheld records in the fixed cohort, then reconcile observed roles, source-use/provenance gaps and finite eligible supply into the existing qualification packet before selecting data-study arms. Do not expand the sampling frame merely to replace unresolved outcomes."
+}

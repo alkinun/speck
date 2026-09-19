@@ -373,8 +373,13 @@ one metadata-only LeetCode-family hold. It brought coverage to 63 files / 97,401
 and 114 unheld records then unread. A Processing example and two dialect fixtures demonstrate
 why observed language/context must remain separate from original labels and sampling weights.
 The [TypeScript/C#/Kotlin review](typed-language-cohort-review.json) adds fourteen readings / 25,281
-tokens, completing all unheld records with those labels. Current coverage is 77 files / 122,682 tokens,
-with 43 held and 100 unheld records still unread. Declarations, translated algorithms, tests and
+tokens, completing all unheld records with those labels. It brought coverage to 77 files / 122,682 tokens,
+with 43 held and 100 unheld records then unread. Declarations, translated algorithms, tests and
 teaching scaffolds require different context; this batch has no new or reused verified origins.
+The [shell/build/config review](build-config-cohort-review.json) adds 24 readings / 36,832 tokens.
+Current coverage is 101 files / 159,514 tokens, with 43 held and 76 unheld records still unread.
+Its twelve scripts, eight authored configs, two generated build files and two localization files show
+why observed role must accompany language labels. It reuses one verified origin and one earlier
+unavailable-original outcome, without new acquisition or corpus execution.
 The [coding guide](../../docs/coding.md#common-cohort-review) records findings and remaining gates.
 No source ranking or eligible-yield estimate follows from these restricted batches.

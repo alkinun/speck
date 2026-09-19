@@ -7,20 +7,15 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
 
 ## Completed preparation
 
-- Common full-read coverage is **77 files / 122,682 tokens** across the fixed 218 records.
-  The [initial review](../corpus-audit/code-cohort-review.json),
-  [Python follow-up](../corpus-audit/python-cohort-validation.json) and
-  [Go/Rust follow-up](../corpus-audit/go-rust-cohort-review.json) retain their frozen selections.
-  The [JS/TSX/Vue follow-up](../corpus-audit/javascript-cohort-review.json) completes reading all
-  currently unheld records carrying those labels and adds one metadata-only LeetCode-family hold.
-  The [TypeScript/C#/Kotlin follow-up](../corpus-audit/typed-language-cohort-review.json) adds fourteen
-  readings, distinguishing declarations, translated code, tests and teaching scaffolds. It has no new
-  or reused verified origins. There are 43 held records and 100 unheld records still unread; original
-  source labels and weights remain intact.
-  The [family/provenance assessment](../corpus-audit/code-family-provenance.json) remains partial.
-  The GoLLIE examples encountered earlier are exposed material; record that when freezing final
-  scoring coverage.
-  All original records/weights remain intact. No eligible yield, source ranking or admission follows.
+- Common full-read coverage is **101 files / 159,514 tokens** across the fixed 218 records.
+  The [latest shell/build/config review](../corpus-audit/build-config-cohort-review.json) adds 24
+  readings: twelve scripts, eight authored configs, two generated build files and two localization
+  files. It reuses one verified origin and one unavailable-original outcome, with no new checks.
+  There are 43 held records and 76 unheld records still unread; source labels and weights remain intact.
+  The [coding guide](../../docs/coding.md#common-cohort-review) links the frozen earlier readings.
+  The [family/provenance assessment](../corpus-audit/code-family-provenance.json) remains partial;
+  the GoLLIE examples encountered earlier are exposed material when freezing final scoring coverage.
+  No eligible yield, source ranking or admission follows.
 
 - The [Stack v3 feasibility probe](../corpus-audit/stack-v3-feasibility.json) inventories two
   revisions and samples 2,699 repository rows / 47,826 files from the current corrected pin.
@@ -125,10 +120,12 @@ a fresh blind evaluation set.
 
 ## Next bounded data packet
 
-Reuse retained packets and current receipts. Common full-read coverage now includes 77 records;
-continue the 100 currently unheld records outside that coverage with the same origin/notice,
-intended-use, content and family gates. Use the updated 43-record family holds, including GoLLIE,
-vendored Pylint and the metadata-identified LeetCode collection. That last hold is conservative,
+Reuse retained packets and current receipts. Common full-read coverage now includes 101 records;
+continue the 76 currently unheld records outside that coverage with the same origin/notice,
+intended-use, content and family gates. Keep this sampling frame fixed; reconcile observed file roles
+and unresolved eligibility into the dataset inventory rather than replacing difficult outcomes.
+Use the updated 43-record family holds, including GoLLIE, vendored Pylint and the metadata-identified
+LeetCode collection. That last hold is conservative,
 not a proven task match; do not inspect solution text to tune exclusions. Extend the partial graph
 beyond known repository/alias/dependency links; no exact consumed-byte duplicates in the 218 records does not
 settle near-duplicates or transformed copies. Arcade 2.5.7 and stringutils 0.3.0 installed identities

@@ -340,10 +340,10 @@ separates inputs available for detailed design from the requirements for launchi
 2. Use the [completed practical checks](../corpus-audit/practical-code-checks.json) and
    [qualification packet](QUALIFICATION.md) to finish broader exclusions and family separation.
    Continue the fixed 138-file Stack-Edu and 80-file Stack v3 cohorts after the
-   [TypeScript/C#/Kotlin follow-up](../corpus-audit/typed-language-cohort-review.json): common full-read
-   coverage is 77 files, with 100 unheld files still outside it and 43 records family-held. The latest
-   batch distinguishes declarations, translated code, tests and teaching scaffolds, retaining original
-   labels/weights. No new or reused verified origins are available for this batch.
+   [shell/build/config follow-up](../corpus-audit/build-config-cohort-review.json): common full-read
+   coverage is 101 files, with 76 unheld files still outside it and 43 records family-held. The latest
+   batch distinguishes scripts, configuration, generated build files and localization, retaining original
+   labels/weights. One verified origin and one unavailable-original outcome are reused; no new checks.
    Complete broader lineage and remaining notice/revision checks. The controlled syntax diagnostic
    confirms one redaction failure; semantic preservation and source-use/family gates remain unresolved.
    Qualify finite experiment arms from eligible supply before bulk packing. No examples are admitted.
