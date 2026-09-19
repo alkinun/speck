@@ -104,17 +104,18 @@ acquired sixteen groups, reconciling 29,347 repository rows / 379,942 entries, t
 remain unresolved. Earlier Stack v3 origin checks explain twelve selected transformations, not
 all supplied-text mismatches or source-use applicability.
 
-The [current cohort assessment](../experiments/corpus-audit/javascript-cohort-review.json) records
-**63 full texts / 97,401 tokens reviewed**, **43 family-held records**, and **114 unheld records still
+The [current cohort assessment](../experiments/corpus-audit/typed-language-cohort-review.json) records
+**77 full texts / 122,682 tokens reviewed**, **43 family-held records**, and **100 unheld records still
 unread**. It preserves all original sampling factors and source labels. A Processing Java-mode
 example is labelled JavaScript, and two fixtures use tool-specific syntax; observed language/dialect
 is recorded separately. A repository/path-based LeetCode-family hold is conservative, not a proven
 benchmark match, and its solution text was not displayed or semantically reviewed.
 
 The [coding guide](coding.md#common-cohort-review) summarizes the frozen readings, redaction
-checks and package/family evidence. Latest readings reuse two previously verified originals without
-new acquisition. Parser success and passing test assertions cannot certify behavior, semantic
-preservation or eligibility. Complete source-use, provenance and family checks in the
+checks and package/family evidence. Latest readings distinguish declarations, translated code, tests
+and teaching scaffolds; no new or reused verified origins are available for this batch. Parser success
+and passing test assertions cannot certify behavior, semantic preservation or eligibility. Complete
+source-use, provenance and family checks in the
 [qualification packet](../experiments/main-data/QUALIFICATION.md) before selecting finite experiment
 inventories. No source ranking, eligible yield or bulk-filter adoption follows from this partial review.
 

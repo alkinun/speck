@@ -7,14 +7,16 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
 
 ## Completed preparation
 
-- Common full-read coverage is **63 files / 97,401 tokens** across the fixed 218 records.
+- Common full-read coverage is **77 files / 122,682 tokens** across the fixed 218 records.
   The [initial review](../corpus-audit/code-cohort-review.json),
   [Python follow-up](../corpus-audit/python-cohort-validation.json) and
   [Go/Rust follow-up](../corpus-audit/go-rust-cohort-review.json) retain their frozen selections.
   The [JS/TSX/Vue follow-up](../corpus-audit/javascript-cohort-review.json) completes reading all
-  currently unheld records carrying those labels and adds one metadata-only LeetCode-family hold:
-  43 records are held, and 114 unheld records remain unread. Processing/dialect annotations preserve
-  original source labels and weights. Two verified originals are reused; no new origins are checked.
+  currently unheld records carrying those labels and adds one metadata-only LeetCode-family hold.
+  The [TypeScript/C#/Kotlin follow-up](../corpus-audit/typed-language-cohort-review.json) adds fourteen
+  readings, distinguishing declarations, translated code, tests and teaching scaffolds. It has no new
+  or reused verified origins. There are 43 held records and 100 unheld records still unread; original
+  source labels and weights remain intact.
   The [family/provenance assessment](../corpus-audit/code-family-provenance.json) remains partial.
   The GoLLIE examples encountered earlier are exposed material; record that when freezing final
   scoring coverage.
@@ -123,8 +125,8 @@ a fresh blind evaluation set.
 
 ## Next bounded data packet
 
-Reuse retained packets and current receipts. Common full-read coverage now includes 63 records;
-continue the 114 currently unheld records outside that coverage with the same origin/notice,
+Reuse retained packets and current receipts. Common full-read coverage now includes 77 records;
+continue the 100 currently unheld records outside that coverage with the same origin/notice,
 intended-use, content and family gates. Use the updated 43-record family holds, including GoLLIE,
 vendored Pylint and the metadata-identified LeetCode collection. That last hold is conservative,
 not a proven task match; do not inspect solution text to tune exclusions. Extend the partial graph

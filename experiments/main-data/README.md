@@ -340,10 +340,10 @@ separates inputs available for detailed design from the requirements for launchi
 2. Use the [completed practical checks](../corpus-audit/practical-code-checks.json) and
    [qualification packet](QUALIFICATION.md) to finish broader exclusions and family separation.
    Continue the fixed 138-file Stack-Edu and 80-file Stack v3 cohorts after the
-   [JS/TSX/Vue follow-up](../corpus-audit/javascript-cohort-review.json): common full-read coverage is
-   63 files, with 114 unheld files still outside it and 43 records family-held. The latest batch adds a
-   metadata-only LeetCode-family hold and language/dialect annotations, retaining original labels/weights.
-   Two verified originals are reused; no new origin checks were made.
+   [TypeScript/C#/Kotlin follow-up](../corpus-audit/typed-language-cohort-review.json): common full-read
+   coverage is 77 files, with 100 unheld files still outside it and 43 records family-held. The latest
+   batch distinguishes declarations, translated code, tests and teaching scaffolds, retaining original
+   labels/weights. No new or reused verified origins are available for this batch.
    Complete broader lineage and remaining notice/revision checks. The controlled syntax diagnostic
    confirms one redaction failure; semantic preservation and source-use/family gates remain unresolved.
    Qualify finite experiment arms from eligible supply before bulk packing. No examples are admitted.

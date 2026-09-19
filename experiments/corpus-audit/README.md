@@ -369,8 +369,12 @@ covering all remaining unheld Go/Rust records. It brought common coverage to 49 
 at that stage, 129 unheld records remained unread and 42 family holds persisted. Static findings do not replace
 provenance: no new origin checks or corpus execution occurred in this batch.
 The [JS/TSX/Vue review](javascript-cohort-review.json) adds fourteen readings / 29,940 tokens and
-one metadata-only LeetCode-family hold. Current coverage is 63 files / 97,401 tokens, with 43 held
-and 114 unheld records still unread. A Processing example and two dialect fixtures demonstrate
+one metadata-only LeetCode-family hold. It brought coverage to 63 files / 97,401 tokens, with 43 held
+and 114 unheld records then unread. A Processing example and two dialect fixtures demonstrate
 why observed language/context must remain separate from original labels and sampling weights.
+The [TypeScript/C#/Kotlin review](typed-language-cohort-review.json) adds fourteen readings / 25,281
+tokens, completing all unheld records with those labels. Current coverage is 77 files / 122,682 tokens,
+with 43 held and 100 unheld records still unread. Declarations, translated algorithms, tests and
+teaching scaffolds require different context; this batch has no new or reused verified origins.
 The [coding guide](../../docs/coding.md#common-cohort-review) records findings and remaining gates.
-No source ranking or eligible-yield estimate follows from this restricted batch.
+No source ranking or eligible-yield estimate follows from these restricted batches.
