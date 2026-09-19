@@ -1,0 +1,109 @@
+{
+  "format": "speck_stack_v3_origin_review",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "21e587c8109f85ffb030521889c3bf39cb74750f",
+  "parent_receipt": {
+    "path": "experiments/corpus-audit/stack-v3-feasibility.json",
+    "sha256": "82de98e50ab91d87256228d7004911ef1378743f147a848696bf54f55ed9050f"
+  },
+  "dataset_revision": "8f3f25d86e44fd691428131efd17af75d4716499",
+  "selection": {
+    "seed": "speck-stack-v3-origins-v1-20260919",
+    "rule": "Lowest two SHA256(seed:identity) per hash-state x license-label cell; no replacement after failures",
+    "population": {
+      "match:no_license": 39772,
+      "match:permissive": 970,
+      "mismatch_marker:no_license": 5692,
+      "mismatch_marker:permissive": 865,
+      "mismatch_no_marker:no_license": 521,
+      "mismatch_no_marker:permissive": 6
+    },
+    "failures_replaced": false
+  },
+  "results": {
+    "corpus_code_executed": false,
+    "incomplete_notice_context": 2,
+    "no_license_with_mit_notice": 2,
+    "original_raw_sha1_matches": 11,
+    "permissive_with_apache_notice": 6,
+    "repository_commit_pairs": 9,
+    "selected_files": 12,
+    "source_git_blob_matches": 12,
+    "source_use_approved": false,
+    "training_admitted": false,
+    "transformations": {
+      "decoded_to_utf8": 1,
+      "ipv4_spans_only": 2,
+      "notebook_json_formatting_only": 1,
+      "notebook_output_metadata_cleanup": 1,
+      "placeholder_spans_only": 4,
+      "unchanged_bytes": 3
+    }
+  },
+  "markerless_mismatch_notebooks": 454,
+  "frame_concentration": {
+    "permissive_repository_count": 42,
+    "largest_repositories": [
+      [
+        "santosha2003/site-antikv",
+        15967
+      ],
+      [
+        "brownd1978/FastSim",
+        1024
+      ],
+      [
+        "c33d3r20/shareaza-for-linux",
+        957
+      ],
+      [
+        "bouthilx/compute-forecast-framework",
+        861
+      ]
+    ],
+    "largest_permissive_repositories": [
+      [
+        "brownd1978/FastSim",
+        1024
+      ],
+      [
+        "riquefsouza/hfsframework-2023",
+        308
+      ],
+      [
+        "sourcetoad/php-fhir-generated-r4",
+        65
+      ],
+      [
+        "chengzi0103/SoulSpeak",
+        40
+      ]
+    ]
+  },
+  "acquisition": {
+    "requests": 40,
+    "response_bytes_read": 10830489,
+    "over_limit_responses": 1,
+    "notice_candidate_limit_per_selected_file": 6,
+    "complete_corpus_shard_hashes_verified": false
+  },
+  "evidence": {
+    "directory": "/mnt/speck-data/speck/data-qualification-20260919/stack-v3-origins",
+    "manifest_sha256": "8234f94552cc2cbd01ac9c69615d590dbeeb90255586008caf39e65289e39436",
+    "offline_replay_identical": true
+  },
+  "decisions": [
+    "Keep upstream content identity, original Git/blob identity, decoded text identity and consumed-text SHA256 separate; do not disable source-byte checks or accept arbitrary mismatches.",
+    "Transformation equivalence is technical provenance, not semantic correctness or source-use approval.",
+    "License labels are screening metadata. Preserve pinned notices; review scope and third-party material before acceptance.",
+    "A wider sample must account for repository concentration; do not extrapolate file proportions from two row groups."
+  ],
+  "remaining": [
+    "Explanations are verified for 12 diagnostic files only, not all 7084 mismatches.",
+    "Two selected files lack complete ancestor-notice context because their tree response exceeded the bound.",
+    "Dataset use decisions, original attribution handling, semantic quality, benchmark exclusions and family/near-duplicate separation remain open."
+  ],
+  "next": "Cost a broader repository-stratified sample with a fixed byte cap and failed selections retained; use current pin and keep the frozen Stack-Edu audit intact.",
+  "gpu_hours": 0,
+  "eligible_tokens_established": 0
+}

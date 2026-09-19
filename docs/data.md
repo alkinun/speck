@@ -109,9 +109,10 @@ family-separation and comparable source-review work; no main corpus is admitted.
 
 The [Stack v3 feasibility probe](coding.md#stack-v3-feasibility--2026-09-19), following the Marin
 review, inventories two revisions and inspects 2,699 repository rows at the current corrected pin.
-Commit metadata is populated, but source-use labels and transformed content identities require
-resolution before broader sampling. Keep source and repository-serialization comparisons separate;
-catalog size and this probe establish neither eligible supply nor independently verified exercises.
+The origin follow-up links twelve originals to pinned Git blobs and characterizes their decoding,
+redaction and notebook transformations. Source-use applicability remains pending; labels alone are
+insufficient. Repository concentration requires broader stratification before any yield estimate.
+Keep source and serialization comparisons separate; this probe establishes no eligible supply.
 
 The [September 18 reopen](../experiments/pilot/supply.json) verifies all shard hashes and every document-index span for the five
 retained token stocks used by the pilot. It counts the larger local `document-token-stock-v2`

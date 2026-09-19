@@ -404,9 +404,35 @@ file returned HTTP 403; current-pin range reads succeeded. No upstream or corpus
 Artifacts and acquisition/inspection scripts live under
 `/mnt/speck-data/speck/data-qualification-20260919/stack-v3`; the receipt binds their manifest.
 Offline replay with network disabled reproduced the range plan, token sample and result exactly.
-Next resolve source-use and redacted/original identity semantics on this fixed probe, then cost a
-broader stratified sample. Keep source comparisons separate from repository serialization. This
-candidate does not replace the frozen retained-Stack-Edu audit, change the mixture, or admit data.
+
+The [origin follow-up](../experiments/corpus-audit/stack-v3-origins.json) selects two files from
+each hash-state × license-label cell, without replacing failures: twelve files from nine pinned
+repositories. All twelve retrieved originals match their Git blob identities. Eleven raw originals
+match upstream content-ID SHA1; the remaining ID matches after Latin-1/CP1252 decoding to UTF-8.
+The supplied training texts have three unchanged byte sequences, one decoded representation,
+four placeholder-only changes, two IPv4-only changes, one notebook with outputs/execution metadata
+removed, and one notebook with JSON formatting changes only. Both notebooks preserve cell sources
+and types. This explains the selected cases, not all 7,084 mismatches; 454 of the 527 markerless
+mismatches in the full probe have the notebook language label.
+
+All six selected `permissive` files have pinned Apache-2.0 ancestor notices. Two `no_license`
+examples have pinned MIT notices; applicability to contributed files, bundled material and intended
+use remains pending. One repository tree exceeded the 8 MB cap, leaving two files without complete
+notice context; exact source blobs were verified through bounded path-specific requests. Labels
+are screening inputs, not automatic acceptance or rejection. No source-use approval is recorded.
+
+Keep upstream content IDs, original Git/blob identities, decoded-text identities and consumed-text
+SHA256 separate. Do not relax existing exact-byte checks or treat arbitrary mismatches as redaction.
+Technical transformation equivalence does not establish useful semantics: IP replacement can alter
+configuration values. No code execution, benchmark exclusion or training admission occurred.
+
+The same frame also exposes concentration: one repository supplies 15,967 of 47,826 files;
+the 1,841 `permissive` entries come from 42 repositories, with 1,024 from one repository.
+Next cost a broader sample with repository strata, explicit byte caps and failed selections retained.
+Do not extrapolate source-use or quality yield from these two row groups. The follow-up's artifacts
+and replay script are in `/mnt/speck-data/speck/data-qualification-20260919/stack-v3-origins`;
+all selections and results replay identically offline. Keep source comparisons separate from
+serialization; the frozen retained-Stack-Edu audit and working mixture remain unchanged.
 
 ## Data work to do next
 

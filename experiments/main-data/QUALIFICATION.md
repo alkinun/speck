@@ -9,8 +9,9 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
 
 - The [Stack v3 feasibility probe](../corpus-audit/stack-v3-feasibility.json) inventories two
   revisions and samples 2,699 repository rows / 47,826 files from the current corrected pin.
-  Source-use labels and transformed content identities remain unresolved; it has not passed
-  exclusions or established eligible yield. This is separate from the frozen retained-stock audit.
+  The [origin follow-up](../corpus-audit/stack-v3-origins.json) links twelve originals to pinned Git
+  blobs and characterizes their transformations and ancestor notices. Source-use applicability,
+  exclusions and eligible yield remain unresolved. This is separate from the frozen retained-stock audit.
 - The [expansion packet](../corpus-audit/code-expansion.json) pins both candidate inventories,
   verifies one new Python metadata shard and recovers 16 blobs. Thirteen length-matched files
   contain 9,541 tokens; four content flags and unresolved eligibility prevent admission. The
