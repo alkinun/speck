@@ -345,9 +345,11 @@ separates inputs available for detailed design from the requirements for launchi
    component stylesheets retain their original labels, weights and document boundaries. The
    [notice follow-up](../corpus-audit/code-notice-provenance.json) adds seven verified host origins and
    reconfirms one. The [pinned-origin follow-up](../corpus-audit/pinned-code-origins.json) adds 42 more:
-   coverage is 18/104 unheld Stack-Edu and 68/70 unheld Stack v3 records, with two pinned-source 404s.
-   Stack-Edu still has 85 unattempted origins and one unresolved attempt. Four path-verified Stack v3
-   records need complete ancestor-notice searches. No source-use approval or admission follows.
+   the [retained-origin recovery](../corpus-audit/retained-code-origins.json) adds ten exact-match
+   Stack-Edu origins. Coverage is now 28/104 unheld Stack-Edu and 68/70 unheld Stack v3. GitHub quota
+   exhaustion blocks 75 records; one earlier Stack-Edu failure and two Stack v3 404s remain separate.
+   Resume quota-blocked work only after access changes; continue independent web/math work meanwhile.
+   Host-origin recovery and notice availability do not establish source-use approval or admission.
    Complete broader lineage and remaining notice/revision checks. The controlled syntax diagnostic
    confirms one redaction failure; semantic preservation and source-use/family gates remain unresolved.
    Qualify finite experiment arms from eligible supply before bulk packing. No examples are admitted.

@@ -117,11 +117,13 @@ component roles. The [notice follow-up](../experiments/corpus-audit/code-notice-
 adds seven verified host origins and reconfirms one, recovering Objective-C repository and Eclipse
 notice context. Eclipse declares separate code/non-code licenses; template attribution and restrictive
 Java wording remain unresolved. The [pinned-origin follow-up](../experiments/corpus-audit/pinned-code-origins.json)
-adds 42 verified origins: coverage is now 18/104 unheld Stack-Edu and 68/70 unheld Stack v3 records.
-Two pinned Stack v3 sources return 404; four path-verified files still need ancestor-notice searches.
-Stack-Edu has 85 unattempted origins and one unresolved attempt in the linked evidence.
-These are coverage counts, not eligible yield. Fixed-cohort reading is complete;
-source-use and broader family qualification remain open.
+adds 42 verified origins. The subsequent [retained-origin recovery](../experiments/corpus-audit/retained-code-origins.json)
+adds ten exact-match Stack-Edu origins, bringing coverage to 28/104 unheld Stack-Edu and 68/70 unheld
+Stack v3 records. GitHub quota exhaustion leaves 75 Stack-Edu records unresolved, separately from
+one prior Stack-Edu failure and two pinned Stack v3 source 404s. The C++-only successful prefix is
+not a representative recovery rate. Pause quota-blocked requests until access changes and continue
+independent web/math qualification. Fixed-cohort reading is complete; source-use and broader family
+qualification remain open, including four path-verified Stack v3 ancestor-notice searches.
 Parser success and passing test assertions cannot certify behavior, semantic preservation or eligibility.
 Complete source-use, provenance and family checks in the
 [qualification packet](../experiments/main-data/QUALIFICATION.md) before selecting finite experiment

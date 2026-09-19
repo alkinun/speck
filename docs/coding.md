@@ -292,11 +292,21 @@ exceed the cap. Those four still lack complete ancestor-notice searches. Two pin
 return 404 and remain unresolved, without revision substitution. Fifteen distinct notice files are
 recovered for 22 records; availability alone is not a notice-applicability decision.
 
-Across the linked cohort-origin evidence, **18/104 unheld Stack-Edu** and **68/70 unheld Stack v3**
-records have Git-verified host origins. Stack-Edu has one unresolved attempt and 85 unattempted
-records; Stack v3 has two unresolved attempts and none unattempted. A derived metadata inventory
-reconciles all 218 original records and observed tokens without changing assessment fields, 176
-full reads or 44 holds. These counts do not establish eligible yield or copied-source provenance.
+The [retained-origin follow-up](../experiments/corpus-audit/retained-code-origins.json) requests bounded
+path histories for all 85 previously unattempted unheld Stack-Edu records. Dataset commit IDs are
+absent; ten C++ files match exact retained bytes and verified Git blobs at recovered revisions, with
+ten ancestor notices. Those revisions do not reconstruct the original dataset acquisition snapshot.
+GitHub quota exhaustion blocks 74 history lookups and one tree verification after exact bytes match.
+The successful C++ prefix reflects request order and available quota, not language/source quality.
+A fresh-request quota stop was added after acquisition; all actual responses remain recorded.
+
+Current linked origin coverage is **28/104 unheld Stack-Edu** and **68/70 unheld Stack v3**. Stack-Edu's
+76 unresolved records comprise 75 quota-blocked outcomes and one earlier failed attempt; Stack v3's
+two pinned 404s remain unresolved. No unheld record lacks an attempted outcome, but 74 new requests
+returned no history data. Resume those cases only after quota recovery or an available authenticated
+route, without repeating the unchanged prior failure. Advance independent web/math work meanwhile.
+All 218 assessment records, sampling weights, 176 reads and 44 holds remain unchanged; host evidence
+and observed-token counts do not establish eligible supply, notice applicability or copied-source provenance.
 
 Installed metadata and `RECORD` hashes identify Arcade 2.5.7 and stringutils 0.3.0. Arcade's package
 notice is recovered. The publisher-hash-verified stringutils wheel contains the sampled file, while

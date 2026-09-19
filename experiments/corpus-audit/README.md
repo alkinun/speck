@@ -426,6 +426,13 @@ The [pinned-origin follow-up](pinned-code-origins.json) checks all 44 remaining 
 records at pinned commits: 42 new verified origins and two source 404s. Four identities use smaller
 path-specific metadata after recursive trees exceed the cap; ancestor-notice searches remain open
 for those files. Fifteen distinct notices are recovered for 22 selected records without deciding
-applicability. Current linked origin coverage is 18/104 unheld Stack-Edu and 68/70 unheld Stack v3.
+applicability. It brought linked origin coverage to 18/104 unheld Stack-Edu and 68/70 unheld Stack v3.
 The derived metadata inventory separates held, verified, attempted-unresolved and unattempted records,
 reconciling original counts/tokens. It adds no semantic readings, holds, eligible tokens or admissions.
+
+The [retained-origin recovery](retained-code-origins.json) attempts all 85 previously unattempted
+unheld Stack-Edu records through bounded path histories. Ten C++ origins and ten ancestor notices
+are verified; 74 history requests and one tree check are blocked by GitHub quota exhaustion.
+Current linked origin coverage is 28/104 unheld Stack-Edu and 68/70 unheld Stack v3. The successful
+prefix is quota/order-dependent, not a source-quality estimate. All 218 assessments remain unchanged.
+Resume blocked requests only after access changes; independent web/math qualification can proceed.

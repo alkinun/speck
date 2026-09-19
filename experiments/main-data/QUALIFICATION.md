@@ -31,6 +31,13 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
   ancestor-notice searches remain incomplete. Fifteen distinct verified notices cover 22 selected
   records, without deciding applicability. A metadata-only inventory reconciles the existing cohort.
 
+- The [retained-origin recovery](../corpus-audit/retained-code-origins.json) attempts bounded path
+  histories for all 85 previously unattempted unheld Stack-Edu records, which lack dataset commit IDs.
+  Ten exact-match origins and ten ancestor notices are verified. GitHub quota exhaustion blocks
+  74 history requests and one tree check after source bytes match. These infrastructure outcomes
+  do not establish content rejection or source quality; the ten successes are a C++-only prefix.
+  The original dataset snapshot is not reconstructed by finding a matching later-visible revision.
+
 - The [Stack v3 feasibility probe](../corpus-audit/stack-v3-feasibility.json) inventories two
   revisions and samples 2,699 repository rows / 47,826 files from the current corrected pin.
   The [origin follow-up](../corpus-audit/stack-v3-origins.json) links twelve originals to pinned Git
@@ -159,12 +166,17 @@ The derived origin inventory reports disjoint evidence states, retaining each so
 
 | Cohort | Family-held files / observed tokens | Verified host files / observed tokens | Attempted unresolved files / observed tokens | Unattempted files / observed tokens |
 | --- | --- | --- | --- | --- |
-| Retained Stack-Edu | 34 / 171,947 | 18 / 22,253 | 1 / 731 | 85 / 264,684 |
+| Retained Stack-Edu | 34 / 171,947 | 28 / 52,329 | 76 / 235,339 | 0 / 0 |
 | Stack v3 | 10 / 10,652 | 68 / 121,397 | 2 / 1,162 | 0 / 0 |
 
-These are evidence categories, not eligible supply or pass rates. Prioritize the 85 unattempted
-Stack-Edu origins and its one unresolved attempt. Keep the two Stack v3 404s outside training absent
-new evidence; do not substitute revisions or repeat failed requests without a changed recovery route.
+These are evidence categories, not eligible supply or pass rates. Of the 76 unresolved Stack-Edu
+records, 75 are quota-blocked in the latest batch and one preserves an earlier failed attempt. All
+records have an attempted outcome, but 74 new history requests returned no history data. Resume
+quota-blocked work only after quota recovery or an available authenticated route, retaining prior
+responses; do not reinterpret the C++-only successful prefix as representative. The acquisition now
+stops fresh API requests after observed quota exhaustion; that guard was added after this batch.
+Keep the two Stack v3 404s outside training absent new evidence; do not substitute revisions or
+repeat unchanged failures. Continue independent web/math qualification while API recovery is blocked.
 Four Stack v3 path-verified files need ancestor-notice searches using bounded path traversal.
 Host verification does not resolve copied or vendored source provenance.
 The recovered Eclipse NOTICE explains its code/non-code labels; dependency applicability remains open.

@@ -81,7 +81,7 @@ historical; do not repeat the completed pilot because a preparation document sti
    and defines family separation. LiveCodeBench release-v6 public-text coverage is now pinned;
    finish the full source-family graph and intended scoring coverage before exercise derivation.
    The 16-row UltraData-Code L3 preview remains held for lineage.
-2. **Qualify finite code inventories, then compare other banks.** The original
+2. **Qualify finite inventories across code, web and math.** The original
    [Stack-Edu sample](experiments/corpus-audit/code-yield-result.json) has 138 files and the
    [Stack v3 sample](experiments/corpus-audit/stack-v3-broader.json) has 80. Their exclusions and
    sampling frames remain distinct. The [reading closeout](experiments/corpus-audit/stylesheet-cohort-review.json)
@@ -89,11 +89,12 @@ historical; do not repeat the completed pilot because a preparation document sti
    Page, template and component stylesheets join the previously recorded file roles. Original source labels, weights
    and document boundaries remain intact; no correctness or training eligibility follows from reading.
    Installed Arcade/stringutils identities are verified; stringutils also matches its published wheel.
-   The [pinned-origin follow-up](experiments/corpus-audit/pinned-code-origins.json) checks all 44
-   remaining unheld Stack v3 records: 42 new verified origins and two pinned-source 404s. Coverage
-   is now 68/70 unheld Stack v3 and 18/104 unheld Stack-Edu records. Stack-Edu has 85 unattempted
-   origins and one unresolved attempt in the linked evidence. Copied-source/notice questions remain
-   separate, including four incomplete ancestor-notice searches. Use the existing
+   The [retained-origin follow-up](experiments/corpus-audit/retained-code-origins.json) adds ten
+   exact-match host origins. Current coverage is 28/104 unheld Stack-Edu and 68/70 unheld Stack v3.
+   GitHub quota exhaustion blocks 75 Stack-Edu records; one earlier unresolved record and two
+   Stack v3 source 404s remain separate. Resume quota-blocked work only after access changes;
+   advance independent web/math qualification meanwhile. Do not treat request failures or the
+   C++-only successful prefix as source-quality evidence. Use the existing
    [qualification packet](experiments/main-data/QUALIFICATION.md#next-bounded-data-packet); record
    natural-code and verified-exercise gates separately. The fixed-cohort reading pass is complete.
    The pair-aware syntax diagnostic passes 14 controls on each of two Python versions and confirms

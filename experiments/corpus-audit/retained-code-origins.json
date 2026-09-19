@@ -1,0 +1,112 @@
+{
+  "format": "speck_retained_code_origins",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "f62354b3fd8fcdf70ad64732300f97a67bd3212e",
+  "status": "bounded_history_recovery_partial_api_quota_exhausted",
+  "input_receipt": {
+    "path": "experiments/corpus-audit/pinned-code-origins.json",
+    "sha256": "905be5e195b80772cbd27cdb74f4c12f7fcb45a6b9e93889adf5fa1b7db2bcc0"
+  },
+  "selection_rule": "All 85 currently unheld Stack-Edu records without an origin attempt in the linked receipts. Preserve the prior unresolved attempt without an unchanged retry; no substitutions.",
+  "summary": {
+    "common_full_read_files": 176,
+    "complete_repository_trees": 10,
+    "corpus_execution": false,
+    "coverage": {
+      "stack_edu": {
+        "attempted_unresolved": {
+          "files": 76,
+          "observed_tokens": 235339
+        },
+        "family_held": {
+          "files": 34,
+          "observed_tokens": 171947
+        },
+        "host_verified": {
+          "files": 28,
+          "observed_tokens": 52329
+        },
+        "not_attempted_in_linked_receipts": {
+          "files": 0,
+          "observed_tokens": 0
+        }
+      },
+      "stack_v3": {
+        "attempted_unresolved": {
+          "files": 2,
+          "observed_tokens": 1162
+        },
+        "family_held": {
+          "files": 10,
+          "observed_tokens": 10652
+        },
+        "host_verified": {
+          "files": 68,
+          "observed_tokens": 121397
+        },
+        "not_attempted_in_linked_receipts": {
+          "files": 0,
+          "observed_tokens": 0
+        }
+      }
+    },
+    "distinct_verified_ancestor_notices": 10,
+    "eligible_tokens_established": 0,
+    "failure_reasons": {
+      "exact_bytes_matched_tree_api_quota_exhausted": 1,
+      "history_api_quota_exhausted": 74
+    },
+    "family_held_files": 44,
+    "files_verified_via_path_metadata": 0,
+    "files_with_incomplete_notice_search": 1,
+    "gpu_hours": 0,
+    "new_git_verified_host_origins": 10,
+    "original_files": 218,
+    "selected_files": 85,
+    "selected_files_with_verified_notices": 10,
+    "selected_observed_tokens": 264684,
+    "selected_statuses": {
+      "git_blob_verified": 10,
+      "revision_unresolved": 74,
+      "tree_unavailable": 1
+    },
+    "training_admitted": false
+  },
+  "findings": [
+    "All 85 previously unattempted, currently unheld Stack-Edu records lack dataset commit IDs. The bounded recovery route requests up to five commits for the recorded path, then requires exact consumed bytes and Git blob identity at a recovered immutable revision. A matching revision does not reconstruct the dataset acquisition snapshot or prove the earliest source.",
+    "Ten new host origins, all C++, match retained SHA256 and plain SHA1 identities and Git blobs in complete trees. Ten ancestor notices are recovered and blob-verified. Notice availability does not decide applicability or training permission.",
+    "GitHub returned quota-exhaustion HTTP 403 responses for 74 history lookups and one tree request. The latter record, ric2b/vivaldi-browser, has exact matching source bytes at a recovered revision but lacks Git-tree verification. All 75 remain unresolved for infrastructure reasons; do not classify them as missing repositories, unsuitable content or failed byte matches.",
+    "The ten successes precede quota exhaustion in the fixed request order, so their language mix and recovery fraction do not support a source-quality or whole-stock recoverability estimate. Cached evidence preserves every response, including all 75 quota responses. A stop for fresh API requests after observed quota exhaustion was added after acquisition and checked offline; it did not prevent the already-recorded responses.",
+    "The prior bcortier-devolutions/climake unresolved attempt was not retried. Current unheld origin coverage is 28/104 Stack-Edu and 68/70 Stack v3. Stack-Edu has 76 unresolved records: 75 blocked in this batch plus the previous unresolved record. All records now have an attempted outcome in linked receipts, but 74 new history lookups returned no history data.",
+    "All 218 original assessment records and weights, 176 full reads and 44 family holds remain unchanged. The derived inventory preserves disjoint evidence states and observed-token accounting. No eligible-token supply, source ranking or training admission is established."
+  ],
+  "acquisition": {
+    "api_requests": 96,
+    "automatic_retries": 0,
+    "request_seconds": 41.5117,
+    "response_bytes": 914924,
+    "unique_requests": 117
+  },
+  "evidence": {
+    "directory": "/mnt/speck-data/speck/data-qualification-20260919/retained-code-origins",
+    "manifest_sha256": "f48d9a2b0f098e9a26dffc1cdfa60543357a44678cb0c7f0957e36939a2a1955",
+    "artifacts": 329,
+    "bytes": 1871032,
+    "network_disabled_replay_identical": true,
+    "negative_controls": [
+      "corrupt_source_bytes",
+      "missing_selected_record",
+      "wrong_pinned_revision",
+      "false_notice_blob",
+      "changed_source_label",
+      "wrong_history_link",
+      "fresh_api_request_stopped_after_cached_quota_exhaustion"
+    ]
+  },
+  "boundaries": [
+    "Bounded history recovery of unpinned retained records; no historical dataset-revision reconstruction or corpus-wide extrapolation.",
+    "No corpus code, package setup, tests or held-task text executed/read. No new semantic reading, source-use approval, eligible supply, GPU work or training admission.",
+    "Infrastructure failures stay separate from source/content rejection. No automatic HTTP retries or credential search; no immediate repeat of quota-blocked requests."
+  ],
+  "next": "Resume the 75 quota-blocked records only after quota recovery or an available authenticated route, retaining prior responses and exact-byte matching. Keep the earlier Stack-Edu unresolved record and two pinned Stack v3 404s separate. Continue independent web/math qualification while this recovery route is unavailable; copied-source, notice and family gates still precede eligible-token accounting."
+}
