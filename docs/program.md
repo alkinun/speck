@@ -28,7 +28,8 @@ next training job. The [model notes](model.md) define the reference backbone and
 
 The paper's main subject is how selected data and actual training develop useful capabilities.
 Complete the 200-hour architecture/efficiency comparison, then freeze the backbone so data
-comparisons are interpretable. Measure attention, size and implementation trade-offs explicitly. MoE, attention residuals and broader
+comparisons are interpretable. Measure the matched attention contrast and implementation efficiency;
+explain the size choice using parameter and compute accounting. MoE, attention residuals and broader
 attention-layout/model-size research belong to later releases with separately funded experiments.
 
 | Stage | Purpose and objective | Budget ownership and readiness |
@@ -82,10 +83,9 @@ The 800-hour post-training and 400-hour protected subdivisions are planning caps
 requirements. Charge every job once; production-stage tokens do not include discarded research
 arms. A 200-hour RL cap includes rollouts and scoring, not just gradient updates.
 
-The completed H100 rental remains separate. This revision funds research by reducing context
-production from 800 to 300 hours and protected evaluation/recovery from 889 to 400. The old 8B
-context curriculum is retired: qualify 16K then 32K, leave stage tokens unset, and treat 128K as a
-stretch requiring an affordable revision. No production stage borrows reserve automatically.
+The completed H100 rental remains separate. Qualify 16K then 32K within the 300-hour context
+production cap, leave stage tokens unset, and treat 128K as a stretch requiring an affordable
+revision. No production stage borrows reserve automatically.
 Only short-context training has a measured cost reference. If the architecture decision changes the
 model, remeasure throughput before relying on the 100B projection. Freeze stage costs and stop
 conditions; unused budget is not a requirement to spend.
@@ -133,7 +133,7 @@ educational web. The eight proposed banks are:
 
 | Bank | Base-token share | Candidate source route |
 | --- | ---: | --- |
-| Natural code, tests and documentation | 30% | Stack-Edu and source-resolved UltraData-Code L2; practical and multilingual coverage |
+| Natural code, tests and documentation | 30% | Stack-Edu, Stack v3 and source-resolved UltraData-Code L2; practical and multilingual coverage |
 | Checked code and repair examples | 5% | Qualified natural-code derivatives; UltraData-Code L3 held until lineage and independent checks pass |
 | Natural math/worked solutions | 20% | UltraData-Math L2, FineMath 4+, Nemotron-CC-Math `4plus` |
 | Refined math | 5% | Checked UltraData-Math L3/derivatives |

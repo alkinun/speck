@@ -1,0 +1,71 @@
+{
+  "format": "speck_stack_v3_broader_preflight",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "e5b93a5ed575d41182089547cd6242a4e7d8950b",
+  "protocol": {
+    "path": "experiments/corpus-audit/stack-v3-sampling.json",
+    "sha256": "92db1ceac0f5fe957a473e35d0288c5f52b5e1a70125b7f8870b707f33d647fc"
+  },
+  "dataset_revision": "8f3f25d86e44fd691428131efd17af75d4716499",
+  "status": "frozen_sample_acquired_selected_and_screened_eligibility_unresolved",
+  "acquisition": {
+    "selected_groups": 16,
+    "acquired_groups": 16,
+    "failed_groups": 0,
+    "range_bytes": 534796546,
+    "range_fetch_wall_seconds": 132.888,
+    "automatic_retries": 0,
+    "full_shard_publisher_hashes_verified": false
+  },
+  "frame": {
+    "declared_file_count_mismatches": 0,
+    "duplicate_repository_commit_keys": 0,
+    "file_entries": 379942,
+    "repositories": 29347,
+    "license_labels": {
+      "no_license": 369422,
+      "permissive": 10520
+    }
+  },
+  "review_cohort": {
+    "repositories": 44,
+    "files": 80,
+    "nonempty_strata": 11,
+    "language_labels": 24,
+    "tokens_with_bos_eos": 133211,
+    "files_over_review_byte_cap": 0,
+    "files_over_4096_tokens": 3,
+    "upstream_content_id_mismatches": 10,
+    "selection_weights_retained": true
+  },
+  "exclusion_screen": {
+    "benchmark_lanes": 22,
+    "content_flagged_files": 4,
+    "eligible_tokens_established": 0,
+    "files": 80,
+    "named_family_held_files": 8,
+    "screened_files": 80,
+    "training_admitted": false
+  },
+  "evidence": {
+    "directory": "/mnt/speck-data/speck/data-qualification-20260919/stack-v3-broader",
+    "manifest_sha256": "13823ed05729c61b864a081ff831f519191a83dfe6063c7405b42f127f7efdd0",
+    "network_disabled_replay_identical": true,
+    "mutated_range_rejected": true
+  },
+  "remaining": [
+    "Source origin, notice applicability and intended-use decisions for this fixed cohort",
+    "Independent content-quality review, including ten unexplained transformed identities in this cohort",
+    "Full family/alias graph, near-deduplication and intended benchmark coverage",
+    "Eligible supply and informative controlled-training endpoints"
+  ],
+  "boundaries": [
+    "Frame and stratified-cohort fractions are not full-corpus yield estimates",
+    "Conservative text flags are not proof of semantic contamination; no-hit is not eligibility",
+    "No source code executed, benchmark tasks scored, GPU hours consumed or training data admitted"
+  ],
+  "next": "Assess the fixed Stack v3 and retained Stack-Edu cohorts with common source-use/content criteria; use findings to draft a feasible controlled data contrast and preparation costs.",
+  "gpu_hours": 0,
+  "training_admitted": false,
+  "eligible_tokens_established": 0
+}

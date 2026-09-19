@@ -60,7 +60,7 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 | Code expansion feasibility | Upstream inventories pinned; one new Python metadata shard scanned, 16 blobs recovered, 13 length-matched / 9,541 tokens | [Receipt](experiments/corpus-audit/code-expansion.json); four content flags; four application modules selected for follow-up; no qualified yield or admission |
 | Application origin/test review | All four source revisions, complete trees and MIT notices recovered; 29 response hashes verified | [Receipt](experiments/corpus-audit/code-application-origins.json); one direct but stale test link, no independent verification or admission |
 | Stratified code preflight | 138 files / 459,615 tokens across 11 languages and 72 strata; exact offline replay | [Receipt](experiments/corpus-audit/code-yield-result.json); 30 content flags, 31 sample family holds; full eligibility and usable yield remain unresolved |
-| Stack v3 feasibility | Two revisions inventoried; 2,699 repository rows / 47,826 entries; twelve original files linked to pinned Git blobs with transformations characterized | [Probe](experiments/corpus-audit/stack-v3-feasibility.json), [origin follow-up](experiments/corpus-audit/stack-v3-origins.json); source-use applicability, full exclusions and eligible yield remain open; exact offline replay, no admission |
+| Stack v3 preflight | All 16 frozen groups acquired; 29,347 repository rows / 379,942 entries; fixed 44-repository / 80-file cohort screened | [Receipt](experiments/corpus-audit/stack-v3-broader.json); four content flags, eight known-family holds; source use, quality and eligible yield unresolved; exact offline replay, no admission |
 | Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
 | Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions or full token census |
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
@@ -90,10 +90,11 @@ historical; do not repeat the completed pilot because a preparation document sti
    The 0.477B retained tokens cannot supply 30B natural-code exposure; close scalable supply
    feasibility before bulk acquisition or packing. The [Stack v3 probe](docs/coding.md#stack-v3-feasibility--2026-09-19)
    and origin follow-up characterize the current pin and twelve selected transformations/notices.
-   The [broader sample](experiments/corpus-audit/stack-v3-sampling.json) is frozen and footer-priced:
-   sixteen groups / 510.02 MiB. Acquire those exact ranges within the caps, then reconcile repository
-   strata and freeze at most 48 repositories / 96 files for review. Retain original/consumed identities,
-   failed selections and pending source-use decisions. The retained-stock audit remains unchanged.
+   The [broader preflight](experiments/corpus-audit/stack-v3-broader.json) acquired all sixteen groups
+   and froze 44 repositories / 80 files for review; screening records four content flags and eight known-family holds.
+   Assess this cohort alongside the fixed Stack-Edu sample using common source-use/content criteria.
+   Retain original/consumed identities, selection factors and unresolved outcomes. Qualify finite
+   comparison arms before bulk packing; neither screen establishes eligible supply.
    The [web extraction review](experiments/corpus-audit/web-filter-validation.json)
    keeps flags review-only and the HQ cutoff unchanged. Resolve web source use, family/near-duplicate
    exclusions and usable tokens; acquire DCLM originals only for a concrete coverage question.
@@ -127,6 +128,25 @@ Runtime and data preparation are the active tracks. Audit sources for all stages
 mixture study precedes main pretraining; mid-training and assistant model comparisons need useful
 parent checkpoints and measured costs. Use milestone checks and bounded supervisors, not frequent
 manual progress polling or duplicate workers.
+
+## Readiness for experiment design
+
+We can now draft hypotheses, controls and outcomes from the fixed direction and audited candidates.
+Full production-corpus materialization is not a prerequisite for designing a bounded comparison.
+Exact launch settings still depend on the evidence below; preparation receipts are not training results.
+
+| Area | Established | Required before the relevant experiment launches |
+| --- | --- | --- |
+| Direction and budget | Data-centered report; bounded architecture study; stage ownership totals 5,000 hours | Costed arms, confirmation allowance and stop rules within each cap |
+| Data | Pinned candidates, deterministic samples, exclusion methods and retained-stock counts | Qualified finite arm manifests, source-use decisions, family splits, eligible tokens and packing checks |
+| Backbone and runtime | 1.2B reference and completed H100 engineering baseline | Exact matched attention control, parameter/FLOP accounting, GH200 recovery and measured cost; freeze backbone before data comparisons |
+| Evaluation | Pilot development evidence and pinned exclusion inputs | Primary endpoints, development/final partitions, regression tolerances and comparator protocol |
+| Downstream stages | Stage objectives and separate research/production reservations | Useful parent checkpoints; qualified changed-data continuation, context and conditional RL paths |
+
+The next design pass should specify the scientific question, varied factor, fixed controls,
+measurement and decision rule for each proposed comparison. Freeze seeds, token horizons and the
+number of arms after eligible supply and hardware timing establish what the caps can support.
+Audit downstream sources now; run their model comparisons when useful parents exist.
 
 ## Compute
 

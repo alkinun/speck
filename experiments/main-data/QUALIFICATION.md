@@ -12,8 +12,10 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
   The [origin follow-up](../corpus-audit/stack-v3-origins.json) links twelve originals to pinned Git
   blobs and characterizes their transformations and ancestor notices. Source-use applicability,
   exclusions and eligible yield remain unresolved. This is separate from the frozen retained-stock audit.
-  The [broader sampling protocol](../corpus-audit/stack-v3-sampling.json) freezes sixteen groups
-  costing 510.02 MiB and a maximum 48-repository / 96-file review; content acquisition has not begun.
+  The [broader preflight](../corpus-audit/stack-v3-broader.json) acquired all sixteen frozen groups
+  (510.02 MiB), reconciling 29,347 rows / 379,942 files. The fixed 44-repository / 80-file cohort
+  has four content flags and eight known-family holds; 72 files remain unresolved. Acquisition,
+  selection and screening replay identically offline; content/source-use review remains open.
 - The [expansion packet](../corpus-audit/code-expansion.json) pins both candidate inventories,
   verifies one new Python metadata shard and recovers 16 blobs. Thirteen length-matched files
   contain 9,541 tokens; four content flags and unresolved eligibility prevent admission. The
@@ -115,14 +117,15 @@ all four source revisions/notices; its single direct test link is stale and no e
 The [stratified protocol](../corpus-audit/code-yield-plan.json) is now frozen and its offline recovery
 and content screen complete. Next assess this sample’s origins/notices, source use, semantic quality
 and unresolved families, keeping natural-code and checked-exercise gates separate. Only completed
-gates support a weighted yield estimate; 107 no-family-hit sample files remain unresolved. The
-proposed code horizon needs substantially more qualified supply. Remaining source comparisons are:
+gates support a weighted yield estimate; 107 no-family-hit sample files remain unresolved. Apply
+the same criteria to the fixed 80-file Stack v3 cohort, preserving each sample's design and weights.
+The proposed code horizon needs substantially more qualified supply. Remaining source comparisons are:
 
 | Lane | Candidates | Required comparison |
 | --- | --- | --- |
 | Natural web | Ultra-FineWeb English/HQ; FineWeb-Edu control; DCLM baseline/Edu | Separate selection thresholds, source provenance, boilerplate, topic/language diversity, duplication and retained tokens |
 | Math | FineMath 4+; UltraData-Math L2; then Nemotron-CC-Math 4plus | Intact questions/solutions, checkable correctness, topic/difficulty coverage and shared source families |
-| Natural code | Retained Stack-Edu; source-resolved UltraData-Code L2 | Multilingual practical roles, source/test/docs linkage, immutable origins, dependency cost and eligible token yield |
+| Natural code | Retained Stack-Edu; Stack v3; source-resolved UltraData-Code L2 | Multilingual practical roles, source/test/docs linkage, immutable origins, dependency cost and eligible token yield |
 | Generated material | Web/math L3 and checked code derivatives | Source grounding, independent answer/test verification, teacher lineage and rejection rates; held separately from natural stock |
 
 The [pinned UltraFineWeb variant inspection](../corpus-audit/web-variants.json) distinguishes

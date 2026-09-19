@@ -217,14 +217,16 @@ campaign is implicitly funded beyond the declared caps.
 ## Preparation workstreams
 
 The ordered next task is in [PLAN.md](../../PLAN.md#immediate-order-of-work); the items below are
-preparation coverage, not five simultaneous studies.
+preparation coverage, not five simultaneous studies. The [readiness summary](../../PLAN.md#readiness-for-experiment-design)
+separates inputs available for detailed design from the requirements for launching experiments.
 
 1. Audit the pinned natural Ultra-FineWeb candidate and its chosen threshold against retained
    FineWeb-Edu using the existing sampler; report content coverage, overlap and eligible tokens.
 2. Use the [completed practical checks](../corpus-audit/practical-code-checks.json) and
    [qualification packet](QUALIFICATION.md) to finish broader exclusions and family separation.
-   No examples are admitted. Establish a scalable acquisition route, then measure a bounded
-   larger shard before bulk packing.
+   Assess the fixed 138-file Stack-Edu and 80-file Stack v3 cohorts with common source-use/content
+   criteria; acquisition and screening are complete. Compare viable coverage, yield and costs,
+   then qualify finite experiment arms before bulk packing. No examples are admitted.
 3. Compare natural/refined math and educational candidates, keeping claimed checked solutions
    distinct from merely well-formed text. Measure source overlap and complete-document lengths.
 4. Audit the retained SFT stock and long-source gaps against the 1.5M task/length targets. Build a

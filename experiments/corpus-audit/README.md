@@ -247,8 +247,8 @@ Main mixture weights and new-source admission remain undecided.
 
 ## Coding priority and bounded preview — 2026-09-18
 
-The [coding plan](../../docs/coding.md) prioritizes checked exercises for our first substantive
-data comparison. [code-preview.json](code-preview.json) binds a separate UltraData-Code inspection:
+The [coding plan](../../docs/coding.md) keeps checked exercises as a candidate for the first
+pretraining data comparison. [code-preview.json](code-preview.json) binds a separate UltraData-Code inspection:
 16 Python rows per tier, two schema probes, and 405,214 response bytes at a checked revision.
 Raw records remain outside Git. Static tokenization and syntax checks identify preparation needs;
 no sampled code was executed, no new source was admitted, and no GPU experiment was launched.
@@ -258,7 +258,7 @@ The subsequent [isolated execution receipt](code-execution.json) tests those 16 
 against their supplied tests: seven pass and nine fail. All seven passing originals reject a
 grossly broken return-value mutation. Sandbox controls pass. This measures sample self-consistency,
 not independent correctness, overall source quality, or training eligibility; all records remain
-outside training. The [coding notes](../../docs/coding.md#isolated-execution-follow-up) retain the
+outside training. The [execution receipt](code-execution.json) retains the
 limitations and two concrete failure reviews.
 
 ## Code lineage decision — 2026-09-19
@@ -273,7 +273,7 @@ no candidate code was executed and the frozen pilot/evaluation were not changed.
 The next route was a 16-file practical Python cohort qualified from retained natural-code stock.
 One concrete Stack-Edu candidate now has an exact byte match to an immutable upstream commit
 and a retained license notice; its remaining eligibility, deduplication, exclusion and independent
-test gates are explicit in the [coding plan](../../docs/coding.md#source-lineage-follow-up--2026-09-19).
+test gates are explicit in the [provenance receipt](code-provenance.json).
 The inspected 354-row natural-code unit itself has no populated commits; do not treat it as
 already qualified. This follow-up does not admit sources or authorize a GPU comparison.
 
@@ -301,7 +301,7 @@ existing conservative benchmark-exclusion filter. Ten files, totaling 8,702 Mist
 BOS/EOS, clear those preliminary checks. None is admitted to the new training intervention.
 This purposeful cohort is not a source-wide quality or supply estimate.
 
-The [coding plan](../../docs/coding.md#natural-code-cohort-qualification--2026-09-19) records the
+The [cohort receipt](natural-code-cohort.json) records the
 three missing-notice cases, two syntax outcomes, observed fork/rename families and next independent
 tests. [Static notes](natural-code-review.json) cover eight files; no corpus code was executed.
 All source bytes, complete license/NOTICE files, lookup responses and the original interrupted
@@ -330,8 +330,7 @@ The [four-module receipt](code-application-origins.json) closes the expansion pr
 all four implementations match immutable revisions with complete trees and retained MIT notices.
 One has a direct test link whose API is stale; three have no test-named paths. Static review and
 29 verified response hashes establish provenance evidence, not independently checked examples.
-No code ran and nothing is admitted. [Coding notes](../../docs/coding.md#application-origin-and-test-review--2026-09-19)
-record the findings. Raw files stay outside Git.
+No code ran and nothing is admitted. Raw files stay outside Git.
 
 ## Stratified code-yield preflight
 
@@ -347,3 +346,11 @@ PYTHONPATH=. uv run --no-sync python experiments/corpus-audit/audit_code_yield.p
 The command verifies input identities, original sampling denominators, selected source bytes and
 tokens, then screens the sample. Output includes raw code and stays outside Git. It neither runs
 corpus code nor admits training data. Keep incomplete gates unresolved; a clean screen is not yield.
+
+
+The separate [Stack v3 preflight](stack-v3-broader.json) completes the
+[frozen broader acquisition](stack-v3-sampling.json): sixteen groups, 29,347 repository rows and
+a fixed 80-file review cohort. Four files trigger content flags and eight have known-family holds.
+Its external manifest binds acquisition, selection and screen artifacts with exact offline replay.
+The [coding guide](../../docs/coding.md#stack-v3-feasibility--2026-09-19) records limitations and
+the common review required for the fixed Stack v3 and Stack-Edu cohorts before estimating yield.

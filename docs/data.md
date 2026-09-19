@@ -91,31 +91,25 @@ missed defects; all candidate flags remain review-only. Sample token retention i
 but eligible full-corpus supply and a better score cutoff remain unestablished.
 
 The [coding plan](coding.md) treats checked exercises as one candidate for the pretraining recipe
-comparison, to run before the main base-training allocation. A pinned, bounded
-UltraData-Code preview establishes schema and serialization questions, not training eligibility
-or correctness. The [natural-code cohort](../experiments/corpus-audit/natural-code-cohort.json)
-now has 16 immutable byte matches and ten preliminary review candidates; none is admitted.
-The bounded practical CPU checks are complete in [coding](coding.md). The subsequent
-[full retained-code census](../experiments/corpus-audit/code-supply.json) verifies 714,369 files /
-476,774,847 tokens across both acquisition batches. No commit fields are populated; test/docs
-co-presence is not same-version linkage. Existing benchmark/content-family evidence holds at
-least 123 files. This stock is 1.59% of the revised 30B natural-code exposure before joint eligibility;
-it is not a checked-exercise bank or evidence of full-release supply. The subsequent
-[bundle follow-up](../experiments/corpus-audit/code-bundles.json) recovers 19 linked files at four
-pinned revisions; family exclusions hold 15, and static test weaknesses prevent treating the
-remainder as qualified exercises. No corpus code ran or new data entered training. The
-[qualification packet](../experiments/main-data/QUALIFICATION.md) now owns the next exclusion,
-family-separation and comparable source-review work; no main corpus is admitted.
+comparison before the main base allocation. Its [completed qualification summary](coding.md#completed-code-qualification)
+links the provenance, practical CPU and bundle checks. Natural-code eligibility and independent
+exercise verification remain separate; no inspected candidate is admitted by these checks.
 
-The [Stack v3 feasibility probe](coding.md#stack-v3-feasibility--2026-09-19), following the Marin
-review, inventories two revisions and inspects 2,699 repository rows at the current corrected pin.
-The origin follow-up links twelve originals to pinned Git blobs and characterizes their decoding,
-redaction and notebook transformations. Source-use applicability remains pending; labels alone are
-insufficient. Repository concentration requires broader stratification before any yield estimate.
-Keep source and serialization comparisons separate; this probe establishes no eligible supply.
-The [broader protocol](../experiments/corpus-audit/stack-v3-sampling.json) now fixes sixteen
-row-group ranges costing 510.02 MiB and a repository-stratified review capped at 96 files.
-Only footer metadata has been read; content acquisition and review remain next.
+The [retained-code census](../experiments/corpus-audit/code-supply.json) verifies 714,369 files /
+476,774,847 tokens before joint eligibility: only 1.59% of the proposed 30B natural-code exposure.
+The [fixed Stack-Edu cohort](../experiments/corpus-audit/code-yield-result.json) has 138 files /
+459,615 tokens and 31 known-family holds. The [broader Stack v3 preflight](../experiments/corpus-audit/stack-v3-broader.json)
+acquired sixteen groups, reconciling 29,347 repository rows / 379,942 entries, then selected
+44 repositories / 80 files. Screening records four content flags and eight known-family holds; the rest
+remain unresolved. Earlier Stack v3 origin checks explain twelve selected transformations, not
+all supplied-text mismatches or source-use applicability.
+
+Assess both fixed cohorts with common source-use, semantic-quality and exclusion criteria, retaining
+sampling factors, identity distinctions and review costs. The [qualification packet](../experiments/main-data/QUALIFICATION.md)
+owns remaining exclusions and source comparison requirements. Content acquisition and screening
+are complete for these cohorts; comparable review and eligible supply remain open. Keep source
+selection separate from repository serialization, and qualify finite experimental arms before
+bulk acquisition or packing.
 
 The [September 18 reopen](../experiments/pilot/supply.json) verifies all shard hashes and every document-index span for the five
 retained token stocks used by the pilot. It counts the larger local `document-token-stock-v2`
@@ -211,7 +205,7 @@ payloads were not acquired. These revision pins are separate from older stock id
 | Priority | Source | Specific question |
 | --- | --- | --- |
 | First: natural web | Natural Ultra-FineWeb versus retained FineWeb-Edu | Does the selected English path/threshold preserve broad topics and useful unique supply? Keep DCLM independent. |
-| First: code | Retained Stack-Edu plus checked exercises | Can we improve practical coding with verified task/solution pairs while retaining languages, libraries, tests and documentation? Follow the existing code plan. |
+| First: code | Retained Stack-Edu, Stack v3 and qualified checked exercises | Can we improve practical coding with verified task/solution pairs while retaining languages, libraries, tests and documentation? Follow the existing code plan. |
 | First: thinking assistant | UltraData-SFT `think`, retained agent traces and selected [SmolTalk2](https://huggingface.co/datasets/HuggingFaceTB/smoltalk2) reasoning components | Qualify code/math reasoning and complete tool trajectories; retain brief reasoning for simple tasks, with no non-thinking mode. |
 | First: math | UltraData-Math L2/L3 and [Nemotron-CC-Math-v1](https://huggingface.co/datasets/nvidia/Nemotron-CC-Math-v1) `4plus` against FineMath | Compare extraction, worked-solution correctness and unique source coverage. Nemotron's published continuation comparison uses an 8B model, not ours. |
 | Next: documents | English [FinePDFs-Edu](https://huggingface.co/datasets/HuggingFaceFW/finepdfs-edu), alongside retained papers/reference material | Inspect educational document coverage, extraction/figure dependencies and intact long-document supply for context extension. Educational filtering alone does not certify long-range coherence. |
