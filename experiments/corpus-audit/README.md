@@ -414,3 +414,10 @@ are available for this batch. Disjoint per-cohort counts reconcile all 218 origi
 592,826 observed tokens. Reading completion does not establish source use, eligible supply or a
 source ranking. The existing [qualification packet](../main-data/QUALIFICATION.md#next-bounded-data-packet)
 owns the remaining provenance, family, intended-use and finite-inventory work before data-study selection.
+
+The [notice follow-up](code-notice-provenance.json) checks all eight sampled files in four repositories
+with recorded notice questions. Seven host origins are newly verified and one is reconfirmed; four
+complete trees and four distinct ancestor notices are retained. Eclipse's NOTICE explains separate
+code/non-code licenses, while Java restrictive wording and Ororus template attribution remain open.
+Linked cohort-origin coverage is 18/104 unheld Stack-Edu and 26/70 unheld Stack v3 records. All reading
+counts, holds and assessment fields remain unchanged. No source-use approval or admission follows.

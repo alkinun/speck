@@ -1,0 +1,75 @@
+{
+  "format": "speck_code_notice_provenance",
+  "date": "2026-09-19",
+  "repository_revision_before_changes": "d43b30f78f111a5a45fb03c5624f63538d167e53",
+  "status": "bounded_host_origin_and_notice_recovery_complete_eligibility_pending",
+  "input_receipt": {
+    "path": "experiments/corpus-audit/stylesheet-cohort-review.json",
+    "sha256": "17eb5498b759caab7a036a0020d93962535cd83e0cb4c75991e26cea7965eb84"
+  },
+  "selection_rule": "All eight original cohort records in the four repositories with the explicitly recorded Java, Objective-C, template CSS and component SCSS notice questions; purpose-selected follow-up, not a new probability sample.",
+  "summary": {
+    "common_full_read_files": 176,
+    "complete_repository_trees": 4,
+    "corpus_execution": false,
+    "current_unheld_origin_coverage": {
+      "stack_edu": {
+        "git_verified_host_origins": 18,
+        "unheld_files": 104,
+        "without_git_verified_host_origin": 86
+      },
+      "stack_v3": {
+        "git_verified_host_origins": 26,
+        "unheld_files": 70,
+        "without_git_verified_host_origin": 44
+      }
+    },
+    "distinct_verified_ancestor_notices": 4,
+    "eligible_tokens_established": 0,
+    "family_held_files": 44,
+    "gpu_hours": 0,
+    "new_family_holds": 0,
+    "new_git_verified_host_origins": 7,
+    "original_files": 218,
+    "reconfirmed_git_verified_host_origins": 1,
+    "selected_files": 8,
+    "selected_files_with_ancestor_notices": 4,
+    "selected_observed_tokens": 73390,
+    "training_admitted": false
+  },
+  "findings": [
+    "All eight purpose-selected sampled files match their pinned host revision bytes, upstream plain-SHA1 identities and Git blobs in four complete repository trees. Seven host-origin verifications are new; ClusterAdminClientProcessor.java was already verified and is reconfirmed. This is not a new sample or new semantic-reading coverage.",
+    "Both toothlou/nature Java files retain proprietary/confidential wording with placeholder organization text. The complete pinned tree has no ancestor notice matching the declared filename rule. File naming and placeholder wording do not resolve permission; both records remain outside training.",
+    "The two iOS-ios-why/wangyiDemo files retain their copyright headers. The root LICENSE is Git-verified and contains Apache License 2.0 text. This recovers repository context without treating boilerplate headers alone as either a conflicting license or evidence of rejection.",
+    "The hoangk51/vue-edu template stylesheet and Vue component match the host revision. No matching ancestor notice is present. public/VvvebJs/LICENSE is a sibling-subtree notice, not an ancestor notice for either sampled file; it was not used to license them. Ororus/Codexin template provenance remains unresolved.",
+    "The eclipse-tractusx/portal-frontend TSX and SCSS file headers declare Apache-2.0. Verified root LICENSE, LICENSE_non-code and NOTICE.md recover the referenced notice context. NOTICE.md explicitly distinguishes Apache-2.0 for code from CC-BY-4.0 for non-code, explaining repository-level labels without inferring dual licensing of each file. It references DEPENDENCIES for third-party content; dependency-level applicability remains unresolved.",
+    "Within the hash-linked cohort-origin receipts, 18 of 104 currently unheld Stack-Edu records and 26 of 70 currently unheld Stack v3 records now have Git-verified host origins. The remaining 86 and 44 lack that evidence in this chain. Counts describe evidence coverage, not source quality, source-use approval or eligible yield; host origin does not establish copied-source provenance."
+  ],
+  "acquisition": {
+    "api_requests": 4,
+    "automatic_retries": 0,
+    "response_bytes": 723471,
+    "unique_requests": 16,
+    "wall_seconds": 9.8647
+  },
+  "evidence": {
+    "directory": "/mnt/speck-data/speck/data-qualification-20260919/code-notice-provenance",
+    "manifest_sha256": "1c2312d7b254995bc333e783290292b209bee12488b5844b1c66416d58b6aec7",
+    "artifacts": 50,
+    "bytes": 1062240,
+    "network_disabled_replay_identical": true,
+    "negative_controls": [
+      "corrupt_source_bytes",
+      "missing_selected_record",
+      "wrong_pinned_revision",
+      "false_notice_blob",
+      "changed_source_label"
+    ]
+  },
+  "boundaries": [
+    "All 218 record identities, weights, metadata and assessment fields preserved byte-for-byte; 176 full reads and 44 family holds unchanged. No additional benchmark or held-task text read.",
+    "Purpose-selected notice follow-up; no probability-based pass-rate inference. Complete trees establish only the bounded filename/path search, not absence of terms elsewhere.",
+    "No corpus code execution, source-use approval, eligible-token estimate, source ranking, training admission or GPU work. Original receipts remain immutable."
+  ],
+  "next": "Use the verified cohort-origin coverage to resolve the remaining host-origin gaps and copied-source/notice questions, extend family and near-duplicate evidence, then count finite eligible supply. Keep source-use decisions separate from host-byte identity and preserve unresolved outcomes."
+}

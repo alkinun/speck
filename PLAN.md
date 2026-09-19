@@ -89,7 +89,11 @@ historical; do not repeat the completed pilot because a preparation document sti
    Page, template and component stylesheets join the previously recorded file roles. Original source labels, weights
    and document boundaries remain intact; no correctness or training eligibility follows from reading.
    Installed Arcade/stringutils identities are verified; stringutils also matches its published wheel.
-   Complete broader lineage discovery and unresolved notice/revision checks using the existing
+   The [notice follow-up](experiments/corpus-audit/code-notice-provenance.json) verifies seven new
+   host origins and reconfirms one; linked evidence now covers 18/104 unheld Stack-Edu and 26/70
+   unheld Stack v3 records. Eclipse notices distinguish code from non-code licenses; Java/template
+   source-use questions remain unresolved. Complete broader lineage and remaining notice/revision
+   checks using the existing
    [qualification packet](experiments/main-data/QUALIFICATION.md#next-bounded-data-packet); record
    natural-code and verified-exercise gates separately. The fixed-cohort reading pass is complete.
    The pair-aware syntax diagnostic passes 14 controls on each of two Python versions and confirms

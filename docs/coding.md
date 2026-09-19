@@ -274,11 +274,21 @@ held records to 44. Its task text was also not displayed or semantically reviewe
 with the intended scoring suite remains unresolved. The Java review additionally records restrictive
 notice wording in a `toothlou/nature` file sampled as `no_license`. Placeholder organization text does
 not settle applicability or permission; source-use review remains open and family partitions are unchanged.
-Two Objective-C files carry generated-style all-rights-reserved headers alongside permissive/Apache-2.0
-dataset metadata. Applicable notices need verification; neither permission nor a conflict is inferred.
-The Ororus stylesheet names Codexin as its author; template origin/notice applicability is unverified.
-The component SCSS contains an Apache-2.0 notice referring to NOTICE files, while dataset labels
-include CC-BY-4.0 and Apache-2.0. This does not establish dual licensing or resolved source use.
+The [notice follow-up](../experiments/corpus-audit/code-notice-provenance.json) verifies all eight
+selected files across four repositories against pinned host bytes and Git blobs: seven new
+origins and one reconfirmed origin. It recovers the Objective-C repository's Apache license alongside
+its existing copyright headers. The complete Java tree yields no matching ancestor notices under
+the declared filename rule; both Java files retain restrictive wording and unresolved source use.
+The Ororus stylesheet and sibling Vue component match their host revision, but template attribution
+and applicable notices remain unresolved; a license in the separate VvvebJs subtree is not applied
+to these records. Eclipse's recovered NOTICE distinguishes Apache-2.0 for code from CC-BY-4.0 for
+non-code, consistent with the sampled TSX/SCSS headers. Its referenced dependency context still
+needs review; repository labels do not establish dual licensing of each file or training admission.
+
+Across the linked cohort-origin evidence, **18/104 unheld Stack-Edu** and **26/70 unheld Stack v3**
+records have Git-verified host origins. The remaining **86 and 44** are evidence gaps, not rejected
+files or source-quality estimates. Host identity alone does not establish copied-source provenance.
+All 218 assessment records, 176 full reads and 44 family holds remain unchanged.
 
 Installed metadata and `RECORD` hashes identify Arcade 2.5.7 and stringutils 0.3.0. Arcade's package
 notice is recovered. The publisher-hash-verified stringutils wheel contains the sampled file, while

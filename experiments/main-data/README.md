@@ -342,8 +342,10 @@ separates inputs available for detailed design from the requirements for launchi
    The [reading closeout](../corpus-audit/stylesheet-cohort-review.json) completes all 174 currently
    unheld records in the fixed 138-file Stack-Edu and 80-file Stack v3 cohorts. The cumulative 176
    full reads include two now-held records; all 44 family holds remain intact. Page, template and
-   component stylesheets retain their original labels, weights and document boundaries. No new
-   or reused verified origins are available for this batch.
+   component stylesheets retain their original labels, weights and document boundaries. The
+   [notice follow-up](../corpus-audit/code-notice-provenance.json) adds seven verified host origins and
+   reconfirms one; linked origin coverage is 18/104 unheld Stack-Edu and 26/70 unheld Stack v3 records.
+   Recovered repository notices clarify context without admitting records.
    Complete broader lineage and remaining notice/revision checks. The controlled syntax diagnostic
    confirms one redaction failure; semantic preservation and source-use/family gates remain unresolved.
    Qualify finite experiment arms from eligible supply before bulk packing. No examples are admitted.

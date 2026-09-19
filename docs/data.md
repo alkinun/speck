@@ -113,9 +113,11 @@ two full reads are now held, so reading and hold counts overlap.
 
 The [coding guide](coding.md#common-cohort-review) summarizes the frozen readings, redaction
 checks and package/family evidence. The final stylesheet readings distinguish page, template and
-component roles. Template attribution, referenced notices, assets and rendered behavior remain
-unresolved; repetition and file length do not independently establish quality or generated provenance.
-No new or reused verified origins are available for this batch. Fixed-cohort reading is complete;
+component roles. The [notice follow-up](../experiments/corpus-audit/code-notice-provenance.json)
+adds seven verified host origins and reconfirms one, recovering Objective-C repository and Eclipse
+notice context. Eclipse declares separate code/non-code licenses; template attribution and restrictive
+Java wording remain unresolved. Linked evidence covers 18/104 unheld Stack-Edu and 26/70 unheld
+Stack v3 host origins. These are coverage counts, not eligible yield. Fixed-cohort reading is complete;
 source-use and broader family qualification remain open.
 Parser success and passing test assertions cannot certify behavior, semantic preservation or eligibility.
 Complete source-use, provenance and family checks in the

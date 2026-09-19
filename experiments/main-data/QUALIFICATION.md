@@ -17,6 +17,14 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
   the GoLLIE examples encountered earlier are exposed material when freezing final scoring coverage.
   No eligible yield, source ranking or admission follows.
 
+- The [notice follow-up](../corpus-audit/code-notice-provenance.json) recovers pinned host bytes for
+  eight purpose-selected records in four repositories: seven new origins and one reconfirmed origin.
+  Four complete trees and four distinct Git-verified ancestor notices recover the Objective-C root
+  license and Eclipse's code/non-code declaration. The Java files and CSS template retain unresolved
+  notice/attribution questions. Across the linked cohort-origin receipts, 18/104 unheld Stack-Edu
+  and 26/70 unheld Stack v3 records have verified host origins; 86 and 44 remain without that evidence.
+  All assessment fields and holds remain unchanged; these counts do not establish eligible yield.
+
 - The [Stack v3 feasibility probe](../corpus-audit/stack-v3-feasibility.json) inventories two
   revisions and samples 2,699 repository rows / 47,826 files from the current corrected pin.
   The [origin follow-up](../corpus-audit/stack-v3-origins.json) links twelve originals to pinned Git
@@ -141,8 +149,10 @@ estimates or comparable quality rates. The next deliverable uses the existing in
 
 Keep the original sampling frames fixed and reconcile roles and unresolved outcomes into the
 inventory. Reading completion does not close any of these gates by itself.
-Resolve observed restrictive notices alongside host/upstream attribution; file headers and dataset
-license metadata do not independently authorize source use. Review embedded application data in
+Prioritize the 86 Stack-Edu and 44 Stack v3 host-origin evidence gaps without substituting records.
+The recovered Eclipse NOTICE explains its code/non-code labels; dependency applicability remains open.
+Resolve the Java restrictive wording and Ororus template attribution alongside host/upstream context;
+file headers and dataset license metadata do not independently authorize source use. Review embedded application data in
 dumps separately from schema quality; a test path or snapshot is not an independent result oracle.
 Use the updated 44-record family holds, including GoLLIE, vendored Pylint and the metadata-identified
 LeetCode collection and Borealis `svcomp` record. The metadata-only holds are conservative, not proven
