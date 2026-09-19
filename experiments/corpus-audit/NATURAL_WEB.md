@@ -90,10 +90,12 @@ Raw corpus text remains outside Git. The original FineWeb stock and frozen pilot
 
 The [follow-up](WEB_INVENTORY_DCLM.md) closes the HQ inventory and now records the completed
 12-shard acquisition: 290,761 documents, a 192-record stratified sample and 24 reviewed texts/excerpts.
-It also adds partial-viewer DCLM previews. Use the observed extraction/template cases to prepare
-source recovery and comparable control checks. Resolve source-use evidence and parent/duplicate
-families while preserving technical and everyday topic coverage.
-Only then measure retained unique tokens under proposed filters. DCLM still needs a comparable
-source-file-based packet before freezing source allocations. The working 25% selected-web
+It also adds partial-viewer DCLM previews. The [extraction follow-up](web-filter-validation.json)
+now recovers all three matching archived captures and compares frozen flags on 32 previously
+unreviewed documents. False alarms and missed defects keep those flags review-only. The next
+bounded packet quantifies natural-code supply; web source-use evidence, parent/duplicate families
+and source-aware repair remain open while preserving technical and everyday topic coverage.
+Only then count accepted unique tokens. DCLM needs comparable source-file evidence for any
+concrete coverage/eligibility decision before freezing allocations. The working 25% selected-web
 share remains a hypothesis; this inspection neither changes it nor establishes its 100B-token
 eligible-bank target.

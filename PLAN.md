@@ -57,6 +57,7 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 | Natural-code audit | 16 exact upstream matches, 13 with license-notice evidence; ten files clear preliminary lineage/syntax/benchmark checks | [Cohort receipt](experiments/corpus-audit/natural-code-cohort.json); zero new training admissions |
 | Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
 | Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions or full token census |
+| Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
 | Other data preparation | 6.799B retained source tokens before joint eligibility; 500K assistant rows inventoried; finite tool-aware SFT rehearsal | [Supply](experiments/pilot/supply.json), [assistant contract](docs/assistant.md); not main-run qualified supply |
 
 The [timing measurements](experiments/qualification/timing-result.json) additionally cover saves,
@@ -77,11 +78,14 @@ historical; do not repeat the completed pilot because a preparation document sti
    prioritizes newer UltraFineWeb HQ for its page/WARC metadata, with FineWeb-Edu as control;
    the [full HQ inventory and DCLM previews](experiments/corpus-audit/WEB_INVENTORY_DCLM.md)
    now include the completed 12-shard census (290,761 documents), 192-record stratified sample and
-   24-document/excerpt review. Recover source context for the identified missing-graphic/list and
-   mixed-page cases, then test extraction/template checks against FineWeb-Edu; no stricter score
-   cutoff is selected. Keep DCLM as an independent coverage candidate and synthetic L3 separate.
-   Review math correctness and source overlap, then assistant reasoning/tool outcomes and missing long-example tails. Work
-   one bounded packet at a time; close code supply feasibility before bulk packing.
+   24-document/excerpt review. The [extraction follow-up](experiments/corpus-audit/web-filter-validation.json)
+   recovers all three matching captures and compares frozen flags on 32 fresh documents. Keep
+   flags review-only and the HQ cutoff unchanged. Next, quantify natural-code supply by language
+   and role, source/test/docs linkage and exclusion coverage; close supply feasibility before
+   bulk packing. Web source-use, family/near-duplicate exclusions and usable-token counts remain
+   open. Acquire DCLM originals for a concrete remaining coverage question; keep synthetic L3
+   separate. Then review math correctness/overlap and assistant reasoning/tool outcomes and
+   missing long-example tails, one bounded packet at a time.
 3. **Prepare the single-model GH200 packet before access.** Bind current source and exact inputs,
    checks, workload sizes, measurements and stop conditions. Rebuild the historical transfer bundle;
    do not treat its old source commit as the current release. No paid run starts from this outline.

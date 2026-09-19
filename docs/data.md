@@ -84,6 +84,11 @@ completes the HQ listing and the 959 MB acquisition: 290,761 documents, 192 stra
 cutoff selection open. Both DCLM variants expose URLs and
 document IDs in their partial viewer indexes. DCLM-Edu's integer and continuous score cutoffs
 select different records; any stricter candidate must name the exact field and operator.
+The [extraction follow-up](../experiments/corpus-audit/web-filter-validation.json) joins three
+problematic HQ texts to their exact archived captures, confirming missing text and mixed page
+boundaries alongside image dependency. A fresh 32-document comparison shows false alarms and
+missed defects; all candidate flags remain review-only. Sample token retention is measured,
+but eligible full-corpus supply and a better score cutoff remain unestablished.
 
 The [coding plan](coding.md) now prioritizes a checked-exercise comparison. A pinned, bounded
 UltraData-Code preview establishes schema and serialization questions, not training eligibility
@@ -200,13 +205,13 @@ can represent the same underlying information. Review source-use evidence per co
 
 ### Next deliverables and decisions
 
-1. Use the completed twelve-shard HQ audit to recover source context for missing graphics/lists
-   and mixed-page boundaries, then compare extraction/template checks with retained FineWeb-Edu.
-   Resolve source-use evidence, source families and overlap before counting accepted unique tokens.
-   Keep the score cutoff unfrozen; the audit measures document/byte retention, not token yield.
-   Extend DCLM's partial-viewer previews into comparable source-file evidence before freezing
-   allocations; neither the default
-   UltraFineWeb split nor a stricter score cutoff inherits HQ's provenance or a quality advantage.
+1. Following the completed web source recovery and review-flag comparison, quantify natural-code
+   supply by language and practical role, source/test/docs linkage and exclusion coverage.
+   For web, resolve source-use evidence, source families, overlap and source-aware extraction
+   repair before counting accepted unique tokens. Keep candidate flags review-only and the HQ
+   cutoff unchanged. Exact sample-token retention is not full-corpus yield. Extend DCLM previews
+   into comparable source-file evidence only for a concrete coverage/eligibility question before
+   freezing allocations; no unqualified split or stricter cutoff inherits a quality advantage.
 2. In assistant preparation, audit retained code/math reasoning and tool trajectories, including
    useful brief reasoning. Include complete examples in each available length band: <=4K, 4–16K,
    16–32K and 32–128K. Keep longer examples separately. Prioritize answer correctness, useful

@@ -108,8 +108,13 @@ retains URLs and WARC identities throughout the inspected shards. Default Englis
 quality superiority and eligible supply remain unestablished. Eleven assistant-reviewed examples
 include missing equations despite a high classifier score, template-heavy text and navigation
 tails. The [follow-up inventory and DCLM preview](../corpus-audit/WEB_INVENTORY_DCLM.md) now
-closes the HQ inventory at 6,000 files / 477.97 GB compressed and pins a 959 MB, 12-shard sample
-across the full inventory. It also distinguishes DCLM-Edu's `edu_int_score >= 3` from
+closes the HQ inventory at 6,000 files / 477.97 GB compressed and completes a 959 MB, 12-shard
+sample across the full inventory: 290,761 documents, 192 sampled and 24 reviewed texts/excerpts.
+The [extraction follow-up](../corpus-audit/web-filter-validation.json) recovers three exact
+archived captures and compares flags on 32 fresh documents. Candidate flags remain review-only;
+source-aware repair, source eligibility and usable-token counts remain open. Natural-code supply
+by language/role and exclusion coverage is the next bounded packet.
+The inventory follow-up also distinguishes DCLM-Edu's `edu_int_score >= 3` from
 `edu_score >= 3`; the two predicates retain different preview records. DCLM viewer indexes
 are partial, so their samples establish schema/content questions only. Score/domain-stratified
 comparison, source-use review and joint deduplication remain open. No corpus-wide quality

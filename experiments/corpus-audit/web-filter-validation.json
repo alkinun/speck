@@ -1,0 +1,734 @@
+{
+  "format": "speck_web_filter_validation",
+  "date": "2026-09-19",
+  "status": "bounded_source_recovery_and_review_flag_comparison_complete",
+  "repository_revision_before_changes": "8a57eb27ceb132303d7b176809d3662b49f9f1fc",
+  "training_admitted": false,
+  "eligible_tokens_established": 0,
+  "score_cutoff_changed": false,
+  "production_filters_changed": false,
+  "gpu_hours": 0,
+  "parent_receipts": [
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/web-hq-stratified.json",
+      "bytes": 28978,
+      "sha256": "2c508679bfb7340799e99c77f8bbbf97d29957c5511829f0e07318647bd5d024"
+    },
+    {
+      "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/result.json",
+      "bytes": 6744,
+      "sha256": "f3a7bb554ebdfc3ad245063ee6cc0565541d1995358228cf51f089c31136e65e"
+    }
+  ],
+  "script": {
+    "path": "/home/alkin/Desktop/speck/experiments/corpus-audit/audit_web_filters.py",
+    "bytes": 7077,
+    "sha256": "d742adeaa0da0876d772c1801c97b345beefef60236076e9301f2bfc3daf39a9"
+  },
+  "artifacts": [
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/analysis/samples.jsonl",
+      "bytes": 566701,
+      "sha256": "e503e851c88cd84d171a3f59ce42b72bc2233cd185e9a3885f8f217d4c62ac0a"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/analysis/summary.json",
+      "bytes": 3248,
+      "sha256": "005e3bd2337450c31566a4493be01180c1cfcb76c9ed81799a25544a9962b34e"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/capture-verification.json",
+      "bytes": 3174,
+      "sha256": "b7790d8e3b3e8a1bdd052b5f59473cc9427e3140838b3c08fe0dd8956cf2b1e2"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-11-capture.html",
+      "bytes": 64705,
+      "sha256": "e95aaa13e8e96256e5e115ab4066855dbd67dcc1623143ad4489b9c996564a4a"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-11-index.body",
+      "bytes": 484,
+      "sha256": "f25e183a104fc4d289388ca24514bd798156429b9e98d44cdad79d4f00ac5c80"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-11-live.body",
+      "bytes": 61476,
+      "sha256": "cd7c6ca7754e62a338e247c80536ef77be1e0a02f9cd479e60f32829788775de"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-11-visible.txt",
+      "bytes": 15149,
+      "sha256": "c08ddf25a880cb5e5209e649fc2fb28f387d27a3d959a8668b4de8f1a6323ae5"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-11.warc.gz",
+      "bytes": 16155,
+      "sha256": "051ceb37500d3f252d0e454eecc7f5b5f517eee4936d2911be1ac293561b6a64"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-22-capture.html",
+      "bytes": 634538,
+      "sha256": "b68994745532ab162907d3fda1837ee829ebe71e0d4a3372af3757cfe4aa98c7"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-22-index.body",
+      "bytes": 559,
+      "sha256": "bca9468a8095e121fa5293d0c27f4aca025d68ef94f2c20f6aa77b57049a1df8"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-22-live.body",
+      "bytes": 576218,
+      "sha256": "a9d2cc3fa39d9c7f3cbd5c8f7644c244ff370417b359b7895fff2a6ccf090d2b"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-22-visible.txt",
+      "bytes": 93799,
+      "sha256": "d11f189d2e540b662811c6f41ef4107ac0cd8a1fb907219d3b018b783cac802e"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-22.warc.gz",
+      "bytes": 112481,
+      "sha256": "a7b2d74953a3b7bd7bfbacf8abf6b451d4ce7756779dc208b2e20f8fffca2e64"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-7-capture.html",
+      "bytes": 61568,
+      "sha256": "084d379297afc63e3d6b36c447a217a6a29ed3569e5f9b326531f9acf40c9951"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-7-index.body",
+      "bytes": 524,
+      "sha256": "0fa4ce445a0347d5e2c4eaa6fe8b69a98163915e46364f0ad715f914835e1c72"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-7-live.body",
+      "bytes": 66782,
+      "sha256": "da6eb18ccd2cc725ae735faa0e88a0107f280f63d6049c745913db2e2a1984c4"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-7-visible.txt",
+      "bytes": 4305,
+      "sha256": "328875ba99dd4f8dcec252d0ec7993af6932d37893755ad8ccb9e0387e4681f8"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/case-7.warc.gz",
+      "bytes": 19307,
+      "sha256": "ff21ccb955d1cebdaa2852d99b7442e9ba0ace75c290fbafee0aaf80974cdb5c"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/control/plan.json",
+      "bytes": 463,
+      "sha256": "4d5472f359daf98ad01e5bdd81eb9bcb7998212ba15801d4529e599a85d362e5"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/control/report.json",
+      "bytes": 2816,
+      "sha256": "7d396f6aee7045f6c773e2dcb6e9d8cc11c811ac185bfdf91973a200b6c66316"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/control/samples.jsonl",
+      "bytes": 309632,
+      "sha256": "546d6046e10d0229a36ed22b4a2bbde228a05e6cc8750a77e524f9591ef613ca"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/control-plan.json",
+      "bytes": 463,
+      "sha256": "5cb6fdaeed6b6d4f7ee9bca492f212f5ecdd71c1d98cef8fbe9c339ff80cd878"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/plan.json",
+      "bytes": 2087,
+      "sha256": "9f44ec16c9eba97580a846ac0fea51f4f86a6f06f9c24a8c6f829a27ce92903c"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/prepare_review.py",
+      "bytes": 1172,
+      "sha256": "2e1ac65bc8864818167710636fce71844148947d7d3ea2544f1e24fbce2d6566"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/record_review.py",
+      "bytes": 6795,
+      "sha256": "adfef8d0d910ae7fc952d4f405d8584768cb03dfb2920e29313124a3985c6450"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/recover.py",
+      "bytes": 3982,
+      "sha256": "2d80aca9d1bb7b349b9ede47cb3d765a9ec5eed23bec7b609ca690df76eeba24"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/recovery.json",
+      "bytes": 11483,
+      "sha256": "c5a2ebf31ed6507c2a2f119d3c8ab103bf2dffb6cf9751457b22725d30c795c1"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/replay/samples.jsonl",
+      "bytes": 566701,
+      "sha256": "e503e851c88cd84d171a3f59ce42b72bc2233cd185e9a3885f8f217d4c62ac0a"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/replay/summary.json",
+      "bytes": 3246,
+      "sha256": "1734d28d2e8dd38756737cc227a43e5fd0efeefacafec963abc860ff019b04a1"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/review-observations.json",
+      "bytes": 16135,
+      "sha256": "531936a759ae8a3a513d38c6a0020d9d7a8ef2bf8e0125d32ebf3b72cb3a461b"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/review-packet.json",
+      "bytes": 134389,
+      "sha256": "843768ad6f5e15afaf4f5a6ebf4510931b0ffbe1e04b4e4767ef2af18fc72001"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/source-context.json",
+      "bytes": 8027,
+      "sha256": "d134427e547153a46ca6710cd4fb993dccb22e72a062270d7294fd30585c10b4"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/validate.py",
+      "bytes": 2535,
+      "sha256": "a5fa16a200c546504e8051f126844c51e8089701f71ebf13e1a7bb21025d5f8d"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/validation.json",
+      "bytes": 1168,
+      "sha256": "f4e526f89bebc81c9e77379bf0e2c0d7ee0ba73c35b0495b1b459045c0f7acf3"
+    },
+    {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/verify_captures.py",
+      "bytes": 3862,
+      "sha256": "a5ee93681bdb0a994e95bd59c436214b241e0d54b9fcca42ed05dc6ac8534a83"
+    }
+  ],
+  "source_recovery": {
+    "cases": [
+      {
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-33-part-0009-of-1000.parquet:16920",
+        "url": "https://documentation.flowwright.com/en_US/all-steps/clsgoogletranslate-step",
+        "warc_date": "2025-08-09T19:29:26Z",
+        "warc_record_id": "<urn:uuid:b3b7df65-18fd-4924-9663-09f61901214f>",
+        "warc_sha256": "ff21ccb955d1cebdaa2852d99b7442e9ba0ace75c290fbafee0aaf80974cdb5c",
+        "html_sha256": "084d379297afc63e3d6b36c447a217a6a29ed3569e5f9b326531f9acf40c9951",
+        "verified_identity_payload_and_block_digests": true,
+        "finding": "image_dependency_and_missing_text_blocks",
+        "observation": "The captured tutorial has four article images without nonempty alt text; no image/OCR recovery was attempted. Six of thirteen list items (input/return definitions) are also absent from the corpus text. Re-extraction can restore those definitions, but does not by itself recover graphical configuration values.",
+        "counts": {
+          "article_list_items": 13,
+          "list_items_present_in_corpus": 7,
+          "article_images": 4,
+          "images_with_nonempty_alt": 0
+        }
+      },
+      {
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-38-part-0312-of-1000.parquet:21334",
+        "url": "https://www.strove.ai/blog/intermittent-fasting-fab-or-fad",
+        "warc_date": "2025-09-09T19:11:38Z",
+        "warc_record_id": "<urn:uuid:31625df9-ccce-4984-8bf2-46dcbc57741f>",
+        "warc_sha256": "051ceb37500d3f252d0e454eecc7f5b5f517eee4936d2911be1ac293561b6a64",
+        "html_sha256": "e95aaa13e8e96256e5e115ab4066855dbd67dcc1623143ad4489b9c996564a4a",
+        "verified_identity_payload_and_block_digests": true,
+        "finding": "list_extraction_loss",
+        "observation": "All fourteen list items in the captured article are absent from the corpus serialization, while surrounding prose remains. This establishes a text extraction omission against the matching capture; it does not validate the health claims.",
+        "counts": {
+          "article_list_items": 14,
+          "list_items_present_in_corpus": 0,
+          "article_images": 0,
+          "images_with_nonempty_alt": 0
+        }
+      },
+      {
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-51-part-0634-of-1000.parquet:12873",
+        "url": "https://www.studyguidemaker.com/Contract%20Law/study-guide/b0d2134e-8748-4501-be46-05524aa0d885",
+        "warc_date": "2025-12-13T07:55:21Z",
+        "warc_record_id": "<urn:uuid:1fff98ef-9232-4ce6-b1eb-c9c10e1a5171>",
+        "warc_sha256": "a7b2d74953a3b7bd7bfbacf8abf6b451d4ce7756779dc208b2e20f8fffca2e64",
+        "html_sha256": "b68994745532ab162907d3fda1837ee829ebe71e0d4a3372af3757cfe4aa98c7",
+        "verified_identity_payload_and_block_digests": true,
+        "finding": "page_boundary_contamination",
+        "observation": "Captured HTML explicitly separates Related Study Guides, including macroeconomics and compliance teasers, from the contract-law material. The corpus merges those sections and upload UI into one document. No factual/legal validation or whole-document semantic review was performed.",
+        "counts": {}
+      }
+    ],
+    "compressed_warc_range_bytes": 147943,
+    "join": "CDX exact URL/timestamp -> bounded HTTP 206 range -> exact WARC URL/date/record ID; independently verified WARC SHA1 block and payload digests. Dataset filename has an extra eight-hex suffix; identity was not inferred from filename alone.",
+    "failure": "First study-page CDX request returned HTTP 503; one retry succeeded. Live HTML is retained only as supplementary context, not evidence of the archived content."
+  },
+  "comparison": {
+    "selection": "HQ: minimum SHA256(speck-web-filter-review-v1:id) in each of 16 score/byte-length cells after prior review/sample text exclusions. Control: fresh seed 2026091901, four per length band from retained FineWeb-Edu stock, checked for overlap with all earlier samples.",
+    "rules": [
+      "visual_reference: shown/illustrated/pictured/displayed within 100 same-line characters of image/graphic/screenshot/figure, or that noun followed by below/above",
+      "adjacent_colon_lines: consecutive nonempty lines both ending in colon",
+      "upload_ui_phrase: click to upload, drag and drop, choose file, or select a file"
+    ],
+    "rules_frozen_before_panel_reading": true,
+    "documents": 32,
+    "sample_tokens_with_bos_eos": 125453,
+    "hypothetical_retention": {
+      "fineweb_edu": {
+        "adjacent_colon_lines": {
+          "documents_kept": 15,
+          "documents_total": 16,
+          "tokens_kept_with_bos_eos": 51438,
+          "tokens_total_with_bos_eos": 73237
+        },
+        "baseline_union": {
+          "documents_kept": 16,
+          "documents_total": 16,
+          "tokens_kept_with_bos_eos": 73237,
+          "tokens_total_with_bos_eos": 73237
+        },
+        "candidate_union": {
+          "documents_kept": 15,
+          "documents_total": 16,
+          "tokens_kept_with_bos_eos": 51438,
+          "tokens_total_with_bos_eos": 73237
+        },
+        "upload_ui_phrase": {
+          "documents_kept": 16,
+          "documents_total": 16,
+          "tokens_kept_with_bos_eos": 73237,
+          "tokens_total_with_bos_eos": 73237
+        },
+        "visual_reference": {
+          "documents_kept": 16,
+          "documents_total": 16,
+          "tokens_kept_with_bos_eos": 73237,
+          "tokens_total_with_bos_eos": 73237
+        }
+      },
+      "hq": {
+        "adjacent_colon_lines": {
+          "documents_kept": 15,
+          "documents_total": 16,
+          "tokens_kept_with_bos_eos": 46347,
+          "tokens_total_with_bos_eos": 52216
+        },
+        "baseline_union": {
+          "documents_kept": 16,
+          "documents_total": 16,
+          "tokens_kept_with_bos_eos": 52216,
+          "tokens_total_with_bos_eos": 52216
+        },
+        "candidate_union": {
+          "documents_kept": 15,
+          "documents_total": 16,
+          "tokens_kept_with_bos_eos": 46347,
+          "tokens_total_with_bos_eos": 52216
+        },
+        "upload_ui_phrase": {
+          "documents_kept": 16,
+          "documents_total": 16,
+          "tokens_kept_with_bos_eos": 52216,
+          "tokens_total_with_bos_eos": 52216
+        },
+        "visual_reference": {
+          "documents_kept": 16,
+          "documents_total": 16,
+          "tokens_kept_with_bos_eos": 52216,
+          "tokens_total_with_bos_eos": 52216
+        }
+      }
+    },
+    "baseline": "Existing corpus_audit.diagnostic_flags unchanged; zero flags in this 32-document panel.",
+    "candidate_result": "One adjacent-colon flag per source; other candidate flags have zero evaluation hits. All three development cases trigger their designed flag, which is not independent validation.",
+    "review": {
+      "reviewer": "assistant; not independent human annotation",
+      "documents": 32,
+      "full_text_documents": 16,
+      "excerpt_documents": 16,
+      "factual_verification": false,
+      "training_admitted": false,
+      "tuned_on_this_panel": false,
+      "observations": [
+        {
+          "index": 0,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-51-part-0634-of-1000.parquet:837",
+          "source": "hq",
+          "sha256": "94f48d491c15fc190e5b5fbf47dd46652c11a62e0f4ac4821f770bae5d30cbfe",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [],
+          "topic": "Meal-delivery software comparison",
+          "observation": "Promotional framing and generic feature/ROI assertions; excerpts preserve lists. No candidate flag; density is outside these checks."
+        },
+        {
+          "index": 1,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-43-part-0196-of-1000.parquet:23251",
+          "source": "hq",
+          "sha256": "b69d8c22ee65fd4f67642ca12e78443a802649026da68fa638243b962974926d",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Mitochondrial research forum snippet",
+          "observation": "Opens with an unexplained personal reference and describes a study without a recoverable citation in the text. No candidate flag."
+        },
+        {
+          "index": 2,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-51-part-0634-of-1000.parquet:13900",
+          "source": "hq",
+          "sha256": "4acadac6df883c869546178a449a4b6c03cdbaecabf7069db03e8f96d448befe",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [],
+          "topic": "Purchasing management",
+          "observation": "Definitions and numbered practical functions are readable in the excerpts; no obvious missing list there. Preserve as a coverage candidate."
+        },
+        {
+          "index": 3,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-38-part-0951-of-1000.parquet:9116",
+          "source": "hq",
+          "sha256": "6be3cbb2ef08b266faba332db6c0055eb36651d0ac962982ba2216b48ad74516",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Business branding and UX",
+          "observation": "Complete argumentative marketing article; broad unsupported behavioral assertions. No visible extraction gap in the full text."
+        },
+        {
+          "index": 4,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-51-part-0634-of-1000.parquet:11132",
+          "source": "hq",
+          "sha256": "b0b599905af08a870a7c2e7199bb20ff73aac588d548ea57dfdc1fd2efa9d8b5",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [],
+          "topic": "Cattle genomics FAQ",
+          "observation": "Named-speaker answers remain readable despite video/navigation references. Media references do not alone make the text unusable."
+        },
+        {
+          "index": 5,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-43-part-0196-of-1000.parquet:7064",
+          "source": "hq",
+          "sha256": "1e8a0850464a7bc6bcc17c890d8e889cc1a708ac2eae22540dc66b086764e70e",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Water-play structure specification",
+          "observation": "Short product promotion contains concrete capacity and feature numbers. Treat as product/specification coverage, not independently checked facts."
+        },
+        {
+          "index": 6,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-30-part-0954-of-1000.parquet:7023",
+          "source": "hq",
+          "sha256": "d71e4f7ff0e5b8c3cf478f16014b3556a1a6003b6173d0e216a1deea9d9606e1",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [
+            "adjacent_colon_lines"
+          ],
+          "topic": "Bodybuilding nutrition article",
+          "observation": "Flag fires on a section heading followed by a paragraph introducing a populated bullet list: a false alarm for a missing list. Tail also contains unrelated recommendations; claims are unverified."
+        },
+        {
+          "index": 7,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-38-part-0951-of-1000.parquet:20391",
+          "source": "hq",
+          "sha256": "b3f41f63b25901a4e4e519d24e5742a9c39ac230e3fd7224b043896803318a65",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Treestand safety article",
+          "observation": "Full text has explanatory lists with apparel captions and product links mixed in. Neither flag family detects those boundaries; safety assertions are unverified."
+        },
+        {
+          "index": 8,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-47-part-0551-of-1000.parquet:107",
+          "source": "hq",
+          "sha256": "3ebf2ff8abd3ee4c98aa492b4ea851ef86b483be53ad05c26225c67f01aec797",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [],
+          "topic": "Cold-formed steel construction",
+          "observation": "Excerpts contain detailed engineering/commercial assertions and a summary list. No flag, but factual reliability and repetitive promotion remain separate questions."
+        },
+        {
+          "index": 9,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-30-part-0185-of-1000.parquet:16541",
+          "source": "hq",
+          "sha256": "6fff87a207f4265d5e8813e5a9c8e069e83643d74aa8d80e3cc1c999269db88c",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Precision forging",
+          "observation": "Awkward and sometimes unclear wording; ends with a trailing title-like line. No flag. Fluency/completeness concerns need a separate review."
+        },
+        {
+          "index": 10,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-33-part-0009-of-1000.parquet:12086",
+          "source": "hq",
+          "sha256": "f93cdbf1a2e86b2762f75ea9e371dc2b071c7e8f08559e34a0a111df8c3ffff4",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [],
+          "topic": "Manufacturing incentive explainer",
+          "observation": "Excerpts mix policy description with related links and repeated FAQ material. No flag; date-sensitive claims are unverified."
+        },
+        {
+          "index": 11,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-43-part-0212-of-1000.parquet:7500",
+          "source": "hq",
+          "sha256": "5f2a542a2e5a29abe254eb1efcee046dbace3c25c339c80824eb1ffee555a75d",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Mental-health software marketing",
+          "observation": "Complete promotional listicle with medical, policy and AI assertions; lists are present. No flag does not establish factual quality."
+        },
+        {
+          "index": 12,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-30-part-0185-of-1000.parquet:14415",
+          "source": "hq",
+          "sha256": "3ea32431d5001baf5ab366f2fc4cf52e6503a3034fcc0dd9bb90d9f87f33c3e5",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [],
+          "topic": "Metal bonding adhesives",
+          "observation": "Technical vocabulary and coherent topic, with formulaic promotional framing in excerpts. Density and repetition cannot be established from head/tail alone."
+        },
+        {
+          "index": 13,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-43-part-0196-of-1000.parquet:24420",
+          "source": "hq",
+          "sha256": "a81cfd331d230e5e6dab522e974205dbf238c2e066e8fe20117c739d1569e183",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Literary theory book description",
+          "observation": "Coherent synopsis and author background. Keep humanities coverage as a candidate; no visible extraction gap."
+        },
+        {
+          "index": 14,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-43-part-0212-of-1000.parquet:21212",
+          "source": "hq",
+          "sha256": "c0a25f02533b82aa2f2948ea6cc29babdca02d312f1795005cfdfc606511cad3",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [],
+          "topic": "Microdosing explainer",
+          "observation": "Excerpts contain broad therapeutic claims and lists. No flag; factual verification is separate and was not performed."
+        },
+        {
+          "index": 15,
+          "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-30-part-0185-of-1000.parquet:19997",
+          "source": "hq",
+          "sha256": "a7f604700023493a0a5466e18626c32ade30fef4d7ed37c9a99ee013a900aea6",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Employee coaching software",
+          "observation": "Full article repeatedly states generic benefits. Lists are intact; no flag. Review information density separately."
+        },
+        {
+          "index": 16,
+          "id": "fineweb_edu:72547",
+          "source": "fineweb_edu",
+          "sha256": "a402b3fc121e3b0162a273b89939dd3f47ea42ef40887567a442939b7b4447f2",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [
+            "adjacent_colon_lines"
+          ],
+          "topic": "Multi-post personal/political blog",
+          "observation": "Flag contexts include absent link targets and consecutive introductions before intact quotations/list items. Head/tail span unrelated posts. Useful boundary/context-review signal, not proof that whole-document rejection or a missing-list rule is correct."
+        },
+        {
+          "index": 17,
+          "id": "fineweb_edu:98866",
+          "source": "fineweb_edu",
+          "sha256": "00ebb1f7cc5fd30443b8e549b26412b370bda69fc90e8c71b6e45f7652737b29",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [],
+          "topic": "Galapagos reference article",
+          "observation": "Encyclopedia-style prose, infobox and bibliography in excerpts. Check shared source family with wiki stock before counting independent coverage."
+        },
+        {
+          "index": 18,
+          "id": "fineweb_edu:187263",
+          "source": "fineweb_edu",
+          "sha256": "e505a434c18339f4b33a084f7218ddec9f751e044ed7a2feff0504319c51b0e5",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Stroke-centre personal article",
+          "observation": "Coherent personal report with a source link and time-sensitive medical assertions. No extraction issue seen in full text; assertions unverified."
+        },
+        {
+          "index": 19,
+          "id": "fineweb_edu:259975",
+          "source": "fineweb_edu",
+          "sha256": "2b56608959b5ad6d4145404caf0711973ff953bf9456b6c4876f5e7a22f17ab9",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Yellowstone video transcript",
+          "observation": "Narrative transcript remains useful as text despite video metadata and an empty date field. Do not reject merely for media references."
+        },
+        {
+          "index": 20,
+          "id": "fineweb_edu:382219",
+          "source": "fineweb_edu",
+          "sha256": "04b1a372fae1ae21e6beae7e02e9b0ad9c52944770df9e319417b84a8020d489",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Portuguese revolution commemoration",
+          "observation": "Coherent short historical/promotional narrative. No visible extraction gap; claims unverified."
+        },
+        {
+          "index": 21,
+          "id": "fineweb_edu:490128",
+          "source": "fineweb_edu",
+          "sha256": "c45cb17634ca83243166a364a77e615a2c115aff2837cf3f60efa21e5089b0d4",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Architect biography",
+          "observation": "Coherent short biographical passage, although full name/title is absent from this serialization. No candidate flag."
+        },
+        {
+          "index": 22,
+          "id": "fineweb_edu:521368",
+          "source": "fineweb_edu",
+          "sha256": "fdc53d3bf6c93f42cfb49a918c3fb567e21b2ecaed3153cefc64ff4abbae5e45",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Women in STEM profile",
+          "observation": "Short profile teaser, rather than full career account. No obvious dangling list; completeness relative to source remains unknown."
+        },
+        {
+          "index": 23,
+          "id": "fineweb_edu:554000",
+          "source": "fineweb_edu",
+          "sha256": "cc4a4bc965ffe95aca9928a904e565736df329fbdba50203b60a6c895ca73877",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Sokcho travel index",
+          "observation": "Short country background followed by a large blog/date/photo listing. Obvious density/boundary concern missed by both flag families."
+        },
+        {
+          "index": 24,
+          "id": "fineweb_edu:555909",
+          "source": "fineweb_edu",
+          "sha256": "c217823f3b5dee7e05c5d20e7eb070682c1c65b4af2f863c0519bd87aa515ef8",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [],
+          "topic": "Meteor sound research history",
+          "observation": "Substantive specialist text with broken citation references and truncated navigation in excerpts. Missed by the candidate checks."
+        },
+        {
+          "index": 25,
+          "id": "fineweb_edu:921949",
+          "source": "fineweb_edu",
+          "sha256": "8f2a1c3740bcfa3567c5fa50802d8349a63b3852040ca985cbac4d8d0cd7dcaa",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [],
+          "topic": "Myanmar annual human-rights report",
+          "observation": "Substantive dated reporting mixed with navigation; list header/value alignment appears incomplete in excerpts. No flag."
+        },
+        {
+          "index": 26,
+          "id": "fineweb_edu:955967",
+          "source": "fineweb_edu",
+          "sha256": "c779a224e57fadf0c8dfa331697bf07c98d5d7fa98b99458606ff396a151e11b",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [],
+          "topic": "Roman-history text with unrelated material",
+          "observation": "Excerpts mix scholarly prose and OCR-like damage with unrelated books, entertainment credits and catalog UI. Clear boundary concern missed by all flags."
+        },
+        {
+          "index": 27,
+          "id": "fineweb_edu:1269772",
+          "source": "fineweb_edu",
+          "sha256": "2b40fc7588198d706f56cf7b543958fef26910c5b2245b0dcdafd07a43182189",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [],
+          "topic": "Gambling policy essay",
+          "observation": "Coherent argumentative essay in excerpts with dated figures/citations; no visible extraction discontinuity there. Factual claims not checked."
+        },
+        {
+          "index": 28,
+          "id": "fineweb_edu:1448540",
+          "source": "fineweb_edu",
+          "sha256": "bcb63b4d583b439b2ba0bbe4a03803780ae7db0b69c4cd4f42297cbf5783e15a",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [],
+          "topic": "Isotope-labeling research and related articles",
+          "observation": "A technical abstract is followed by related-article material; tail shifts to a different medical experiment. Boundary problem missed by all flags."
+        },
+        {
+          "index": 29,
+          "id": "fineweb_edu:1454993",
+          "source": "fineweb_edu",
+          "sha256": "ddaf9a1bb6215735d2cce8293495b83e5d2b7b5ff230fbd5ef586eed8cddd5fd",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Grass biomass repository abstract",
+          "observation": "Useful abstract/citation with repository UI and an explicit noncommercial license statement. Route source-use review separately; this observation is not a license determination."
+        },
+        {
+          "index": 30,
+          "id": "fineweb_edu:1782565",
+          "source": "fineweb_edu",
+          "sha256": "b47921c6daaadd38f49d2e6a24bdd130c1967f5b41d73731ac72d0fab9efc18f",
+          "scope": "full_text",
+          "candidate_flags": [],
+          "topic": "Kipling and war commentary",
+          "observation": "Full text includes a poem introduction followed immediately by a question, with that referenced poem absent. Missing-content/context concern missed by all flags; source capture not recovered."
+        },
+        {
+          "index": 31,
+          "id": "fineweb_edu:1946596",
+          "source": "fineweb_edu",
+          "sha256": "c9baed6c1640286b4a3714a425c85aff84548735bd670c666ec02a9869917ed0",
+          "scope": "head_2500_tail_1000_plus_flag_lines",
+          "candidate_flags": [],
+          "topic": "Immigration organization commentary",
+          "observation": "Excerpts present an attributed but strongly evaluative political account. Distinguish viewpoint from factual verification; no visible extraction gap in the inspected spans."
+        }
+      ],
+      "decision": "Keep all three candidate flags experimental/review-only. No automatic rejection or higher HQ score cutoff. Prefer source-aware list preservation and page-boundary repair, with useful-content retention checked independently."
+    },
+    "control_sampler": {
+      "path": "/home/alkin/Desktop/speck/speck/data/corpus_audit.py",
+      "sha256": "b335a33b90694884e326fae19a802aa0378649b9c543a9441f3f67cde9234aa8"
+    },
+    "control_plan_revision_note": "control-plan.json inherits repository_revision from the original retained-stock plan; it is not the execution revision. This receipt records the current execution base and exact sampler module identity."
+  },
+  "validation": {
+    "offline_samples_identical": true,
+    "offline_summary_identical_except_sample_path": true,
+    "negative_checks": [
+      {
+        "check": "input_hash",
+        "error": "input identity mismatch: hq",
+        "no_output_created": true
+      },
+      {
+        "check": "frozen_script_hash",
+        "error": "rules/selection changed since the plan was frozen",
+        "no_output_created": true
+      },
+      {
+        "check": "previously_sampled_control",
+        "error": "control overlaps previously inspected/sampled material",
+        "no_output_created": true
+      }
+    ],
+    "development_cases_not_evaluation": [
+      {
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-33-part-0009-of-1000.parquet:16920",
+        "candidate_flags": [
+          "visual_reference"
+        ],
+        "baseline_flags": []
+      },
+      {
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-38-part-0312-of-1000.parquet:21334",
+        "candidate_flags": [
+          "adjacent_colon_lines"
+        ],
+        "baseline_flags": []
+      },
+      {
+        "id": "ultrafineweb-l1-en-hq-CC-MAIN-2025-51-part-0634-of-1000.parquet:12873",
+        "candidate_flags": [
+          "upload_ui_phrase"
+        ],
+        "baseline_flags": []
+      }
+    ]
+  },
+  "decision": {
+    "automatic_rejection": "Do not promote any candidate flag to production rejection. HQ flag is a heading/list false alarm; control flag reveals context gaps but not a demonstrated missing-list rule. Unflagged records also have missing content and mixed boundaries.",
+    "provisional_web_recipe": "Keep pinned HQ as qualification candidate, FineWeb-Edu as control, source allocations unfrozen. Hold the three identified serializations for repair/review; do not blacklist their entire domains or infer a better score cutoff.",
+    "next_priority": "Bounded natural-code supply audit: exact retained tokens by language and role, source-family/exclusion coverage, origin/test/docs linkage and acquisition requirements. Close supply feasibility before packing or a paid run.",
+    "remaining_web_gates": "Source-use eligibility, source-family/near-duplicate exclusions, source-aware repair validation, usable unique tokens and model-level comparison. Acquire DCLM originals only for a concrete remaining coverage/eligibility question."
+  },
+  "limitations": [
+    "Equal byte-length quotas and small, different sampling frames do not establish corpus defect rates, source superiority or useful training yield.",
+    "Sixteen full-document and sixteen excerpt reviews by the assistant; uninspected middles and factual accuracy remain unknown.",
+    "Token retention is exact for this frozen sample, including BOS/EOS, not the full acquired shards or released datasets.",
+    "No new semantic classifier, broad template detector, automatic repair, training admission or GPU experiment."
+  ]
+}

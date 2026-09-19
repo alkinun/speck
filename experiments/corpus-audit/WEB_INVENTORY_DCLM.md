@@ -4,7 +4,9 @@
 are complete. The [new receipt](web-hq-stratified.json) binds the results and replayable
 [audit script](audit_web_hq.py). The earlier [inventory/DCLM receipt](web-inventory-dclm.json)
 preserves the complete file inventory, partial-viewer DCLM previews and original acquisition plan.
-This extends the [initial web inspection](NATURAL_WEB.md); no training data is admitted.
+The [source recovery and review-flag comparison](web-filter-validation.json) below completes
+the bounded extraction follow-up. This extends the [initial web inspection](NATURAL_WEB.md);
+no training data is admitted.
 
 ## UltraFineWeb HQ inventory is complete
 
@@ -78,10 +80,10 @@ no independent factual verification, corpus-wide topic proportions or defect rat
   opinion, reference material and checked solutions without rejecting entire nontechnical topics.
 
 **Decision:** retain HQ as a qualification candidate with FineWeb-Edu as control; do not adopt a
-stricter cutoff or freeze source weights from this packet. Next, inspect full texts and recover
-source context for the three extraction cases above, then test extraction/template checks against
-retained FineWeb-Edu. Complete source-family/near-duplicate exclusions and eligibility before
-counting usable tokens. A low exact-duplicate count alone does not establish novel information.
+stricter cutoff or freeze source weights from this packet. The source recovery and review-flag
+comparison below completes the immediate follow-up. Source-family/near-duplicate exclusions and
+eligibility remain necessary before counting usable tokens. A low exact-duplicate count alone
+does not establish novel information.
 
 Replay offline into a fresh external directory:
 
@@ -95,6 +97,67 @@ PYTHONPATH=. .venv/bin/python experiments/corpus-audit/audit_web_hq.py analyze \
 Offline replay reproduced identical sample and reading-packet bytes and all summary fields except
 output paths. Ten focused tests cover corrupt/oversized/truncated downloads and score boundaries.
 Raw corpus/review text stays outside Git; the receipt identifies each reviewed document and scope.
+
+## Archived source recovery and frozen review flags
+
+All three original Common Crawl records were recovered with **147,943 compressed range bytes**.
+Exact URL, capture date and WARC record ID match the corpus metadata; WARC block and payload
+digests also verify. The dataset's WARC filenames carry an extra eight-hex suffix, so the join
+uses record identity rather than a filename guess. One CDX request returned HTTP 503; one retry
+succeeded. Live pages were saved as supplementary context; the findings use the archived captures.
+
+| Case | Finding against the matching capture | Consequence |
+| --- | --- | --- |
+| FlowWright translation tutorial | Four article images have no nonempty alt text; six of thirteen list items, covering inputs/returns, are also absent from corpus text | Restore missing text separately from graphical values; HTML re-extraction alone cannot resolve the image dependency |
+| Fasting explainer | All fourteen article list items are absent, although surrounding prose remains | Confirmed extraction omission; preserving list structure is a concrete repair target |
+| Contract-law study page | HTML separates related-guide teasers and upload UI; the corpus merges them into the document | Recover main-content boundaries; do not treat related material as part of the lesson |
+
+No images were recovered/OCRed and no subject-matter claims were independently verified. Hold
+these three serializations for repair/review, without inferring a whole-domain blacklist.
+
+Three simple candidates were frozen before reading a new panel: visual-reference wording,
+consecutive nonempty lines ending in colons, and upload-interface phrases. The
+[replay script](audit_web_filters.py) keeps them separate from production diagnostics. Evaluation
+uses **16 previously unreviewed HQ documents**, one per score/byte-length cell, and **16 fresh
+FineWeb-Edu documents**, four per byte-length band. The control comes from a new seed over the
+2,097,270-document retained stock, with its original manifest/index/text hashes verified. Exact
+text overlap with earlier samples is excluded; all 32 token counts were recomputed with the
+frozen Mistral tokenizer. Review covers sixteen full texts and sixteen head/tail excerpts plus
+flag-match contexts, not full semantic inspection of every document.
+
+| Source | Documents hypothetically retained if any candidate flag caused rejection | Sample tokens retained, including BOS/EOS | Token share |
+| --- | ---: | ---: | ---: |
+| HQ | 15 / 16 | 46,347 / 52,216 | 88.76% |
+| FineWeb-Edu | 15 / 16 | 51,438 / 73,237 | 70.23% |
+
+Only the colon flag triggers in this evaluation panel. In HQ it flags a heading followed by
+a paragraph introducing an intact list: a false alarm for missing lists. In the control it finds
+context gaps in a multi-post blog, but also consecutive introductions before intact quotations.
+That does not establish a reliable missing-list rule or justify dropping the whole document.
+The other two flags have **zero evaluation hits**, so their usefulness remains unestablished.
+Each catches its corresponding development case; those three cases are not validation results.
+
+Unflagged control excerpts also mix unrelated articles/catalog UI, while a full article introduces
+a poem absent from its text. Existing diagnostics flag none of these 32 records. Thus passing
+either flag set is not evidence of clean extraction. These small, length-balanced samples do not
+estimate corpus defect rates, full-corpus token retention, classifier precision/recall or learning
+quality. The complete 32 observations and artifact identities are in the
+[receipt](web-filter-validation.json); raw text remains outside Git.
+
+**Decision:** keep all candidates review-only, with no stricter HQ score cutoff. Prefer source-aware
+list preservation and boundary repair, then measure useful-content retention on fresh material.
+The bounded web diagnosis is complete; the next packet should quantify **natural-code supply by
+language/role, immutable source linkage and exclusion coverage**. Web eligibility, near-duplicate
+work and usable token counts remain launch gates, not a reason for an indefinite preview loop.
+
+```bash
+PYTHONPATH=. .venv/bin/python experiments/corpus-audit/audit_web_filters.py \
+  /mnt/speck-data/speck/data-qualification-20260919/web-filter-validation/plan.json \
+  /external/fresh-web-filter-comparison
+```
+
+Offline replay reproduces identical sample bytes and summary metrics. Negative checks reject
+changed input hashes, a changed frozen script and control overlap before creating output.
 
 ## DCLM previews: useful fields, limited sampling scope
 
@@ -149,9 +212,9 @@ These are assistant inspection observations, not independent factual checks or s
 rates. Both cards were checked against pinned Git blob IDs. Offline replay reproduced exact
 sample/review bytes, metadata statistics and all 127,694 sample tokens.
 
-The HQ sample above completes the planned acquisition and bounded stratified review. After the
-extraction/source-family follow-up, prepare a comparable source-file-based DCLM packet if its
-source-use review supports proceeding. Exact bounded DCLM
+The HQ sample and source-recovery comparison above complete the bounded web diagnosis. Prepare
+a comparable source-file-based DCLM packet only for a concrete remaining coverage/eligibility
+question after source-use review. Exact bounded DCLM
 file routes are pinned externally: approximately 224 MB for baseline and 2.91 GB for Edu
 (3,129,916,683 bytes combined), before decoding overhead. Those selected files are convenience
 samples, not a complete DCLM inventory or representative comparison design. No bulk acquisition

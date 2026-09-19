@@ -93,6 +93,11 @@ The [inventory/DCLM follow-up](WEB_INVENTORY_DCLM.md) completes the HQ listing (
 and 24 reviewed texts/excerpts in [web-hq-stratified.json](web-hq-stratified.json). Extraction and
 source-family work remains; no stricter cutoff or source allocation is selected. DCLM previews
 use partial viewer indexes; integer and continuous educational cutoffs differ.
+The [extraction follow-up](web-filter-validation.json) recovers all three matching archived
+captures and compares frozen review flags on 16 fresh HQ and 16 fresh FineWeb-Edu documents.
+Missing lists and mixed page boundaries are confirmed; false alarms and missed defects keep
+the flags review-only. Next, quantify natural-code supply and exclusions; web eligibility and
+usable-token counts remain open. See the [current findings](WEB_INVENTORY_DCLM.md).
 
 The 105M-token engineering pilot intentionally uses the six retained sources listed in
 [its frozen recipe](../pilot/README.md#recipe). This is not the final flagship mixture.
@@ -108,7 +113,7 @@ over another source. The DCLM Parquet release has its own revision, distinct fro
 
 | Source | Matching revision prefix | Main-data role and next check |
 | --- | --- | --- |
-| [Ultra-FineWeb](https://huggingface.co/datasets/openbmb/Ultra-FineWeb) | `02c85641e3d1` | Prioritize L1-derived English HQ for recoverable page/WARC origins; 12-shard stratified audit complete. Recover missing graphic/list content and page boundaries; qualify source families, extraction and eligible token supply |
+| [Ultra-FineWeb](https://huggingface.co/datasets/openbmb/Ultra-FineWeb) | `02c85641e3d1` | HQ audit and three archived-capture joins complete; new flags stay review-only. Qualify source-aware repairs, source families and eligible token supply |
 | [DCLM baseline Parquet](https://huggingface.co/datasets/mlfoundations/dclm-baseline-1.0-parquet) | `817d6752765f` | Independent selection approach; URL/ID fields verified in partial-viewer preview. Source-use review and comparable source-file sample remain |
 | [DCLM-Edu](https://huggingface.co/datasets/HuggingFaceTB/dclm-edu) | `dbad8ad71224` | Related filtered candidate; explicitly distinguish `edu_int_score >= 3` from continuous-score cutoff. Do not count parent/filtered overlap as extra supply |
 | [Ultra-FineWeb-L3](https://huggingface.co/datasets/openbmb/Ultra-FineWeb-L3) | `bc3b1ba986fc` | Synthetic candidate for the Cosmopedia comparison; continue the source/answer checks below |

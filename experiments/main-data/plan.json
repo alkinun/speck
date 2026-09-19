@@ -40,7 +40,7 @@
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
         "stretch_exposure_tokens": 100000000000,
-        "qualification_priority": "data/ultrafineweb_l1_en_hq at 02c85641e3d19a854be2e09139c25adaa9518063; twelve-shard stratified audit complete. Recover extraction defects, qualify source families and compare control checks; no cutoff or training admission."
+        "qualification_priority": "data/ultrafineweb_l1_en_hq at 02c85641e3d19a854be2e09139c25adaa9518063; twelve-shard audit and three matching archived captures complete. Frozen 32-document comparison keeps candidate flags review-only. Source-use/family exclusions, source-aware repair and eligible tokens remain open; next bounded packet quantifies natural-code supply. No stricter cutoff or training admission."
       },
       {
         "id": "independent_web",
@@ -366,7 +366,8 @@
     "experiments/corpus-audit/web-variants.json": "13917e1d1e209ea7b913579f12de5093f84e9332f7c413bfc0ffdc0a1fbb1fcf",
     "experiments/corpus-audit/natural-web-inspection.json": "3f27886a4173c64a771beea134f1f383caf5944707cc259c2f4cdb85e1168681",
     "experiments/corpus-audit/web-inventory-dclm.json": "438f5f61aee6087959e461ceb20760dbc0de5d8bb775199a3711a09e617f8906",
-    "experiments/corpus-audit/web-hq-stratified.json": "2c508679bfb7340799e99c77f8bbbf97d29957c5511829f0e07318647bd5d024"
+    "experiments/corpus-audit/web-hq-stratified.json": "2c508679bfb7340799e99c77f8bbbf97d29957c5511829f0e07318647bd5d024",
+    "experiments/corpus-audit/web-filter-validation.json": "b390a64790f1b9ab83f0a54350805275810031e1afc13a5f7724b02127ab7879"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",
