@@ -52,6 +52,17 @@ claimed, finite accepted-token counts, a disjoint evaluation pack and measured G
 launch request must bind the qualified manifests and the existing rights/operations/firewall records.
 The packet does not authorize acquisition, training or a main-run mixture.
 
+## Capability mid-training efficiency packet
+
+[mid-training-study-packet.json](mid-training-study-packet.json) defines the next data-efficiency study. It compares replay/source-only data, targeted raw capability data and grounded augmentation from one useful parent. Executable trajectories are a conditional replacement, not a fourth arm. Validate it offline:
+
+```bash
+PYTHONPATH=. python experiments/main-data/check_mid_training_study.py \
+  experiments/main-data/mid-training-study-packet.json
+```
+
+The packet reserves 150 GPU-hours for mid-training research. Linked SFT/RL convergence and adaptation measurements belong to the separate post-training research reservation and must use the same downstream recipe across retained arms.
+
 The [source-readiness matrix](source-readiness.json) is the companion evidence index. It records the retained inventory, source-of-truth receipts, open gates and blocked arm status for each candidate bank. Validate it offline:
 
 ```bash

@@ -1,0 +1,145 @@
+{
+  "format": "speck_capability_mid_training_study_packet",
+  "format_version": 1,
+  "status": "design_only_not_training_authority",
+  "date": "2026-09-20",
+  "purpose": "Bind a bounded capability mid-training comparison that measures data value and downstream optimization efficiency from a useful parent checkpoint.",
+  "research_basis": "The MidTool review in docs/research.md motivates separating raw source, grounded augmentation and executable trajectory supervision while holding downstream post-training fixed.",
+  "source_of_truth": {
+    "working_plan": {
+      "path": "experiments/main-data/plan.json",
+      "status": "working_targets_not_launch_settings"
+    },
+    "source_readiness": {
+      "path": "experiments/main-data/source-readiness.json",
+      "sha256": "a1863aae08a1ce1993765a57763f8aad2b92dc9b0de62f156979bb8f93829fee"
+    },
+    "qualification_rules": {
+      "path": "experiments/main-data/qualification-rules.json",
+      "sha256": "6279b75e5515a136b795056b6405745b551c3835e7956b551dd1c070bc2310b0"
+    },
+    "data_readiness": {
+      "path": "experiments/corpus-audit/data-readiness.json",
+      "sha256": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549"
+    }
+  },
+  "common_contract": {
+    "parent": "One useful 4K production checkpoint, with model tensors and optimizer state hash-bound before branching. No arm may start without a qualified parent.",
+    "continuation": "A changed-data continuation contract must be implemented and qualified before launch. Do not relabel a data intervention as context extension.",
+    "context_tokens": 4096,
+    "objective": "Next-token prediction with identical serialization, masking and optimizer policy across arms.",
+    "exposure": "Matched complete-update tokens and schedule across arms; report source exposure and replay separately. Mid-training exposure remains part of the 100B working horizon, not an additional allowance.",
+    "initialization": "Arms branch from the same useful parent and preserve the declared optimizer policy. Any cursor reset or optimizer-state change is predeclared and measured.",
+    "downstream": "Use one fixed SFT recipe and one fixed RL feasibility recipe for linked efficiency evaluation. Downstream runs are charged to the 150-hour post-training research reservation, not hidden in this packet.",
+    "evaluation": "Hold out source families and final tests. Report source/domain loss, capability, retention, SFT convergence and early RL adaptation separately.",
+    "accounting": "Count source preparation, teacher/generation, validation, retries, discarded trajectories, training, evaluation and allocated idle time once and by stage."
+  },
+  "arms": [
+    {
+      "id": "replay_control",
+      "role": "Preceding-stage data and broad replay control",
+      "factor": "none",
+      "status": "candidate_only_pending_useful_parent_and_qualified_manifest",
+      "contract": "Use the preceding-stage mixture under the same 4K next-token objective and matched exposure. This controls for continuation compute and parent age."
+    },
+    {
+      "id": "raw_targeted",
+      "role": "Targeted natural capability data",
+      "factor": "source_only",
+      "status": "candidate_only_pending_source_and_family_gates",
+      "contract": "Add qualified code, math, repair and tool-facing documentation with no synthesized QA or trajectories. Keep broad replay and total exposure fixed against the control.",
+      "required_evidence": [
+        "qualified source-use and family manifests",
+        "independent math/code correctness where claimed",
+        "language, task and difficulty coverage",
+        "accepted-token and preparation-cost accounting"
+      ]
+    },
+    {
+      "id": "grounded_targeted",
+      "role": "Context-grounded augmentation over qualified sources",
+      "factor": "grounded_synthesis",
+      "status": "candidate_only_pending_source_teacher_and_validation_gates",
+      "contract": "Add validated source-grounded QA or workflow supervision to the raw targeted route. Preserve the originating context, teacher identity, generation settings and rejection reasons.",
+      "required_evidence": [
+        "source-to-example lineage",
+        "held-out family separation for source and derived records",
+        "schema/context grounding checks",
+        "independent correctness or oracle checks",
+        "teacher, retry and discarded-output cost"
+      ]
+    }
+  ],
+  "conditional_branch": {
+    "id": "executable_trajectories",
+    "role": "Native environment-grounded multi-turn supervision",
+    "status": "conditional_replacement_not_an_extra_arm",
+    "replacement_scope": "May replace grounded_targeted only after tool environments, schemas, turn order, required arguments, responses, recovery cases and verifier reliability are qualified.",
+    "reason": "The 150-hour mid-training reservation cannot support an undeclared fourth arm. Preserve the branch as a recorded revision or later post-training study if environment cost is not affordable.",
+    "required_evidence": [
+      "pinned environment and tool schemas",
+      "valid and deliberately invalid controls",
+      "response/tool grounding and turn-order checks",
+      "nontrivial failure and recovery cases",
+      "rollout, validation and retry cost"
+    ]
+  },
+  "screening": {
+    "maximum_arms": 3,
+    "paired_seed_count": 1,
+    "training_gpu_hours": 75,
+    "per_arm_training_cap_gpu_hours": 25,
+    "order": "Run the replay control and only candidates whose source, derivation and validation gates pass. Protect confirmation and linked downstream evaluation reservations.",
+    "primary_evidence": "Capability and source/domain loss at matched mid-training exposure, with retention and preparation cost.",
+    "efficiency_evidence": "Compare capability per mid-training token and GPU-hour, plus the downstream SFT convergence curve under the fixed recipe.",
+    "failure_rule": "If targeted data does not improve the predeclared endpoint or worsens retention/cost, retain the eligible replay control or record an explicit redesign."
+  },
+  "confirmation": {
+    "arms": 2,
+    "new_paired_seed_count": 1,
+    "training_gpu_hours": 50,
+    "per_arm_per_seed_cap_gpu_hours": 25,
+    "selected_candidate": "One screening candidate, or a documented control-only/inconclusive outcome.",
+    "controls": "Same useful parent identity, declared optimizer policy, exposure, validation, downstream SFT recipe and final-test boundary.",
+    "claim_boundary": "One paired confirmation seed supports a bounded data/optimization result, not a global mixture optimum or guaranteed scaling law."
+  },
+  "support_and_reserve": {
+    "gpu_hours": 25,
+    "includes": [
+      "manifest and lineage checks",
+      "packing and replay checks",
+      "source/domain evaluation",
+      "SFT convergence evaluation packaging",
+      "retries, recovery and allocated idle time"
+    ],
+    "budget_check": "75 screening + 50 confirmation + 25 support = 150 mid-training-research GPU-hours."
+  },
+  "linked_downstream_evaluation": {
+    "budget_owner": "post_training_research_150_gpu_hours",
+    "fixed_sft": "Same SFT data, masks, supervised-token exposure, optimizer, schedule and evaluation identities for every retained mid-training arm.",
+    "rl_feasibility": "Same prompts, environment, verifier, rollout budget and recovery policy; report early adaptation and held-out transfer rather than in-environment reward alone.",
+    "efficiency_outputs": [
+      "SFT loss area and steps to a fixed development target",
+      "Capability at matched SFT tokens and allocated GPU-hours",
+      "Early RL reward adaptation, final held-out transfer and rollout cost",
+      "Teacher, verifier, environment and discarded-output accounting"
+    ],
+    "boundary": "Linked downstream evaluation is required to make an optimization-efficiency claim, but it is not additional mid-training exposure and cannot be silently charged to the 150-hour mid-training reservation."
+  },
+  "required_gates_before_first_arm": [
+    "Useful parent checkpoint, model/optimizer identities and changed-data continuation contract are hash-bound.",
+    "Selected source families pass source-use, exact/near-duplicate, benchmark and held-out partition gates.",
+    "Accepted unique tokens, replay exposure, derivation lineage and preparation cost are finite and recorded.",
+    "Grounded or executable supervision has independent correctness, schema, response and failure checks.",
+    "SFT/RL downstream data, environments, verifiers and evaluation identities are fixed before mid-training results are selected.",
+    "GH200 cost and recovery behavior support the matched horizon within the declared reservation."
+  ],
+  "required_outputs_for_report": [
+    "Per-arm source, derived-example and replay accounting.",
+    "Capability and retention versus mid-training tokens and GPU-hours.",
+    "SFT convergence, early RL adaptation and held-out transfer under fixed downstream recipes.",
+    "Teacher, environment, validation, retry, idle and discarded-data costs.",
+    "Negative, inconclusive and conditional-branch outcomes with the same detail as selected results."
+  ],
+  "boundary": "No arm is launch-ready from this packet. It defines a data and optimization study only; a future launch must bind the useful parent, changed-data implementation, admitted manifests, downstream packet, runtime measurements and an explicit launch receipt."
+}

@@ -237,7 +237,7 @@
         "contrast": "Replay/source-only control versus targeted code/math/repair/tool-use material at the same 4K context and next-token objective; add grounded or executable synthesis only as separately validated branches",
         "parent_and_state": "Same useful parent checkpoint and optimizer state; identical declared schedule and cursor-reset policy. Requires a qualified changed-data branch.",
         "proposed_paired_seed_count": 1,
-        "per_arm_training_gpu_hour_cap": 35,
+        "per_arm_training_gpu_hour_cap": 25,
         "primary_endpoint": "Predeclared code/math/tool-use development outcome; fixed source losses, general retention, downstream SFT convergence and early RL adaptation are guardrails",
         "efficiency_endpoints": [
           "Capability versus mid-training tokens and allocated GPU-hours",
@@ -245,7 +245,9 @@
           "Early RL adaptation and final held-out transfer under the same rollout and verifier protocol",
           "Preparation, teacher/generation, validation, retry and discarded-trajectory cost counted separately"
         ],
-        "branch_controls": "Raw/source-only, grounded augmentation and executable trajectory branches are additive ablations; hold the downstream SFT/RL recipe fixed and do not treat context extension as a data branch"
+        "branch_controls": "Raw/source-only, grounded augmentation and executable trajectory branches are additive ablations; hold the downstream SFT/RL recipe fixed and do not treat context extension as a data branch",
+        "packet": "experiments/main-data/mid-training-study-packet.json",
+        "downstream_accounting": "Linked SFT/RL efficiency evaluation is charged to the separate 150-hour post-training research reservation; it is not hidden in the 150-hour mid-training cap."
       }
     },
     "context_extension": "See context_extension for the separate additional exposure, length curriculum and budget; keep capability and length effects distinct"
@@ -504,7 +506,8 @@
     "experiments/corpus-audit/code-yield-result.json": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94",
     "experiments/corpus-audit/data-readiness.json": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549",
     "experiments/main-data/data-study-packet.json": "f20ab236d8bf8dd9554d04e7f4ac9713dd54b1a58c74a42ca915d543f16f2a89",
-    "experiments/main-data/source-readiness.json": "a1863aae08a1ce1993765a57763f8aad2b92dc9b0de62f156979bb8f93829fee"
+    "experiments/main-data/source-readiness.json": "a1863aae08a1ce1993765a57763f8aad2b92dc9b0de62f156979bb8f93829fee",
+    "experiments/main-data/mid-training-study-packet.json": "8227891bca9aa3a0263bf7e6bd82dd6512b091cf9062c0278f1f40d411cf638f"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

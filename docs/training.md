@@ -73,6 +73,11 @@ remain separate from the production run. The [research design](../experiments/ma
 records proposed run counts, finite-epoch SFT exposure matching and remaining runtime/scoring work.
 These design rules are not executable launch manifests.
 
+The [capability mid-training efficiency packet](../experiments/main-data/mid-training-study-packet.json)
+adds a design-only comparison of replay/source-only, targeted raw and grounded data from one useful
+parent. It measures downstream SFT convergence and early RL adaptation under fixed recipes; executable
+trajectories remain conditional on environment and verifier qualification.
+
 ## Mid-training readiness
 
 The base loader supports token-endpoint mixture phases declared in one immutable packed manifest.
