@@ -61,6 +61,7 @@ PYTHONPATH=. python experiments/main-data/check_source_readiness.py \
 
 The matrix is an evidence boundary: retained tokens are not eligible tokens, and an arm remains blocked until its listed gates close in a revised manifest.
 Its horizon accounting records the 100B/125B working target separately from the current one-pass bounds: retained code evidence bounds a 30% share at 1.589B total tokens before exclusions, and HQ tokens distinct from retained FineWeb-Edu bound a 25% share at 1.405B. These are constraints, not qualified supply.
+The HQ comparison retains FineWeb-Edu as the control, keeps the pinned L1/HQ route as a candidate, and adopts no score cutoff or automatic repair rule; its sampled panels establish review evidence, not eligible yield.
 
 ## Research before the main run
 

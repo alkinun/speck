@@ -57,6 +57,14 @@
         {
           "path": "/mnt/speck-data/speck/document-token-stock-e1s-v1/fineweb_edu/manifest.json",
           "kind": "retained_token_stock_manifest"
+        },
+        {
+          "path": "experiments/corpus-audit/natural-web-inspection.json",
+          "field": "validation.cross_source_scope"
+        },
+        {
+          "path": "experiments/corpus-audit/web-filter-validation.json",
+          "field": "comparison"
         }
       ],
       "gates": {
@@ -105,6 +113,22 @@
         {
           "path": "experiments/corpus-audit/data-readiness.json",
           "field": "mid_training.complete_document_length_bands.ultrafineweb_hq"
+        },
+        {
+          "path": "experiments/corpus-audit/web-variants.json",
+          "field": "decision_route"
+        },
+        {
+          "path": "experiments/corpus-audit/natural-web-inspection.json",
+          "field": "decision"
+        },
+        {
+          "path": "experiments/corpus-audit/web-hq-stratified.json",
+          "field": "census_and_sample"
+        },
+        {
+          "path": "experiments/corpus-audit/web-filter-validation.json",
+          "field": "comparison_and_decision"
         }
       ],
       "gates": {
@@ -121,8 +145,58 @@
         "joint family/benchmark partition",
         "review flags and cutoff decision",
         "eligible-token accounting",
-        "measured comparison cost"
-      ]
+        "measured comparison cost",
+        "full-shard eligible-token census under frozen exclusions",
+        "source-aware repair and provenance review"
+      ],
+      "comparison_evidence": {
+        "control": "fineweb_edu",
+        "candidate_route": "data/ultrafineweb_l1_en_hq",
+        "pinned_revision": "02c85641e3d19a854be2e09139c25adaa9518063",
+        "hq_stratified_panel": {
+          "documents": 192,
+          "tokens_with_bos_eos": 682970,
+          "shards": 12
+        },
+        "hq_qualitative_review": {
+          "documents": 24,
+          "full_text_documents": 8,
+          "excerpt_documents": 16,
+          "independent_human_annotation": false
+        },
+        "cross_source_sample_scope": {
+          "hq_documents": 48,
+          "fineweb_edu_documents": 64,
+          "hq_shards": 6,
+          "exact_matches": 0
+        },
+        "filter_validation_panel": {
+          "documents": 32,
+          "tokens_with_bos_eos": 125453,
+          "candidate_flags": 3,
+          "production_filter_changed": false
+        },
+        "threshold_inventory": [
+          {
+            "predicate": "pred_score >= 0.65",
+            "documents": 227501,
+            "token_yield_established": false
+          },
+          {
+            "predicate": "pred_score >= 0.8",
+            "documents": 166027,
+            "token_yield_established": false
+          },
+          {
+            "predicate": "pred_score >= 0.95",
+            "documents": 82128,
+            "token_yield_established": false
+          }
+        ],
+        "decision": "retain_control_and_candidate_for_qualification; adopt_no_score_cutoff_or_repair_rule",
+        "eligible_tokens_established": 0,
+        "training_admitted": false
+      }
     },
     {
       "id": "stack_edu",

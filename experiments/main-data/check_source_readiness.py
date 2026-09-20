@@ -55,6 +55,23 @@ def validate(matrix_path):
             "runtime",
         }:
             raise ValueError(f"incomplete gate set: {source['id']}")
+        if source["id"] == "ultrafineweb_hq":
+            comparison = source.get("comparison_evidence", {})
+            if (
+                comparison.get("eligible_tokens_established") != 0
+                or comparison.get("training_admitted") is not False
+            ):
+                raise ValueError("HQ comparison must remain non-admitted")
+            if (
+                comparison.get("filter_validation_panel", {}).get("production_filter_changed")
+                is not False
+            ):
+                raise ValueError("HQ filter validation must not silently change production filters")
+            if (
+                comparison.get("decision")
+                != "retain_control_and_candidate_for_qualification; adopt_no_score_cutoff_or_repair_rule"
+            ):
+                raise ValueError("HQ comparison decision boundary changed")
         inventory = source.get("inventory", {})
         for key, value in inventory.items():
             if isinstance(value, int) and value < 0:
