@@ -10,6 +10,17 @@ defines stage boundaries; [model notes](../../docs/model.md) cover supporting at
 Broader architecture research belongs to later releases. Our base starts from scratch; the future
 50,000-hour allocation is not assumed funded.
 
+The [architecture study packet](architecture-study-packet.json) is the executable design contract
+for that gate. Validate it before preparing a run:
+
+```bash
+PYTHONPATH=. python experiments/main-data/check_architecture_study.py \
+  experiments/main-data/architecture-study-packet.json
+```
+
+It contains one reference, one matched all-GQA/RoPE control, one seed and the existing 200-hour
+cap. It does not authorize training or broaden the architecture search.
+
 The [data preparation closeout](data-closeout.json) freezes the current evidence-only corpus pass.
 The supplied frontier-data research is recorded in
 [frontier-data-research.json](frontier-data-research.json); source-specific gate updates are next.

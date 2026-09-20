@@ -1,0 +1,110 @@
+{
+  "format": "speck_architecture_efficiency_study_packet",
+  "format_version": 1,
+  "date": "2026-09-20",
+  "status": "design_only_not_training_authority",
+  "purpose": "Bind the single bounded backbone comparison required before data-study runs.",
+  "evidence_boundary": "This packet fixes the comparison and accounting contract. It does not select a production backbone, authorize GPU work or create a broad architecture search.",
+  "source_of_truth": {
+    "reference_model": {
+      "path": "experiments/qualification/model.json",
+      "sha256": "84d7ee22eaec7cc2b5c9ccad3c18b80af5aa73cada394ad3fb800e792e67f8e6"
+    },
+    "timing_receipt": {
+      "path": "experiments/qualification/timing-result.json",
+      "sha256": "3d285f483468756ef22bcf22c3a93cc9f59ca2930ea374cb84b6645a920ad7a0"
+    },
+    "qualification_result": {
+      "path": "experiments/main-data/qualification-result.json",
+      "sha256": "05e3c3c928abfc6db69c448c2353c5a19069b922c130b3de29f3979e5eeb610d"
+    }
+  },
+  "budget": {
+    "total_gpu_hours": 200,
+    "paired_training_gpu_hours": 120,
+    "profiling_gpu_hours": 40,
+    "qualification_evaluation_recovery_gpu_hours": 40,
+    "accounting": "Charge startup, validation, checkpoints, profiling, evaluation, retries and allocated idle time once. CPU acquisition and storage are logged separately."
+  },
+  "common_contract": {
+    "arms": "Use exactly two complete backbone designs and one declared seed. No intermediate geometry search or extra architecture arm.",
+    "data": "Use the same qualified corpus, tokenizer, order policy, sequence length, objective, optimizer policy and token horizon after those inputs are bound. The corpus must be eligible for the comparison; this packet does not admit sources.",
+    "initialization": "Use the same declared seed and initialization policy where shapes permit; different geometries cannot have identical tensors. Record every configuration and checkpoint hash.",
+    "quality": "Evaluate matched exposure on held-out source/domain loss and a fixed development capability panel. Bind the acceptable regression tolerance before launch.",
+    "efficiency": "Report actual parameters, estimated FLOPs, precision, implementation, allocated GPU-hours, throughput, peak memory and inference measurements. Equal parameter counts do not equal equal FLOPs.",
+    "boundary": "The comparison tests complete backbone packages. It cannot isolate KDA, NoPE, RoPE or feed-forward width."
+  },
+  "arms": [
+    {
+      "id": "reference_kda_nope_gqa",
+      "role": "reference",
+      "configuration": "experiments/qualification/model.json",
+      "status": "shape_and_checkpoint_identity_pinned"
+    },
+    {
+      "id": "matched_all_gqa_rope",
+      "role": "single_control",
+      "status": "shape_count_checked_not_runtime_qualified",
+      "configuration": {
+        "layers": 24,
+        "hidden_size": 2048,
+        "query_heads": 16,
+        "key_value_heads": 4,
+        "head_dim": 128,
+        "rope_dim": 128,
+        "rope_theta": 1000000.0,
+        "intermediate_size": 5888,
+        "vocab_size": 32003,
+        "tie_word_embeddings": true,
+        "context_tokens": 4096
+      },
+      "geometry_rule": "Replace all mixing layers with global GQA, retain depth/width/tokenizer and choose the nearest parameter match on the 256-wide SwiGLU grid.",
+      "claim_boundary": "The wider feed-forward layers and full RoPE are part of this complete control; no isolated mechanism claim."
+    }
+  ],
+  "training": {
+    "paired_seed_count": 1,
+    "per_arm_gpu_hour_cap": 60,
+    "token_horizon": "bind_after measured runtime and eligible-corpus checks; same horizon for both arms",
+    "required_outputs": [
+      "held-out source/domain loss at matched exposure",
+      "development capability and retention panel",
+      "training tokens per allocated GPU-hour",
+      "peak memory and checkpoint/restart behavior",
+      "actual total, active and non-embedding parameters",
+      "estimated training FLOPs and precision/runtime metadata"
+    ]
+  },
+  "profiling": {
+    "lengths": [512, 2048, 3840],
+    "batch_sizes": [1, 8],
+    "output_tokens": 256,
+    "required_outputs": [
+      "prefill latency and time to first token",
+      "decode latency and throughput",
+      "peak and cache memory",
+      "warmup, repetition and environment metadata"
+    ],
+    "boundary": "These measurements establish deployment cost only; they do not establish long-context capability."
+  },
+  "decision": {
+    "gates_before_launch": [
+      "Both configurations and implementation identities are hash-bound.",
+      "The common eligible corpus, tokenizer, objective, horizon and evaluation panel are bound.",
+      "Quality-regression tolerance and deployment cost endpoints are recorded before execution.",
+      "The four-worker/runtime environment and recovery destination are qualified sufficiently for the declared run.",
+      "The 200-hour envelope is affordable after preparation, evaluation, retries and idle time."
+    ],
+    "selection": "Select a qualified affordable backbone that passes the predeclared quality and cost gates. If evidence is inconclusive and the reference passes, retain the reference. If neither passes, stop and record a scope revision.",
+    "claim_boundary": "One seed supports a bounded design decision, not architectural superiority or a scaling law. Remeasure the selected backbone before data comparisons."
+  },
+  "required_outputs_for_report": [
+    "Exact configurations, hashes, seed, corpus and token horizon",
+    "Quality and retention curves at matched exposure",
+    "Training and inference cost tables with hardware and precision",
+    "Memory, restart and backend qualification results",
+    "Negative, inconclusive and scope-revision outcomes",
+    "Final backbone selection receipt and limitations"
+  ],
+  "boundary": "No architecture result is launch-ready from this packet. The first release permits this one bounded comparison; MoE, attention residuals, broad attention searches and size sweeps remain deferred."
+}

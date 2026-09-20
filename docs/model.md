@@ -61,7 +61,9 @@ also do not equalize FLOPs. Use the same eligible corpus/order, token horizon, o
 precision, update size and schedule; disclose shape-dependent initialization/optimizer differences.
 The common seed does not make differently shaped model tensors identical.
 
-The proposed 200h envelope assigns 120h to one seed pair (60h per arm), 40h to training/inference
+The [architecture study packet](../experiments/main-data/architecture-study-packet.json) and its
+[offline validator](../experiments/main-data/check_architecture_study.py) bind the proposed 200h
+envelope. It assigns 120h to one seed pair (60h per arm), 40h to training/inference
 profiling and 40h to qualification, evaluation and recovery. Select a common token horizon from
 measured cost before running either arm. Measure fixed-pack loss and development regressions, then
 training throughput/memory and prefill/decode at batch sizes one/eight, prefix lengths

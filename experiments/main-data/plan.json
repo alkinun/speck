@@ -79,6 +79,10 @@
       "Numerical/restart behavior and backend qualifications"
     ],
     "decision": "Use predeclared quality-regression tolerances and training/inference cost endpoints. Select a qualified, affordable backbone; retain the reference if evidence is inconclusive and it passes the gates. One seed is supporting design evidence only. Preserve historical configs and remeasure the chosen model before data comparisons.",
+    "packet": {
+      "path": "experiments/main-data/architecture-study-packet.json",
+      "status": "design_only_not_training_authority"
+    },
     "proposed_control": {
       "status": "shape_count_checked_not_runtime_qualified_or_selected_for_production",
       "layers": 24,
@@ -563,7 +567,8 @@
     "experiments/main-data/math-candidate-manifest.json": "cbf18ff1bc36cf2caa566b21536f3e6f9e3d8749c8bf57d513e7ced6ac3e2610",
     "experiments/main-data/post-training-candidate-manifest.json": "38b1da8ff316c6a6a7ddc7580cb144367489eb73829032471daa28ee595cac9b",
     "experiments/main-data/post-training-audit-protocol.json": "a1722427604a4685621da0e53964d7ec0c4b1422a0225e4573788cc4a8fc353f",
-    "experiments/main-data/post-training-research.json": "5036027c1aa274c3f7b0f1aa6b07ad3f4a80016c90a866eee7cf27b096604c99"
+    "experiments/main-data/post-training-research.json": "5036027c1aa274c3f7b0f1aa6b07ad3f4a80016c90a866eee7cf27b096604c99",
+    "experiments/main-data/architecture-study-packet.json": "d506aa41460d265f0a7209a7fa1073ca4f1cf4defcd6e0fa5a6afff136e87846"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",
