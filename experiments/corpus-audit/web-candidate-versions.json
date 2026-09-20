@@ -3,7 +3,8 @@
   "method": "Read current Hugging Face dataset API sha/lastModified fields and compare to archived config; no dataset payload refresh or admission.",
   "historical_config": {
     "revision": "e3ed10c0a2e584b38384dc2c6714bea44bfd909d",
-    "path": "experiments/Speck1.5-140M/data.json"
+    "path": null,
+    "status": "historical config is not retained in the current checkout; the revision is recorded for provenance only"
   },
   "sources": [
     {
