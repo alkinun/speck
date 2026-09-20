@@ -15,7 +15,7 @@ changes without retokenizing. Recheck tokenizer fingerprints and hashes whenever
 | Source readers, configuration, packing, resume | `speck/data/{acquisition,configuration,packing,dataset}.py` |
 | Global disk-backed deduplication | `scripts.production_data_preprocess` (`--batched-minhash` is optional) |
 | Secret filtering, near duplicates, contamination | `scripts.text_gitleaks_filter`, `text_near_duplicates`, `text_contamination` |
-| Source-use review | `scripts.source_rights_review` |
+| Source-use review | `scripts.source_rights_review` (validates a pending human template; never makes an approval decision) |
 | Checked retained-stock tokenization | `scripts.tokenize_stock` |
 | Distributed loading | `speck/data/loader.py` |
 
