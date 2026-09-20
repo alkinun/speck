@@ -251,6 +251,14 @@ Reported token counts use upstream metadata, not the Speck tokenizer. These smal
 samples establish neither population overlap nor relative quality. Next, compare pinned source
 files, join held-out families and review complete worked solutions with independent checks.
 
+The filtered [InfiWebMath arithmetic diagnostic](../experiments/corpus-audit/infiwebmath-4plus-arithmetic.json)
+adds a conservative independent numeric check over 3,725 qualified sample records. It parses 276
+standalone numeric equalities: 260 agree within displayed rounding and 16 are flagged across six
+records. Those flags are manual-review leads, not an error rate; symbolic, unit-bearing and
+multi-line reasoning remain unchecked. The source-readiness matrix records InfiWebMath as a
+separate non-admitted candidate with source-use, family, contamination, correctness and supply
+gates open.
+
 The intended pretraining composition is selected broad natural text, meaningful code exposure,
 math/science, reference/documents and a controlled refined/synthetic component. Preserve everyday,
 nontechnical topics and varied prose as well as difficult educational material. Retain source-family

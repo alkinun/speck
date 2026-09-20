@@ -58,12 +58,14 @@ and checkpoint position change together, so the card cannot isolate the effect o
 reweighting. We should test a phase-conditioned mixture only as a predeclared replacement or later
 ablation inside the existing 600-hour pretraining study, with the schedule, source exposures,
 validation mixture and total tokens fixed. It must not become a fourth screening arm. The source
-names also expose three candidates that are not yet in Speck's source-readiness matrix: NVIDIA's
+names also expose three candidates: NVIDIA's
 [OpenMathInstruct-2](https://huggingface.co/datasets/nvidia/OpenMathInstruct-2), the
 [InfiWebMath 3+](https://huggingface.co/datasets/HuggingFaceTB/finemath/tree/main/infiwebmath-3plus)
-subset of FineMath, and [SmolTalk](https://huggingface.co/datasets/HuggingFaceTB/smoltalk). They
-need the same source-use, family/contamination, correctness, finite-supply and runtime gates as the
-current candidates; their public presence does not admit them.
+subset of FineMath, and [SmolTalk](https://huggingface.co/datasets/HuggingFaceTB/smoltalk). The
+source-readiness matrix now records a separately filtered InfiWebMath 4+ candidate with a bounded
+arithmetic diagnostic; the 3+ viewer evidence, OpenMath and SmolTalk remain outside the matrix.
+Every candidate needs the same source-use, family/contamination, correctness, finite-supply and
+runtime gates; public presence does not admit it.
 
 The card's `smollm-corpus` tag should not be counted as one undifferentiated corpus. Its named
 components and their transformations need separate identities, overlap checks and exposure

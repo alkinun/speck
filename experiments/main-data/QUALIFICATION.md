@@ -213,7 +213,7 @@ corpus winner or supply the full confirmation horizon. Remaining source comparis
 | Lane | Candidates | Required comparison |
 | --- | --- | --- |
 | Natural web | Ultra-FineWeb English/HQ; FineWeb-Edu control; DCLM baseline/Edu | Separate selection thresholds, source provenance, boilerplate, topic/language diversity, duplication and retained tokens |
-| Math | FineMath 4+; UltraData-Math L2; then Nemotron-CC-Math 4plus | Intact questions/solutions, checkable correctness, topic/difficulty coverage and shared source families |
+| Math | FineMath 4+; UltraData-Math L2; filtered InfiWebMath 4+; then Nemotron-CC-Math 4plus | Intact questions/solutions, conservative arithmetic triage, checkable correctness, topic/difficulty coverage and shared source families |
 | Natural code | Retained Stack-Edu; Stack v3; source-resolved UltraData-Code L2 | Multilingual practical roles, source/test/docs linkage, immutable origins, dependency cost and eligible token yield |
 | Generated material | Web/math L3 and checked code derivatives | Source grounding, independent answer/test verification, teacher lineage and rejection rates; held separately from natural stock |
 

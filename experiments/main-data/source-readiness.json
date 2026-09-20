@@ -28,6 +28,10 @@
     "stack_v3_broader": {
       "path": "experiments/corpus-audit/stack-v3-broader.json",
       "sha256": "e9aa292f1ba99d072c7a5f318bcc46d17d522daddcf9db96b1b2618d1a284d2b"
+    },
+    "math_arithmetic_diagnostic": {
+      "path": "experiments/corpus-audit/infiwebmath-4plus-arithmetic.json",
+      "sha256": "423f0d0c11c23cd2ad62262db09441eaf32760f6307d92cea0734f08fe393a4a"
     }
   },
   "gate_vocabulary": {
@@ -655,6 +659,79 @@
         "source-use decision",
         "family partition",
         "quality checks",
+        "eligible-token accounting"
+      ]
+    },
+    {
+      "id": "infiwebmath_4plus",
+      "roles": [
+        "math_candidate_support_bank"
+      ],
+      "identity": {
+        "repository": "HuggingFaceTB/finemath",
+        "config": "infiwebmath-4plus",
+        "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594"
+      },
+      "inventory": {
+        "source_rows": 196757,
+        "bounded_sample_records": 3725,
+        "bounded_sample_training_bytes": 18000388,
+        "bounded_sample_evaluation_bytes": 1807642,
+        "qualified_supply_tokens": null
+      },
+      "evidence": [
+        {
+          "path": "experiments/corpus-audit/infiwebmath-4plus-arithmetic.json",
+          "field": "input_and_arithmetic_diagnostic"
+        },
+        {
+          "path": "/mnt/speck-data/speck/source-qualification/math-infiwebmath_4plus-v1/report.json",
+          "kind": "bounded_source_qualification_report"
+        },
+        {
+          "path": "/mnt/speck-data/speck/source-qualification/math-infiwebmath_4plus-v1/tokenizer-input.jsonl",
+          "kind": "bounded_filtered_sample"
+        }
+      ],
+      "gates": {
+        "source_use": "open_manual_terms_decision",
+        "family_partition": "open_joint_graph",
+        "correctness": "open_arithmetic_triage_manual_review",
+        "finite_supply": "sample_only_not_eligible_count",
+        "runtime": "open"
+      },
+      "status": "candidate_sample_not_admitted",
+      "admitted": false,
+      "qualification_evidence": {
+        "source_report": {
+          "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+          "records_considered": 5317,
+          "records_sampled": 3725,
+          "source_native_quality_gate": "pass",
+          "benchmark_contamination": "pending_evaluation_firewall",
+          "cross_source_near_duplicates": "pending",
+          "manual_legal_acceptance": "pending"
+        },
+        "arithmetic_diagnostic": {
+          "receipt_sha256": "423f0d0c11c23cd2ad62262db09441eaf32760f6307d92cea0734f08fe393a4a",
+          "audit_script": "experiments/corpus-audit/audit_math_arithmetic.py",
+          "audit_script_sha256": "8eee02d83d1b56e5be88f9454ee503307240abf39d2d4dca270d552863b12d48",
+          "lines_seen": 292452,
+          "candidate_lines": 312,
+          "oracle_parsed_lines": 276,
+          "numerically_consistent_lines": 260,
+          "flagged_lines": 16,
+          "rows_with_flags": 6,
+          "interpretation": "Triage only; flagged lines require manual review and matching lines do not certify solution correctness."
+        },
+        "training_admitted": false,
+        "decision": "retain_as_separate_filtered_math_candidate; do not admit until source-use, family, contamination, independent solution and finite-supply gates close"
+      },
+      "blockers": [
+        "source-use and upstream page terms decision",
+        "joint source-family and evaluation partition",
+        "independent solution correctness and completeness checks",
+        "16 arithmetic triage flags across 6 records require manual review",
         "eligible-token accounting"
       ]
     },

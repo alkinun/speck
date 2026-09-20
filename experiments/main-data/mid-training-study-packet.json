@@ -12,7 +12,7 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "a1863aae08a1ce1993765a57763f8aad2b92dc9b0de62f156979bb8f93829fee"
+      "sha256": "cd7552cba0cb14cbf273e2031a971dc0f50f34fd872521474773542eb3a1d095"
     },
     "qualification_rules": {
       "path": "experiments/main-data/qualification-rules.json",

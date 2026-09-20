@@ -1,0 +1,173 @@
+{
+  "boundary": "This diagnostic covers only standalone numeric equalities visible on one line. It does not assess symbolic algebra, units, multi-line derivations, extraction quality, semantic correctness, source rights, contamination, population quality or training eligibility. Flagged lines are manual-review leads, not an error rate; matching lines are not correctness certification.",
+  "checked_utc": "2026-09-20T07:25:56.055315+00:00",
+  "corpus_code_executed": false,
+  "extraction": {
+    "candidate_lines": 312,
+    "flagged_example_limit": 32,
+    "flagged_lines": 16,
+    "lines_seen": 292452,
+    "numerically_consistent_lines": 260,
+    "oracle_parsed_lines": 276,
+    "rows_with_candidates": 78,
+    "rows_with_flags": 6
+  },
+  "flagged_examples": [
+    {
+      "content_id": "503a53661626b4fd82c4ac92ebdc4c1d3c17fbb8bb761352e84c80e733e20eea",
+      "expression_sha256": "910d9dfcc67194c007e63de34fbea192ef04cc1160758b42278350e06e9f782d",
+      "line_index": 146,
+      "line_sha256": "674019bbb34bad721b3f553252f6f2a39e3913f908d9e33de604ee9b197dd159",
+      "released_content_sha256": "6a2c310081c2ef81ea88fc81b31288cdbf56524674e1ac268e02e10fd5f7b3f1",
+      "row_index": 124
+    },
+    {
+      "content_id": "66f9721725b633350cb3f264f98762ed9a11fcfda138fc242914e5d398d7103a",
+      "expression_sha256": "4a1b21d876ae00c8ed5c4d1cde09c61f8a61b50fe370a801b10c339831f370ab",
+      "line_index": 14,
+      "line_sha256": "ecc777b937894af9ea5cc351c312bdb29a5785d39e90db74ec108ccd8974bd7b",
+      "released_content_sha256": "02ef53ade1a2b0b8dc1280099adc9a4ad558b075b7b82f82cbc0ba6c00390002",
+      "row_index": 458
+    },
+    {
+      "content_id": "66f9721725b633350cb3f264f98762ed9a11fcfda138fc242914e5d398d7103a",
+      "expression_sha256": "4a1b21d876ae00c8ed5c4d1cde09c61f8a61b50fe370a801b10c339831f370ab",
+      "line_index": 26,
+      "line_sha256": "ecc777b937894af9ea5cc351c312bdb29a5785d39e90db74ec108ccd8974bd7b",
+      "released_content_sha256": "02ef53ade1a2b0b8dc1280099adc9a4ad558b075b7b82f82cbc0ba6c00390002",
+      "row_index": 458
+    },
+    {
+      "content_id": "e162a2811d413d0d97eff65c0205f935bc64c6255e63caea67b8d2ee3a475b5a",
+      "expression_sha256": "f46702977560dbc1e4242f105af2fcda9c02a0dc4f02efdb574fe9e2b9fceba1",
+      "line_index": 74,
+      "line_sha256": "e634746602f571c2e10db0548f4a5bab66bc32e9e3866b139bfe40ef06f8896f",
+      "released_content_sha256": "4b651ede17554e84080efc090a1bc96f36d049d09f1646faa75003d88062c19a",
+      "row_index": 2603
+    },
+    {
+      "content_id": "c164758b5d4c0d8549f3b4b65b440e47e5dd8550b8c2a57f995b795c1b30e031",
+      "expression_sha256": "2841016d1cd9efa25e200f44d2b1b365eac01d33b3b6875c0b658258fb3f29a7",
+      "line_index": 68,
+      "line_sha256": "b0163fefebb322f69268fbe540760575a4e49dcd9492d6713546057382123efd",
+      "released_content_sha256": "6c1efe04f9bf5b3510fad67c033fd7600a61e881230c7b6e0a6ab3c1c62bdbda",
+      "row_index": 3543
+    },
+    {
+      "content_id": "c164758b5d4c0d8549f3b4b65b440e47e5dd8550b8c2a57f995b795c1b30e031",
+      "expression_sha256": "6df0753a40eff0d6aafd521f7ff0b48deee37a50d8f4247be997de213364d4d3",
+      "line_index": 80,
+      "line_sha256": "7e07ccc87fb347e2d6a2c4e292c1d07c0753e946ca3917a25ec47e05ad7fd72a",
+      "released_content_sha256": "6c1efe04f9bf5b3510fad67c033fd7600a61e881230c7b6e0a6ab3c1c62bdbda",
+      "row_index": 3543
+    },
+    {
+      "content_id": "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+      "expression_sha256": "0d9602001c7c7004495b5236ac6e4420803f4c1d3c047336f4781f154862ba0b",
+      "line_index": 13,
+      "line_sha256": "1a44e520f63dd83195c9ca782e15cf31f21056ec0980a9492fdc0b97cbade75d",
+      "released_content_sha256": "a510c766212df6ea81df0b7a913151dcd24b94a17630f996afce57271ba429f2",
+      "row_index": 3585
+    },
+    {
+      "content_id": "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+      "expression_sha256": "95ec9b35a08ebedd230af35b7a44973ac9bd6794aed2ecce7018fbb7ab5f0205",
+      "line_index": 14,
+      "line_sha256": "568360f7049633c1087fd01f131d6824da1e4fbba3e92fb00f9c1310896335b1",
+      "released_content_sha256": "a510c766212df6ea81df0b7a913151dcd24b94a17630f996afce57271ba429f2",
+      "row_index": 3585
+    },
+    {
+      "content_id": "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+      "expression_sha256": "f8ba88f41798d7bb7498b001b4c67a314f519a33d909e5fa757bd9408725dc2c",
+      "line_index": 15,
+      "line_sha256": "b01fda91415b327f4cc52fb4ba3fdf5816f173798c344f91ac2b566aa7d6ec9c",
+      "released_content_sha256": "a510c766212df6ea81df0b7a913151dcd24b94a17630f996afce57271ba429f2",
+      "row_index": 3585
+    },
+    {
+      "content_id": "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+      "expression_sha256": "3f998a10175ba5da5dff0abc0d87bbdd6c717674d3b7c959c715a4489c8a2346",
+      "line_index": 25,
+      "line_sha256": "a6de84e19a474cd1a6fb95cc93def866bf5e809f50a0808f37a5e3cfeb05a901",
+      "released_content_sha256": "a510c766212df6ea81df0b7a913151dcd24b94a17630f996afce57271ba429f2",
+      "row_index": 3585
+    },
+    {
+      "content_id": "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+      "expression_sha256": "507d28b06e5e20ff8ffafd7199d481f80013a18f0794c92bdf98662cdcd31167",
+      "line_index": 26,
+      "line_sha256": "65ae884b7822594642c1a806a4ffba468de72c0c719fb0a625e36d2b037b99e8",
+      "released_content_sha256": "a510c766212df6ea81df0b7a913151dcd24b94a17630f996afce57271ba429f2",
+      "row_index": 3585
+    },
+    {
+      "content_id": "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+      "expression_sha256": "0db9fe372f1e7f84776057156c2152b9717f5529a174c78024def09cfdcdd8bf",
+      "line_index": 27,
+      "line_sha256": "bb8ffdef528d6cc3cf329c99eac34ec89185144eac6e22cc27c1678de2e610c2",
+      "released_content_sha256": "a510c766212df6ea81df0b7a913151dcd24b94a17630f996afce57271ba429f2",
+      "row_index": 3585
+    },
+    {
+      "content_id": "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+      "expression_sha256": "2cac6ac34c9096bbe08cbcc801bdbd8bff25d502b59443dbe0a6a528899d2b4a",
+      "line_index": 36,
+      "line_sha256": "ba38a5e25867735233a5f82a40cbb4bbdbfac79efd69d678627e76a62f9c0ba4",
+      "released_content_sha256": "a510c766212df6ea81df0b7a913151dcd24b94a17630f996afce57271ba429f2",
+      "row_index": 3585
+    },
+    {
+      "content_id": "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+      "expression_sha256": "d034162ed7f1d18c9dc51b7af053bcd46536c5c2f67a953bcbcd01d7b73df60d",
+      "line_index": 37,
+      "line_sha256": "e0a203bb32b384a11496625966b90d17ce2f58a67741c29c3246551111ec8efc",
+      "released_content_sha256": "a510c766212df6ea81df0b7a913151dcd24b94a17630f996afce57271ba429f2",
+      "row_index": 3585
+    },
+    {
+      "content_id": "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+      "expression_sha256": "60b4405102ca6e77ecc7230214599f8d57bb85f251cdd0f71c146010edf21c41",
+      "line_index": 38,
+      "line_sha256": "28bd9295417d663e54f616f3ad09f9e434895c9fe7579c0ae9e51b5a0edd5480",
+      "released_content_sha256": "a510c766212df6ea81df0b7a913151dcd24b94a17630f996afce57271ba429f2",
+      "row_index": 3585
+    },
+    {
+      "content_id": "af11d7e1291a0f7ecefd7324b40e45a2d8ebea4eec24ab684cab27b9cbdb7e21",
+      "expression_sha256": "9c5461a26e3f2e08e84aee1fa638c63d693700133b5ac5acc9ce5d56492313cb",
+      "line_index": 37,
+      "line_sha256": "bde0b5fa3ee2b46a88b012bd052a2119660ee8e1f08c8c8aa63a9d2015b0d1b3",
+      "released_content_sha256": "46fe204e8b624fcbc986c3ab231795722d58c0f60175e375aca904b3144aa8df",
+      "row_index": 3664
+    }
+  ],
+  "format": "speck_math_arithmetic_diagnostic",
+  "format_version": 1,
+  "input": {
+    "path": "/mnt/speck-data/speck/source-qualification/math-infiwebmath_4plus-v1/tokenizer-input.jsonl",
+    "rows_seen": 3725,
+    "sha256": "3fbf4a979cb9f97bdc5e46447b5e359d547ba76940fb8c384e36ab053d08f724",
+    "source_counts": {
+      "infiwebmath_4plus": 3725
+    },
+    "source_revisions": [
+      "e92b25a616738fe95dc186b64dfb19f9c8525594"
+    ]
+  },
+  "oracle": {
+    "decimal_policy": "Accept within half the final displayed decimal unit, plus 1e-12.",
+    "implementation": "Python AST restricted to numeric constants, unary signs and arithmetic operators.",
+    "maximum_power": 20,
+    "operations": [
+      "+",
+      "-",
+      "*",
+      "/",
+      "^",
+      "\u00d7",
+      "\u00f7"
+    ]
+  },
+  "training_admitted": false
+}
