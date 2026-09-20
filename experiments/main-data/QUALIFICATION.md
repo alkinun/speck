@@ -1,6 +1,6 @@
 # Main-data qualification packet
 
-2026-09-19. CPU preparation only. The model, working mixture, pilot and evaluation remain unchanged.
+2026-09-20. CPU preparation only. The model, working mixture, pilot and evaluation remain unchanged.
 [qualification-rules.json](qualification-rules.json) owns version-one eligibility rules;
 [qualification-inputs.json](qualification-inputs.json) pins the bounded exclusion inputs and source
 snapshot. Candidate partitions and a clean content screen never authorize training.
@@ -103,7 +103,8 @@ PYTHONPATH=. python experiments/main-data/check_qualification.py \
 ```
 
 The command verifies hashes, scans 37 source files, assigns candidate family partitions, and emits
-a JSON summary. It performs no acquisition, corpus execution, training admission or model scoring.
+a JSON summary. The 2026-09-20 replay reproduced seven content-flagged files and 22 quarantined
+files. It performs no acquisition, corpus execution, training admission or model scoring.
 Hash/row-count mismatches fail closed. New records require a new input snapshot and receipt.
 
 ## Remaining exclusion work
