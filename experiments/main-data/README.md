@@ -36,6 +36,16 @@ one common baseline, one code-bank contrast and one natural-web contrast, with a
 arms and a protected confirmation comparison. It fixes the tokenizer, 4K context, objective,
 serialization, exposure accounting and evaluation boundaries while leaving source admission open.
 
+Validate the packet and its source-of-truth hashes offline:
+
+```bash
+PYTHONPATH=. python experiments/main-data/check_data_study.py \
+  experiments/main-data/data-study-packet.json
+```
+
+The command checks design arithmetic and launch boundaries only. It does not acquire sources,
+execute corpus content or authorize training.
+
 The packet is deliberately design-only. Before any arm can run, every selected source needs named
 source-use decisions, family and near-duplicate partitions, independent correctness checks where
 claimed, finite accepted-token counts, a disjoint evaluation pack and measured GH200 cost. A future
