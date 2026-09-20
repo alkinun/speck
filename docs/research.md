@@ -20,6 +20,43 @@ cadence. This prioritizes one testable data intervention while preserving indepe
 | [DeepSeek-V3 report](https://arxiv.org/abs/2412.19437) | A large MoE combines broad pretraining, systems work, SFT, and RL; it reports 14.8T pretraining tokens and 2.788M H800 GPU-hours for full training. | Learn from staged capability development and cost accounting. Its MoE, MLA, FP8 stack, and hardware totals are not a drop-in recipe for our scale. |
 | [DeepSeek-R1 report](https://arxiv.org/abs/2501.12948), sections 2.3–2.4 and 4 | Cold-start examples address readability/language problems; verified rewards improve reasoning. Distilled small models use curated teacher samples, and the paper compares distillation with small-model RL. | Prefer a measurable SFT/distillation baseline before building RL infrastructure. Better math scores do not establish reliable tool use, instruction following, or general quality. |
 
+## Frontier data engineering synthesis — 2026-09-20
+
+The supplied survey of DeepSeek, Kimi, GLM, MiniMax and MiMo reports a consistent shift from a
+static corpus to a stage-conditioned data curriculum. The linked reports support the direction,
+but their token counts, model scales, teacher systems and source permissions differ too much for
+their percentages to be copied into Speck. The structured review is in
+[frontier-data-research.json](../experiments/main-data/frontier-data-research.json).
+
+The strongest lesson is to treat data as a schedule over source family, quality, representation,
+dependency structure and transformation type. GLM-4.5 describes a general pretraining stage followed
+by repository, synthetic reasoning and long-context/agent mid-training; MiMo-7B reports a three-stage
+recipe that raises math/code to about 70% and later adds about 10% synthetic responses; Kimi K2
+reports source-grounded rephrasing with fidelity checks and at most two rephrasings per corpus; and
+DeepSeek-V4 reports progressive context training alongside a 32T/33T-token base. These are evidence
+for experimental axes, not portable mixture settings. [GLM-4.5](https://arxiv.org/abs/2508.06471),
+[MiMo-7B](https://arxiv.org/abs/2505.07608), [Kimi K2](https://arxiv.org/abs/2507.20534) and
+[DeepSeek-V4](https://arxiv.org/abs/2606.19348) are the primary references.
+
+The practical implications for Speck are concrete:
+
+- Keep a mostly natural, quality-weighted core and separate source-grounded rewrites, generated
+  reasoning, repository-event sequences and agent trajectories by lineage and stage.
+- Make extraction fidelity a first-class math/code gate. Generic HTML/PDF cleaning can remove the
+  equations, code blocks and forum structure that carry the intended signal.
+- Represent repository training as linked files, issues, reviews, pull requests, commits, diffs and
+  tests, with loss masks and family boundaries that distinguish context from targets.
+- Measure useful dependency distance for context stages. Long documents alone do not establish a
+  long-range learning signal.
+- Use cheap proxy or bounded recipe experiments to choose quality weights and transformations, then
+  confirm the selected recipe at matched exposure with held-out families.
+- Keep benchmark decontamination separate from exact, fuzzy and semantic deduplication.
+
+This research does not change the 35/25/40 working envelope, add a pretraining arm, admit a source,
+or expand the 5,000-GPU-hour allocation. The next step is to map each finding to the pinned candidate
+manifests and close only the source-use, family, correctness, supply and runtime gates supported by
+primary evidence.
+
 ## MidTool review — 2026-09-20
 
 Reviewed [MidTool: Mid-training Data Synthesis for Agentic Tool Use](https://arxiv.org/abs/2608.20314), including its data construction, ablation and optimization analyses. The paper trains Qwen3-4B-Base and Qwen3-8B-Base on a 20.3B-token mixture spanning web, PDF, code and tool artifacts, then keeps the downstream SFT/RL recipe fixed while comparing mid-training corpora. Its mixture contains filtered source data, context-grounded augmentation and native executable trajectories.

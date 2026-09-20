@@ -1,0 +1,136 @@
+{
+  "format": "speck_frontier_data_research_synthesis",
+  "format_version": 1,
+  "date": "2026-09-20",
+  "status": "reviewed_hypotheses_not_source_admission",
+  "purpose": "Translate the supplied frontier-data survey and its linked primary reports into testable Speck data-design implications.",
+  "evidence_boundary": "The survey is a secondary synthesis supplied for review. Linked primary reports support the directional findings below, but their token counts, mixtures and ablations are not directly comparable to Speck and do not establish source rights or transfer.",
+  "primary_references": [
+    {
+      "family": "DeepSeek",
+      "reports": [
+        "https://arxiv.org/abs/2412.19437",
+        "https://arxiv.org/abs/2606.19348",
+        "https://cdn.deepseek.com/policies/en-US/model-algorithm-disclosure.html"
+      ]
+    },
+    {
+      "family": "Kimi",
+      "reports": [
+        "https://arxiv.org/abs/2507.20534",
+        "https://arxiv.org/abs/2602.02276",
+        "https://arxiv.org/abs/2607.24653"
+      ]
+    },
+    {
+      "family": "GLM",
+      "reports": [
+        "https://arxiv.org/abs/2508.06471",
+        "https://arxiv.org/abs/2602.15763"
+      ]
+    },
+    {
+      "family": "MiniMax",
+      "reports": [
+        "https://arxiv.org/abs/2501.08313",
+        "https://arxiv.org/abs/2605.26494",
+        "https://www.minimax.io/blog/minimax-m3"
+      ]
+    },
+    {
+      "family": "MiMo",
+      "reports": [
+        "https://arxiv.org/abs/2505.07608",
+        "https://arxiv.org/abs/2601.02780"
+      ]
+    }
+  ],
+  "high_confidence_findings": [
+    {
+      "id": "stage_conditioned_distribution",
+      "finding": "The disclosed recipes change data composition and context length across training stages; a single static mixture percentage is an incomplete description.",
+      "speck_implication": "Represent source exposure as a schedule over pretraining, capability mid-training, context extension and post-training. Keep all stage tokens and repetition counts explicit.",
+      "evidence_types": ["DeepSeek V4", "GLM 4.5/5", "MiMo 7B", "Kimi K2.5"]
+    },
+    {
+      "id": "quality_weighting_with_coverage",
+      "finding": "Quality scores are used for sampling and upweighting, while some lower-scoring material is retained for coverage and long-tail knowledge.",
+      "speck_implication": "Prefer calibrated quality-weighted sampling with coverage strata over a single hard cutoff. Record score distributions, domain/language coverage and sampled exposure separately.",
+      "evidence_types": ["Kimi K1.5/K2", "GLM 4.5/5", "MiniMax Text-01/M2", "MiMo 7B"]
+    },
+    {
+      "id": "source_specific_extraction",
+      "finding": "Math, code, PDFs and structured web pages require source-specific extraction; generic cleaning can remove the signal being optimized.",
+      "speck_implication": "Add extraction fidelity and notation preservation to math/code gates before quality ranking. A publisher score or successful parse is not correctness evidence.",
+      "evidence_types": ["Kimi K1.5/K2", "GLM 4.5/5", "MiMo 7B"]
+    },
+    {
+      "id": "natural_core_synthetic_specialization",
+      "finding": "Several recipes keep the broad core predominantly natural while introducing verified or targeted synthetic reasoning and agent data later.",
+      "speck_implication": "Keep natural-source identity separate from grounded transformations, synthetic reasoning, trajectories and reward prompts. Every transformation needs lineage, validation and a stage assignment.",
+      "evidence_types": ["DeepSeek V4", "GLM 5", "MiMo 7B", "Kimi K2"]
+    },
+    {
+      "id": "repository_event_context",
+      "finding": "Code capability data increasingly links repositories, files, issues, reviews, pull requests, commits, diffs and tests.",
+      "speck_implication": "Treat repository events as structured source families and measure context versus loss-bearing targets. Do not admit raw patches or co-present files without origin, license, family and behavioral checks.",
+      "evidence_types": ["GLM 4.5/5", "Kimi K2.5", "MiMo V2"]
+    },
+    {
+      "id": "dependency_aware_long_context",
+      "finding": "Long-context gains are tied to distributed dependencies, related-document packing and recall tasks, not length alone.",
+      "speck_implication": "Add dependency-distance and position-stratified evaluation to context qualification. Count long documents separately from sequences whose targets require distant evidence.",
+      "evidence_types": ["GLM 5", "Kimi K3", "MiniMax M2", "MiMo V2"]
+    },
+    {
+      "id": "proxy_recipe_experiments",
+      "finding": "Small proxy-model or smaller-scale ablations are used to choose quality weights, transformations and domain rates before expensive runs.",
+      "speck_implication": "Treat data recipe design as an experiment with controls, power or uncertainty estimates, fixed downstream evaluation and measured utility per token/GPU-hour.",
+      "evidence_types": ["Kimi K2/K3", "MiniMax Text-01"]
+    },
+    {
+      "id": "contamination_is_separate",
+      "finding": "Deduplication and benchmark decontamination are distinct, and public reports often disclose insufficient detail to reproduce benchmark removal.",
+      "speck_implication": "Keep benchmark-family joins and evaluation firewalls as independent admission gates. Never infer clearance from exact or semantic dedup alone.",
+      "evidence_types": ["Cross-report comparison in supplied survey"]
+    }
+  ],
+  "adopt_now_as_design_requirements": [
+    "Add stage, source family, transformation type, quality vector, dependency metadata and contamination status to candidate manifests.",
+    "Separate natural core, source-grounded transformation, synthetic reasoning, repository-event and agent-trajectory banks.",
+    "Use quality weighting with coverage constraints rather than a universal hard cutoff.",
+    "Measure token utility as held-out loss, capability gain, retention, preparation cost and allocated GPU-hours per exposed and unique token.",
+    "Add long-range dependency distance and position-stratified checks to the context packet.",
+    "Require independent correctness or outcome checks for rephrasing, learning notes, generated solutions, code repairs and trajectories."
+  ],
+  "defer_or_bound": [
+    "Do not copy frontier mixture percentages; their model sizes, token definitions, repeated exposure and teacher pipelines differ.",
+    "Do not add a fourth pretraining arm. Transformations and stage schedules must fit the existing bounded study or replace a declared factor.",
+    "Do not introduce multimodal data into the first text-only release; retain native multimodal and rendered-code ideas for a later allocation.",
+    "Do not make broad AI-text removal a production rule until a source-aware detector has false-positive controls for math, code, OCR and long-tail knowledge.",
+    "Do not treat proxy-model rankings as final-model proof; confirm selected recipes at matched exposure with held-out families."
+  ],
+  "recipe_hypotheses_for_the_existing_plan": [
+    {
+      "stage": "pretraining",
+      "hypothesis": "A mostly natural, quality-weighted mixture with specialized extraction and modest source-family repetition provides a stronger broad base than a hard high-score-only filter.",
+      "measurement": "Held-out source loss, domain/language coverage, utility per token and unique-supply retention."
+    },
+    {
+      "stage": "mid_training",
+      "hypothesis": "Grounded code/math transformations and repository-event sequences improve capability and downstream optimization efficiency when they preserve lineage and correctness.",
+      "measurement": "Capability per continuation token/GPU-hour, SFT convergence, early RL adaptation and source-family transfer."
+    },
+    {
+      "stage": "context",
+      "hypothesis": "Sequences with explicit distant dependencies outperform equally long but locally predictable documents for useful-context behavior.",
+      "measurement": "Position-stratified retrieval, multi-file reasoning, dependency-distance loss and short-task retention."
+    },
+    {
+      "stage": "post_training",
+      "hypothesis": "Verified outcome data and on-policy/agent trajectories should be selected by task validity and reward reliability, not by length or reasoning verbosity.",
+      "measurement": "Independent task outcomes, supervised-token efficiency, reward agreement, failure recovery and held-out transfer."
+    }
+  ],
+  "admission_boundary": "This synthesis updates hypotheses and experiment design only. It does not admit any external source, establish source rights, change the working mixture percentages, authorize acquisition or alter the 5,000-GPU-hour allocation."
+}

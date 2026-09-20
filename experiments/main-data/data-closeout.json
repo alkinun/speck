@@ -2,7 +2,7 @@
   "format": "speck_data_preparation_closeout",
   "format_version": 1,
   "date": "2026-09-20",
-  "status": "preparation_complete_external_research_intake_pending",
+  "status": "preparation_complete_external_research_reviewed_recipe_revision_pending",
   "purpose": "Freeze the current evidence-only data state before integrating externally compiled dataset research. This receipt closes local deterministic preparation; it does not admit sources or authorize acquisition or training.",
   "completed_scope": [
     {
@@ -132,5 +132,11 @@
     }
   },
   "launch_boundary": "This closeout is an evidence handoff. It does not authorize corpus acquisition, source substitution, training, repetition, GPU spending or publication claims.",
-  "next_action": "Integrate the externally compiled dataset research into the listed merge targets, preserving every pinned identity and open gate. Do not reopen completed local audits unless the new evidence changes a source identity or a declared comparison."
+  "next_action": "Map the reviewed hypotheses to pinned candidate manifests and primary evidence, then revise only the source-readiness gates and study contracts supported by that evidence.",
+  "external_research": {
+    "path": "experiments/main-data/frontier-data-research.json",
+    "sha256": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",
+    "status": "reviewed_primary_reports_hypotheses_only",
+    "changes_made": "Added structured synthesis and design requirements; no source admission, mixture percentage or GPU allocation changed."
+  }
 }

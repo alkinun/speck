@@ -77,13 +77,13 @@ historical; do not repeat the completed pilot because a preparation document sti
 ## Immediate order of work
 
 The local data-preparation pass is now closed for the current evidence. The
-[data closeout](experiments/main-data/data-closeout.json) is the handoff point for externally
-compiled dataset research. Integrate that research before changing source identities, candidate
-weights or study arms; keep all five source-readiness gates explicit.
+[data closeout](experiments/main-data/data-closeout.json) records the supplied frontier-data
+research synthesis. Map its hypotheses to pinned source evidence before changing source identities,
+candidate weights or study arms; keep all five source-readiness gates explicit.
 
-1. **Integrate external dataset research into the data handoff.** Attach each finding to a pinned
+1. **Map the reviewed research to source evidence.** Attach each finding to a pinned
    source/configuration, sampling frame, processing method, baseline, measured result and limitation.
-   Update the candidate review and source-readiness matrix only when the evidence supports the
+   Update the candidate review and source-readiness matrix only when primary evidence supports the
    corresponding gate. Do not reopen completed deterministic audits or infer eligibility from a
    paper's headline result.
 2. **After research intake, complete main-data eligibility and coverage.** The bounded Python/JS/TS practical checks are

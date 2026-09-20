@@ -275,10 +275,11 @@ format audits, candidate card reviews, bounded diagnostics and the three design-
 are complete for the current local evidence. No source is admitted: rights, family partitions,
 independent correctness, finite eligible supply and GH200 cost remain explicit gates.
 
-The next data change is integration of the external dataset research into the closeout's listed
-merge targets. Preserve pinned revisions and existing receipts, attach new claims to a sampling
-frame and baseline, and revise source readiness only when the five gates are supported. The closeout
-does not authorize new acquisition, repetition, GPU work or training.
+The supplied frontier-data research is now recorded in the structured synthesis and linked from the
+closeout. The next data change is source-specific mapping of those hypotheses into pinned candidate
+manifests. Preserve existing receipts, attach new claims to a sampling frame and baseline, and
+revise source readiness only when the five gates are supported. The closeout does not authorize new
+acquisition, repetition, GPU work or training.
 
 ### Next deliverables and decisions
 

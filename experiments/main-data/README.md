@@ -11,8 +11,10 @@ Broader architecture research belongs to later releases. Our base starts from sc
 50,000-hour allocation is not assumed funded.
 
 The [data preparation closeout](data-closeout.json) freezes the current evidence-only corpus pass.
-External dataset research is the next input; no source is admitted and no study packet authorizes
-acquisition or training until the closeout gates are updated with pinned evidence.
+The supplied frontier-data research is recorded in
+[frontier-data-research.json](frontier-data-research.json); source-specific gate updates are next.
+No source is admitted and no study packet authorizes acquisition or training until the closeout gates
+are updated with pinned evidence.
 
 ## Scale
 
