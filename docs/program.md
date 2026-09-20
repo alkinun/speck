@@ -59,7 +59,7 @@ compute. CPU acquisition/verification, disk and external teacher API costs need 
 Release GPU allocations during CPU-only waits where the provider permits it; count every allocated
 GPU, including idle devices. A trainer stop is not necessarily a provider billing stop.
 
-The user-approved research-and-release allocation is:
+The research-and-release allocation is:
 
 | Work | GPU-hours | Share | Four-GPU elapsed equivalent |
 | --- | ---: | ---: | ---: |

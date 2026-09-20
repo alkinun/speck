@@ -29,6 +29,19 @@ post-training conversations**, within a 1–2M planning range. These require the
 quality qualification. All tokens use the frozen Mistral tokenizer; holdouts are outside training
 supply, and exposure/replay is distinct from unique eligible material.
 
+## The first executable data-study packet
+
+[data-study-packet.json](data-study-packet.json) is the next bounded experiment artifact. It binds
+one common baseline, one code-bank contrast and one natural-web contrast, with at most three screening
+arms and a protected confirmation comparison. It fixes the tokenizer, 4K context, objective,
+serialization, exposure accounting and evaluation boundaries while leaving source admission open.
+
+The packet is deliberately design-only. Before any arm can run, every selected source needs named
+source-use decisions, family and near-duplicate partitions, independent correctness checks where
+claimed, finite accepted-token counts, a disjoint evaluation pack and measured GH200 cost. A future
+launch request must bind the qualified manifests and the existing rights/operations/firewall records.
+The packet does not authorize acquisition, training or a main-run mixture.
+
 ## Research before the main run
 
 This is the proposed experiment design, with numeric caps in [plan.json](plan.json). Exact datasets,
@@ -271,8 +284,8 @@ distributed execution, stage promotion criteria and release evaluation.
 
 ## Compute allocation
 
-The user confirmed the four-GH200 / 5,000-total-GPU-hour envelope; provider access and hardware
-throughput remain unconfirmed. Use this reservation without treating previous rental reservations
+The program reserves four GH200s and 5,000 total GPU-hours; provider access and hardware throughput
+remain unconfirmed. Use this reservation without treating previous rental reservations
 as actual provider billing:
 
 | Work | GPU-hours reserved |
@@ -304,8 +317,8 @@ These elapsed times assume each device matches the measured H100 before communic
 in aggregate at perfect scaling, or 41.1K at 80%. They consume four GPU-hours per elapsed hour:
 5,000 aggregate GPU-hours permit 1,250 four-GPU hours (52.1 days), not 5,000 machine-hours.
 The recorded 90-day access window does not establish 90 days of continuous four-GPU funding.
-The user confirmed on September 19 that the allowance is **5,000 total GPU-hours**.
-Provider access remains unconfirmed; the budget interpretation is now explicit.
+The allowance is **5,000 total GPU-hours**. Provider access remains unconfirmed; the budget
+interpretation is explicit.
 
 At the H100 reference rate, keeping the other 2,700 reserved GPU-hours brings the full program to
 approximately **9,612 GPU-hours for 320B** or **11,341 for 400B**, before any distributed penalty.
@@ -318,7 +331,7 @@ engineering pilot is an optimized throughput ceiling or promise a particular spe
 The 100B horizon is now the working preparation baseline, conditional on cost and supply; the
 larger comparisons do not authorize expansion. Preserve continuation checkpoints and choose a
 compatible learning-rate schedule before training; a fully decayed run does not extend at no cost.
-The approved research allocation reserves 200 hours for architecture/efficiency and 900 for data
+The research allocation reserves 200 hours for architecture/efficiency and 900 for data
 experiments, while preserving 2,300 base and 800 post-training production hours. Context production
 is reduced to 300 hours and protected evaluation/recovery to 400. Historical H100 rental costs are
 separate. Remeasure throughput if the architecture decision changes the reference model.

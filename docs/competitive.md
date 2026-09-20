@@ -4,7 +4,7 @@ Status: strategy and proposed release gates, not measured Speck capability or a 
 The reference is the existing 1.2B-total, all-active KDA/GQA model with dense feed-forward
 layers. One bounded matched attention-control study is in scope; MoE and broad
 architecture/size searches remain later work.
-The user clarified that developing our own pretraining capability is essential; pretrained
+Developing our own pretraining capability is essential; pretrained
 adaptation is not an alternative first-release route.
 The 100B working first-release horizon is a cost-based preparation target, not evidence that the
 result will be competitive. Larger deferred horizons do not establish parity with current releases.

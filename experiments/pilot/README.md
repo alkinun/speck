@@ -54,7 +54,7 @@ recovery remain checks on the actual allocation.
 
 ## Local qualitative preview — 2026-09-19
 
-The user-requested [completion preview](completion-preview.json) ran eight newly written plain
+The [completion preview](completion-preview.json) ran eight newly written plain
 completion prompts on the local RTX 3090 using the reconstructed final export. All 18 export
 file hashes were reverified before loading. BF16 greedy decoding with a 64-token limit completed
 in 11.98 seconds including identity checks, loading and cold startup; peak allocated memory was

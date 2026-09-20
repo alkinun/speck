@@ -125,7 +125,7 @@ Prioritize these additions and checks:
 1. Prioritize the retained [UltraData-SFT-2605](https://huggingface.co/datasets/openbmb/UltraData-SFT-2605)
    `think` math/code/instruction examples and independently checked reasoning. Balance brief and
    deep reasoning by task difficulty. The earlier proposal to add `no_think` as a response mode is
-   superseded by the user's always-thinking requirement. Such sources may supply candidate tasks
+   superseded by the always-thinking assistant contract. Such sources may supply candidate tasks
    or reference answers, but need separately generated/verified reasoning before reasoning-SFT
    admission. Do not fabricate a rationale or insert an empty thinking block to relabel a record.
 2. Inspect selected [SmolTalk2](https://huggingface.co/datasets/HuggingFaceTB/smoltalk2) SFT

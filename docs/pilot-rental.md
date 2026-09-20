@@ -25,7 +25,8 @@ started after removing supervisor rank variables that incorrectly triggered dist
 The endpoint later refused SSH and the gateway reported container not found. The final checkpoint
 and CPU export reconstruction are verified locally. The original eight-hour watcher ended at
 2026-09-19 04:11 UTC without observing recovery. Its terminal evidence is
-preserved in the execution receipt. The user subsequently restarted one H100 and supplied access.
+preserved in the execution receipt. The H100 was later restarted and access was restored for the
+remaining inspection work.
 The retained disk had 84 partial GSM8K evaluation rows and no live evaluator. A fresh complete
 development pass used `development-restored-20260919/`, supervised under
 `recovery-after-restart-20260919/`, within a new four-hour reservation ending September 19 at
@@ -175,7 +176,8 @@ the original packet and transfer receipt locally. Create a SHA-256 file inventor
 and verify it against the copied files locally; do not infer backup success from a completed copy
 command alone. If bandwidth requires keeping fewer checkpoints, preserve the final model/optimizer,
 recovery metadata, all small evidence and every failed artifact needed for diagnosis first, and
-record exactly what was omitted. The user controls rental shutdown after backup verification.
+record exactly what was omitted. Shut down the rental after backup verification and record the
+provider-side billing state separately.
 
 With every attempt stopped and no writer active, produce the inventory on the rental:
 

@@ -18,8 +18,8 @@ capability development. External models are comparators or qualified teachers, n
   recurrent blocks then one global NoPE GQA block, repeated six times. Dense SwiGLU throughout,
   intermediate width 5120, tied embeddings, sigmoid KDA gates. One bounded architecture/efficiency comparison before backbone freeze; no MoE or size sweep.
 - **Tokenizer fixed:** Mistral 32K; 32,003 embedding rows include three assistant role IDs.
-- **Compute envelope confirmed by the user:** 5,000 total GPU-hours across four GH200s, equivalent
-  to 1,250 hours with all four allocated. Site/access and GH200 throughput remain unconfirmed.
+- **Compute envelope:** 5,000 total GPU-hours across four GH200s, equivalent to 1,250 hours with
+  all four allocated. Site/access and GH200 throughput remain unconfirmed.
 - **Behavior selected:** one always-thinking protocol with brief/deep reasoning and tool actions;
   no supported non-thinking response mode. Preserve separate base and assistant checkpoints.
 - **Context target:** start at 4K, qualify 16K then 32K within 300 production GPU-hours; 128K is a stretch.

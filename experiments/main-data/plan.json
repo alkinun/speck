@@ -372,7 +372,7 @@
     "qualification_status": "experiments/corpus-audit/data-readiness.json records the full retained SFT structural census, unchanged deterministic samples at four serialized context ceilings, prompt links and bounded RL reference/schema inventory. Format compatibility is not answer quality or thinking/tool success. Preserve source records and missing-tail limitations; no admission or RL launch."
   },
   "compute": {
-    "allocation_status": "user_confirmed_envelope_provider_access_unconfirmed",
+    "allocation_status": "defined_envelope_provider_access_unconfirmed",
     "requested_gpus": 4,
     "requested_total_gpu_hours": 5000,
     "reservations_gpu_hours": {
@@ -418,7 +418,7 @@
       }
     ],
     "boundary": "H100 measured full-trainer rate includes startup, validation and saves, not setup, external capability evaluation, transfer/idle or provider billing. No GH200/multiworker scaling claim. Effective rate divides aggregate throughput by every allocated GPU. Do not spend protected context/SFT/evaluation budgets on base expansion.",
-    "allocation_interpretation": "User confirmed 2026-09-19: 5,000 total GPU-hours across four GH200s, equivalent to 1,250 four-GPU elapsed hours. Provider access remains unconfirmed.",
+    "allocation_interpretation": "The planning envelope is 5,000 total GPU-hours across four GH200s, equivalent to 1,250 four-GPU elapsed hours. Provider access remains unconfirmed.",
     "scaling_boundary": "Illustrative 80% efficiency is not measured. Four GPUs at H100 per-device speed yield 51,437 aggregate tokens/s at perfect scaling or 41,149 at 80%; GPU-hour cost is invariant at perfect scaling and rises with inefficiency. GH200 per-device gains require measurement.",
     "proposed_post_training_breakdown_gpu_hours": {
       "sft": 500,
@@ -429,8 +429,8 @@
       "comparative_and_final_evaluation": 200,
       "recovery_and_unresolved_cost_reserve": 200
     },
-    "breakdown_status": "User-approved 5000-hour research-and-release envelope; stage subdivisions are planning caps, not measured requirements or job authorization. Research includes each experiment's evaluation/preparation/retries; production phases have separate exposure ledgers.",
-    "reservation_revision": "Approved research-first revision: runtime 100, architecture/efficiency 200, data research 900 (600/150/150), base/capability production 2300, context production 300, post-training production 800, protected evaluation/recovery 400. External H100 rentals remain separate; no repeat engineering pilot.",
+    "breakdown_status": "The 5000-hour research-and-release envelope is a planning cap, not a measured requirement or job authorization. Research includes each experiment's evaluation/preparation/retries; production phases have separate exposure ledgers.",
+    "reservation_revision": "Research-first allocation: runtime 100, architecture/efficiency 200, data research 900 (600/150/150), base/capability production 2300, context production 300, post-training production 800, protected evaluation/recovery 400. External H100 rentals remain separate; no repeat engineering pilot.",
     "main_budget_feasibility": {
       "h100_rate_tokens_in_reserved_hours": 106474161012.40411,
       "reference_margin_gpu_hours": 139.8514924836527,
@@ -495,7 +495,8 @@
     "experiments/corpus-audit/code-expansion.json": "cd7baf97ebbf7d6898610b2ee85b37bb03a63d8fc7369e3a7ab4e4a529566b48",
     "experiments/corpus-audit/code-application-origins.json": "49932682280ceb291dff7827520787e148c76783f5488c0f083d41323f1b0ac8",
     "experiments/corpus-audit/code-yield-result.json": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94",
-    "experiments/corpus-audit/data-readiness.json": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549"
+    "experiments/corpus-audit/data-readiness.json": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549",
+    "experiments/main-data/data-study-packet.json": "f20ab236d8bf8dd9554d04e7f4ac9713dd54b1a58c74a42ca915d543f16f2a89"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",
@@ -508,7 +509,7 @@
     "frozen optimizer schedule and stop budget"
   ],
   "program_objective": {
-    "initialization": "from scratch; external pretrained base adaptation excluded by user on 2026-09-19",
+    "initialization": "from scratch; external pretrained base adaptation is excluded",
     "first_program_gpu_hours": 5000,
     "release_targets": [
       "base checkpoint",
