@@ -6,8 +6,18 @@
     "rows_with_empty_expected_answer": 0
   },
   "boundary": "Schema, source labels, character lengths and boxed-answer self-consistency only. No independent oracle, contamination clearance, source-use decision, finite-supply estimate or training admission.",
-  "checked_utc": "2026-09-20T06:53:40.526514+00:00",
+  "checked_utc": "2026-09-20T07:03:10.500915+00:00",
   "config": "default",
+  "contamination": {
+    "benchmark": "gsm8k",
+    "benchmark_path": "/home/alkin/.cache/huggingface/hub/datasets--openai--gsm8k/blobs/ee7b8da9e381df27b9e3f7758a159ab2bdaa4dbaa910546cbbc47e0cb44e4f59",
+    "benchmark_rows": 1319,
+    "benchmark_sha256": "ee7b8da9e381df27b9e3f7758a159ab2bdaa4dbaa910546cbbc47e0cb44e4f59",
+    "boundary": "Exact normalized problem matching against GSM8K only. MATH, derived variants, semantic overlap and the full candidate are not covered; zero matches does not establish contamination clearance.",
+    "exact_normalized_problem_matches": 0,
+    "sample_rows_with_gsm8k_source_label": 10,
+    "status": "exact_match_diagnostic_only"
+  },
   "corpus_code_executed": false,
   "dataset": "nvidia/OpenMathInstruct-2",
   "format": "speck_openmathinstruct2_bounded_sample",

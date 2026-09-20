@@ -236,8 +236,9 @@ payloads were not acquired. These revision pins are separate from older stock id
 
 The bounded [OpenMathInstruct-2 sample receipt](../experiments/corpus-audit/openmathinstruct2-sample.json)
 checks 80 fixed-offset rows for schema, source strata, lengths and boxed-answer self-consistency.
-It is diagnostic evidence only: independent correctness, contamination clearance and source-use
-decisions remain open.
+It finds zero exact normalized matches against the pinned 1,319-row GSM8K evaluation file, while
+10 sampled rows carry GSM8K-derived source labels. This is diagnostic evidence only: MATH, derived
+variants, semantic overlap, independent correctness and source-use decisions remain open.
 
 The intended pretraining composition is selected broad natural text, meaningful code exposure,
 math/science, reference/documents and a controlled refined/synthetic component. Preserve everyday,

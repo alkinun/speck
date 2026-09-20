@@ -16,6 +16,7 @@ import hashlib
 import json
 import re
 import statistics
+import unicodedata
 import urllib.parse
 import urllib.request
 from datetime import UTC, datetime
@@ -51,7 +52,12 @@ def fetch(offset):
     return url, hashlib.sha256(payload).hexdigest(), rows
 
 
-def audit():
+def normalize(value):
+    value = unicodedata.normalize("NFKC", value).replace("\u00a0", " ")
+    return re.sub(r"\s+", " ", value).strip().casefold()
+
+
+def audit(gsm8k_path=None):
     source_counts = collections.Counter()
     problem_lengths = []
     solution_lengths = []
@@ -59,6 +65,7 @@ def audit():
     boxed_count = 0
     boxed_expected_matches = 0
     responses = []
+    sample_rows = []
 
     for offset in OFFSETS:
         url, response_sha256, rows = fetch(offset)
@@ -70,6 +77,7 @@ def audit():
                 "response_sha256": response_sha256,
             }
         )
+        sample_rows.extend(item["row"] for item in rows)
         for item in rows:
             row = item["row"]
             source_counts[row["problem_source"]] += 1
@@ -86,6 +94,32 @@ def audit():
             "min_chars": min(values),
             "median_chars": statistics.median(values),
             "max_chars": max(values),
+        }
+
+    contamination = {
+        "status": "not_run",
+        "boundary": "No benchmark comparison was requested.",
+    }
+    if gsm8k_path:
+        import pyarrow.parquet as parquet
+
+        benchmark = Path(gsm8k_path)
+        benchmark_questions = parquet.read_table(benchmark, columns=["question"])[
+            "question"
+        ].to_pylist()
+        benchmark_keys = {normalize(question) for question in benchmark_questions}
+        matches = sum(normalize(row["problem"]) in benchmark_keys for row in sample_rows)
+        contamination = {
+            "benchmark": "gsm8k",
+            "benchmark_path": str(benchmark),
+            "benchmark_sha256": hashlib.sha256(benchmark.read_bytes()).hexdigest(),
+            "benchmark_rows": len(benchmark_questions),
+            "exact_normalized_problem_matches": matches,
+            "sample_rows_with_gsm8k_source_label": sum(
+                row["problem_source"] in {"gsm8k", "augmented_gsm8k"} for row in sample_rows
+            ),
+            "status": "exact_match_diagnostic_only",
+            "boundary": "Exact normalized problem matching against GSM8K only. MATH, derived variants, semantic overlap and the full candidate are not covered; zero matches does not establish contamination clearance.",
         }
 
     return {
@@ -113,6 +147,7 @@ def audit():
             "boxed_solution_equals_expected": boxed_expected_matches,
             "independent_correctness_established": False,
         },
+        "contamination": contamination,
         "responses": responses,
         "training_admitted": False,
         "corpus_code_executed": False,
@@ -123,8 +158,9 @@ def audit():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--gsm8k-path", type=Path)
     args = parser.parse_args()
-    result = audit()
+    result = audit(args.gsm8k_path)
     rendered = json.dumps(result, indent=2, sort_keys=True) + "\n"
     if args.output:
         args.output.write_text(rendered)

@@ -116,12 +116,14 @@
       ],
       "bounded_sample": {
         "receipt_path": "experiments/corpus-audit/openmathinstruct2-sample.json",
-        "receipt_sha256": "023ce25401427c90189f466ddda905dc37609f1c5d00ac50253e53c00eebaa93",
+        "receipt_sha256": "38a328cad858acef19359a62d7bb0d33f91e0e267e5f62a0af69ae7137b0441c",
         "audit_script": "experiments/corpus-audit/audit_openmath_sample.py",
-        "audit_script_sha256": "5320d0d51839dc5975fcb45456a6e9b01906bd443a75e3a46bb3c22b04825386",
+        "audit_script_sha256": "c5a07ba0f28ebf1c9adaa6c109c21c3c2dfc94cee96a64aa4d4d746645330bda",
         "rows": 80,
         "source_strata": 4,
         "boxed_expected_matches": 58,
+        "gsm8k_exact_normalized_matches": 0,
+        "sample_rows_with_gsm8k_source_label": 10,
         "independent_correctness": false
       }
     },
