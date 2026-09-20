@@ -140,6 +140,10 @@ hashes, tokenizer identity, rejection reasons, and complete-conversation fit wit
 Pass conversation shards only: Hugging Face `cache-*.arrow` files can contain shuffle indices.
 A sample's fit percentage is an estimate, not a prepared training count or quality score.
 
+The [post-training audit protocol](../experiments/main-data/post-training-audit-protocol.json) extends
+this structural audit with fixed outcome strata, tool-trajectory checks, deterministic environment
+controls and a bounded fixed-policy RL panel. It must close before a post-training study arm is selected.
+
 SFT can initialize directly from a completed native base checkpoint. Bind its model and metadata
 hashes with `speck.export.pretrained.native_pretrained_source(directory, step)` and use the returned
 object as `sft.json`'s `pretrained` setting. This reads local weights without exporting or uploading

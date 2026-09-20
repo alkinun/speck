@@ -47,6 +47,10 @@
     "post_training_manifest": {
       "path": "experiments/main-data/post-training-candidate-manifest.json",
       "status": "candidate_manifest_not_admitted"
+    },
+    "post_training_audit_protocol": {
+      "path": "experiments/main-data/post-training-audit-protocol.json",
+      "status": "design_only_not_training_authority"
     }
   },
   "model": {
@@ -545,7 +549,7 @@
     "experiments/main-data/source-readiness.json": "fb04c0d3f3b3ee72048858629ea8b0faed69d7d4f8a942c1a5a116ecaadd51d8",
     "experiments/main-data/mid-training-study-packet.json": "66943bd323c666a563be3aeb9bd08215dceac987b762419e7a89f380edadaf05",
     "experiments/main-data/post-training-study-packet.json": "1ecb95b3fc9e318cba2693ff1e192c70e7dde0146f4b8aa646d61d93420d33cb",
-    "experiments/main-data/data-closeout.json": "6535161d2fa56060b7b95b336136322ba0c7af83b7fb88b1ea98d11d828f0a43",
+    "experiments/main-data/data-closeout.json": "1f016a944e8bbd2c7a326a18921fb48e313f090574aecea0c1976945959dae0e",
     "experiments/main-data/frontier-data-research.json": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",
     "experiments/main-data/data-design-contract.json": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f",
     "experiments/main-data/frontier-data-source-mapping.json": "1e8621483defe5ecfb9785c71a77f317b62b00ac522b5ad91c56bbb942faf473",
@@ -553,7 +557,8 @@
     "experiments/main-data/natural-web-candidate-manifest.json": "a099f269b0b466d76c3bd914d7ac69bc8241ada17332509eaeaafa4665d4ed17",
     "experiments/main-data/natural-code-candidate-manifest.json": "ebaf0bb386b4ba81e4c5400435c5652b00acacc5634570afaf8aaedd666fbae1",
     "experiments/main-data/math-candidate-manifest.json": "cbf18ff1bc36cf2caa566b21536f3e6f9e3d8749c8bf57d513e7ced6ac3e2610",
-    "experiments/main-data/post-training-candidate-manifest.json": "38b1da8ff316c6a6a7ddc7580cb144367489eb73829032471daa28ee595cac9b"
+    "experiments/main-data/post-training-candidate-manifest.json": "38b1da8ff316c6a6a7ddc7580cb144367489eb73829032471daa28ee595cac9b",
+    "experiments/main-data/post-training-audit-protocol.json": "9b90084b25ff6591e8773f6d65f578dac1ec86f86164da5465606c370fa09db1"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

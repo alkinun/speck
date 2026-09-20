@@ -1,0 +1,156 @@
+{
+  "format": "speck_post_training_audit_protocol",
+  "format_version": 1,
+  "date": "2026-09-20",
+  "status": "design_only_not_training_authority",
+  "purpose": "Define the bounded structural, outcome and verifier checks required before selecting SFT data or running fixed-policy RL feasibility.",
+  "evidence_boundary": "This protocol fixes audit strata and stop rules; it does not acquire sources, execute external corpus code, admit rows, update a policy or authorize GPU work.",
+  "source_of_truth": {
+    "candidate_manifest": {
+      "path": "experiments/main-data/post-training-candidate-manifest.json",
+      "sha256": "38b1da8ff316c6a6a7ddc7580cb144367489eb73829032471daa28ee595cac9b"
+    },
+    "study_packet": {
+      "path": "experiments/main-data/post-training-study-packet.json",
+      "sha256": "1ecb95b3fc9e318cba2693ff1e192c70e7dde0146f4b8aa646d61d93420d33cb"
+    },
+    "data_readiness": {
+      "path": "experiments/corpus-audit/data-readiness.json",
+      "sha256": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549"
+    },
+    "sft_audit_cli": {
+      "path": "scripts/sft_audit.py",
+      "sha256": "ac31949aab3c8545a838cc441c27e5b49256e7ffc32fd112aa7b1c19f1521704"
+    },
+    "sft_audit_impl": {
+      "path": "speck/training/sft_audit.py",
+      "sha256": "9715d78eb530a7b5ae00d665947c3f7f8d041b41bb6ec4548c050566ec9b477b"
+    },
+    "tool_environment": {
+      "path": "speck/evaluation/tools.py",
+      "sha256": "05c1038e085e4200bacab2cee2950684b592d2eb9b5af852de0d663dee3dbd5b"
+    },
+    "qualification_rules": {
+      "path": "experiments/main-data/qualification-rules.json",
+      "sha256": "6279b75e5515a136b795056b6405745b551c3835e7956b551dd1c070bc2310b0"
+    }
+  },
+  "audit_order": [
+    "Bind source revisions, terms, component lineage and held-out family identities.",
+    "Run the deterministic structural SFT audit and freeze row/task-family exclusions.",
+    "Run bounded independent outcome and tool-trajectory checks on eligible rows only.",
+    "Bind supervised/context token counts and matched SFT strata for the two research arms.",
+    "Qualify fixed-policy RL prompts, verifiers and deterministic tool controls after a useful SFT parent exists."
+  ],
+  "sft_structural_audit": {
+    "tool": "scripts.sft_audit.py",
+    "settings": {
+      "samples_per_source_subset": 256,
+      "context_lengths": [
+        4096,
+        16384,
+        32768,
+        131072
+      ],
+      "seed": "bind_before_run"
+    },
+    "coverage": "Census every row; deterministic sample within each source/subset; preserve source/subset identities and file hashes.",
+    "required_outputs": [
+      "row and rejection counts",
+      "tool/reasoning/context-only indicators",
+      "total and supervised token quantiles",
+      "complete-row fit at each context ceiling",
+      "input/tokenizer/adapter fingerprints"
+    ],
+    "boundary": "Structural and length evidence only; it does not establish correctness, source rights, contamination clearance or arm eligibility."
+  },
+  "sft_outcome_panel": {
+    "status": "planned_after_source_and_parent_gates",
+    "strata": [
+      "publisher/source family",
+      "subset/task category",
+      "reasoning versus direct response",
+      "tool versus no-tool",
+      "context/length band",
+      "code/math/instruction outcome type"
+    ],
+    "minimum_panel": "32 eligible rows per nonempty source/category stratum, with all known-invalid, unresolved and held rows excluded from the accepted panel and counted separately.",
+    "checks": [
+      "independent code tests or oracle",
+      "independent math/reference verification",
+      "instruction/protocol constraints",
+      "tool schema and observation consistency",
+      "reasoning/final-answer separation",
+      "source and benchmark family joins"
+    ],
+    "report": [
+      "accepted/rejected/unresolved counts",
+      "false-positive and false-negative controls",
+      "supervised/context tokens",
+      "assistant-token density and reasoning length",
+      "preparation and verification cost"
+    ],
+    "stop_rules": [
+      "No independent oracle: keep the row unresolved.",
+      "A source-family or benchmark join is unresolved: quarantine the connected family.",
+      "Structural validity without outcome evidence cannot promote a row."
+    ]
+  },
+  "tool_trajectory_panel": {
+    "status": "planned_after_adapter_and_environment_gates",
+    "strata": [
+      "Code-Agent",
+      "General-Agent",
+      "Search-Agent",
+      "Tool-Use"
+    ],
+    "minimum_panel": "64 complete candidate trajectories per nonempty agent subset when supply permits; retain every rejection reason and do not backfill from another subset.",
+    "checks": [
+      "speck_tools_v1 schema validity",
+      "turn order and tool-result binding",
+      "required argument and response fields",
+      "observation grounding",
+      "successful, failed and recovery cases",
+      "assistant mask and context accounting"
+    ],
+    "environment_control": "Run the existing five deterministic golden tool scenarios before interpreting source trajectories. A passing control verifies the evaluator, not the data.",
+    "stop_rules": [
+      "Unresolved tool calls or missing parameter schemas remain rejected.",
+      "No recovery case: do not claim agent reliability.",
+      "Adapter-only conversion remains a format intervention and must be reported separately."
+    ]
+  },
+  "rl_feasibility_panel": {
+    "status": "conditional_fixed_policy_only",
+    "parent": "Selected SFT checkpoint after the SFT comparison or documented baseline-only outcome.",
+    "planned_rows": {
+      "Code": 25,
+      "Math": 128,
+      "Knowledge": 64,
+      "Long_Context": 0
+    },
+    "selection": "Deterministic family-stratified sample from eligible prompts; keep the 60-row long-context probe outside the initial 16K path because all inspected queries exceed 32K.",
+    "required_controls": [
+      "pinned references/tests",
+      "deliberately wrong controls",
+      "solvable and unsolvable strata",
+      "verifier validity and agreement",
+      "rollout length/tool-step/retry cost",
+      "environment recovery",
+      "held-out transfer"
+    ],
+    "outputs": [
+      "fixed-policy success/failure/recovery curves",
+      "verifier pass validity",
+      "difficulty and cost distributions",
+      "decision on policy-training infrastructure"
+    ],
+    "boundary": "No policy updates, RL-data ablation or production RL commitment."
+  },
+  "decision_boundary": {
+    "sft_arm_launch": "Requires accepted manifest, independent outcome panel, source/task-family partitions, supervised-token target, useful parent and measured cost.",
+    "rl_feasibility_launch": "Requires selected SFT parent, eligible prompt/reference manifest, valid verifier controls, deterministic environment and budget receipt.",
+    "negative_result": "Report baseline-only or inconclusive outcomes; do not replace unresolved rows with undisclosed samples."
+  },
+  "admission_boundary": "This is an audit protocol only. It does not admit downstream data, authorize corpus execution, start SFT/RL, or change the 150-GPU-hour research reservation."
+}

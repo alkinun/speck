@@ -98,6 +98,8 @@ correctness, contamination and finite-supply gates close.
 The [post-training candidate manifest](experiments/main-data/post-training-candidate-manifest.json)
 binds the assistant and reward inventories while keeping structural validity, outcome verification,
 tool trajectories and fixed-policy RL feasibility as separate downstream gates.
+The [post-training audit protocol](experiments/main-data/post-training-audit-protocol.json) fixes the
+bounded order and stop rules for closing those gates.
 
 1. **Map the reviewed research to source evidence.** The
    [source-mapping receipt](experiments/main-data/frontier-data-source-mapping.json) now attaches each

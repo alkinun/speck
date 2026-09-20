@@ -157,10 +157,14 @@
     "post_training_manifest": {
       "path": "experiments/main-data/post-training-candidate-manifest.json",
       "sha256": "38b1da8ff316c6a6a7ddc7580cb144367489eb73829032471daa28ee595cac9b"
+    },
+    "post_training_audit_protocol": {
+      "path": "experiments/main-data/post-training-audit-protocol.json",
+      "sha256": "9b90084b25ff6591e8773f6d65f578dac1ec86f86164da5465606c370fa09db1"
     }
   },
   "launch_boundary": "This closeout is an evidence handoff. It does not authorize corpus acquisition, source substitution, training, repetition, GPU spending or publication claims.",
-  "next_action": "Resolve the downstream manifest lineage, outcome, partition and token-count gates, then qualify runtime before freezing any post-training study arm.",
+  "next_action": "Execute the bounded downstream audit protocol after source/parent gates close: structural SFT audit, stratified outcome/tool review, then fixed-policy verifier feasibility.",
   "external_research": {
     "path": "experiments/main-data/frontier-data-research.json",
     "sha256": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",

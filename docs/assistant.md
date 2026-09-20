@@ -172,6 +172,11 @@ initial 16K RL path. The Code probe has 808 paired test cases; schema validity d
 strength or executable correctness. Retain prompt/reference inventories separately from successful
 SFT trajectories. Verifier qualification, source-use decisions and a useful parent policy still gate RL.
 
+The [post-training audit protocol](../experiments/main-data/post-training-audit-protocol.json) fixes
+the bounded review order: structural SFT audit, stratified independent outcome checks, tool-trajectory
+validation, then fixed-policy verifier feasibility. It keeps query-only prompts separate from successful
+assistant trajectories and does not authorize SFT or RL.
+
 ## Stage and budget ownership
 
 The [program overview](program.md#thinking-sft) connects this data/format contract to length-bucketed
