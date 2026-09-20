@@ -23,7 +23,7 @@
   "peak_allocated_bytes": 2742045696,
   "outputs_sha256": "bf574cf545ca251261f56f3b719ee6b5e9ae840c5b22eb64ff9a69f9c3cb2a24",
   "completed_prompts": 8,
-  "scope": "Separate user-requested qualitative local preview; frozen rental evaluation and training inputs unchanged.",
+  "scope": "Separate qualitative local preview; frozen rental evaluation and training inputs unchanged.",
   "evidence_directory": "/mnt/speck-data/speck/h100-pilot-execution-20260918/local-completion-preview-20260919",
   "training_steps": 800,
   "training_tokens": 104857600,
