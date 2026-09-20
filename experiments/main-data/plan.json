@@ -19,7 +19,11 @@
       "Record the comparison result and limitations, select a supported starting recipe, then freeze and launch main pretraining.",
       "Use useful stage checkpoints for capability/context and SFT/RL data comparisons before committing each downstream stage; charge each to its declared reservation."
     ],
-    "candidate_contrast": "Screen at most one code-bank contrast selected from fixed source audits and one natural-web source contrast against a shared eligible baseline. Checked-code substitution remains an alternative only with qualified supply. Confirm one selected intervention; no untested combination or broad weight sweep."
+    "candidate_contrast": "Screen at most one code-bank contrast selected from fixed source audits and one natural-web source contrast against a shared eligible baseline. Checked-code substitution remains an alternative only with qualified supply. Confirm one selected intervention; no untested combination or broad weight sweep.",
+    "data_design_contract": {
+      "path": "experiments/main-data/data-design-contract.json",
+      "status": "shared_design_requirements_only_no_source_admission"
+    }
   },
   "model": {
     "parameters": 1195884576,
@@ -97,7 +101,8 @@
       "token_horizon": null,
       "initialization": "Fresh paired initial model tensors and optimizer/data state; confirmation seeds differ from screening. Reusing qualified training families is allowed and counted.",
       "selection_boundary": "Report each seed pair and family-level uncertainty separately. Inconsistent pairs or uninformative capability endpoints restrict claims; two seeds do not establish broad training robustness."
-    }
+    },
+    "data_design_contract": "experiments/main-data/data-design-contract.json"
   },
   "main_pretraining": {
     "target_tokens": 100000000000,
@@ -253,7 +258,8 @@
         "downstream_accounting": "Linked SFT/RL efficiency evaluation is charged to the separate 150-hour post-training research reservation; it is not hidden in the 150-hour mid-training cap."
       }
     },
-    "context_extension": "See context_extension for the separate additional exposure, length curriculum and budget; keep capability and length effects distinct"
+    "context_extension": "See context_extension for the separate additional exposure, length curriculum and budget; keep capability and length effects distinct",
+    "data_design_contract": "experiments/main-data/data-design-contract.json"
   },
   "context_extension": {
     "target_tokens": null,
@@ -383,7 +389,8 @@
       "packet": "experiments/main-data/post-training-study-packet.json",
       "downstream_accounting": "SFT comparison uses 100 hours, fixed-policy RL feasibility 20 hours and support 30 hours; production SFT/RL exposure remains in the separate 800-hour reservation."
     },
-    "qualification_status": "experiments/corpus-audit/data-readiness.json records the full retained SFT structural census, unchanged deterministic samples at four serialized context ceilings, prompt links and bounded RL reference/schema inventory. Format compatibility is not answer quality or thinking/tool success. Preserve source records and missing-tail limitations; no admission or RL launch."
+    "qualification_status": "experiments/corpus-audit/data-readiness.json records the full retained SFT structural census, unchanged deterministic samples at four serialized context ceilings, prompt links and bounded RL reference/schema inventory. Format compatibility is not answer quality or thinking/tool success. Preserve source records and missing-tail limitations; no admission or RL launch.",
+    "data_design_contract": "experiments/main-data/data-design-contract.json"
   },
   "compute": {
     "allocation_status": "defined_envelope_provider_access_unconfirmed",
@@ -510,16 +517,18 @@
     "experiments/corpus-audit/code-application-origins.json": "49932682280ceb291dff7827520787e148c76783f5488c0f083d41323f1b0ac8",
     "experiments/corpus-audit/code-yield-result.json": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94",
     "experiments/corpus-audit/data-readiness.json": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549",
-    "experiments/main-data/data-study-packet.json": "f20ab236d8bf8dd9554d04e7f4ac9713dd54b1a58c74a42ca915d543f16f2a89",
-    "experiments/main-data/source-readiness.json": "105113484a6073e4300c8d470e3ef614812d57d780a26786b2687e982cec3713",
-    "experiments/main-data/mid-training-study-packet.json": "56574c25ad7893c020b6e52abb851946ff61ae8c45ac8ac4fa4e944d3736121e",
-    "experiments/main-data/post-training-study-packet.json": "8f5927edf1afb23f8b97021440b34ef99ed69086f5900085a27fa209b2dbb68a",
-    "experiments/main-data/data-closeout.json": "c9a18dd2c011d5f3eaa50c6aa25a9414443d1fef548d439479e5784873488dd9",
-    "experiments/main-data/frontier-data-research.json": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5"
+    "experiments/main-data/data-study-packet.json": "62a38d4c5278e151e229681208c8e877f6ead5ceef032d7b0b0dbffdf91b3213",
+    "experiments/main-data/source-readiness.json": "4d5ffe1efcb2979bd7ece20b2b5c7df2ac694bfb9b227000cdccfdc10757b6b5",
+    "experiments/main-data/mid-training-study-packet.json": "154ce98eaa5a5d5b7c20b2b68f056ac34837837ecaf36ce7b5cfa5af4746b9ca",
+    "experiments/main-data/post-training-study-packet.json": "274da2954ade60ee11b0545a1771a04200f19873f344df16ae18960852d0bd9f",
+    "experiments/main-data/data-closeout.json": "0cfaca1c40edfd1e8bb5b289e7775118862527209c81c97b2b70b9449680a4a3",
+    "experiments/main-data/frontier-data-research.json": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",
+    "experiments/main-data/data-design-contract.json": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",
     "completed architecture/efficiency comparison and frozen backbone before pretraining-data experiments",
+    "shared stage-conditioned data-design contract bound to every data manifest",
     "qualified per-source supply and revised manifest",
     "completed pretraining-data comparison and documented starting-recipe decision before main pretraining",
     "joint source-family exclusions and validation split",

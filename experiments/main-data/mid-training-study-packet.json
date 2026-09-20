@@ -12,7 +12,7 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "105113484a6073e4300c8d470e3ef614812d57d780a26786b2687e982cec3713"
+      "sha256": "4d5ffe1efcb2979bd7ece20b2b5c7df2ac694bfb9b227000cdccfdc10757b6b5"
     },
     "qualification_rules": {
       "path": "experiments/main-data/qualification-rules.json",
@@ -21,6 +21,10 @@
     "data_readiness": {
       "path": "experiments/corpus-audit/data-readiness.json",
       "sha256": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549"
+    },
+    "design_contract": {
+      "path": "experiments/main-data/data-design-contract.json",
+      "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
     }
   },
   "common_contract": {
@@ -32,7 +36,8 @@
     "initialization": "Arms branch from the same useful parent and preserve the declared optimizer policy. Any cursor reset or optimizer-state change is predeclared and measured.",
     "downstream": "Use one fixed SFT recipe and one fixed RL feasibility recipe for linked efficiency evaluation. Downstream runs are charged to the 150-hour post-training research reservation, not hidden in this packet.",
     "evaluation": "Hold out source families and final tests. Report source/domain loss, capability, retention, SFT convergence and early RL adaptation separately.",
-    "accounting": "Count source preparation, teacher/generation, validation, retries, discarded trajectories, training, evaluation and allocated idle time once and by stage."
+    "accounting": "Count source preparation, teacher/generation, validation, retries, discarded trajectories, training, evaluation and allocated idle time once and by stage.",
+    "data_design_contract": "experiments/main-data/data-design-contract.json"
   },
   "arms": [
     {
@@ -135,6 +140,7 @@
     "GH200 cost and recovery behavior support the matched horizon within the declared reservation."
   ],
   "required_outputs_for_report": [
+    "Manifest fields, quality-weighted coverage distributions, lineage and contamination status under the shared data-design contract.",
     "Per-arm source, derived-example and replay accounting.",
     "Capability and retention versus mid-training tokens and GPU-hours.",
     "SFT convergence, early RL adaptation and held-out transfer under fixed downstream recipes.",

@@ -7,7 +7,7 @@
   "source_of_truth": {
     "data_study_packet": {
       "path": "experiments/main-data/data-study-packet.json",
-      "sha256": "f20ab236d8bf8dd9554d04e7f4ac9713dd54b1a58c74a42ca915d543f16f2a89"
+      "sha256": "62a38d4c5278e151e229681208c8e877f6ead5ceef032d7b0b0dbffdf91b3213"
     },
     "data_readiness": {
       "path": "experiments/corpus-audit/data-readiness.json",
@@ -36,6 +36,10 @@
     "math_arithmetic_review": {
       "path": "experiments/corpus-audit/infiwebmath-4plus-arithmetic-review.json",
       "sha256": "0f150799d621b85d39b1742a682d78c99fece8ff0e46c8fb0d10fd14053b3412"
+    },
+    "design_contract": {
+      "path": "experiments/main-data/data-design-contract.json",
+      "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
     }
   },
   "gate_vocabulary": {

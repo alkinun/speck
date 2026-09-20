@@ -17,6 +17,10 @@
     "qualification_rules": {
       "path": "experiments/main-data/qualification-rules.json",
       "sha256": "6279b75e5515a136b795056b6405745b551c3835e7956b551dd1c070bc2310b0"
+    },
+    "design_contract": {
+      "path": "experiments/main-data/data-design-contract.json",
+      "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
     }
   },
   "common_contract": {
@@ -28,7 +32,8 @@
     "exposure": "Same complete-update token horizon per comparison, frozen from the slowest measured arm. Research exposure is not production exposure.",
     "packing": "Same document boundaries, packing policy, sequence length, validation schedule and checkpoint milestones.",
     "evaluation": "Fixed held-out source/domain loss plus predeclared development capability and retention checks; final tests remain untouched.",
-    "accounting": "Report preparation, acquisition, retries, allocated idle GPUs, training, evaluation and recovery separately; charge each operation once."
+    "accounting": "Report preparation, acquisition, retries, allocated idle GPUs, training, evaluation and recovery separately; charge each operation once.",
+    "data_design_contract": "experiments/main-data/data-design-contract.json"
   },
   "candidate_sources": {
     "web_control": "FineWeb-Edu or another source-use-qualified independent web control; current retained inventory is not yet admitted.",
@@ -108,6 +113,7 @@
     "Backbone frozen after the bounded architecture/efficiency comparison."
   ],
   "required_outputs_for_report": [
+    "Manifest fields, quality-weighted coverage distributions, lineage and contamination status under the shared data-design contract.",
     "Source lineage, rights status, transformations, exclusions and accepted/rejected token accounting.",
     "Exact mixture weights, exposure, repetition policy and held-out family construction.",
     "Per-arm loss and capability curves versus tokens and allocated GPU-hours.",

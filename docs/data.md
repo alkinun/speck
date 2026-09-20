@@ -261,6 +261,13 @@ not a correctness rate; symbolic, unit-bearing and multi-line reasoning remain u
 source-readiness matrix records InfiWebMath as a separate non-admitted candidate with source-use,
 family, contamination, correctness and supply gates open.
 
+The shared [stage-conditioned data-design contract](../experiments/main-data/data-design-contract.json)
+now binds the pretraining, mid-training and post-training packets. It standardizes manifest fields for
+stage, source family, transformation, quality, coverage, dependency, contamination and lineage, while
+keeping natural, grounded, synthetic, repository-event and agent-trajectory banks distinct. This is a
+design requirement for the next source-mapping pass; it does not change the working mixture, admit a
+source or authorize a run.
+
 The intended pretraining composition is selected broad natural text, meaningful code exposure,
 math/science, reference/documents and a controlled refined/synthetic component. Preserve everyday,
 nontechnical topics and varied prose as well as difficult educational material. Retain source-family

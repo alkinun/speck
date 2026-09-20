@@ -57,6 +57,10 @@ or expand the 5,000-GPU-hour allocation. The next step is to map each finding to
 manifests and close only the source-use, family, correctness, supply and runtime gates supported by
 primary evidence.
 
+Those requirements are centralized in the [stage-conditioned data-design contract](../experiments/main-data/data-design-contract.json),
+which the pretraining, mid-training and post-training packets now reference. This keeps the research
+direction consistent across manifests without turning hypotheses into launch settings.
+
 ## MidTool review — 2026-09-20
 
 Reviewed [MidTool: Mid-training Data Synthesis for Agentic Tool Use](https://arxiv.org/abs/2608.20314), including its data construction, ablation and optimization analyses. The paper trains Qwen3-4B-Base and Qwen3-8B-Base on a 20.3B-token mixture spanning web, PDF, code and tool artifacts, then keeps the downstream SFT/RL recipe fixed while comparing mid-training corpora. Its mixture contains filtered source data, context-grounded augmentation and native executable trajectories.

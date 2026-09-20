@@ -19,7 +19,11 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "105113484a6073e4300c8d470e3ef614812d57d780a26786b2687e982cec3713"
+      "sha256": "4d5ffe1efcb2979bd7ece20b2b5c7df2ac694bfb9b227000cdccfdc10757b6b5"
+    },
+    "design_contract": {
+      "path": "experiments/main-data/data-design-contract.json",
+      "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
     }
   },
   "common_contract": {
@@ -28,7 +32,8 @@
     "rl": "Fixed-policy prompt, rollout and verifier feasibility only. No policy optimization or RL training-data ablation is promised by this packet.",
     "context": "Train only within the qualified context ceiling. Complete conversations are required; no silent truncation or fabricated reasoning/tool observations.",
     "accounting": "Count source preparation, teacher/reference generation, validation, rejected rows, retries, rollouts, scoring, training and allocated idle time separately and once.",
-    "evaluation": "Keep task families, source families and final tests disjoint from every training, teacher-generation and prompt-selection path."
+    "evaluation": "Keep task families, source families and final tests disjoint from every training, teacher-generation and prompt-selection path.",
+    "data_design_contract": "experiments/main-data/data-design-contract.json"
   },
   "sft": {
     "status": "candidate_only_pending_qualified_parent_and_data",
@@ -105,6 +110,7 @@
     "SFT and fixed-policy evaluation cost fits the 150-hour research reservation; production exposure remains separate."
   ],
   "required_outputs_for_report": [
+    "Manifest fields, quality-weighted coverage distributions, lineage and contamination status under the shared data-design contract.",
     "Unique tasks, source families, total/context/supervised tokens and reasoning lengths by arm.",
     "Per-arm success, retention, convergence and cost curves with paired-seed variation.",
     "Outcome-verification coverage, unresolved cases and false-positive/negative controls.",

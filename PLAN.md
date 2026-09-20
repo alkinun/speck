@@ -80,6 +80,9 @@ The local data-preparation pass is now closed for the current evidence. The
 [data closeout](experiments/main-data/data-closeout.json) records the supplied frontier-data
 research synthesis. Map its hypotheses to pinned source evidence before changing source identities,
 candidate weights or study arms; keep all five source-readiness gates explicit.
+The [shared data-design contract](experiments/main-data/data-design-contract.json) now binds the
+stage, lineage, quality, coverage, dependency and contamination fields required by every data-stage
+manifest. It changes design metadata only; it does not admit sources or alter the allocation.
 
 1. **Map the reviewed research to source evidence.** Attach each finding to a pinned
    source/configuration, sampling frame, processing method, baseline, measured result and limitation.
