@@ -95,6 +95,9 @@ code tokens and keeps the code contrast blocked.
 The [math candidate manifest](experiments/main-data/math-candidate-manifest.json) separates natural,
 filtered-web, refined/generated and unavailable math candidates; it keeps all math routes blocked until
 correctness, contamination and finite-supply gates close.
+The [post-training candidate manifest](experiments/main-data/post-training-candidate-manifest.json)
+binds the assistant and reward inventories while keeping structural validity, outcome verification,
+tool trajectories and fixed-policy RL feasibility as separate downstream gates.
 
 1. **Map the reviewed research to source evidence.** The
    [source-mapping receipt](experiments/main-data/frontier-data-source-mapping.json) now attaches each

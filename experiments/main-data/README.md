@@ -113,6 +113,11 @@ limits, with zero eligible code tokens established and all provenance/correctnes
 The [math candidate manifest](math-candidate-manifest.json) now separates FineMath, UltraData-Math,
 InfiWebMath, Nemotron and review-only OpenMath/L3 candidates. It preserves arithmetic triage as a
 quality lead rather than a correctness certificate and leaves all math sources outside training arms.
+
+The [post-training candidate manifest](post-training-candidate-manifest.json) now binds the 500K-row
+assistant census and the 44,369-row reward-prompt inventory. It keeps structural serialization,
+verified outcomes, tool trajectories and fixed-policy RL feasibility separate; no downstream rows are
+admitted.
 Its horizon accounting records the 100B/125B working target separately from the current one-pass bounds: retained code evidence bounds a 30% share at 1.589B total tokens before exclusions, and HQ tokens distinct from retained FineWeb-Edu bound a 25% share at 1.405B. These are constraints, not qualified supply.
 The HQ comparison retains FineWeb-Edu as the control, keeps the pinned L1/HQ route as a candidate, and adopts no score cutoff or automatic repair rule; its sampled panels establish review evidence, not eligible yield.
 The natural-code route is similarly bounded: the retained Stack-Edu census has 0 eligible tokens established, the fixed Stack-Edu/Stack v3 cohorts retain all 44 family holds, and unresolved origins/404s remain outside any arm. Checked-code substitution stays separate until provenance and correctness gates close.

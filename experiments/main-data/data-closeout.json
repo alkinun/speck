@@ -153,10 +153,14 @@
     "math_manifest": {
       "path": "experiments/main-data/math-candidate-manifest.json",
       "sha256": "cbf18ff1bc36cf2caa566b21536f3e6f9e3d8749c8bf57d513e7ced6ac3e2610"
+    },
+    "post_training_manifest": {
+      "path": "experiments/main-data/post-training-candidate-manifest.json",
+      "sha256": "38b1da8ff316c6a6a7ddc7580cb144367489eb73829032471daa28ee595cac9b"
     }
   },
   "launch_boundary": "This closeout is an evidence handoff. It does not authorize corpus acquisition, source substitution, training, repetition, GPU spending or publication claims.",
-  "next_action": "Resolve the math manifest gates and source-specific supply limits, then qualify downstream assistant and reward data before freezing any screening arm.",
+  "next_action": "Resolve the downstream manifest lineage, outcome, partition and token-count gates, then qualify runtime before freezing any post-training study arm.",
   "external_research": {
     "path": "experiments/main-data/frontier-data-research.json",
     "sha256": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",

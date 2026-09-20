@@ -290,6 +290,10 @@ worked material, filtered web math, refined/generated solutions and unavailable 
 InfiWebMath arithmetic review remains a triage diagnostic; it does not certify solution correctness or
 eligible supply.
 
+The [post-training candidate manifest](../experiments/main-data/post-training-candidate-manifest.json)
+binds the 500K-row assistant census and 44,369 reward-prompt rows. Structural serializability,
+independent outcomes, tool trajectories and fixed-policy RL feasibility remain separate gates.
+
 The intended pretraining composition is selected broad natural text, meaningful code exposure,
 math/science, reference/documents and a controlled refined/synthetic component. Preserve everyday,
 nontechnical topics and varied prose as well as difficult educational material. Retain source-family
