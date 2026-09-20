@@ -1,0 +1,85 @@
+"""Validate the source-readiness matrix without authorizing data or training.
+
+Run from the repository root::
+
+    python experiments/main-data/check_source_readiness.py experiments/main-data/source-readiness.json
+
+The check verifies the matrix's local receipt identities and non-admission boundary. It does not
+acquire sources, execute corpus content, infer rights decisions or select a study arm.
+"""
+
+import argparse
+import json
+from pathlib import Path
+
+from speck.provenance.io import file_sha256
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def _artifact(path, expected):
+    resolved = (ROOT / path).resolve() if not Path(path).is_absolute() else Path(path)
+    if file_sha256(resolved) != expected:
+        raise ValueError(f"artifact checksum mismatch: {resolved}")
+    return resolved
+
+
+def validate(matrix_path):
+    matrix_path = Path(matrix_path).resolve()
+    matrix = json.loads(matrix_path.read_text())
+    if matrix.get("format") != "speck_data_study_source_readiness":
+        raise ValueError("unsupported source-readiness format")
+    if matrix.get("format_version") != 1:
+        raise ValueError("unsupported source-readiness version")
+    if matrix.get("status") != "candidate_evidence_only_no_training_admission":
+        raise ValueError("source-readiness matrix must remain evidence-only")
+
+    receipts = matrix["source_of_truth"]
+    for entry in receipts.values():
+        _artifact(entry["path"], entry["sha256"])
+
+    sources = matrix["sources"]
+    ids = [source["id"] for source in sources]
+    if len(ids) != len(set(ids)):
+        raise ValueError("source IDs must be unique")
+    if not sources or any(source.get("admitted") is not False for source in sources):
+        raise ValueError("every source must remain explicitly non-admitted")
+    for source in sources:
+        if not source.get("evidence") or not source.get("blockers"):
+            raise ValueError(f"source lacks evidence or blockers: {source['id']}")
+        if set(source["gates"]) != {
+            "source_use",
+            "family_partition",
+            "correctness",
+            "finite_supply",
+            "runtime",
+        }:
+            raise ValueError(f"incomplete gate set: {source['id']}")
+        inventory = source.get("inventory", {})
+        for key, value in inventory.items():
+            if isinstance(value, int) and value < 0:
+                raise ValueError(f"negative inventory count: {source['id']}.{key}")
+
+    arms = matrix["arm_readiness"]
+    expected_arms = {"baseline", "code_bank_candidate", "web_bank_candidate"}
+    if set(arms) != expected_arms or any(
+        value.get("status") != "blocked" for value in arms.values()
+    ):
+        raise ValueError("every packet arm must remain blocked")
+    boundary = matrix.get("launch_boundary", "")
+    if not boundary.startswith("This matrix records evidence and blockers only"):
+        raise ValueError("matrix boundary must keep launch authority outside the artifact")
+    return {
+        "format": matrix["format"],
+        "status": matrix["status"],
+        "sources": len(sources),
+        "admitted_sources": 0,
+        "blocked_arms": len(arms),
+    }
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("matrix", type=Path)
+    args = parser.parse_args()
+    print(json.dumps(validate(args.matrix), indent=2, sort_keys=True))

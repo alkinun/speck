@@ -52,6 +52,15 @@ claimed, finite accepted-token counts, a disjoint evaluation pack and measured G
 launch request must bind the qualified manifests and the existing rights/operations/firewall records.
 The packet does not authorize acquisition, training or a main-run mixture.
 
+The [source-readiness matrix](source-readiness.json) is the companion evidence index. It records the retained inventory, source-of-truth receipts, open gates and blocked arm status for each candidate bank. Validate it offline:
+
+```bash
+PYTHONPATH=. python experiments/main-data/check_source_readiness.py \
+  experiments/main-data/source-readiness.json
+```
+
+The matrix is an evidence boundary: retained tokens are not eligible tokens, and an arm remains blocked until its listed gates close in a revised manifest.
+
 ## Research before the main run
 
 This is the proposed experiment design, with numeric caps in [plan.json](plan.json). Exact datasets,
