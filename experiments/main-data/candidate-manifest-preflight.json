@@ -1,0 +1,818 @@
+{
+  "format": "speck_candidate_manifest_preflight",
+  "format_version": 1,
+  "date": "2026-09-20",
+  "status": "preflight_only_no_source_admission",
+  "purpose": "Expose required manifest-field and gate completeness for every current candidate before finite-arm construction.",
+  "evidence_boundary": "This is a generated completeness view over the source-readiness matrix. Retained or pinned inventory is not eligible supply; no row authorizes acquisition, training or source admission.",
+  "source_of_truth": {
+    "source_readiness": {
+      "path": "experiments/main-data/source-readiness.json",
+      "sha256": "fb04c0d3f3b3ee72048858629ea8b0faed69d7d4f8a942c1a5a116ecaadd51d8"
+    },
+    "data_design_contract": {
+      "path": "experiments/main-data/data-design-contract.json",
+      "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
+    }
+  },
+  "required_fields": [
+    "stage",
+    "source_family",
+    "transformation_type",
+    "quality_vector",
+    "coverage_stratum",
+    "dependency_metadata",
+    "contamination_status",
+    "lineage",
+    "unique_tokens",
+    "exposure_tokens",
+    "repetition_count"
+  ],
+  "field_status_vocabulary": {
+    "not_bound": "No launch manifest value is selected.",
+    "partial_inventory_only": "A bounded inventory or review record exists, but coverage is not eligible-manifest evidence.",
+    "retained_count_only": "A retained count exists; exclusions and eligibility are unresolved.",
+    "sample_or_inventory_only": "Only a sample, listed inventory or bounded review is available.",
+    "identity_pinned_but_lineage_gate_open": "A revision is pinned, but source/family/notice gates remain open.",
+    "candidate_id_only_full_graph_open": "The candidate name is known; the complete family graph is not frozen.",
+    "open": "The relevant gate is unresolved."
+  },
+  "summary": {
+    "candidate_count": 12,
+    "admitted_count": 0,
+    "identity_pinned_count": 5,
+    "retained_or_inventory_count": 11,
+    "complete_required_manifest_count": 0,
+    "eligible_unique_tokens_established": 0,
+    "status_counts": {
+      "blocked_pending_source_and_supply_resolution": 2,
+      "candidate_inventory_not_admitted": 7,
+      "candidate_sample_not_admitted": 1,
+      "unavailable_candidate": 2
+    },
+    "gate_counts": {
+      "source_use": {
+        "not_started": 2,
+        "open_host_lineage_and_named_decision": 1,
+        "open_manual_terms_decision": 1,
+        "open_named_decision": 4,
+        "open_named_decision_and_cutoff_review": 1,
+        "open_no_named_decision": 1,
+        "open_origin_and_notice_recovery": 2
+      },
+      "family_partition": {
+        "not_started": 2,
+        "open_joint_graph": 8,
+        "open_partial_graph": 1,
+        "open_partial_graph_44_files_held": 1
+      },
+      "correctness": {
+        "not_applicable_for_natural_text_quality_review_open": 2,
+        "not_started": 2,
+        "open_arithmetic_triage_manual_review": 1,
+        "open_generated_content_quality_review": 1,
+        "open_independent_solution_checks": 2,
+        "open_no_execution_oracle": 2,
+        "open_reference_quality_review": 1,
+        "open_science_quality_review": 1
+      },
+      "finite_supply": {
+        "bounded_review_cohort_only": 1,
+        "missing_qualified_supply": 1,
+        "no_acquired_shards": 1,
+        "no_eligible_tokens_established": 1,
+        "retained_count_only_not_eligible_count": 7,
+        "sample_only_not_eligible_count": 1
+      },
+      "runtime": {
+        "not_started": 2,
+        "open": 10
+      }
+    }
+  },
+  "candidates": [
+    {
+      "id": "fineweb_edu",
+      "roles": [
+        "web_control",
+        "baseline_bank"
+      ],
+      "status": "candidate_inventory_not_admitted",
+      "admitted": false,
+      "identity": null,
+      "inventory_summary": {
+        "documents": 2097270,
+        "retained_tokens": 2306703052,
+        "within_source_exact_duplicate_copies": 0
+      },
+      "gate_status": {
+        "source_use": "open_no_named_decision",
+        "family_partition": "open_joint_graph",
+        "correctness": "not_applicable_for_natural_text_quality_review_open",
+        "finite_supply": "retained_count_only_not_eligible_count",
+        "runtime": "open"
+      },
+      "manifest_fields": {
+        "stage": "proposed_from_role_not_bound",
+        "source_family": "candidate_id_only_full_graph_open",
+        "transformation_type": "not_bound",
+        "quality_vector": "not_bound",
+        "coverage_stratum": "partial_inventory_only",
+        "dependency_metadata": "not_bound",
+        "contamination_status": "open",
+        "lineage": "identity_or_revision_not_bound",
+        "unique_tokens": "retained_count_only",
+        "exposure_tokens": "not_set",
+        "repetition_count": "not_set"
+      },
+      "blockers": [
+        "source-use and notice decision",
+        "joint family/benchmark partition",
+        "eligible-token accounting",
+        "measured comparison cost"
+      ],
+      "evidence": [
+        {
+          "path": "experiments/pilot/supply.json",
+          "field": "sources[source=fineweb_edu]"
+        },
+        {
+          "path": "/mnt/speck-data/speck/document-token-stock-e1s-v1/fineweb_edu/manifest.json",
+          "kind": "retained_token_stock_manifest"
+        },
+        {
+          "path": "experiments/corpus-audit/natural-web-inspection.json",
+          "field": "validation.cross_source_scope"
+        },
+        {
+          "path": "experiments/corpus-audit/web-filter-validation.json",
+          "field": "comparison"
+        }
+      ]
+    },
+    {
+      "id": "ultrafineweb_hq",
+      "roles": [
+        "web_candidate"
+      ],
+      "status": "candidate_inventory_not_admitted",
+      "admitted": false,
+      "identity": {
+        "revision": "02c85641e3d19a854be2e09139c25adaa9518063"
+      },
+      "inventory_summary": {
+        "documents": 290761,
+        "raw_tokens": 351718255,
+        "exact_unique_tokens": 351555487,
+        "distinct_from_retained_fineweb_edu_tokens": 351237925,
+        "exact_duplicate_copies": 162,
+        "exact_duplicate_tokens": 162768,
+        "shared_unique_documents_with_fineweb_edu": 313,
+        "shared_tokens_with_fineweb_edu": 317562
+      },
+      "gate_status": {
+        "source_use": "open_named_decision_and_cutoff_review",
+        "family_partition": "open_joint_graph",
+        "correctness": "not_applicable_for_natural_text_quality_review_open",
+        "finite_supply": "retained_count_only_not_eligible_count",
+        "runtime": "open"
+      },
+      "manifest_fields": {
+        "stage": "proposed_from_role_not_bound",
+        "source_family": "candidate_id_only_full_graph_open",
+        "transformation_type": "not_bound",
+        "quality_vector": "not_bound",
+        "coverage_stratum": "partial_inventory_only",
+        "dependency_metadata": "not_bound",
+        "contamination_status": "open",
+        "lineage": "identity_pinned_but_lineage_gate_open",
+        "unique_tokens": "retained_count_only",
+        "exposure_tokens": "not_set",
+        "repetition_count": "not_set"
+      },
+      "blockers": [
+        "source-use and notice decision",
+        "joint family/benchmark partition",
+        "review flags and cutoff decision",
+        "eligible-token accounting",
+        "measured comparison cost",
+        "full-shard eligible-token census under frozen exclusions",
+        "source-aware repair and provenance review"
+      ],
+      "evidence": [
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "pretraining.hq"
+        },
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "pretraining.cross_source_exact_overlap"
+        },
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "mid_training.complete_document_length_bands.ultrafineweb_hq"
+        },
+        {
+          "path": "experiments/corpus-audit/web-variants.json",
+          "field": "decision_route"
+        },
+        {
+          "path": "experiments/corpus-audit/natural-web-inspection.json",
+          "field": "decision"
+        },
+        {
+          "path": "experiments/corpus-audit/web-hq-stratified.json",
+          "field": "census_and_sample"
+        },
+        {
+          "path": "experiments/corpus-audit/web-filter-validation.json",
+          "field": "comparison_and_decision"
+        }
+      ]
+    },
+    {
+      "id": "stack_edu",
+      "roles": [
+        "natural_code_candidate"
+      ],
+      "status": "blocked_pending_source_and_supply_resolution",
+      "admitted": false,
+      "identity": {
+        "retained_source_revision": "eeec5caac5cc3758a18f1d3ba4416837a9ba814c"
+      },
+      "inventory_summary": {
+        "documents": 714369,
+        "retained_tokens_with_bos_eos": 476774847,
+        "eligible_unique_tokens_established": 0,
+        "known_benchmark_hold_tokens": 174977
+      },
+      "gate_status": {
+        "source_use": "open_origin_and_notice_recovery",
+        "family_partition": "open_partial_graph_44_files_held",
+        "correctness": "open_no_execution_oracle",
+        "finite_supply": "no_eligible_tokens_established",
+        "runtime": "open"
+      },
+      "manifest_fields": {
+        "stage": "proposed_from_role_not_bound",
+        "source_family": "candidate_id_only_full_graph_open",
+        "transformation_type": "not_bound",
+        "quality_vector": "not_bound",
+        "coverage_stratum": "partial_inventory_only",
+        "dependency_metadata": "not_bound",
+        "contamination_status": "open",
+        "lineage": "identity_pinned_but_lineage_gate_open",
+        "unique_tokens": "retained_count_only",
+        "exposure_tokens": "not_set",
+        "repetition_count": "not_set"
+      },
+      "blockers": [
+        "origin/notice resolution",
+        "family and benchmark partition",
+        "independent correctness checks",
+        "eligible supply and cost",
+        "75 quota-blocked origin outcomes and one earlier unresolved outcome",
+        "retained stock is not representative of the full upstream release"
+      ],
+      "evidence": [
+        {
+          "path": "experiments/corpus-audit/code-supply.json",
+          "field": "summary"
+        },
+        {
+          "path": "experiments/corpus-audit/retained-code-origins.json",
+          "field": "summary.coverage.stack_edu"
+        },
+        {
+          "path": "experiments/corpus-audit/code-yield-result.json",
+          "field": "summary_and_next_decision"
+        },
+        {
+          "path": "experiments/corpus-audit/natural-code-cohort.json",
+          "field": "cohort_and_holds"
+        },
+        {
+          "path": "experiments/corpus-audit/retained-code-origins.json",
+          "field": "summary.coverage.stack_edu"
+        }
+      ]
+    },
+    {
+      "id": "stack_v3",
+      "roles": [
+        "natural_code_candidate"
+      ],
+      "status": "blocked_pending_source_and_supply_resolution",
+      "admitted": false,
+      "identity": {
+        "dataset_revision": "8f3f25d86e44fd691428131efd17af75d4716499"
+      },
+      "inventory_summary": {
+        "review_repositories": 44,
+        "review_files": 80,
+        "review_tokens_with_bos_eos": 133211,
+        "eligible_tokens_established": 0
+      },
+      "gate_status": {
+        "source_use": "open_origin_and_notice_recovery",
+        "family_partition": "open_partial_graph",
+        "correctness": "open_no_execution_oracle",
+        "finite_supply": "bounded_review_cohort_only",
+        "runtime": "open"
+      },
+      "manifest_fields": {
+        "stage": "proposed_from_role_not_bound",
+        "source_family": "candidate_id_only_full_graph_open",
+        "transformation_type": "not_bound",
+        "quality_vector": "not_bound",
+        "coverage_stratum": "partial_inventory_only",
+        "dependency_metadata": "not_bound",
+        "contamination_status": "open",
+        "lineage": "identity_pinned_but_lineage_gate_open",
+        "unique_tokens": "sample_or_inventory_only",
+        "exposure_tokens": "not_set",
+        "repetition_count": "not_set"
+      },
+      "blockers": [
+        "origin/notice resolution",
+        "family and benchmark partition",
+        "independent correctness checks",
+        "full finite eligible supply",
+        "two pinned source 404s",
+        "ten unexplained transformed identities",
+        "bounded cohort cannot establish full-release eligible supply"
+      ],
+      "evidence": [
+        {
+          "path": "experiments/corpus-audit/stack-v3-feasibility.json",
+          "field": "selected_candidate_revision"
+        },
+        {
+          "path": "experiments/corpus-audit/stack-v3-broader.json",
+          "field": "review_cohort"
+        },
+        {
+          "path": "experiments/corpus-audit/stack-v3-origins.json",
+          "field": "results"
+        },
+        {
+          "path": "experiments/corpus-audit/stack-v3-sampling.json",
+          "field": "selection_and_limits"
+        },
+        {
+          "path": "experiments/corpus-audit/code-yield-result.json",
+          "field": "next_decision"
+        },
+        {
+          "path": "experiments/corpus-audit/retained-code-origins.json",
+          "field": "summary.coverage.stack_v3"
+        }
+      ]
+    },
+    {
+      "id": "checked_code",
+      "roles": [
+        "optional_code_candidate_substitution"
+      ],
+      "status": "unavailable_candidate",
+      "admitted": false,
+      "identity": null,
+      "inventory_summary": {
+        "qualified_supply_tokens": null
+      },
+      "gate_status": {
+        "source_use": "not_started",
+        "family_partition": "not_started",
+        "correctness": "not_started",
+        "finite_supply": "missing_qualified_supply",
+        "runtime": "not_started"
+      },
+      "manifest_fields": {
+        "stage": "proposed_from_role_not_bound",
+        "source_family": "candidate_id_only_full_graph_open",
+        "transformation_type": "not_bound",
+        "quality_vector": "not_bound",
+        "coverage_stratum": "partial_inventory_only",
+        "dependency_metadata": "not_bound",
+        "contamination_status": "open",
+        "lineage": "identity_or_revision_not_bound",
+        "unique_tokens": "missing",
+        "exposure_tokens": "not_set",
+        "repetition_count": "not_set"
+      },
+      "blockers": [
+        "independently verified checked-code supply is not present"
+      ],
+      "evidence": [
+        {
+          "path": "experiments/main-data/data-study-packet.json",
+          "field": "candidate_sources.checked_code"
+        },
+        {
+          "path": "experiments/corpus-audit/code-provenance.json",
+          "field": "next_source_route"
+        },
+        {
+          "path": "experiments/corpus-audit/code-provenance.json",
+          "field": "join"
+        },
+        {
+          "path": "experiments/corpus-audit/code-provenance.json",
+          "field": "rejections"
+        }
+      ]
+    },
+    {
+      "id": "finemath_4plus",
+      "roles": [
+        "math_support_bank"
+      ],
+      "status": "candidate_inventory_not_admitted",
+      "admitted": false,
+      "identity": null,
+      "inventory_summary": {
+        "documents": 753071,
+        "retained_tokens": 1124167472,
+        "within_normalized_duplicate_copies": 0,
+        "host_metadata_missing": 0
+      },
+      "gate_status": {
+        "source_use": "open_named_decision",
+        "family_partition": "open_joint_graph",
+        "correctness": "open_independent_solution_checks",
+        "finite_supply": "retained_count_only_not_eligible_count",
+        "runtime": "open"
+      },
+      "manifest_fields": {
+        "stage": "proposed_from_role_not_bound",
+        "source_family": "candidate_id_only_full_graph_open",
+        "transformation_type": "not_bound",
+        "quality_vector": "not_bound",
+        "coverage_stratum": "partial_inventory_only",
+        "dependency_metadata": "not_bound",
+        "contamination_status": "open",
+        "lineage": "identity_or_revision_not_bound",
+        "unique_tokens": "retained_count_only",
+        "exposure_tokens": "not_set",
+        "repetition_count": "not_set"
+      },
+      "blockers": [
+        "source-use decision",
+        "family partition",
+        "independent correctness",
+        "eligible-token accounting",
+        "independent solution correctness and completeness checks",
+        "joint source-family and evaluation partition",
+        "candidate directory policy not yet frozen"
+      ],
+      "evidence": [
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "pretraining.math.sources.finemath_4plus"
+        },
+        {
+          "path": "/mnt/speck-data/speck/document-token-stock-v2/finemath_4plus/manifest.json",
+          "kind": "retained_token_stock_manifest"
+        },
+        {
+          "path": "experiments/corpus-audit/followup.json",
+          "field": "math_census_and_directory_candidate"
+        },
+        {
+          "path": "experiments/corpus-audit/result.json",
+          "field": "sources[id=finemath_4plus]"
+        }
+      ]
+    },
+    {
+      "id": "ultradata_math_l2_preview",
+      "roles": [
+        "math_candidate_support_bank"
+      ],
+      "status": "candidate_inventory_not_admitted",
+      "admitted": false,
+      "identity": null,
+      "inventory_summary": {
+        "documents": 169058,
+        "retained_tokens": 384788210,
+        "within_normalized_duplicate_copies": 0,
+        "host_metadata_missing": 169058
+      },
+      "gate_status": {
+        "source_use": "open_host_lineage_and_named_decision",
+        "family_partition": "open_joint_graph",
+        "correctness": "open_independent_solution_checks",
+        "finite_supply": "retained_count_only_not_eligible_count",
+        "runtime": "open"
+      },
+      "manifest_fields": {
+        "stage": "proposed_from_role_not_bound",
+        "source_family": "candidate_id_only_full_graph_open",
+        "transformation_type": "not_bound",
+        "quality_vector": "not_bound",
+        "coverage_stratum": "partial_inventory_only",
+        "dependency_metadata": "not_bound",
+        "contamination_status": "open",
+        "lineage": "identity_or_revision_not_bound",
+        "unique_tokens": "retained_count_only",
+        "exposure_tokens": "not_set",
+        "repetition_count": "not_set"
+      },
+      "blockers": [
+        "host/source lineage",
+        "source-use decision",
+        "family partition",
+        "independent correctness",
+        "eligible-token accounting",
+        "all rows lack host metadata",
+        "independent solution correctness and completeness checks",
+        "joint source-family and evaluation partition"
+      ],
+      "evidence": [
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "pretraining.math.sources.ultradata_math_l2_preview"
+        },
+        {
+          "path": "/mnt/speck-data/speck/document-token-stock-v1/ultradata_math_l2_preview/manifest.json",
+          "kind": "retained_token_stock_manifest"
+        },
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "pretraining.math"
+        },
+        {
+          "path": "experiments/corpus-audit/result.json",
+          "field": "sources[id=ultradata_math_l2_preview]"
+        }
+      ]
+    },
+    {
+      "id": "cosmopedia_v2",
+      "roles": [
+        "synthetic_support_bank"
+      ],
+      "status": "candidate_inventory_not_admitted",
+      "admitted": false,
+      "identity": null,
+      "inventory_summary": {
+        "documents": 1851034,
+        "retained_tokens": 1489288743,
+        "within_source_exact_duplicate_copies": 0
+      },
+      "gate_status": {
+        "source_use": "open_named_decision",
+        "family_partition": "open_joint_graph",
+        "correctness": "open_generated_content_quality_review",
+        "finite_supply": "retained_count_only_not_eligible_count",
+        "runtime": "open"
+      },
+      "manifest_fields": {
+        "stage": "proposed_from_role_not_bound",
+        "source_family": "candidate_id_only_full_graph_open",
+        "transformation_type": "not_bound",
+        "quality_vector": "not_bound",
+        "coverage_stratum": "partial_inventory_only",
+        "dependency_metadata": "not_bound",
+        "contamination_status": "open",
+        "lineage": "identity_or_revision_not_bound",
+        "unique_tokens": "retained_count_only",
+        "exposure_tokens": "not_set",
+        "repetition_count": "not_set"
+      },
+      "blockers": [
+        "source-use decision",
+        "family partition",
+        "independent quality checks",
+        "eligible-token accounting"
+      ],
+      "evidence": [
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "pretraining.retained_non_code_banks.cosmopedia_v2"
+        },
+        {
+          "path": "/mnt/speck-data/speck/document-token-stock-v1/cosmopedia_v2/manifest.json",
+          "kind": "retained_token_stock_manifest"
+        }
+      ]
+    },
+    {
+      "id": "pes2o_v3",
+      "roles": [
+        "science_support_bank"
+      ],
+      "status": "candidate_inventory_not_admitted",
+      "admitted": false,
+      "identity": null,
+      "inventory_summary": {
+        "documents": 55787,
+        "retained_tokens": 403558463,
+        "within_source_exact_duplicate_copies": 0
+      },
+      "gate_status": {
+        "source_use": "open_named_decision",
+        "family_partition": "open_joint_graph",
+        "correctness": "open_science_quality_review",
+        "finite_supply": "retained_count_only_not_eligible_count",
+        "runtime": "open"
+      },
+      "manifest_fields": {
+        "stage": "proposed_from_role_not_bound",
+        "source_family": "candidate_id_only_full_graph_open",
+        "transformation_type": "not_bound",
+        "quality_vector": "not_bound",
+        "coverage_stratum": "partial_inventory_only",
+        "dependency_metadata": "not_bound",
+        "contamination_status": "open",
+        "lineage": "identity_or_revision_not_bound",
+        "unique_tokens": "retained_count_only",
+        "exposure_tokens": "not_set",
+        "repetition_count": "not_set"
+      },
+      "blockers": [
+        "source-use decision",
+        "family partition",
+        "quality checks",
+        "eligible-token accounting"
+      ],
+      "evidence": [
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "pretraining.retained_non_code_banks.pes2o_v3"
+        },
+        {
+          "path": "/mnt/speck-data/speck/document-token-stock-v1/pes2o_v3/manifest.json",
+          "kind": "retained_token_stock_manifest"
+        }
+      ]
+    },
+    {
+      "id": "finewiki_en",
+      "roles": [
+        "reference_support_bank"
+      ],
+      "status": "candidate_inventory_not_admitted",
+      "admitted": false,
+      "identity": null,
+      "inventory_summary": {
+        "documents": 387313,
+        "retained_tokens": 582070378,
+        "within_source_exact_duplicate_copies": 0
+      },
+      "gate_status": {
+        "source_use": "open_named_decision",
+        "family_partition": "open_joint_graph",
+        "correctness": "open_reference_quality_review",
+        "finite_supply": "retained_count_only_not_eligible_count",
+        "runtime": "open"
+      },
+      "manifest_fields": {
+        "stage": "proposed_from_role_not_bound",
+        "source_family": "candidate_id_only_full_graph_open",
+        "transformation_type": "not_bound",
+        "quality_vector": "not_bound",
+        "coverage_stratum": "partial_inventory_only",
+        "dependency_metadata": "not_bound",
+        "contamination_status": "open",
+        "lineage": "identity_or_revision_not_bound",
+        "unique_tokens": "retained_count_only",
+        "exposure_tokens": "not_set",
+        "repetition_count": "not_set"
+      },
+      "blockers": [
+        "source-use decision",
+        "family partition",
+        "quality checks",
+        "eligible-token accounting"
+      ],
+      "evidence": [
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "pretraining.retained_non_code_banks.finewiki_en"
+        },
+        {
+          "path": "/mnt/speck-data/speck/document-token-stock-v1/finewiki_en/manifest.json",
+          "kind": "retained_token_stock_manifest"
+        }
+      ]
+    },
+    {
+      "id": "infiwebmath_4plus",
+      "roles": [
+        "math_candidate_support_bank"
+      ],
+      "status": "candidate_sample_not_admitted",
+      "admitted": false,
+      "identity": {
+        "repository": "HuggingFaceTB/finemath",
+        "config": "infiwebmath-4plus",
+        "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594"
+      },
+      "inventory_summary": {
+        "source_rows": 196757,
+        "bounded_sample_records": 3725,
+        "bounded_sample_training_bytes": 18000388,
+        "bounded_sample_evaluation_bytes": 1807642,
+        "qualified_supply_tokens": null
+      },
+      "gate_status": {
+        "source_use": "open_manual_terms_decision",
+        "family_partition": "open_joint_graph",
+        "correctness": "open_arithmetic_triage_manual_review",
+        "finite_supply": "sample_only_not_eligible_count",
+        "runtime": "open"
+      },
+      "manifest_fields": {
+        "stage": "proposed_from_role_not_bound",
+        "source_family": "candidate_id_only_full_graph_open",
+        "transformation_type": "not_bound",
+        "quality_vector": "not_bound",
+        "coverage_stratum": "partial_inventory_only",
+        "dependency_metadata": "not_bound",
+        "contamination_status": "open",
+        "lineage": "identity_pinned_but_lineage_gate_open",
+        "unique_tokens": "sample_or_inventory_only",
+        "exposure_tokens": "not_set",
+        "repetition_count": "not_set"
+      },
+      "blockers": [
+        "source-use and upstream page terms decision",
+        "joint source-family and evaluation partition",
+        "independent solution correctness and completeness checks",
+        "one likely source transcription error remains held; surrounding solutions are not certified",
+        "eligible-token accounting"
+      ],
+      "evidence": [
+        {
+          "path": "experiments/corpus-audit/infiwebmath-4plus-arithmetic.json",
+          "field": "input_and_arithmetic_diagnostic"
+        },
+        {
+          "path": "/mnt/speck-data/speck/source-qualification/math-infiwebmath_4plus-v1/report.json",
+          "kind": "bounded_source_qualification_report"
+        },
+        {
+          "path": "/mnt/speck-data/speck/source-qualification/math-infiwebmath_4plus-v1/tokenizer-input.jsonl",
+          "kind": "bounded_filtered_sample"
+        }
+      ]
+    },
+    {
+      "id": "nemotron_cc_math_4plus",
+      "roles": [
+        "math_candidate_support_bank"
+      ],
+      "status": "unavailable_candidate",
+      "admitted": false,
+      "identity": {
+        "repository": "nvidia/Nemotron-CC-Math-v1",
+        "revision": "397a2502f2028c659ba411a6c4935b464a7f03aa"
+      },
+      "inventory_summary": {
+        "listed_files": 46,
+        "unusable_lfs_hashes": 46,
+        "acquired_shards": 0,
+        "qualified_supply_tokens": null
+      },
+      "gate_status": {
+        "source_use": "not_started",
+        "family_partition": "not_started",
+        "correctness": "not_started",
+        "finite_supply": "no_acquired_shards",
+        "runtime": "not_started"
+      },
+      "manifest_fields": {
+        "stage": "proposed_from_role_not_bound",
+        "source_family": "candidate_id_only_full_graph_open",
+        "transformation_type": "not_bound",
+        "quality_vector": "not_bound",
+        "coverage_stratum": "partial_inventory_only",
+        "dependency_metadata": "not_bound",
+        "contamination_status": "open",
+        "lineage": "identity_pinned_but_lineage_gate_open",
+        "unique_tokens": "sample_or_inventory_only",
+        "exposure_tokens": "not_set",
+        "repetition_count": "not_set"
+      },
+      "blockers": [
+        "all 46 listed LFS objects have unusable hashes",
+        "no shards acquired or verified"
+      ],
+      "evidence": [
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "new_source_inventories.nvidia--Nemotron-CC-Math-v1"
+        }
+      ]
+    }
+  ],
+  "next_actions": [
+    "For each selected candidate, bind the exact revision/configuration, source-family graph, notices and transformation identity before estimating eligible supply.",
+    "Add quality and coverage vectors from source-specific audits; retain score distributions rather than only a cutoff.",
+    "Add contamination status and held-out family joins before any exercise derivation or study selection.",
+    "Materialize accepted unique-token, rejected-token and exposure counts only after all five gates close.",
+    "Keep every candidate outside study arms until a revised source-readiness matrix and hash-bound finite manifest are issued."
+  ],
+  "admission_boundary": "No candidate in this preflight is admitted. A future arm requires a complete manifest, all five gates, measured runtime and a launch receipt."
+}

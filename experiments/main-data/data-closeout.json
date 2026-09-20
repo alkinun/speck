@@ -137,10 +137,14 @@
     "research_mapping": {
       "path": "experiments/main-data/frontier-data-source-mapping.json",
       "sha256": "1e8621483defe5ecfb9785c71a77f317b62b00ac522b5ad91c56bbb942faf473"
+    },
+    "candidate_manifest_preflight": {
+      "path": "experiments/main-data/candidate-manifest-preflight.json",
+      "sha256": "1dd71d275f6a184c85796ea0c3f40271e7868ba150cc7b720f2973a4613c0b00"
     }
   },
   "launch_boundary": "This closeout is an evidence handoff. It does not authorize corpus acquisition, source substitution, training, repetition, GPU spending or publication claims.",
-  "next_action": "Use the source mapping to bind candidate manifests and close only source-use, family, correctness, supply and runtime gates supported by pinned evidence.",
+  "next_action": "Use the candidate manifest preflight to bind source-specific manifests and close only source-use, family, correctness, supply and runtime gates supported by pinned evidence.",
   "external_research": {
     "path": "experiments/main-data/frontier-data-research.json",
     "sha256": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",

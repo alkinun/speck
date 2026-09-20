@@ -272,6 +272,10 @@ The [source-mapping receipt](../experiments/main-data/frontier-data-source-mappi
 which existing audits support each reviewed hypothesis and which readiness gates remain open. It is
 an evidence index, not a source-admission decision.
 
+The [candidate manifest preflight](../experiments/main-data/candidate-manifest-preflight.json) applies
+the shared fields to all 12 candidates. It records five pinned identities, zero complete manifests and
+zero established eligible tokens, so the next work is qualification rather than training.
+
 The intended pretraining composition is selected broad natural text, meaningful code exposure,
 math/science, reference/documents and a controlled refined/synthetic component. Preserve everyday,
 nontechnical topics and varied prose as well as difficult educational material. Retain source-family

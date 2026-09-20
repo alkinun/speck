@@ -27,6 +27,10 @@
     "source_mapping": {
       "path": "experiments/main-data/frontier-data-source-mapping.json",
       "status": "review_only_no_gate_closure"
+    },
+    "candidate_manifest_preflight": {
+      "path": "experiments/main-data/candidate-manifest-preflight.json",
+      "status": "preflight_only_no_source_admission"
     }
   },
   "model": {
@@ -525,10 +529,11 @@
     "experiments/main-data/source-readiness.json": "fb04c0d3f3b3ee72048858629ea8b0faed69d7d4f8a942c1a5a116ecaadd51d8",
     "experiments/main-data/mid-training-study-packet.json": "66943bd323c666a563be3aeb9bd08215dceac987b762419e7a89f380edadaf05",
     "experiments/main-data/post-training-study-packet.json": "1ecb95b3fc9e318cba2693ff1e192c70e7dde0146f4b8aa646d61d93420d33cb",
-    "experiments/main-data/data-closeout.json": "8429d7627a56a05c5f9f226984a8488d0abcd87b4bed5483c5c41ec416ae18a3",
+    "experiments/main-data/data-closeout.json": "465bedf0614c78baba59cd56c3c647a7797b75872116790532f93230e5c6f7ea",
     "experiments/main-data/frontier-data-research.json": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",
     "experiments/main-data/data-design-contract.json": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f",
-    "experiments/main-data/frontier-data-source-mapping.json": "1e8621483defe5ecfb9785c71a77f317b62b00ac522b5ad91c56bbb942faf473"
+    "experiments/main-data/frontier-data-source-mapping.json": "1e8621483defe5ecfb9785c71a77f317b62b00ac522b5ad91c56bbb942faf473",
+    "experiments/main-data/candidate-manifest-preflight.json": "1dd71d275f6a184c85796ea0c3f40271e7868ba150cc7b720f2973a4613c0b00"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

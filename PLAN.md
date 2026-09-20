@@ -83,6 +83,8 @@ candidate weights or study arms; keep all five source-readiness gates explicit.
 The [shared data-design contract](experiments/main-data/data-design-contract.json) now binds the
 stage, lineage, quality, coverage, dependency and contamination fields required by every data-stage
 manifest. It changes design metadata only; it does not admit sources or alter the allocation.
+The [candidate manifest preflight](experiments/main-data/candidate-manifest-preflight.json) applies
+those fields to all 12 candidates and currently finds no complete manifest or eligible token.
 
 1. **Map the reviewed research to source evidence.** The
    [source-mapping receipt](experiments/main-data/frontier-data-source-mapping.json) now attaches each
