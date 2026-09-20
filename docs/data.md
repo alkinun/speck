@@ -254,10 +254,12 @@ files, join held-out families and review complete worked solutions with independ
 The filtered [InfiWebMath arithmetic diagnostic](../experiments/corpus-audit/infiwebmath-4plus-arithmetic.json)
 adds a conservative independent numeric check over 3,725 qualified sample records. It parses 276
 standalone numeric equalities: 260 agree within displayed rounding and 16 are flagged across six
-records. Those flags are manual-review leads, not an error rate; symbolic, unit-bearing and
-multi-line reasoning remain unchecked. The source-readiness matrix records InfiWebMath as a
-separate non-admitted candidate with source-use, family, contamination, correctness and supply
-gates open.
+records. The [manual review](../experiments/corpus-audit/infiwebmath-4plus-arithmetic-review.json)
+classifies the flags as binary notation, intentional counterexamples, puzzle notation, extraction
+truncation and one likely source transcription error. These classifications are triage evidence,
+not a correctness rate; symbolic, unit-bearing and multi-line reasoning remain unchecked. The
+source-readiness matrix records InfiWebMath as a separate non-admitted candidate with source-use,
+family, contamination, correctness and supply gates open.
 
 The intended pretraining composition is selected broad natural text, meaningful code exposure,
 math/science, reference/documents and a controlled refined/synthetic component. Preserve everyday,

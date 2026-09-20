@@ -1,0 +1,170 @@
+{
+  "format": "speck_math_arithmetic_manual_review",
+  "format_version": 1,
+  "source_receipt": {
+    "path": "experiments/corpus-audit/infiwebmath-4plus-arithmetic.json",
+    "sha256": "423f0d0c11c23cd2ad62262db09441eaf32760f6307d92cea0734f08fe393a4a"
+  },
+  "source_revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+  "review_scope": {
+    "flagged_lines": 16,
+    "flagged_rows": 6,
+    "raw_text_retained": false
+  },
+  "classifications": [
+    {
+      "category": "contextual_binary_arithmetic",
+      "flagged_lines": 2,
+      "row_indices": [
+        458,
+        458
+      ],
+      "content_ids": [
+        "66f9721725b633350cb3f264f98762ed9a11fcfda138fc242914e5d398d7103a",
+        "66f9721725b633350cb3f264f98762ed9a11fcfda138fc242914e5d398d7103a"
+      ],
+      "line_sha256": [
+        "ecc777b937894af9ea5cc351c312bdb29a5785d39e90db74ec108ccd8974bd7b",
+        "ecc777b937894af9ea5cc351c312bdb29a5785d39e90db74ec108ccd8974bd7b"
+      ],
+      "expression_sha256": [
+        "4a1b21d876ae00c8ed5c4d1cde09c61f8a61b50fe370a801b10c339831f370ab",
+        "4a1b21d876ae00c8ed5c4d1cde09c61f8a61b50fe370a801b10c339831f370ab"
+      ],
+      "rationale": "The surrounding document explicitly defines a one-bit adder and binary output, so decimal evaluation is the wrong interpretation."
+    },
+    {
+      "category": "intentional_counterexample",
+      "flagged_lines": 2,
+      "row_indices": [
+        3543,
+        3543
+      ],
+      "content_ids": [
+        "c164758b5d4c0d8549f3b4b65b440e47e5dd8550b8c2a57f995b795c1b30e031",
+        "c164758b5d4c0d8549f3b4b65b440e47e5dd8550b8c2a57f995b795c1b30e031"
+      ],
+      "line_sha256": [
+        "b0163fefebb322f69268fbe540760575a4e49dcd9492d6713546057382123efd",
+        "7e07ccc87fb347e2d6a2c4e292c1d07c0753e946ca3917a25ec47e05ad7fd72a"
+      ],
+      "expression_sha256": [
+        "2841016d1cd9efa25e200f44d2b1b365eac01d33b3b6875c0b658258fb3f29a7",
+        "6df0753a40eff0d6aafd521f7ff0b48deee37a50d8f4247be997de213364d4d3"
+      ],
+      "rationale": "The surrounding document is demonstrating that an algebraic rule is false; the unequal sides are the point of the example."
+    },
+    {
+      "category": "contextual_pattern_puzzle",
+      "flagged_lines": 10,
+      "row_indices": [
+        3585,
+        3585,
+        3585,
+        3585,
+        3585,
+        3585,
+        3585,
+        3585,
+        3585,
+        3664
+      ],
+      "content_ids": [
+        "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+        "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+        "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+        "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+        "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+        "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+        "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+        "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+        "5bd60092fbc7094868c207dfd973851db446f9a83f6848ab6e555add705043b3",
+        "af11d7e1291a0f7ecefd7324b40e45a2d8ebea4eec24ab684cab27b9cbdb7e21"
+      ],
+      "line_sha256": [
+        "1a44e520f63dd83195c9ca782e15cf31f21056ec0980a9492fdc0b97cbade75d",
+        "568360f7049633c1087fd01f131d6824da1e4fbba3e92fb00f9c1310896335b1",
+        "b01fda91415b327f4cc52fb4ba3fdf5816f173798c344f91ac2b566aa7d6ec9c",
+        "a6de84e19a474cd1a6fb95cc93def866bf5e809f50a0808f37a5e3cfeb05a901",
+        "65ae884b7822594642c1a806a4ffba468de72c0c719fb0a625e36d2b037b99e8",
+        "bb8ffdef528d6cc3cf329c99eac34ec89185144eac6e22cc27c1678de2e610c2",
+        "ba38a5e25867735233a5f82a40cbb4bbdbfac79efd69d678627e76a62f9c0ba4",
+        "e0a203bb32b384a11496625966b90d17ce2f58a67741c29c3246551111ec8efc",
+        "28bd9295417d663e54f616f3ad09f9e434895c9fe7579c0ae9e51b5a0edd5480",
+        "bde0b5fa3ee2b46a88b012bd052a2119660ee8e1f08c8c8aa63a9d2015b0d1b3"
+      ],
+      "expression_sha256": [
+        "0d9602001c7c7004495b5236ac6e4420803f4c1d3c047336f4781f154862ba0b",
+        "95ec9b35a08ebedd230af35b7a44973ac9bd6794aed2ecce7018fbb7ab5f0205",
+        "f8ba88f41798d7bb7498b001b4c67a314f519a33d909e5fa757bd9408725dc2c",
+        "3f998a10175ba5da5dff0abc0d87bbdd6c717674d3b7c959c715a4489c8a2346",
+        "507d28b06e5e20ff8ffafd7199d481f80013a18f0794c92bdf98662cdcd31167",
+        "0db9fe372f1e7f84776057156c2152b9717f5529a174c78024def09cfdcdd8bf",
+        "2cac6ac34c9096bbe08cbcc801bdbd8bff25d502b59443dbe0a6a528899d2b4a",
+        "d034162ed7f1d18c9dc51b7af053bcd46536c5c2f67a953bcbcd01d7b73df60d",
+        "60b4405102ca6e77ecc7230214599f8d57bb85f251cdd0f71c146010edf21c41",
+        "9c5461a26e3f2e08e84aee1fa638c63d693700133b5ac5acc9ce5d56492313cb"
+      ],
+      "rationale": "The surrounding document defines concatenation or a puzzle-specific operation; the plus sign is not ordinary decimal addition."
+    },
+    {
+      "category": "extraction_or_truncation",
+      "flagged_lines": 1,
+      "row_indices": [
+        2603
+      ],
+      "content_ids": [
+        "e162a2811d413d0d97eff65c0205f935bc64c6255e63caea67b8d2ee3a475b5a"
+      ],
+      "line_sha256": [
+        "e634746602f571c2e10db0548f4a5bab66bc32e9e3866b139bfe40ef06f8896f"
+      ],
+      "expression_sha256": [
+        "f46702977560dbc1e4242f105af2fcda9c02a0dc4f02efdb574fe9e2b9fceba1"
+      ],
+      "rationale": "The surrounding probability text is incomplete at the extracted line; the missing normalization/fraction context prevents a standalone arithmetic judgment."
+    },
+    {
+      "category": "source_or_transcription_error",
+      "flagged_lines": 1,
+      "row_indices": [
+        124
+      ],
+      "content_ids": [
+        "503a53661626b4fd82c4ac92ebdc4c1d3c17fbb8bb761352e84c80e733e20eea"
+      ],
+      "line_sha256": [
+        "674019bbb34bad721b3f553252f6f2a39e3913f908d9e33de604ee9b197dd159"
+      ],
+      "expression_sha256": [
+        "910d9dfcc67194c007e63de34fbea192ef04cc1160758b42278350e06e9f782d"
+      ],
+      "rationale": "The surrounding elementary lesson gives a correct preceding 10 + 4 = 14 example, then repeats 10 + 4 = 11; this is a likely source transcription error."
+    }
+  ],
+  "classification_counts": {
+    "contextual_binary_arithmetic": {
+      "flagged_lines": 2,
+      "rows": 1
+    },
+    "intentional_counterexample": {
+      "flagged_lines": 2,
+      "rows": 1
+    },
+    "contextual_pattern_puzzle": {
+      "flagged_lines": 10,
+      "rows": 2
+    },
+    "extraction_or_truncation": {
+      "flagged_lines": 1,
+      "rows": 1
+    },
+    "source_or_transcription_error": {
+      "flagged_lines": 1,
+      "rows": 1
+    }
+  },
+  "decision": "Arithmetic flags are classified for triage; no line is promoted to verified supervision. The source remains a non-admitted candidate pending broader solution correctness, source-use, family/contamination and finite-supply gates.",
+  "training_admitted": false,
+  "boundary": "Classifications use local surrounding text and hashed flag identities only. They do not establish the correctness of other statements in the records, source rights, benchmark separation or population-level quality."
+}

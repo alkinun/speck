@@ -511,9 +511,9 @@
     "experiments/corpus-audit/code-yield-result.json": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94",
     "experiments/corpus-audit/data-readiness.json": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549",
     "experiments/main-data/data-study-packet.json": "f20ab236d8bf8dd9554d04e7f4ac9713dd54b1a58c74a42ca915d543f16f2a89",
-    "experiments/main-data/source-readiness.json": "cd7552cba0cb14cbf273e2031a971dc0f50f34fd872521474773542eb3a1d095",
-    "experiments/main-data/mid-training-study-packet.json": "951849451a94f6842c0d10a9991595993a5babf54a401b1e31322723030ab44a",
-    "experiments/main-data/post-training-study-packet.json": "e7acc34c1af086b1d8857ce10e0343dd18874015b5ab571c284618a8e85a0f08"
+    "experiments/main-data/source-readiness.json": "105113484a6073e4300c8d470e3ef614812d57d780a26786b2687e982cec3713",
+    "experiments/main-data/mid-training-study-packet.json": "56574c25ad7893c020b6e52abb851946ff61ae8c45ac8ac4fa4e944d3736121e",
+    "experiments/main-data/post-training-study-packet.json": "8f5927edf1afb23f8b97021440b34ef99ed69086f5900085a27fa209b2dbb68a"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

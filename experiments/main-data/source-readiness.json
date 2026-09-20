@@ -32,6 +32,10 @@
     "math_arithmetic_diagnostic": {
       "path": "experiments/corpus-audit/infiwebmath-4plus-arithmetic.json",
       "sha256": "423f0d0c11c23cd2ad62262db09441eaf32760f6307d92cea0734f08fe393a4a"
+    },
+    "math_arithmetic_review": {
+      "path": "experiments/corpus-audit/infiwebmath-4plus-arithmetic-review.json",
+      "sha256": "0f150799d621b85d39b1742a682d78c99fece8ff0e46c8fb0d10fd14053b3412"
     }
   },
   "gate_vocabulary": {
@@ -722,7 +726,32 @@
           "numerically_consistent_lines": 260,
           "flagged_lines": 16,
           "rows_with_flags": 6,
-          "interpretation": "Triage only; flagged lines require manual review and matching lines do not certify solution correctness."
+          "interpretation": "All 16 parser flags have a bounded triage classification; one likely source transcription error remains a quality hold. Matching lines still do not certify solution correctness.",
+          "manual_review_receipt": "experiments/corpus-audit/infiwebmath-4plus-arithmetic-review.json",
+          "manual_review_sha256": "0f150799d621b85d39b1742a682d78c99fece8ff0e46c8fb0d10fd14053b3412",
+          "manual_review_status": "classified_triage_complete; correctness gate remains open",
+          "flag_classification_counts": {
+            "contextual_binary_arithmetic": {
+              "flagged_lines": 2,
+              "rows": 1
+            },
+            "intentional_counterexample": {
+              "flagged_lines": 2,
+              "rows": 1
+            },
+            "contextual_pattern_puzzle": {
+              "flagged_lines": 10,
+              "rows": 2
+            },
+            "extraction_or_truncation": {
+              "flagged_lines": 1,
+              "rows": 1
+            },
+            "source_or_transcription_error": {
+              "flagged_lines": 1,
+              "rows": 1
+            }
+          }
         },
         "training_admitted": false,
         "decision": "retain_as_separate_filtered_math_candidate; do not admit until source-use, family, contamination, independent solution and finite-supply gates close"
@@ -731,7 +760,7 @@
         "source-use and upstream page terms decision",
         "joint source-family and evaluation partition",
         "independent solution correctness and completeness checks",
-        "16 arithmetic triage flags across 6 records require manual review",
+        "one likely source transcription error remains held; surrounding solutions are not certified",
         "eligible-token accounting"
       ]
     },

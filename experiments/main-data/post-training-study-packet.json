@@ -19,7 +19,7 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "cd7552cba0cb14cbf273e2031a971dc0f50f34fd872521474773542eb3a1d095"
+      "sha256": "105113484a6073e4300c8d470e3ef614812d57d780a26786b2687e982cec3713"
     }
   },
   "common_contract": {
