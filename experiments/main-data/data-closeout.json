@@ -140,7 +140,7 @@
     },
     "candidate_manifest_preflight": {
       "path": "experiments/main-data/candidate-manifest-preflight.json",
-      "sha256": "1dd71d275f6a184c85796ea0c3f40271e7868ba150cc7b720f2973a4613c0b00"
+      "sha256": "4cf5423b096f1cfbd1289b85809a015fba494b2e05986f3c4987b8a97ded0058"
     }
   },
   "launch_boundary": "This closeout is an evidence handoff. It does not authorize corpus acquisition, source substitution, training, repetition, GPU spending or publication claims.",

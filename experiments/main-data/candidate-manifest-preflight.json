@@ -4,7 +4,7 @@
   "date": "2026-09-20",
   "status": "preflight_only_no_source_admission",
   "purpose": "Expose required manifest-field and gate completeness for every current candidate before finite-arm construction.",
-  "evidence_boundary": "This is a generated completeness view over the source-readiness matrix. Retained or pinned inventory is not eligible supply; no row authorizes acquisition, training or source admission.",
+  "evidence_boundary": "This is a compact completeness view over the source-readiness matrix. The source-readiness matrix remains the detailed evidence authority; no row authorizes acquisition, training or source admission.",
   "source_of_truth": {
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
@@ -98,13 +98,8 @@
         "baseline_bank"
       ],
       "status": "candidate_inventory_not_admitted",
-      "admitted": false,
-      "identity": null,
-      "inventory_summary": {
-        "documents": 2097270,
-        "retained_tokens": 2306703052,
-        "within_source_exact_duplicate_copies": 0
-      },
+      "identity_pinned": false,
+      "inventory_class": "retained_count_only",
       "gate_status": {
         "source_use": "open_no_named_decision",
         "family_partition": "open_joint_graph",
@@ -125,30 +120,7 @@
         "exposure_tokens": "not_set",
         "repetition_count": "not_set"
       },
-      "blockers": [
-        "source-use and notice decision",
-        "joint family/benchmark partition",
-        "eligible-token accounting",
-        "measured comparison cost"
-      ],
-      "evidence": [
-        {
-          "path": "experiments/pilot/supply.json",
-          "field": "sources[source=fineweb_edu]"
-        },
-        {
-          "path": "/mnt/speck-data/speck/document-token-stock-e1s-v1/fineweb_edu/manifest.json",
-          "kind": "retained_token_stock_manifest"
-        },
-        {
-          "path": "experiments/corpus-audit/natural-web-inspection.json",
-          "field": "validation.cross_source_scope"
-        },
-        {
-          "path": "experiments/corpus-audit/web-filter-validation.json",
-          "field": "comparison"
-        }
-      ]
+      "blocker_count": 4
     },
     {
       "id": "ultrafineweb_hq",
@@ -156,20 +128,8 @@
         "web_candidate"
       ],
       "status": "candidate_inventory_not_admitted",
-      "admitted": false,
-      "identity": {
-        "revision": "02c85641e3d19a854be2e09139c25adaa9518063"
-      },
-      "inventory_summary": {
-        "documents": 290761,
-        "raw_tokens": 351718255,
-        "exact_unique_tokens": 351555487,
-        "distinct_from_retained_fineweb_edu_tokens": 351237925,
-        "exact_duplicate_copies": 162,
-        "exact_duplicate_tokens": 162768,
-        "shared_unique_documents_with_fineweb_edu": 313,
-        "shared_tokens_with_fineweb_edu": 317562
-      },
+      "identity_pinned": true,
+      "inventory_class": "retained_count_only",
       "gate_status": {
         "source_use": "open_named_decision_and_cutoff_review",
         "family_partition": "open_joint_graph",
@@ -190,45 +150,7 @@
         "exposure_tokens": "not_set",
         "repetition_count": "not_set"
       },
-      "blockers": [
-        "source-use and notice decision",
-        "joint family/benchmark partition",
-        "review flags and cutoff decision",
-        "eligible-token accounting",
-        "measured comparison cost",
-        "full-shard eligible-token census under frozen exclusions",
-        "source-aware repair and provenance review"
-      ],
-      "evidence": [
-        {
-          "path": "experiments/corpus-audit/data-readiness.json",
-          "field": "pretraining.hq"
-        },
-        {
-          "path": "experiments/corpus-audit/data-readiness.json",
-          "field": "pretraining.cross_source_exact_overlap"
-        },
-        {
-          "path": "experiments/corpus-audit/data-readiness.json",
-          "field": "mid_training.complete_document_length_bands.ultrafineweb_hq"
-        },
-        {
-          "path": "experiments/corpus-audit/web-variants.json",
-          "field": "decision_route"
-        },
-        {
-          "path": "experiments/corpus-audit/natural-web-inspection.json",
-          "field": "decision"
-        },
-        {
-          "path": "experiments/corpus-audit/web-hq-stratified.json",
-          "field": "census_and_sample"
-        },
-        {
-          "path": "experiments/corpus-audit/web-filter-validation.json",
-          "field": "comparison_and_decision"
-        }
-      ]
+      "blocker_count": 7
     },
     {
       "id": "stack_edu",
@@ -236,16 +158,8 @@
         "natural_code_candidate"
       ],
       "status": "blocked_pending_source_and_supply_resolution",
-      "admitted": false,
-      "identity": {
-        "retained_source_revision": "eeec5caac5cc3758a18f1d3ba4416837a9ba814c"
-      },
-      "inventory_summary": {
-        "documents": 714369,
-        "retained_tokens_with_bos_eos": 476774847,
-        "eligible_unique_tokens_established": 0,
-        "known_benchmark_hold_tokens": 174977
-      },
+      "identity_pinned": true,
+      "inventory_class": "retained_count_only",
       "gate_status": {
         "source_use": "open_origin_and_notice_recovery",
         "family_partition": "open_partial_graph_44_files_held",
@@ -266,36 +180,7 @@
         "exposure_tokens": "not_set",
         "repetition_count": "not_set"
       },
-      "blockers": [
-        "origin/notice resolution",
-        "family and benchmark partition",
-        "independent correctness checks",
-        "eligible supply and cost",
-        "75 quota-blocked origin outcomes and one earlier unresolved outcome",
-        "retained stock is not representative of the full upstream release"
-      ],
-      "evidence": [
-        {
-          "path": "experiments/corpus-audit/code-supply.json",
-          "field": "summary"
-        },
-        {
-          "path": "experiments/corpus-audit/retained-code-origins.json",
-          "field": "summary.coverage.stack_edu"
-        },
-        {
-          "path": "experiments/corpus-audit/code-yield-result.json",
-          "field": "summary_and_next_decision"
-        },
-        {
-          "path": "experiments/corpus-audit/natural-code-cohort.json",
-          "field": "cohort_and_holds"
-        },
-        {
-          "path": "experiments/corpus-audit/retained-code-origins.json",
-          "field": "summary.coverage.stack_edu"
-        }
-      ]
+      "blocker_count": 6
     },
     {
       "id": "stack_v3",
@@ -303,16 +188,8 @@
         "natural_code_candidate"
       ],
       "status": "blocked_pending_source_and_supply_resolution",
-      "admitted": false,
-      "identity": {
-        "dataset_revision": "8f3f25d86e44fd691428131efd17af75d4716499"
-      },
-      "inventory_summary": {
-        "review_repositories": 44,
-        "review_files": 80,
-        "review_tokens_with_bos_eos": 133211,
-        "eligible_tokens_established": 0
-      },
+      "identity_pinned": true,
+      "inventory_class": "sample_or_inventory_only",
       "gate_status": {
         "source_use": "open_origin_and_notice_recovery",
         "family_partition": "open_partial_graph",
@@ -333,41 +210,7 @@
         "exposure_tokens": "not_set",
         "repetition_count": "not_set"
       },
-      "blockers": [
-        "origin/notice resolution",
-        "family and benchmark partition",
-        "independent correctness checks",
-        "full finite eligible supply",
-        "two pinned source 404s",
-        "ten unexplained transformed identities",
-        "bounded cohort cannot establish full-release eligible supply"
-      ],
-      "evidence": [
-        {
-          "path": "experiments/corpus-audit/stack-v3-feasibility.json",
-          "field": "selected_candidate_revision"
-        },
-        {
-          "path": "experiments/corpus-audit/stack-v3-broader.json",
-          "field": "review_cohort"
-        },
-        {
-          "path": "experiments/corpus-audit/stack-v3-origins.json",
-          "field": "results"
-        },
-        {
-          "path": "experiments/corpus-audit/stack-v3-sampling.json",
-          "field": "selection_and_limits"
-        },
-        {
-          "path": "experiments/corpus-audit/code-yield-result.json",
-          "field": "next_decision"
-        },
-        {
-          "path": "experiments/corpus-audit/retained-code-origins.json",
-          "field": "summary.coverage.stack_v3"
-        }
-      ]
+      "blocker_count": 7
     },
     {
       "id": "checked_code",
@@ -375,11 +218,8 @@
         "optional_code_candidate_substitution"
       ],
       "status": "unavailable_candidate",
-      "admitted": false,
-      "identity": null,
-      "inventory_summary": {
-        "qualified_supply_tokens": null
-      },
+      "identity_pinned": false,
+      "inventory_class": "missing",
       "gate_status": {
         "source_use": "not_started",
         "family_partition": "not_started",
@@ -400,27 +240,7 @@
         "exposure_tokens": "not_set",
         "repetition_count": "not_set"
       },
-      "blockers": [
-        "independently verified checked-code supply is not present"
-      ],
-      "evidence": [
-        {
-          "path": "experiments/main-data/data-study-packet.json",
-          "field": "candidate_sources.checked_code"
-        },
-        {
-          "path": "experiments/corpus-audit/code-provenance.json",
-          "field": "next_source_route"
-        },
-        {
-          "path": "experiments/corpus-audit/code-provenance.json",
-          "field": "join"
-        },
-        {
-          "path": "experiments/corpus-audit/code-provenance.json",
-          "field": "rejections"
-        }
-      ]
+      "blocker_count": 1
     },
     {
       "id": "finemath_4plus",
@@ -428,14 +248,8 @@
         "math_support_bank"
       ],
       "status": "candidate_inventory_not_admitted",
-      "admitted": false,
-      "identity": null,
-      "inventory_summary": {
-        "documents": 753071,
-        "retained_tokens": 1124167472,
-        "within_normalized_duplicate_copies": 0,
-        "host_metadata_missing": 0
-      },
+      "identity_pinned": false,
+      "inventory_class": "retained_count_only",
       "gate_status": {
         "source_use": "open_named_decision",
         "family_partition": "open_joint_graph",
@@ -456,33 +270,7 @@
         "exposure_tokens": "not_set",
         "repetition_count": "not_set"
       },
-      "blockers": [
-        "source-use decision",
-        "family partition",
-        "independent correctness",
-        "eligible-token accounting",
-        "independent solution correctness and completeness checks",
-        "joint source-family and evaluation partition",
-        "candidate directory policy not yet frozen"
-      ],
-      "evidence": [
-        {
-          "path": "experiments/corpus-audit/data-readiness.json",
-          "field": "pretraining.math.sources.finemath_4plus"
-        },
-        {
-          "path": "/mnt/speck-data/speck/document-token-stock-v2/finemath_4plus/manifest.json",
-          "kind": "retained_token_stock_manifest"
-        },
-        {
-          "path": "experiments/corpus-audit/followup.json",
-          "field": "math_census_and_directory_candidate"
-        },
-        {
-          "path": "experiments/corpus-audit/result.json",
-          "field": "sources[id=finemath_4plus]"
-        }
-      ]
+      "blocker_count": 7
     },
     {
       "id": "ultradata_math_l2_preview",
@@ -490,14 +278,8 @@
         "math_candidate_support_bank"
       ],
       "status": "candidate_inventory_not_admitted",
-      "admitted": false,
-      "identity": null,
-      "inventory_summary": {
-        "documents": 169058,
-        "retained_tokens": 384788210,
-        "within_normalized_duplicate_copies": 0,
-        "host_metadata_missing": 169058
-      },
+      "identity_pinned": false,
+      "inventory_class": "retained_count_only",
       "gate_status": {
         "source_use": "open_host_lineage_and_named_decision",
         "family_partition": "open_joint_graph",
@@ -518,34 +300,7 @@
         "exposure_tokens": "not_set",
         "repetition_count": "not_set"
       },
-      "blockers": [
-        "host/source lineage",
-        "source-use decision",
-        "family partition",
-        "independent correctness",
-        "eligible-token accounting",
-        "all rows lack host metadata",
-        "independent solution correctness and completeness checks",
-        "joint source-family and evaluation partition"
-      ],
-      "evidence": [
-        {
-          "path": "experiments/corpus-audit/data-readiness.json",
-          "field": "pretraining.math.sources.ultradata_math_l2_preview"
-        },
-        {
-          "path": "/mnt/speck-data/speck/document-token-stock-v1/ultradata_math_l2_preview/manifest.json",
-          "kind": "retained_token_stock_manifest"
-        },
-        {
-          "path": "experiments/corpus-audit/data-readiness.json",
-          "field": "pretraining.math"
-        },
-        {
-          "path": "experiments/corpus-audit/result.json",
-          "field": "sources[id=ultradata_math_l2_preview]"
-        }
-      ]
+      "blocker_count": 8
     },
     {
       "id": "cosmopedia_v2",
@@ -553,13 +308,8 @@
         "synthetic_support_bank"
       ],
       "status": "candidate_inventory_not_admitted",
-      "admitted": false,
-      "identity": null,
-      "inventory_summary": {
-        "documents": 1851034,
-        "retained_tokens": 1489288743,
-        "within_source_exact_duplicate_copies": 0
-      },
+      "identity_pinned": false,
+      "inventory_class": "retained_count_only",
       "gate_status": {
         "source_use": "open_named_decision",
         "family_partition": "open_joint_graph",
@@ -580,22 +330,7 @@
         "exposure_tokens": "not_set",
         "repetition_count": "not_set"
       },
-      "blockers": [
-        "source-use decision",
-        "family partition",
-        "independent quality checks",
-        "eligible-token accounting"
-      ],
-      "evidence": [
-        {
-          "path": "experiments/corpus-audit/data-readiness.json",
-          "field": "pretraining.retained_non_code_banks.cosmopedia_v2"
-        },
-        {
-          "path": "/mnt/speck-data/speck/document-token-stock-v1/cosmopedia_v2/manifest.json",
-          "kind": "retained_token_stock_manifest"
-        }
-      ]
+      "blocker_count": 4
     },
     {
       "id": "pes2o_v3",
@@ -603,13 +338,8 @@
         "science_support_bank"
       ],
       "status": "candidate_inventory_not_admitted",
-      "admitted": false,
-      "identity": null,
-      "inventory_summary": {
-        "documents": 55787,
-        "retained_tokens": 403558463,
-        "within_source_exact_duplicate_copies": 0
-      },
+      "identity_pinned": false,
+      "inventory_class": "retained_count_only",
       "gate_status": {
         "source_use": "open_named_decision",
         "family_partition": "open_joint_graph",
@@ -630,22 +360,7 @@
         "exposure_tokens": "not_set",
         "repetition_count": "not_set"
       },
-      "blockers": [
-        "source-use decision",
-        "family partition",
-        "quality checks",
-        "eligible-token accounting"
-      ],
-      "evidence": [
-        {
-          "path": "experiments/corpus-audit/data-readiness.json",
-          "field": "pretraining.retained_non_code_banks.pes2o_v3"
-        },
-        {
-          "path": "/mnt/speck-data/speck/document-token-stock-v1/pes2o_v3/manifest.json",
-          "kind": "retained_token_stock_manifest"
-        }
-      ]
+      "blocker_count": 4
     },
     {
       "id": "finewiki_en",
@@ -653,13 +368,8 @@
         "reference_support_bank"
       ],
       "status": "candidate_inventory_not_admitted",
-      "admitted": false,
-      "identity": null,
-      "inventory_summary": {
-        "documents": 387313,
-        "retained_tokens": 582070378,
-        "within_source_exact_duplicate_copies": 0
-      },
+      "identity_pinned": false,
+      "inventory_class": "retained_count_only",
       "gate_status": {
         "source_use": "open_named_decision",
         "family_partition": "open_joint_graph",
@@ -680,22 +390,7 @@
         "exposure_tokens": "not_set",
         "repetition_count": "not_set"
       },
-      "blockers": [
-        "source-use decision",
-        "family partition",
-        "quality checks",
-        "eligible-token accounting"
-      ],
-      "evidence": [
-        {
-          "path": "experiments/corpus-audit/data-readiness.json",
-          "field": "pretraining.retained_non_code_banks.finewiki_en"
-        },
-        {
-          "path": "/mnt/speck-data/speck/document-token-stock-v1/finewiki_en/manifest.json",
-          "kind": "retained_token_stock_manifest"
-        }
-      ]
+      "blocker_count": 4
     },
     {
       "id": "infiwebmath_4plus",
@@ -703,19 +398,8 @@
         "math_candidate_support_bank"
       ],
       "status": "candidate_sample_not_admitted",
-      "admitted": false,
-      "identity": {
-        "repository": "HuggingFaceTB/finemath",
-        "config": "infiwebmath-4plus",
-        "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594"
-      },
-      "inventory_summary": {
-        "source_rows": 196757,
-        "bounded_sample_records": 3725,
-        "bounded_sample_training_bytes": 18000388,
-        "bounded_sample_evaluation_bytes": 1807642,
-        "qualified_supply_tokens": null
-      },
+      "identity_pinned": true,
+      "inventory_class": "sample_or_inventory_only",
       "gate_status": {
         "source_use": "open_manual_terms_decision",
         "family_partition": "open_joint_graph",
@@ -736,27 +420,7 @@
         "exposure_tokens": "not_set",
         "repetition_count": "not_set"
       },
-      "blockers": [
-        "source-use and upstream page terms decision",
-        "joint source-family and evaluation partition",
-        "independent solution correctness and completeness checks",
-        "one likely source transcription error remains held; surrounding solutions are not certified",
-        "eligible-token accounting"
-      ],
-      "evidence": [
-        {
-          "path": "experiments/corpus-audit/infiwebmath-4plus-arithmetic.json",
-          "field": "input_and_arithmetic_diagnostic"
-        },
-        {
-          "path": "/mnt/speck-data/speck/source-qualification/math-infiwebmath_4plus-v1/report.json",
-          "kind": "bounded_source_qualification_report"
-        },
-        {
-          "path": "/mnt/speck-data/speck/source-qualification/math-infiwebmath_4plus-v1/tokenizer-input.jsonl",
-          "kind": "bounded_filtered_sample"
-        }
-      ]
+      "blocker_count": 5
     },
     {
       "id": "nemotron_cc_math_4plus",
@@ -764,17 +428,8 @@
         "math_candidate_support_bank"
       ],
       "status": "unavailable_candidate",
-      "admitted": false,
-      "identity": {
-        "repository": "nvidia/Nemotron-CC-Math-v1",
-        "revision": "397a2502f2028c659ba411a6c4935b464a7f03aa"
-      },
-      "inventory_summary": {
-        "listed_files": 46,
-        "unusable_lfs_hashes": 46,
-        "acquired_shards": 0,
-        "qualified_supply_tokens": null
-      },
+      "identity_pinned": true,
+      "inventory_class": "sample_or_inventory_only",
       "gate_status": {
         "source_use": "not_started",
         "family_partition": "not_started",
@@ -795,16 +450,7 @@
         "exposure_tokens": "not_set",
         "repetition_count": "not_set"
       },
-      "blockers": [
-        "all 46 listed LFS objects have unusable hashes",
-        "no shards acquired or verified"
-      ],
-      "evidence": [
-        {
-          "path": "experiments/corpus-audit/data-readiness.json",
-          "field": "new_source_inventories.nvidia--Nemotron-CC-Math-v1"
-        }
-      ]
+      "blocker_count": 2
     }
   ],
   "next_actions": [
