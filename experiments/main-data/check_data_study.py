@@ -57,14 +57,17 @@ def validate(packet_path):
         raise ValueError("confirmation budget does not match its seed and arm caps")
     decay = packet["decay_study"]
     if decay["training_gpu_hours"] != (
-        len(decay["arms"])
-        * decay["paired_seed_count"]
-        * decay["per_arm_training_cap_gpu_hours"]
+        len(decay["arms"]) * decay["paired_seed_count"] * decay["per_arm_training_cap_gpu_hours"]
     ):
         raise ValueError("decay budget does not match its arm and seed caps")
     if len(decay["arms"]) != 3:
         raise ValueError("decay study must contain natural, curated and derived arms")
-    total = screening["training_gpu_hours"] + decay["training_gpu_hours"] + confirmation["training_gpu_hours"] + support["gpu_hours"]
+    total = (
+        screening["training_gpu_hours"]
+        + decay["training_gpu_hours"]
+        + confirmation["training_gpu_hours"]
+        + support["gpu_hours"]
+    )
     if total != 600 or support["budget_check"] != (
         "120 base screening + 90 decay screening + 240 confirmation + 150 support = 600 pretraining-data-research GPU-hours."
     ):

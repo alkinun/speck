@@ -45,10 +45,15 @@ def _verify_code(verification, runner):
     if any(not isinstance(verification.get(key), str) or not verification[key] for key in required):
         raise ValueError("code verification requires non-empty code, test, and entry_point")
     result = runner(
-        verification["code"], verification["test"], verification["entry_point"],
+        verification["code"],
+        verification["test"],
+        verification["entry_point"],
         seconds=verification.get("seconds", 15),
     )
-    return {"status": "verified" if result.get("status") == "pass" else "rejected", "result": result}
+    return {
+        "status": "verified" if result.get("status") == "pass" else "rejected",
+        "result": result,
+    }
 
 
 def _parse_results(content):
@@ -87,7 +92,11 @@ def _verify_tool(row, verification):
             return {"status": "rejected", "reason": "tool result mismatch", "tool_results": actual}
         executed.extend(actual)
     if expected_final is not None and _last_answer(messages) != expected_final.strip():
-        return {"status": "rejected", "reason": "final answer mismatch", "actual": _last_answer(messages)}
+        return {
+            "status": "rejected",
+            "reason": "final answer mismatch",
+            "actual": _last_answer(messages),
+        }
     return {"status": "verified", "tool_results": executed, "actual": _last_answer(messages)}
 
 

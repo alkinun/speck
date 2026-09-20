@@ -4,7 +4,7 @@
 Release the report alongside identified base and always-thinking assistant checkpoints. The model's
 attention, size and implementation choices provide supporting context. Broader architectural research
 remains later work. The first release includes a bounded 200-hour architecture/efficiency comparison
-before backbone freeze and 900 hours of data research across training stages.
+before backbone freeze and 1,050 hours of data research across training stages.
 
 **Status: engineering results available; flagship training and final evaluation ahead.** The
 [preparation receipt](../experiments/pilot/preparation.json),
@@ -56,10 +56,10 @@ exact/near deduplication, partitioning, benchmark exclusions and their remaining
 | Stage | Data evidence to report |
 | --- | --- |
 | Pretraining | Domain/language/source coverage, unique tokens, quality filters, document packing and actual mixture |
-| Capability mid-training | Task-oriented code/math/repair material, independent checks, broad-data replay and overlap with the base |
-| Context mid-training | Coherent repositories/documents, length and position coverage, short replay and reused source families |
+| Capability mid-training | Repository structure, issue/PR/commit context, verified repairs, tool schemas, workflows, trajectories and independent checks |
+| Context/agentic mid-training | Coherent multi-file repositories, dependency distance, tool state, recovery, long-horizon trajectories, length and position coverage |
 | SFT | Unique conversations/task families, verified outcomes, complete trajectories, context/supervised tokens and reasoning lengths |
-| RL | Prompt/task families, reference answers/tests, verifier validity, task difficulty, rollout outcomes and environment failures |
+| RL and final self-SFT | Prompt/task families, reference answers/tests, verifier validity, teacher lineage, anchor replay, rollout outcomes and environment failures |
 
 Publisher quality labels, syntactically valid traces and passing self-generated tests are not
 independent correctness evidence. Report verification coverage and sampled-audit uncertainty.
@@ -77,21 +77,24 @@ capability versus tokens and cost at declared checkpoints.
 Describe from-scratch initialization, broad code/math/general coverage and the realized recipe.
 Explain deterministic data order, packing boundaries and continuation checkpoints. Starting weights
 and the engineering pilot's schedule are not optimized findings. State the achieved horizon and
-its feasibility relative to the 100B working base horizon and 2,300-hour base reservation.
+its feasibility relative to the 80B 4K-base working horizon and 1,800-hour base reservation.
 
 ### Mid-training
 
-Separate capability-focused continuation from context extension. Describe selected code/math/repair
-material and broad replay, then coherent long data and short-task retention. Freeze each transition's
-objective, mixture, length, optimizer/schedule policy and cost. Capability continuation is a portion
-of the declared base horizon; context production has a separate 300-hour cap with token counts
-unfrozen. Qualify 16K/32K, treat 128K as stretch, and report actual splits.
+Describe the 4K capability bridge, 16K repository reasoning stage and 32K long-horizon agentic
+stage. Report repository families, dependency links, issues/PRs/commits, verified repairs, tool
+schemas, grounded workflows, executable trajectories, replay and derived-data lineage. Freeze each
+transition's objective, loss mask, packing, mixture, length, optimizer/schedule policy and cost.
+Separate data continuation from context continuation; the combined production reservation is 600
+GPU-hours and the comparison reservation is 300 GPU-hours.
 
-Use related-prefix benefit, positional retrieval and multi-file/document tasks to establish useful
-context. A configured ceiling does not establish 128K capability. Document any unexecuted stage as
-such; mixture-phase support alone is not evidence of a qualified changed-data continuation workflow.
+For trajectories, report environment images, tool schemas, turn structure, valid/invalid calls,
+test outcomes, failure/recovery labels, supervised positions and masked observations. Use related-prefix
+benefit, dependency-distance retrieval, positional retrieval, multi-file repair, tool-state
+continuation and short-task retention to establish useful context. A configured ceiling does not
+establish capability at that length.
 
-### Post-training: thinking SFT and verified-reward RL
+### Post-training: thinking SFT, verified-reward RL and final self-SFT
 
 For SFT, explain assistant-only masks, complete conversations, tool serialization, brief/deep reasoning
 and actual task outcomes. Count processed context, padding, supervised reasoning and final-answer
@@ -107,6 +110,10 @@ general regressions. Count generation, scoring, updates and retries. Preserve th
 explain whether RL justified promotion. Correctness must be established before applying any efficiency
 preference to response length.
 RL remains planned until its runtime and verifiers are qualified; an RL dataset is not an RL result.
+
+For final self-SFT, describe the selected parent, frozen prompt pool, teacher checkpoint, generation
+settings, environment and verifier receipts, rejected records, anchor replay and the comparison to the
+pre-self-SFT parent. Report held-out transfer and regressions before promoting the final checkpoint.
 
 ## 4. Model choices and implementation
 
@@ -127,24 +134,22 @@ establish an optimal size, attention ratio, architecture advantage or scaling la
 ## 5. Controlled data study and evaluation
 
 The [research design](../experiments/main-data/README.md#research-before-the-main-run) proposes a
-baseline and at most two single-factor screening candidates, followed by baseline-versus-selected
+baseline and at most three single-factor screening candidates (code-bank, natural-web and calibrated AI-generation/provenance filtering), followed by baseline-versus-selected
 confirmation on two fresh paired seeds before main pretraining. Freeze the data contrast,
 manifests, exposure, schedule, validation mixture, development endpoints and all-in cost. Report
 seed variation, source/domain loss and capability curves, including uninformative endpoints.
 If several data components change together, attribute results to the combined recipe, not one source.
 Checked-code substitution does not isolate synthesis, selection and verification separately.
 Publish the selection decision, unfavorable/inconclusive results and limits on extrapolating short
-runs to 100B. A later useful-checkpoint continuation study answers a separate question and cannot
+runs to the 80B working horizon. A later useful-checkpoint continuation study answers a separate question and cannot
 retroactively justify the original mixture. The 600-hour pretraining study includes screening and
 confirmation, evaluations and overhead. The [mid-training packet](../experiments/main-data/mid-training-study-packet.json)
-and [post-training packet](../experiments/main-data/post-training-study-packet.json) each reserve
-150 hours: start comparison arms from the same useful parent, hold the objective and exposure fixed
-where testing data effects, and declare any combined intervention. Capability mid-training is also an
-efficiency study: compare replay/source-only data with validated grounded or executable supervision,
-then report capability per mid-training token and GPU-hour, SFT convergence, early RL adaptation and
-held-out transfer under the same downstream recipe. Context extension remains a separate systems/data
-question. The proposed mid-training pairs have one seed each; SFT has two paired seeds with
-processed/supervised exposure differences reported.
+reserves 300 hours for proxy, objective/packing, context and 1.2B confirmation studies. The
+[post-training packet](../experiments/main-data/post-training-study-packet.json) reserves 150 hours
+for SFT selection, fixed-policy RL feasibility, a final self-SFT pilot and support. Start comparison
+arms from the same useful parent, hold objective and exposure fixed where testing data effects, and
+declare every combined intervention. Report capability per mid-training token and GPU-hour, SFT
+convergence, early RL adaptation, self-distillation transfer and held-out results under fixed downstream recipes.
 RL research currently covers fixed-policy prompt/verifier feasibility, not a policy-training data
 ablation. Charge comparisons separately from production. Report inconclusive results and downstream
 recipe decisions as well as gains.

@@ -29,19 +29,20 @@ are updated with pinned evidence.
 
 ## Scale
 
-Use **100B combined pretraining and capability mid-training tokens as the first-allocation
-working horizon**. At the measured H100 full-trainer rate this projects to 2,160 of the reserved
-2,300 GPU-hours. The roughly 106.5B arithmetic capacity is not a guaranteed hardware ceiling or a
-launch target. At an illustrative 80% of that effective rate, only 85.2B fits. Freeze the horizon
-from qualified supply and measured GH200/multiworker cost; shorten it if necessary.
+Use **80B 4K-base tokens as the revised first-allocation working horizon**. At the measured H100
+full-trainer rate this projects to 1,728 of the reserved 1,800 4K-base GPU-hours. The roughly 83.3B
+arithmetic capacity is not a guaranteed hardware ceiling or a launch target. At an illustrative 80%
+of that effective rate, only 66.7B fits. Freeze the final horizon from qualified supply, GH200 cost,
+and the separate 16K/32K mid-training costs; 100B is deferred.
 
 The previous 320B desired / 400B stretch scales remain deferred cost comparisons, not current
 acquisition targets. Better data does not prove equal quality at different token horizons. The
 first release studies data and staged training within the confirmed 5,000-hour envelope.
 
-Capability mid-training's split within the 100B horizon remains unfrozen; it is not an additional
-allowance. Follow with **300 hours of context qualification toward 16K/32K**, with tokens unfrozen
-and 128K a stretch, and **1.5M unique
+Capability mid-training uses a combined **600-hour production reservation** across a 4K capability
+bridge, 16K repository reasoning and 32K agentic continuation; its tokens are separately accounted
+from the 4K base. Research uses **300 hours** for the four-arm proxy/objective/context/confirmation
+funnel, and **1.5M unique
 post-training conversations**, within a 1–2M planning range. These require their own cost and
 quality qualification. All tokens use the frozen Mistral tokenizer; holdouts are outside training
 supply, and exposure/replay is distinct from unique eligible material.
@@ -49,7 +50,7 @@ supply, and exposure/replay is distinct from unique eligible material.
 ## The first executable data-study packet
 
 [data-study-packet.json](data-study-packet.json) is the next bounded experiment artifact. It binds
-one common baseline, one code-bank contrast and one natural-web contrast, followed by an explicit
+one common baseline, code-bank, natural-web and AI-generation/provenance-filter contrasts, followed by an explicit
 three-way decay comparison. It fixes the tokenizer, 4K context, objective,
 serialization, exposure accounting and evaluation boundaries while leaving source admission open.
 
@@ -71,28 +72,38 @@ The packet does not authorize acquisition, training or a main-run mixture.
 
 ## Capability mid-training efficiency packet
 
-[mid-training-study-packet.json](mid-training-study-packet.json) defines the next data-efficiency study. It compares replay/source-only data, targeted raw capability data and grounded augmentation from one useful parent. Executable trajectories are a conditional replacement, not a fourth arm. Validate it offline:
+[mid-training-study-packet.json](mid-training-study-packet.json) defines the next data-efficiency study. It compares replay, source-only repository data, grounded workflows and executable trajectories, then separately tests selective loss/packing and context transitions. Validate it offline:
 
 ```bash
 PYTHONPATH=. python experiments/main-data/check_mid_training_study.py \
   experiments/main-data/mid-training-study-packet.json
 ```
 
-The packet reserves 150 GPU-hours for mid-training research. Capability data interventions must use
+The packet reserves 300 GPU-hours for mid-training research. Capability data interventions must use
 `--branch-kind data` with `training_phase: data_continuation`; context interventions must use the
 separate context branch. Linked SFT/RL convergence and adaptation measurements belong to the separate
 post-training research reservation and must use the same downstream recipe across retained arms.
 
 ## Post-training data-study packet
 
-[post-training-study-packet.json](post-training-study-packet.json) binds the linked SFT and RL-feasibility comparison. It uses two outcome-selection SFT arms with two paired seeds, then a fixed-policy prompt/verifier slot; it does not authorize policy updates or production RL. Validate it offline:
+[post-training-study-packet.json](post-training-study-packet.json) binds SFT selection, fixed-policy RL feasibility and a bounded final self-SFT pilot. It does not authorize policy updates or production self-SFT. Validate it offline:
 
 ```bash
 PYTHONPATH=. python experiments/main-data/check_post_training_study.py \
   experiments/main-data/post-training-study-packet.json
 ```
 
-The packet reserves 100 GPU-hours for SFT comparison, 20 for RL feasibility and 30 for support. Existing 500K-row stock remains format and context evidence until source, family, correctness and held-out gates close.
+The packet reserves 80 GPU-hours for SFT comparison, 20 for RL feasibility, 30 for the final self-SFT pilot and 20 for support. Existing 500K-row stock remains format and context evidence until source, family, correctness and held-out gates close.
+
+Run `make plan-check` from the repository root to validate the cross-stage compute ledger, all
+packet budgets and every recorded input receipt together. A passing check is necessary bookkeeping,
+not training authority.
+
+The ledger checker validates direct plan receipt hashes; the stage validators check their own
+declared dependencies. This is not a recursive audit of every historical receipt or evidence of
+source eligibility. Study packets own arm counts and per-arm ceilings; mirrored plan fields must
+match them. Match training exposure for data comparisons and report actual GPU-hours separately;
+equal exposure and equal elapsed cost are not generally achievable together.
 
 The [source-readiness matrix](source-readiness.json) is the companion evidence index. It records the retained inventory, source-of-truth receipts, open gates and blocked arm status for each candidate bank. Validate it offline:
 
@@ -137,7 +148,7 @@ The [post-training audit protocol](post-training-audit-protocol.json) fixes the 
 deterministic SFT structure, stratified independent outcomes, tool-trajectory checks, reasoning-mode
 measurement, and fixed-policy verifier feasibility with explicit stop rules. It measures efficiency
 only after correctness, using task-conditioned length curves rather than a global shortness reward.
-Its horizon accounting records the 100B/125B working target separately from the current one-pass bounds: retained code evidence bounds a 30% share at 1.589B total tokens before exclusions, and HQ tokens distinct from retained FineWeb-Edu bound a 25% share at 1.405B. These are constraints, not qualified supply.
+Its horizon accounting records the 80B/100B working target separately from the current one-pass bounds: retained code evidence bounds a 30% share at 1.589B total tokens before exclusions, and HQ tokens distinct from retained FineWeb-Edu bound a 25% share at 1.405B. These are constraints, not qualified supply.
 The HQ comparison retains FineWeb-Edu as the control, keeps the pinned L1/HQ route as a candidate, and adopts no score cutoff or automatic repair rule; its sampled panels establish review evidence, not eligible yield.
 The natural-code route is similarly bounded: the retained Stack-Edu census has 0 eligible tokens established, the fixed Stack-Edu/Stack v3 cohorts retain all 44 family holds, and unresolved origins/404s remain outside any arm. Checked-code substitution stays separate until provenance and correctness gates close.
 The math route keeps FineMath 4+, UltraData-Math L2 and filtered InfiWebMath 4+ as separate candidates: the reversible FineMath directory view removes 1.67% of its stock as a conservative candidate, while all L2 rows still lack host metadata. The InfiWebMath sample has a conservative arithmetic triage and a hashed manual classification; it is not a correctness certificate. A single normalized cross-source link is recorded without automatic removal; Nemotron-CC-Math remains unavailable because its listed LFS hashes are unusable and no shards were acquired.
@@ -153,7 +164,7 @@ parent checkpoints. The full production corpus need not be materialized to desig
 
 | Study | Proposed comparison and controls | Decision evidence |
 | --- | --- | --- |
-| Pretraining screening | One qualified baseline plus at most two single-factor candidates: one code-bank contrast and one natural-web-bank contrast. Same fresh initialization, other banks, domain shares, packing, objective and exposure. | Fixed source losses and development curves rank candidates for confirmation; one screening seed establishes no robust winner. |
+| Pretraining screening | One qualified baseline plus at most three single-factor candidates: code-bank, natural-web-bank and calibrated AI-generation/provenance-filter contrasts. Same fresh initialization, other banks, domain shares, packing, objective and exposure. | Fixed source losses and development curves rank candidates for confirmation; one screening seed establishes no robust winner. |
 | Pretraining confirmation | Baseline versus one selected candidate, each from two new paired initialization seeds. Identical initial tensors within each pair; fresh optimizer/data state. | Predeclared primary endpoint, consistent paired effects, acceptable regressions and affordable supply. Publish both seed pairs and inconclusive outcomes. |
 | Capability mid-training | Replay/source-only control versus targeted code/math/repair/tool-use grounding, with validated executable trajectories only if environments qualify. Same useful parent, 4K next-token objective, downstream SFT/RL recipe, optimizer policy, schedule and exposure; one paired data-order seed. | Target capability, source losses, downstream SFT convergence, early RL adaptation and quality per mid-training token/GPU-hour. Branches are additive ablations; context extension stays separate. |
 | Context mid-training | At 16K, coherent records in preceding domain proportions versus proposed long-domain reweighting. Same parent, short replay, packing and token exposure; one paired seed. | Fixed-suffix loss at matched long prefix length, related-prefix benefit, positional/multifile checks and short-task retention. This does not isolate coherent packing or context length. |
@@ -177,7 +188,7 @@ changes without testing that combined recipe. Confirmation
 uses fresh runs and seeds, not extensions of selected screening checkpoints. It may reuse qualified
 training families, with exposure reported; these are not new independent source samples. Main
 pretraining starts fresh after the recipe decision. Neither research exposure nor discarded arms count toward
-the main model's 100B horizon.
+the main model's 80B 4K-base horizon.
 
 Capability arms branch from the same preserved 4K production milestone before final LR decay.
 The decay study branches from one matched stable checkpoint and compares natural, curated-natural
@@ -189,19 +200,27 @@ recipe. Research checkpoints do not silently become extra production exposure.
 
 ### Research cost envelopes
 
+Deduplication strength (exact versus near/family), quality thresholds, coverage-aware sampling,
+grounded augmentation and difficulty/replay curricula remain candidate follow-ups. CPU audits can
+measure retention, false positives, overlap and cost now; separate causal training claims require
+a predeclared replacement of a funded arm or a later allocation. They are not extra funded runs.
+Never relax benchmark-family separation as a deduplication ablation. A combined recipe needs its
+own comparison before attributing gains to individual components.
+
 These are proposed ceilings within existing reservations, not measured durations or runnable jobs.
 
 | Reservation | Training / study slots | Shared support | Total GPU-hours |
 | --- | --- | ---: | ---: |
 | Architecture | Two arms × one seed × 60h = 120h; profiling 40h | 40h | 200 |
-| Pretraining data | Base screen: three arms × 40h = 120h; decay screen: three arms × 30h = 90h; confirmation: two arms × two new seeds × 60h = 240h | 150h | 600 |
-| Mid-training data | Capability pair: two × 35h = 70h; context pair: two × 25h = 50h | 30h | 150 |
-| Post-training data | SFT: two arms × two seeds × 25h = 100h; conditional RL prompt feasibility 20h | 30h | 150 |
+| Pretraining data | Base screen: four arms × 30h = 120h; decay screen: three arms × 30h = 90h; confirmation: two arms × two new seeds × 60h = 240h | 150h | 600 |
+| Mid-training data | Proxy screen 120h; objective/packing 40h; context 40h; 1.2B confirmation 80h | 20h | 300 |
+| Post-training data | SFT: two arms × two seeds × 20h = 80h; conditional RL feasibility 20h; final self-SFT pilot 30h | 20h | 150 |
 
 Training slots include trainer startup, inline validation and saves. Shared support covers other
 on-allocation preparation, capability scoring, qualification and recovery. Each operation is charged
-once; CPU/storage and external API costs are separate. Production caps remain 2,300h base/capability,
-300h context and 800h post-training, with 400h protected evaluation/recovery. The RL prompt study
+once; CPU/storage and external API costs are separate. Production caps are 1,800h 4K base,
+600h capability/context/agentic mid-training and 800h post-training, with 450h protected
+evaluation/recovery. The RL prompt study
 does not fund optimizer updates; conditional RL implementation qualification, rollouts and production
 updates must fit its separate 200h production subdivision.
 
@@ -282,17 +301,17 @@ The source names below are production hypotheses; the experimental baseline deli
 its declared control source in the bank under study. Update the production source choices after
 confirmation rather than assuming every preferred candidate wins.
 
-| Component | Share | 100B exposure | Eligible unique preparation | Candidate sources / admission condition |
+| Component | Share | 80B exposure | Eligible unique preparation | Candidate sources / admission condition |
 | --- | ---: | ---: | ---: | --- |
-| Selected broad natural web | 25% | 25B | 31.25B | Natural Ultra-FineWeb English; bind scored/HQ path and threshold after the bounded audit |
-| Independent web coverage | 5% | 5B | 6.25B | FineWeb-Edu and/or DCLM; select allocation after overlap and coverage measurements |
-| Natural code, tests and documentation | 30% | 30B | 37.5B | Stack-Edu, source-resolved UltraData-Code L2, and Stack v3 under qualification; preserve practical and multilingual coverage |
-| Checked code explanations, exercises and repair | 5% | 5B | 6.25B | Qualified natural-code derivatives; UltraData-Code L3 only if lineage and independent checks succeed |
-| Selected natural math / worked solutions | 20% | 20B | 25B | UltraData-Math L2, FineMath 4+, Nemotron-CC-Math `4plus`; source allocation follows comparative audit |
-| Refined math explanations / derivations | 5% | 5B | 6.25B | Qualified UltraData-Math L3 and verified derivatives |
-| Reference / science / technical documents | 5% | 5B | 6.25B | FineWiki, peS2o and qualified English FinePDFs-Edu |
-| Refined educational web | 5% | 5B | 6.25B | Qualified Ultra-FineWeb-L3; Cosmopedia remains a comparison source |
-| **Total** | **100%** | **100B** | **125B** | **35% code, 25% math, 40% supporting material** |
+| Selected broad natural web | 25% | 20B | 25B | Natural Ultra-FineWeb English; bind scored/HQ path and threshold after the bounded audit |
+| Independent web coverage | 5% | 4B | 5B | FineWeb-Edu and/or DCLM; select allocation after overlap and coverage measurements |
+| Natural code, tests and documentation | 30% | 24B | 30B | Stack-Edu, source-resolved UltraData-Code L2, and Stack v3 under qualification; preserve practical and multilingual coverage |
+| Checked code explanations, exercises and repair | 5% | 4B | 5B | Qualified natural-code derivatives; UltraData-Code L3 only if lineage and independent checks succeed |
+| Selected natural math / worked solutions | 20% | 16B | 20B | UltraData-Math L2, FineMath 4+, Nemotron-CC-Math `4plus`; source allocation follows comparative audit |
+| Refined math explanations / derivations | 5% | 4B | 5B | Qualified UltraData-Math L3 and verified derivatives |
+| Reference / science / technical documents | 5% | 4B | 5B | FineWiki, peS2o and qualified English FinePDFs-Edu |
+| Refined educational web | 5% | 4B | 5B | Qualified Ultra-FineWeb-L3; Cosmopedia remains a comparison source |
+| **Total** | **100%** | **80B** | **100B** | **35% code, 25% math, 40% supporting material** |
 
 Every document has one primary bank, including cross-domain material such as mathematical code.
 Deduplicate across banks and original/derived families before counting supply. Candidate names
@@ -315,8 +334,8 @@ and harder derivations, rather than exclusively competition problems or lengthy 
 
 The current pilot-source stocks total **6.799B tokens before joint eligibility**, including only
 **0.477B code tokens**. The separate natural UltraData-Math preview adds 0.385B before joint checks.
-These figures do not establish qualified supply for the new recipe. Prepare a **125B eligible unique
-token bank** as a 25% selection margin over 100B exposure: each bank's target is 1.25 times its
+These figures do not establish qualified supply for the new recipe. Prepare a **100B eligible unique
+token bank** as a 25% selection margin over 80B exposure: each bank's target is 1.25 times its
 exposure in the table. Default to one pass through the selected training documents; the unused
 margin is not a requirement to train everything. Holdouts and rejected raw records are additional.
 
@@ -329,8 +348,8 @@ baseline at 1.59B total tokens with a 30% natural-code share, before exclusions,
 banks. Even the proposed short studies need additional qualified baseline supply or shorter common
 horizons; their hour caps do not imply that 1.85B/4.17B-token arms are available.
 
-At uint16, 100B training token IDs occupy **200GB decimal**; the 125B preparation bank occupies
-250GB. These are alternative inventories, not automatically two distinct copies to sum.
+At uint16, 80B training token IDs occupy **160GB decimal**; the 100B preparation bank occupies
+200GB. These are alternative inventories, not automatically two distinct copies to sum.
 Budget indexes, masks, source text, deduplication workspaces, checkpoints and backups separately.
 A 2TB local scratch allowance is a working envelope, not a measured dataset size. The September19
 filesystem check showed approximately 4.5TiB available. Stream bounded acquisitions and retain
@@ -338,27 +357,27 @@ qualified packs; do not mirror all upstream datasets or assume the rental's 200G
 
 ## Mid-training data
 
-Capability continuation uses selected code/math explanations, independently checked exercises and
-repair material with broad-data replay. Specify difficulty, source families, actual correctness
-coverage and overlap/reuse from pretraining. Tokens and GPU-hours come from the existing base
-horizon and 2,300-hour reservation; the targeted portion and replay weights remain to be frozen.
-The [training guide](../../docs/training.md#mid-training-readiness) records the changed-data branch
-and objective limitations. Data acquisition does not make this a runnable continuation recipe.
+Capability continuation uses repository structure, dependency-linked files, issues, reviews,
+pull requests, commits, diffs, verified repairs, tool schemas, grounded workflows and executable
+trajectories with broad-data replay. Specify difficulty, source families, correctness, environment
+receipts, loss masks and overlap/reuse from pretraining. The [training guide](../../docs/training.md#mid-training-readiness)
+records the data/context branch and objective limitations. Data acquisition does not make this a
+runnable continuation recipe.
 
-The pretraining recipe study precedes the main run and uses 600 of the 900 data-research hours.
+The pretraining recipe study precedes the main run and uses 600 of the 1,050 data-research hours.
 Its fresh-run tokens do not count as main-model exposure; production starts fresh after selection.
-Mid-training comparisons use their separate 150-hour research cap and cannot replace the initial study.
+Mid-training comparisons use their separate 300-hour research cap and cannot replace the initial study.
 
 ## Context extension
 
-Qualify **4K → 16K → 32K within 300 production GPU-hours**. Keep stage token counts unset until
-measured cost, useful-context learning and short-task retention justify them. Approximately 128K
-is a stretch; the old 8B/800-hour curriculum is retired. Retain complete longer records as inventory
-without counting them as first-release training exposure.
+Qualify **4K → 16K → 32K within the combined 600-hour capability/context/agentic production
+reservation**. Keep stage token counts unset until measured cost, useful-context learning and
+short-task retention justify them. 64K/128K is future work. Retain complete longer records as
+inventory without counting them as first-release training exposure.
 
 Short replay at 25% remains a hypothesis. For the long portion, compare unchanged domain weights
 repacked into coherent longer records against the proposed 50% repository / 30% math/science /
-20% grounded cross-document mix. Charge these comparisons to the 150-hour mid-training research
+20% grounded cross-document mix. Charge these comparisons to the 300-hour mid-training research
 cap, distinct from the selected context production run. Preserve repository/import/document
 relationships and record source-family reuse. Evaluate fixed-suffix loss with related prefixes,
 retrieval across positions, multi-file tasks and short-task retention before advancing length.
@@ -385,6 +404,11 @@ Measure the actual length mixture before claiming that 1.5M or 2M conversations 
 See the [program overview](../../docs/program.md) for the proposed SFT/RL subdivision,
 distributed execution, stage promotion criteria and release evaluation.
 
+After SFT and optional RL, the final self-SFT pilot compares verified-anchor continuation against
+verified self-distillation with anchor replay. Freeze prompt, teacher, environment, verifier and
+rejection manifests before generation. Full final self-SFT remains inside the 800-hour post-training
+production reservation and is promoted only on held-out transfer.
+
 ## Compute allocation
 
 The grant allocation confirms four GH200s and 5,000 total GPU-hours within a nominal 90-day window;
@@ -395,25 +419,25 @@ as actual provider billing:
 | --- | ---: |
 | Runtime qualification | 100 |
 | Architecture and efficiency study | 200 |
-| Pretraining and capability mid-training | 2,300 |
-| Context production | 300 |
+| 4K base production | 1,800 |
+| Capability/context/agentic mid-training production | 600 |
 | Post-training, including any on-allocation teacher/reward work | 800 |
-| Data experiments: 600 pretraining / 150 mid-training / 150 post-training | 900 |
-| Protected evaluation and recovery | 400 |
+| Data experiments: 600 pretraining / 300 mid-training / 150 post-training | 1,050 |
+| Protected evaluation and recovery | 450 |
 | **Total** | **5,000** |
 
 The completed pilot measured **12,859 tokens/s** over the full trainer process, including cold
-startup, validation and checkpoint saves. At that single-H100 rate, 100B takes **2,160 GPU-hours**.
-The 2,300-hour reservation leaves about 140 hours beyond that linear extrapolation. Four workers
+startup, validation and checkpoint saves. At that single-H100 rate, 80B takes **1,728 GPU-hours**.
+The 1,800-hour reservation leaves about 72 hours before long-context overhead. Four workers
 at perfect scaling would take 22.5 days; this is arithmetic, not measured GH200 wall time. Charge
 all allocated GPUs, including idle workers. Hardware, communication, input loading and cadence
 can change the rate. GH200/multiworker qualification is still required.
 
-| Base scenario | H100-rate GPU-hours | Four-GPU elapsed days, ideal / illustrative 80% scaling | Effective tokens/s per GPU needed within 2,300h |
+| Base scenario | H100-rate GPU-hours | Four-GPU elapsed days, ideal / illustrative 80% scaling | Effective tokens/s per GPU needed within 1,800h |
 | --- | ---: | ---: | ---: |
-| **100B first-allocation working horizon** | 2,160h | 22.5 / 28.1 | 12,077 |
-| 320B deferred scale comparison | 6,912h | 72.0 / 90.0 | 38,647 |
-| 400B deferred scale comparison | 8,641h | 90.0 / 112.5 | 48,309 |
+| **80B first-allocation 4K-base working horizon** | 1,728h | 18.0 / 22.5 | 12,346 |
+| 320B deferred scale comparison | 6,912h | 72.0 / 90.0 | 49,383 |
+| 400B deferred scale comparison | 8,641h | 90.0 / 112.5 | 61,728 |
 
 These elapsed times assume each device matches the measured H100 before communication losses;
 80% scaling is an illustration, not a measurement. Four devices would deliver about 51.4K tokens/s
@@ -424,25 +448,25 @@ The allowance is **5,000 total GPU-hours**. The allocation is confirmed, but pro
 and runtime qualification remain unconfirmed; the budget
 interpretation is explicit.
 
-At the H100 reference rate, keeping the other 2,700 reserved GPU-hours brings the full program to
+At the H100 reference rate, keeping the other 3,200 reserved GPU-hours brings the full program to
 approximately **9,612 GPU-hours for 320B** or **11,341 for 400B**, before any distributed penalty.
-Alternatively, fitting the base into its current 2,300-hour reservation requires about **3.0× / 3.8×
+Alternatively, fitting the base into its current 1,800-hour reservation requires about **3.0× / 3.8×
 more effective throughput per allocated GPU**. Merely adding four workers does not deliver that
 per-GPU improvement. GH200 hardware gains, larger batches and implementation improvements remain
 unmeasured; qualify single-worker efficiency and four-worker scaling separately. Do not assume the
 engineering pilot is an optimized throughput ceiling or promise a particular speedup.
 
-The 100B horizon is now the working preparation baseline, conditional on cost and supply; the
-larger comparisons do not authorize expansion. Preserve continuation checkpoints and choose a
-compatible learning-rate schedule before training; a fully decayed run does not extend at no cost.
-The research allocation reserves 200 hours for architecture/efficiency and 900 for data
-experiments, while preserving 2,300 base and 800 post-training production hours. Context production
-is reduced to 300 hours and protected evaluation/recovery to 400. Historical H100 rental costs are
+The 80B 4K-base horizon is now the working preparation baseline, conditional on cost and supply;
+the 100B and larger comparisons do not authorize expansion. Preserve continuation checkpoints and
+choose a compatible learning-rate schedule before training; a fully decayed run does not extend at
+no cost. The research allocation reserves 200 hours for architecture/efficiency and 1,050 for data
+experiments, while preserving 1,800 base, 600 mid-training and 800 post-training production hours.
+Historical H100 rental costs are
 separate. Remeasure throughput if the architecture decision changes the reference model.
 
 Charge experimental training, evaluation, retries and on-allocation preparation to the appropriate
 research cap; charge selected production runs to their production phase. CPU/storage and external
-teacher API costs remain separate. Context token counts are deliberately unset; the 300-hour cap
+teacher API costs remain separate. Context token counts are deliberately unset; the 600-hour cap
 cannot inherit the former 8B curriculum without evidence. No extra experiment, 128K stage or RL
 campaign is implicitly funded beyond the declared caps.
 

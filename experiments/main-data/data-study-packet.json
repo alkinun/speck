@@ -20,7 +20,7 @@
     },
     "design_contract": {
       "path": "experiments/main-data/data-design-contract.json",
-      "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
+      "sha256": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58"
     }
   },
   "common_contract": {
@@ -38,6 +38,7 @@
   "candidate_sources": {
     "web_control": "FineWeb-Edu or another source-use-qualified independent web control; current retained inventory is not yet admitted.",
     "web_candidate": "Pinned Ultra-FineWeb L1 English/HQ route at revision 02c85641e3d19a854be2e09139c25adaa9518063; cutoff and review flags remain unchanged until qualification.",
+    "ai_provenance_filter": "A calibrated AI-generation/provenance filter applied to the same eligible bank as its unfiltered control; detector precision, recall, calibration drift and false-positive coverage loss must be measured before any filtering decision.",
     "natural_code": "One qualified natural-code contrast selected from the fixed Stack-Edu / Stack v3 evidence, subject to source, family and finite-supply gates.",
     "checked_code": "Optional substitution only if independently verified checked-code supply is qualified; it cannot be silently used to fill the natural-code arm.",
     "math_and_supporting_banks": "Held constant across the study after their own source, overlap, correctness and supply gates."
@@ -69,14 +70,22 @@
       "status": "candidate_only_pending_source_and_family_gates",
       "contrast": "Compare the qualified independent web control with the qualified Ultra-FineWeb HQ route at the same bank share. Do not tune score cutoffs, filters or serialization inside this arm.",
       "decision_scope": "Exact overlap is counted once. Review flags remain review inputs until a source-aware decision is recorded."
+    },
+    {
+      "id": "ai_provenance_filter_candidate",
+      "role": "AI-generated-content filtering intervention",
+      "factor": "ai_provenance_filter",
+      "status": "candidate_only_pending_detector_calibration_and_source_gates",
+      "contrast": "On the same qualified bank and exposure, compare an unfiltered control with a predeclared calibrated detector/filter policy. Report detector precision/recall, removed coverage, residual synthetic markers and downstream loss/capability; do not call a classifier score ground truth.",
+      "decision_scope": "Filtering is a bounded ablation, not a universal synthetic-data verdict. Preserve a no-filter control, freeze detector/version/threshold before training and reject the contrast if detector quality or coverage loss is unmeasured."
     }
   ],
   "screening": {
-    "maximum_arms": 3,
+    "maximum_arms": 4,
     "paired_seed_count": 1,
     "training_gpu_hours": 120,
-    "per_arm_training_cap_gpu_hours": 40,
-    "order": "Run baseline plus only candidates whose source gates pass. Protect confirmation and support reservations before starting.",
+    "per_arm_training_cap_gpu_hours": 30,
+    "order": "Run baseline plus only candidates whose source and detector gates pass. Protect confirmation and support reservations before starting.",
     "primary_evidence": "Held-out source/domain loss and development curves at matched exposure; capability and general retention are guardrails.",
     "selection_rule": "A candidate advances only with a predeclared useful effect, no prohibited regression, reproducible format/packing and affordable measured cost. Raw code and web deltas are not ranked against each other.",
     "failure_rule": "If no candidate passes, retain the qualified baseline or record an explicit redesign within the remaining reservation."
@@ -89,7 +98,7 @@
     "per_arm_per_seed_cap_gpu_hours": 60,
     "controls": "Fresh paired initial tensors and fresh optimizer/data state; confirmation seeds differ from screening.",
     "evidence": "Report each pair, family-level uncertainty, source-wise loss, target capability, general retention, preparation cost and regressions.",
-    "claim_boundary": "Two paired seeds support a bounded data comparison, not a global optimum or guaranteed 100B ranking."
+    "claim_boundary": "Two paired seeds support a bounded data comparison, not a global optimum or guaranteed 80B ranking."
   },
   "decay_study": {
     "purpose": "Test whether late-stage capability enrichment improves capability density over ordinary pretraining decay.",

@@ -23,7 +23,7 @@ capability development. External models are comparators or qualified teachers, n
   start timing, site details and GH200 throughput remain unconfirmed.
 - **Behavior selected:** one always-thinking protocol with brief/deep reasoning and tool actions;
   no supported non-thinking response mode. Preserve separate base and assistant checkpoints.
-- **Context target:** start at 4K, qualify 16K then 32K within 300 production GPU-hours; 128K is a stretch.
+- **Mid-training target:** move from a 4K capability bridge to 16K repository reasoning and 32K long-horizon agentic coding; the combined capability/context/agentic production reservation is 600 GPU-hours. 64K/128K is deferred.
 - **Future ambition:** 50,000 GH200-hours and larger models; no future allocation is assumed funded.
 
 The [model notes](docs/model.md) define the reference backbone and 200-hour architecture/efficiency
@@ -36,13 +36,12 @@ measure. The [program overview](docs/program.md#training-lifecycle) defines stag
 
 | Area | Preparation target | Still to resolve |
 | --- | --- | --- |
-| Pretraining | 100B working base horizon including capability mid-training; initial 35% code, 25% math, 40% supporting material; explicit natural/curated/derived decay study | Qualified source supply and measured GH200 cost; H100 reference implies 106.5B within the base reservation |
-| Capability mid-training | Targeted code/math/repair/tool-use continuation with broad-data replay, within the base horizon | Token split, source-only versus validated synthesis, objective and changed-data continuation support remain to be qualified; measure downstream quality per token and GPU-hour |
-| Context mid-training | 300-hour production cap; 16K then 32K qualification, with 128K stretch and token counts unset | Memory, useful-context learning, positional behavior and stage costs |
+| Pretraining | 80B 4K-base working horizon; initial 35% code, 25% math, 40% supporting material; explicit natural/curated/derived decay study | Qualified source supply and measured GH200 cost; 100B is deferred because the revised 1,800-hour 4K reservation must protect the expanded mid-training stages |
+| Capability/mid-training | 4K repository/tool bridge, 16K multi-file repository reasoning and 32K long-horizon agentic coding with replay, grounded workflows and executable traces | Trajectory environments, selective loss masks, packing, changed-data continuation, context cost and useful transfer remain to be qualified |
 | Thinking SFT | 1.5M unique qualified conversations, within a 1–2M range | Correctness, source-family deduplication, complete long examples and supervised/context token totals |
 | Reward training | Conditional verifiable math/code rewards after useful SFT | Trainer, rollout integration, verifiers, recovery and affordable measured benefit |
 | Architecture/efficiency study | 200-hour bounded reference-versus-control comparison; proposed 1.186B all-GQA/RoPE control shape-checked | GPU qualification, FLOP accounting, numeric quality/cost thresholds and final configuration |
-| Data research | 900 hours: 600 pretraining, 150 mid-training, 150 post-training | Screening and confirmation before each production stage; useful parents for downstream comparisons |
+| Data research | 1,050 hours: 600 pretraining, 300 mid-training, 150 post-training | Screening and confirmation before each production stage; useful parents for downstream comparisons |
 
 The [main data plan](experiments/main-data/README.md) specifies candidate sources and counting rules.
 Retained stock, admitted data and training exposure are different quantities. No small preview or
@@ -138,7 +137,7 @@ bounded order and stop rules for closing those gates.
    batching, optimizer, communication, sustained throughput, restart/export and scheduler behavior.
    Declare every allocated GPU, including idle devices. Use results to cost the architecture/data
    studies and inform the main schedule, batch and horizon before the subsequent research gates.
-   Reduce the 100B working horizon if measured
+   Reduce the 80B working horizon if measured
    cost or supply requires it.
 6. **Complete the bounded architecture study, then research the starting recipe.** Use the
    200-hour architecture/efficiency cap to answer one consequential question and freeze the backbone.
@@ -190,18 +189,21 @@ comparisons from useful parents only after the recorded runtime gaps are closed.
 ## Compute
 
 The [numeric plan](experiments/main-data/plan.json) reserves **100 hours for runtime qualification,
-200 for architecture/efficiency, 900 for data experiments, 2,300 for base/capability production,
-300 for context production, 800 for post-training production and 400 for evaluation/recovery:
-5,000 total**. Data research divides into 600/150/150 hours across pretraining/mid-training/post-training.
+200 for architecture/efficiency, 1,050 for data experiments, 1,800 for 4K base production,
+600 for capability/context/agentic mid-training production, 800 for post-training production and
+450 for evaluation/recovery: 5,000 total**. Data research divides into 600/300/150 hours across
+pretraining/mid-training/post-training.
 Each experiment includes its preparation, evaluations, retries and allocated idle time; production
-exposures are separate. Capability production remains inside the 100B base horizon and 2,300 hours.
+exposures are separate. Capability production is separately budgeted in the 600-hour mid-training
+reservation; the 80B 4K-base horizon uses the 1,800-hour base reservation.
 The [overview](docs/program.md#compute-and-allocation) records subdivisions and gates. Context tokens
 remain unset until measured qualification; 128K is optional. The protected reserve is smaller and
 must remain explicit. Completed external rental costs stay separate from this allocation.
 
-At the measured H100 full-trainer rate, 2,300 GPU-hours corresponds to about 106.5B base tokens.
-The 100B working horizon projects to 2,160 hours, leaving about 140 hours of margin. At an
-illustrative 80% of the H100 effective rate, only 85.2B fits; measure before freezing the horizon.
+At the measured H100 full-trainer rate, the revised 1,800-hour 4K reservation supports about 83.3B
+tokens before long-context and agentic overhead. The 80B working horizon therefore leaves little
+margin, and an illustrative 80% rate supports about 66.7B. The final horizon must be frozen only
+after GH200 throughput and the 16K/32K costs are measured; 100B is deferred.
 The old 320B/400B scales are deferred comparisons, not first-allocation targets.
 Four GPUs increase aggregate speed while consuming four GPU-hours per elapsed hour; they do not
 close the per-GPU efficiency gap. No GH200 or distributed speedup is assumed. The rough 90-calendar-day

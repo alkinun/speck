@@ -2,7 +2,7 @@
 
 This document is the policy layer for the data program. Numeric ceilings and launch receipts remain in [`experiments/main-data/plan.json`](../experiments/main-data/plan.json), while executable study checks live beside each study packet. No document here authorizes a training run.
 
-## One pipeline, three stage policies
+## One pipeline, four stage policies
 
 Every record follows the same auditable path:
 
@@ -27,9 +27,11 @@ The primary work is boring infrastructure: source-specific extraction, exact SHA
 
 ### Mid-training
 
-Mid-training is a continuation from one useful 4K parent with a qualified changed-data continuation contract. The 150-hour research envelope is split into a 70-hour capability comparison, a 50-hour context comparison and 30 hours of shared support. The capability comparison pairs replay with one selected candidate: raw, source-only targeted data is preferred; grounded augmentation is conditional on lineage and correctness gates; executable trajectories are a replacement branch, never an undeclared extra arm.
+Mid-training is a continuation from one useful 4K parent with explicit data and context continuation contracts. The 300-hour research envelope screens four data arms, selective loss/packing, and the 4K-to-16K transition before one 1.2B confirmation. The 600-hour production reservation contains three stages: a 4K capability bridge, 16K repository reasoning, and 32K long-horizon agentic coding. The 4K stage uses repository structure, repair, tool schemas, short workflows and replay; the 16K stage adds multi-file repositories and issue/PR/commit context; the 32K stage adds repeated tool calls, test failures, recovery, summaries and state tracking.
 
-The context comparison is separate from capability-data claims. It tests unchanged-domain repacking against the long-context candidate mix at 16K, measuring fixed-suffix loss, related-prefix benefit, position and multi-file retrieval, short-task retention and source-family reuse. The 32K step remains a production gate inside the separate 300-hour context reservation.
+Repository records retain file/dependency relationships, issues, reviews, pull requests, commits, diffs and tests. Grounded workflows retain parent context and teacher lineage. Executable trajectories require pinned repository snapshots, tool schemas, environment images, turn order, loss masks, verifier outcomes and recovery labels. Best-fit packing is required for complete repository, reasoning and trajectory records. Environment observations remain context; model actions and valid reasoning are supervised only after the mask adapter is qualified. A changed data manifest uses the data-continuation branch; a length change uses the context branch.
+
+The research controls are replay, source-only repository data, grounded workflows and executable trajectories. A separate objective/packing comparison tests all-token next-token loss against output/action-only masking. Context comparisons measure fixed-suffix loss, dependency-distance retrieval, multi-file repair, tool-state continuation and short-task retention. 64K/128K remains future work until 32K benefit and cost are measured.
 
 ### Post-training
 
@@ -38,6 +40,8 @@ SFT begins with structurally valid, outcome-verified candidate selection. Tool c
 The release baseline remains the qualified always-thinking protocol. A direct-response mode may be evaluated as an SFT/control variant, but it cannot replace the release contract without explicit latency, quality, tool-use and long-task evidence.
 
 RL is conditional. First qualify the trainer, rollout isolation, deterministic environments, verifiers, failure/recovery cases and held-out tests in a fixed-policy feasibility study. Only then can verified-reward RL enter production. Synthetic data is most acceptable here when it is generated inside pinned, testable environments or used for self-distillation; it remains separately attributed and must earn its place on held-out transfer, not training reward alone.
+
+Final self-SFT is a distinct stage after SFT and optional RL. Starting from the promoted RL checkpoint, or the SFT checkpoint if RL is not promoted, freeze a prompt pool and generate tool-aware responses in pinned environments. Verify, deduplicate and filter those responses, mix them with a verified anchor set, and train with the same assistant masks and tool protocol. Compare anchor-only continuation against self-distillation plus anchor replay. Preserve the pre-self-SFT parent and promote the final checkpoint only for held-out transfer without general, protocol, length or tool-call regressions.
 
 ## Admission gates and grant order
 

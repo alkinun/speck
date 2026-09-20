@@ -14,8 +14,8 @@ No GPU run starts from this document.
 | Reference, to test | 1.2B total/all-active KDA/GQA model; one bounded attention-baseline comparison before backbone freeze; no MoE or size sweep |
 | Selected | Pretrain from scratch; preserve base and thinking-assistant releases; one thinking protocol with variable effort |
 | Confirmed envelope | 5,000 total GPU-hours across four GH200s, with a nominal 90-day access window; start date/site details remain unconfirmed |
-| Working recipe | 35% code, 25% math, 40% supporting data; 100B working horizon, subject to supply and measured GH200 cost |
-| Working stages | Capability mid-training within the base horizon; 16K/32K context qualification within 300 hours; 128K stretch, token counts unfrozen; 1.5M SFT conversations within 1–2M; RL conditional |
+| Working recipe | 35% code, 25% math, 40% supporting data; 80B 4K-base working horizon, subject to supply and measured GH200 cost |
+| Working stages | 4K capability bridge, 16K repository reasoning and 32K long-horizon agentic coding within a combined 600-hour mid-training production reservation; 64K/128K deferred; 1.5M SFT conversations within 1–2M; RL and final self-SFT conditional |
 | Measured | H100 engineering pilot, development evaluation and backups complete; the 105M-token base is weak |
 | Unresolved | Main eligible supply, GH200/distributed speed, final token horizon, long-context cost/quality and useful thinking/tool performance |
 
@@ -35,13 +35,13 @@ attention-layout/model-size research belong to later releases with separately fu
 | Stage | Purpose and objective | Budget ownership and readiness |
 | --- | --- | --- |
 | Architecture/efficiency research | Compare the hybrid reference with one matched attention baseline, then freeze the backbone | 200 hours including training/inference measurements and overhead |
-| Pretraining data research | Screen feasible source/filter/mixture contrasts and confirm the strongest candidate before main training | 600 of 900 data-research hours; matched initializations, fixed endpoints and costed arms |
-| Downstream data research | Compare continuation/context and SFT/RL data on appropriate parent checkpoints before each production stage | 150 hours for mid-training and 150 for post-training; separate from production exposure |
-| Pretraining | Broad code/math/general foundations using next-token prediction | Shares the 100B working base horizon and 2,300 hours with capability mid-training; main data/runtime not yet qualified |
-| Capability mid-training | Targeted code/math/repair/tool-use continuation with broad-data replay | A separately reported portion of that base horizon, not extra tokens/hours; source-only versus validated synthesis, split, objective and changed-data branch remain to qualify; measure downstream quality per token and GPU-hour |
-| Context mid-training | Learn to use coherent longer repositories/documents while retaining short tasks | 300 production hours; qualify 16K then 32K, 128K stretch; token counts and runtime unqualified |
+| Pretraining data research | Screen feasible source/filter/mixture contrasts and confirm the strongest candidate before main training | 600 of 1,050 data-research hours; matched initializations, fixed endpoints and costed arms |
+| Downstream data research | Compare repository, workflow, trajectory, context, SFT, RL and self-distillation data on appropriate parent checkpoints | 300 hours for mid-training and 150 for post-training; separate from production exposure |
+| Pretraining | Broad code/math/general foundations using next-token prediction | Uses the revised 80B 4K-base working horizon and 1,800-hour reservation; main data/runtime not yet qualified |
+| Capability/mid-training | Repository, repair, tool-use and long-horizon continuation with replay, grounded workflows and executable traces | 4K/16K/32K sequence; selective loss masks and changed-data/context branches remain to qualify; measure capability per token and GPU-hour |
+| Context and agentic mid-training | Learn coherent repositories, tool state, recovery and long-horizon workflows while retaining short tasks | 600 production hours; 32K is the first release target; longer contexts require a later measured revision |
 | Post-training: SFT | Verified reasoning and complete tool trajectories with assistant-only supervision | Working 1.5M unique conversations; small 4K rehearsal complete, production data unqualified |
-| Post-training: RL | Improve outcomes using checkable tasks, reliable rewards and policy rollouts | Conditional within post-training's 800 hours; trainer, verifiers and rollout integration remain to qualify |
+| Post-training: RL and final self-SFT | Improve outcomes with verified rewards, then distill selected model behavior back into an anchored assistant | Conditional within post-training's 800 hours; trainer, verifiers, rollout integration and self-distillation gates remain to qualify |
 
 Record each stage's parent, data families, unique supply, actual exposure/replay, objective, schedule
 and cost. Preserve checkpoints at transitions. Share family exclusions across all stages, including
@@ -67,30 +67,30 @@ The research-and-release allocation is:
 | Hardware/runtime qualification | 100 | 2% | 25h |
 | Architecture and efficiency experiments | 200 | 4% | 50h |
 | Pretraining data research | 600 | 12% | 150h |
-| Mid-training data research | 150 | 3% | 37.5h |
+| Mid-training data research | 300 | 6% | 75h |
 | Post-training data research | 150 | 3% | 37.5h |
-| Pretraining and capability mid-training production | 2,300 | 46% | 575h |
-| Context production | 300 | 6% | 75h |
-| Thinking SFT production | 500 | 10% | 125h |
+| 4K base production | 1,800 | 36% | 450h |
+| Capability/context/agentic mid-training production | 600 | 12% | 150h |
+| Thinking SFT and final self-SFT production | 500 | 10% | 125h |
 | Conditional verified-reward RL production | 200 | 4% | 50h |
 | Production teacher / verification work | 100 | 2% | 25h |
-| Comparative/final evaluation | 200 | 4% | 50h |
+| Comparative/final evaluation | 250 | 5% | 62.5h |
 | Recovery and unresolved costs | 200 | 4% | 50h |
 | **Total** | **5,000** | **100%** | **1,250h** |
 
-Data research totals 900 hours; its 600/150/150 caps include experiment preparation, evaluation,
+Data research totals 1,050 hours; its 600/300/150 caps include experiment preparation, evaluation,
 retries and allocated idle time. The [research design](../experiments/main-data/README.md#research-cost-envelopes)
 proposes subcaps and run counts, protecting pretraining confirmation before screening. The numeric
 plan owns these ceilings; exact launch costs remain to be measured.
-The 800-hour post-training and 400-hour protected subdivisions are planning caps, not measured
+The 800-hour post-training and 450-hour protected subdivisions are planning caps, not measured
 requirements. Charge every job once; production-stage tokens do not include discarded research
 arms. A 200-hour RL cap includes rollouts and scoring, not just gradient updates.
 
-The completed H100 rental remains separate. Qualify 16K then 32K within the 300-hour context
-production cap, leave stage tokens unset, and treat 128K as a stretch requiring an affordable
+The completed H100 rental remains separate. Qualify 16K then 32K within the 600-hour combined
+mid-training production cap, leave stage tokens unset, and treat 64K/128K as future work requiring an affordable
 revision. No production stage borrows reserve automatically.
 Only short-context training has a measured cost reference. If the architecture decision changes the
-model, remeasure throughput before relying on the 100B projection. Freeze stage costs and stop
+model, remeasure throughput before relying on the 80B projection. Freeze stage costs and stop
 conditions; unused budget is not a requirement to spend.
 
 ## Model and runtime
@@ -154,18 +154,18 @@ audit findings and acquisition gates; [research notes](research.md) distinguish 
 Candidate releases are not automatically admitted supply. Freeze source eligibility, deduplication,
 benchmark exclusions, source-family partitions, language coverage and actual token counts first.
 
-Preparation targets 125B eligible unique tokens for 100B exposure,
+Preparation targets 100B eligible unique tokens for an 80B 4K-base working exposure,
 allowing selection headroom and normally one pass. Current retained pilot-source stocks total only
 6.799B before joint eligibility, including 0.477B code tokens. A 16-file code audit or passing generated
 tests cannot close that supply gap. Keep raw stock, qualified unique supply, exposure/replay and
 rejected material as separate counts. If refined supply fails, explicitly revise within-domain
 shares or shorten the horizon; do not silently repeat examples or assume unbudgeted teacher generation.
 
-Within 2,300 GPU-hours, the measured H100 full-trainer rate projects to about 106.5B tokens.
-The 100B working horizon takes about 2,160 hours, leaving 140 hours of margin. At an illustrative
-80% of that effective rate, only 85.2B fits; the horizon must shrink if GH200 qualification does
-not sustain the required 12,077 tokens/s per allocated GPU. Rates divide aggregate useful
-throughput by every allocated GPU and include base-stage overhead. The former 320B/400B scales
+Within the revised 1,800-hour 4K reservation, the measured H100 full-trainer rate projects to about
+83.3B tokens. The 80B working horizon therefore leaves little margin before long-context and
+agentic overhead. At an illustrative 80% of that rate, only 66.7B fits; the horizon must shrink if
+GH200 qualification does not sustain the required throughput. Rates divide aggregate useful
+throughput by every allocated GPU and include base-stage overhead. The former 100B/320B/400B scales
 remain deferred comparisons, not current supply targets or promised throughput gains.
 
 Freeze a continuation-compatible learning-rate schedule, update size, cadence and horizon before
@@ -178,33 +178,31 @@ declared base horizon, with any revised weights recorded separately from the ini
 
 ### Capability continuation
 
-Develop code/math/repair capability using selected, independently checked material and broad-data
-replay. Specify source-family overlap with pretraining, difficulty, language/task coverage and actual
-token exposure. Start with the existing next-token objective; any prompt/patch masking or alternative
-objective needs an explicit adapter and qualification. Plain token packing does not implement it.
+Develop repository, code, math, repair and tool-use capability using selected, independently checked
+material and broad-data replay. Add issues, reviews, pull requests, commits, diffs, dependency-linked
+files, tool schemas, grounded workflows and executable trajectories only with lineage and outcome
+evidence. Start with next-token prediction; any output/action-only masking needs an explicit adapter,
+mask fingerprint and resume qualification. Plain token packing does not implement it.
 
-The capability portion, mixture, replay share and LR/optimizer policy remain unfrozen. Allocate it
-inside the 100B working base horizon and 2,300-hour reservation. The existing bank totals are initial
-mixture scenarios; update them if a staged mixture changes aggregate exposure. Do not count the same
-tokens as both pretraining and an additional mid-training allowance.
+The production sequence is 4K capability bridge, 16K repository reasoning and 32K agentic
+continuation. The 4K stage teaches repository structure, repair and tool schemas. The 16K stage
+teaches multi-file dependencies and issue/PR/commit context. The 32K stage teaches repeated tool
+calls, test failures, recovery, summaries and state tracking. Best-fit packing preserves complete
+reasoning and repository records. Environment observations remain context; valid model actions are
+the supervised target.
 
-The loader supports predeclared mixture phases. Ordinary checkpoint branches require the same data
-manifest; changed-data branches currently use the context-extension contract. A dedicated data
-continuation path must be qualified before new-data capability continuation or any later
-continuation comparison. The pretraining recipe study uses fresh runs and needs no trained parent.
-Do not relabel continuation runs as context extension to bypass the contract. See
-[training](training.md#mid-training-readiness) for current implementation boundaries.
-
-Separate capability changes from length changes when drawing causal conclusions. Keep source-wise
-loss and short-task checks at both transitions. Context extension follows below; these two parts of
-mid-training have distinct data questions and accounting.
+The loader supports predeclared mixture phases. Data branches require the qualified data-continuation
+contract; context branches are the only path that changes sequence capacity. Do not relabel a data
+intervention as context extension. Keep source loss, tool validity, recovery, long-horizon coherence
+and short-task retention at every transition. See [training](training.md#mid-training-readiness) for
+the implementation boundary.
 
 ### Context extension
 
-Base 4K → qualify up to 16K → up to 32K, within 300 production GPU-hours. Token counts remain
-unset until useful-context learning and runtime are measured. Approximately 128K is a stretch,
-not a promised stage. The former 2B + 2B + 4B curriculum does not fit by declaration into this
-smaller budget. Context-mixture comparisons use the separate 150-hour mid-training research cap.
+Base 4K → qualify up to 16K → up to 32K, within the combined 600-hour mid-training production
+reservation. Token counts remain unset until useful-context learning and runtime are measured.
+64K/128K is future work requiring an explicit affordable revision. Context-mixture comparisons use
+the separate 300-hour mid-training research cap.
 
 Keep 25% short replay as a working proposal. Coherent long records include repository files/tests/
 documentation, intact technical/math documents and grounded multi-document tasks. The proposed long
@@ -215,7 +213,8 @@ its results do not establish the right mixture or extension cost for our model.
 
 Each transition requires finite/stable training, memory/runtime and recovery qualification, improved
 use of additional context, and acceptable short-task retention. Evaluate fixed-suffix loss as related
-prefix grows, retrieval across positions/distances, multi-file repair and grounded reasoning.
+prefix grows, dependency-distance retrieval, multi-file repair, tool-state continuation, recovery and
+grounded reasoning.
 NoPE global layers mean this is not a standard RoPE-rescaling recipe. Global attention still has
 quadratic attention work and a length-growing inference cache, despite the recurrent layers.
 
@@ -224,7 +223,7 @@ ceiling; longer records can be retained for future work without counting them as
 
 ## Post-training
 
-SFT and the conditional RL stage below together constitute post-training.
+Thinking SFT, conditional RL and final self-SFT together constitute post-training.
 
 ### Thinking SFT
 
@@ -264,6 +263,22 @@ outcomes and consistency of reasoning/tool observations. One pass over 1.5M conv
 positions separately. The measured 4K SFT rate is not a long-context throughput prediction, so the
 500-hour subdivision needs validation against the actual length mixture and workflow overhead.
 
+### Final self-SFT
+
+Run a bounded pilot after SFT and optional RL. Start from the promoted RL checkpoint, or the selected
+SFT checkpoint if RL is not promoted. Freeze a prompt pool, generate responses and tool trajectories
+in pinned environments, verify outcomes, remove duplicates and rejected records, and mix the accepted
+records with a verified anchor set. Compare anchor-only continuation against self-distillation with
+anchor replay. Preserve the pre-self-SFT parent and promote the final checkpoint only when held-out
+task transfer improves without unacceptable general, protocol, length or tool-call regressions.
+Teacher checkpoint, prompts, decoding, environment images, tool schemas, verifier versions, masks and
+rejections are part of the derived-data manifest. Self-generated text is never counted as natural
+pretraining data.
+
+Final self-SFT shares the 500-hour supervised-production subdivision with initial SFT; its exact
+split is frozen after measured cost and the pilot decision. Generation and verification share the
+100-hour production support subdivision. Neither is an extra budget beyond post-training's 800 hours.
+
 ### Conditional RL
 
 RL is planned, not implemented/qualified as a production pipeline here. The fixed-policy feasibility
@@ -282,7 +297,8 @@ part of the data recipe. The post-training research design includes a conditiona
 prompt/rollout feasibility slot; it does not promise an RL training-data ablation. Retain success,
 failure and rejection counts by task family; report held-out transfer beyond training reward.
 
-Propose a 16K total-context ceiling initially, considering 32K only after measured benefit/cost.
+Propose a 16K total-context ceiling initially, considering 32K only after measured benefit/cost and
+the 32K mid-training parent is qualified.
 Freeze prompt/output limits, sample-group size, tool-step caps, reward normalization, reference/KL
 policy and update settings from a bounded rehearsal. No full 128K online-RL campaign is promised.
 Reward correctness/task completion; format is a requirement, not a substitute. Check trivial reward
@@ -328,7 +344,7 @@ guide selection but do not become training ablations automatically; each extra a
 
 ## Storage, recovery and operational gates
 
-At uint16, 100B token IDs alone take 200GB decimal; the 125B eligible bank takes 250GB. Masks,
+At uint16, 80B token IDs alone take 160GB decimal; the 100B eligible bank takes 200GB. Masks,
 indexes, raw text, deduplication databases, environments, checkpoints and backups are additional. The numeric plan's 2TB scratch allowance is provisional, not a measured
 full footprint. Acquire in bounded units, verify hashes and manifests, and avoid staging every raw
 source simultaneously without a storage budget. Keep corpus/checkpoint payloads outside Git.
@@ -354,9 +370,10 @@ accelerated serving integration is assumed qualified merely because base trainin
    record selection or an inconclusive result, then freeze the main admitted mixture, repetition,
    batch, schedule, cadence and affordable horizon. No main-run launch precedes this decision.
 4. **After a useful pretraining checkpoint:** execute qualified capability continuation within the
-   base horizon, then qualify context stages and short-task retention. Prepare and train verified
+   separate 600-hour mid-training production cap, then qualify context stages and short-task retention. Prepare and train verified
    thinking SFT. Compare downstream data recipes on useful parent checkpoints before committing
-   each stage, within its declared budget. Attempt RL only with working verifiers and bounded cost.
+   each stage, within its declared budget. Attempt RL only with working verifiers and bounded cost,
+   then evaluate final self-SFT against the preserved selected SFT/RL parent.
 5. **Before release:** finish matched development comparisons, freeze the selected checkpoint/recipe,
    then score final tests and publish measured capability, efficiency and limitations with artifacts.
 

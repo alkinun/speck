@@ -95,7 +95,7 @@ The paper does not establish a universal mixture or a direct intelligence-per-FL
 - Report downstream capability versus mid-training tokens and GPU-hours, SFT convergence area/steps to a fixed target, early RL adaptation and final held-out transfer. Count source preparation, teacher generation, validation, retries and discarded trajectories.
 - Keep context extension separate from capability mid-training. A longer sequence is a systems and representation change; it cannot be used to attribute a data-mixture gain.
 
-This adds a sharper question inside the existing 150-hour mid-training research reservation. It does not create a new production allowance, architecture arm or training admission.
+This adds a sharper question inside the existing 300-hour mid-training research reservation. It does not create a new production allowance, architecture arm or training admission.
 
 ## Cagliostro v3 review — 2026-09-20
 
@@ -377,7 +377,7 @@ come from a substantially larger model/program and different attention architect
   Count full processed context separately from loss-bearing targets. This requires an explicit
   adapter/objective contract before admission; pasting raw patches into a pack is not equivalent.
 - Add unchanged-domain repacking as the context-extension control, plus fixed-suffix loss and
-  position-stratified task checks. Under the revised 300-hour context cap, leave stage tokens unset
+  position-stratified task checks. Under the revised 300-hour mid-training research cap, leave stage tokens unset
   until measured qualification; 128K is a stretch. No context behavior is inherited from this paper.
 - Preserve our supervised thinking baseline and bounded natural/refined comparisons. The report
   does not establish that abandoning synthetic data or starting our small model with RL is better.

@@ -7,7 +7,7 @@
   "source_of_truth": {
     "data_study_packet": {
       "path": "experiments/main-data/data-study-packet.json",
-      "sha256": "0cde6c5aad7cda4e41608f37700ac1e79dfbb12550b9aee5782e86773f4d8332"
+      "sha256": "b15c981f375eaa6c610a7249d3da9a169e431b29d9806583fb3238ca0c8e6e18"
     },
     "data_readiness": {
       "path": "experiments/corpus-audit/data-readiness.json",
@@ -39,7 +39,7 @@
     },
     "design_contract": {
       "path": "experiments/main-data/data-design-contract.json",
-      "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
+      "sha256": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58"
     },
     "research_mapping": {
       "path": "experiments/main-data/frontier-data-source-mapping.json",

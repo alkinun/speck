@@ -117,8 +117,8 @@ raises the known hold to **123 files / 209,751 tokens**; six previously content-
 present. This propagates existing evidence, without claiming a new complete content scan. Removing
 only these files would not establish a qualified remainder or complete family separation.
 
-At the working 100B base horizon, natural code needs 30B exposure / 37.5B eligible unique
-preparation, separately from 5B checked-code exposure. The retained stock covers 1.59% of natural
+At the working 80B base horizon, natural code needs 24B exposure / 30B eligible unique
+preparation, separately from 4B checked-code exposure / 5B eligible preparation. The retained stock covers 1.59% of natural
 code exposure before joint eligibility. Repetition is not an approved way to fill the gap.
 The original census retains its historical planning denominator; current targets live in
 [the numeric plan](../experiments/main-data/plan.json).
@@ -326,7 +326,7 @@ runs need more eligible baseline data.
 
 The [research design](../experiments/main-data/README.md#research-before-the-main-run) owns the
 screening/confirmation matrix, shared controls, cost caps and decision rules before main pretraining.
-On the frozen backbone, screening permits one code-bank candidate alongside one natural-web candidate,
+On the frozen backbone, screening permits one code-bank candidate, one natural-web candidate and one calibrated AI-generation/provenance-filter candidate,
 each against the same qualified baseline. Confirm one selected intervention on fresh paired seeds.
 
 Use the fixed Stack-Edu and Stack v3 audits to choose a feasible natural-source contrast.
@@ -389,4 +389,4 @@ Before training on change examples, specify how pre-change context is loss-maske
 other targets are supervised. Audit processed-context and supervised-token totals independently;
 the current plain pretraining pack does not automatically implement that objective. Reuse compatible
 masking infrastructure only after adapter validation. Freeze any bank-share or objective changes
-explicitly, within the 100B working base horizon and its measured-cost gate.
+explicitly, within the 80B working base horizon and its measured-cost gate.

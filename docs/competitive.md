@@ -6,7 +6,7 @@ layers. One bounded matched attention-control study is in scope; MoE and broad
 architecture/size searches remain later work.
 Developing our own pretraining capability is essential; pretrained
 adaptation is not an alternative first-release route.
-The 100B working first-release horizon is a cost-based preparation target, not evidence that the
+The 80B working first-release horizon is a cost-based preparation target, not evidence that the
 result will be competitive. Larger deferred horizons do not establish parity with current releases.
 
 ## Primary-source comparison
@@ -36,8 +36,8 @@ The first release develops a data and training recipe across pretraining, mid-tr
 post-training, with the backbone frozen after a 200-hour architecture/efficiency study near 1.2B. The [model notes](model.md) explain attention/size
 choices and their measured limitations. MoE, attention residuals and broader architectural research
 belong to later releases with larger allocations. Qualify the current runtime, improve the data and
-measure useful thinking/code/tool behavior. Allocate 900 hours to data experiments: 600 before
-main pretraining and 150 each before mid-training and post-training production. Predeclare
+measure useful thinking/code/tool behavior. Allocate 1,050 hours to data experiments: 600 before
+main pretraining, 300 before mid-training production and 150 before post-training production. Predeclare
 matched controls and screening/confirmation endpoints; do not assume efficiency gains.
 
 The current 5,000-total-GPU-hour allowance does not support a confident broad best-in-class release
@@ -54,10 +54,11 @@ input/validation/checkpoint overhead, then measure four-worker communication. Pr
 semantics and validate numerical/recovery behavior for any production change. These are bounded
 runtime qualification tasks, not an assumed 3–4x gain or a new GPU launch.
 
-The 2,300-hour base reservation needs 12,077 effective tokens/s per allocated GPU for the 100B
+The 1,800-GPU-hour base reservation needs about 12,346 effective tokens/s per allocated GPU for the 80B
 working horizon. Four workers do not improve GPU-hour efficiency automatically. The completed
-pilot is separate from the new 200-hour architecture and 900-hour data research allocation. The
-300-hour context and 400-hour evaluation/recovery reservations remain protected in the [scale plan](../experiments/main-data/README.md). Reduce the
+pilot is separate from the new 200-hour architecture and 1,050-hour data research allocation. The
+600-hour mid-training production, 800-hour post-training production and 450-hour protected
+evaluation/recovery reservations remain explicit in the [scale plan](../experiments/main-data/README.md). Reduce the
 horizon if measured cost or qualified supply requires it; do not promise quality from token count.
 
 ## Before committing the main training budget

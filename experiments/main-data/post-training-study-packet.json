@@ -1,6 +1,6 @@
 {
   "format": "speck_post_training_data_study_packet",
-  "format_version": 1,
+  "format_version": 2,
   "status": "design_only_not_training_authority",
   "date": "2026-09-20",
   "purpose": "Bind a post-training data comparison that measures verified supervision value and conditional RL prompt feasibility from the same useful parent.",
@@ -19,17 +19,18 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "0c9ebecead7aa3a5803de9a9b2aa888c5026e397a75f7ff3f52d3641c616e9ec"
+      "sha256": "58800b809620f6c0355483711a427124482daaf4fe4d312eb5b2b321c3f99cf8"
     },
     "design_contract": {
       "path": "experiments/main-data/data-design-contract.json",
-      "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
+      "sha256": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58"
     }
   },
   "common_contract": {
     "parent": "SFT arms start from the same useful parent checkpoint with model and tokenizer identities hash-bound. RL feasibility uses the selected SFT checkpoint and does not update policy weights.",
     "sft": "Fresh optimizer and paired data-order seeds; same task and length strata, chat serialization, assistant-only masks, schedule, supervised-token target and evaluation identities.",
-    "rl": "Fixed-policy prompt, rollout and verifier feasibility only. No policy optimization or RL training-data ablation is promised by this packet.",
+    "rl": "Fixed-policy prompt, rollout and verifier feasibility only. Policy optimization remains conditional on the runtime, reward and recovery gates.",
+    "final_self_sft": "Self-distillation starts from the selected RL checkpoint when RL is promoted, otherwise the selected SFT checkpoint. Generated records remain derived data with teacher, prompt, environment, verifier and rejection lineage.",
     "context": "Train only within the qualified context ceiling. Complete conversations are required; no silent truncation or fabricated reasoning/tool observations.",
     "accounting": "Count source preparation, teacher/reference generation, validation, rejected rows, retries, rollouts, scoring, training and allocated idle time separately and once.",
     "evaluation": "Keep task families, source families and final tests disjoint from every training, teacher-generation and prompt-selection path.",
@@ -54,8 +55,8 @@
       }
     ],
     "paired_seed_count": 2,
-    "per_arm_per_seed_training_gpu_hour_cap": 25,
-    "training_gpu_hours": 100,
+    "per_arm_per_seed_training_gpu_hour_cap": 20,
+    "training_gpu_hours": 80,
     "primary_endpoint": "Predeclared held-out code, math or tool-task success metric matching the selection intervention.",
     "efficiency_endpoints": [
       "Success and retention per supervised token and allocated GPU-hour",
@@ -90,16 +91,38 @@
     ],
     "boundary": "This slot does not fund an RL data comparison, policy updates or a production RL commitment."
   },
+  "final_self_sft_pilot": {
+    "status": "conditional_after_sft_and_rl_selection",
+    "training_gpu_hours": 30,
+    "paired_seed_count": 1,
+    "per_arm_training_gpu_hour_cap": 15,
+    "arms": [
+      {
+        "id": "anchor_only",
+        "role": "Selected SFT/RL parent continued on verified anchor data",
+        "contract": "Retain the same verified task strata, masks, protocol and evaluation partitions without newly generated self-distillation records."
+      },
+      {
+        "id": "self_distilled_with_anchor",
+        "role": "Verified self-distillation with anchor replay",
+        "contract": "Generate responses and tool trajectories from the selected parent on a frozen prompt pool, verify outcomes, filter and deduplicate them, then mix them with verified anchor data."
+      }
+    ],
+    "generation_contract": "Use fixed prompts, model/checkpoint identity, decoding settings, tool schemas, environment images, verifier versions and rejection reasons. Keep final tests and their source families out of prompt generation.",
+    "selection": "Promote only when held-out task success or SFT/RL transfer improves without unacceptable general, protocol, length or tool-call regressions. Preserve the pre-self-SFT parent for release comparison.",
+    "boundary": "This pilot is a bounded data-selection comparison, not evidence that self-generated text is universally beneficial. Full final self-SFT remains inside the 800-hour post-training production reservation."
+  },
   "support_and_reserve": {
-    "gpu_hours": 30,
+    "gpu_hours": 20,
     "includes": [
       "SFT manifest and mask checks",
       "held-out split and source-family checks",
       "evaluation and result packaging",
       "rollout/verifier setup and recovery",
+      "self-distillation prompt and lineage checks",
       "retries and allocated idle time"
     ],
-    "budget_check": "100 SFT comparison + 20 RL feasibility + 30 support = 150 post-training-research GPU-hours."
+    "budget_check": "80 SFT comparison + 20 RL feasibility + 30 self-SFT pilot + 20 support = 150 post-training-research GPU-hours."
   },
   "required_gates_before_first_arm": [
     "Useful parent, tokenizer/chat format and checkpoint identities are hash-bound.",
@@ -107,6 +130,7 @@
     "Complete conversations, assistant masks, supervised-token counts and context ceilings are measured without truncation.",
     "Outcome-verification selection uses independent checks and records rejected, unresolved and invalid cases.",
     "RL prompts, references/tests, environments and verifiers are pinned and pass non-vacuous controls.",
+    "Self-distillation prompts, teacher checkpoint, generation settings, verifier outputs and anchor mixture are hash-bound before generation.",
     "SFT and fixed-policy evaluation cost fits the 150-hour research reservation; production exposure remains separate."
   ],
   "required_outputs_for_report": [
@@ -115,6 +139,7 @@
     "Per-arm success, retention, convergence and cost curves with paired-seed variation.",
     "Outcome-verification coverage, unresolved cases and false-positive/negative controls.",
     "Fixed-policy RL feasibility, verifier reliability, rollout failures and environment cost.",
+    "Self-distillation generation, rejection, verification, anchor-replay and final-parent comparison accounting.",
     "Negative, inconclusive and baseline-only outcomes with the same detail as selected results."
   ],
   "boundary": "No post-training arm is launch-ready from this packet. It defines SFT data selection and conditional RL feasibility only; a future launch must bind a useful parent, qualified manifests, chat/mask fingerprints, evaluation partitions, verifier/runtime receipts and an explicit launch receipt."

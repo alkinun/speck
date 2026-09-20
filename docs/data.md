@@ -164,15 +164,15 @@ then run the same source-rights, joint-exclusion, partition, pack, and full-load
 The first model and paper center on data quality, coverage and learnability through pretraining,
 mid-training and post-training. Keep the selected model fixed; attention/size rationale and measured
 trade-offs have a bounded 200-hour study before backbone freeze. Broader architecture research
-belongs to later releases; data experiments have a separate 900-hour allocation.
+belongs to later releases; data experiments have a separate 1,050-hour allocation.
 The [program lifecycle](program.md#training-lifecycle) defines capability continuation, context
 16K/32K context qualification with 128K stretch, thinking SFT and conditional RL with separate data objectives.
 This is a direction for the main recipe; the pilot weights are not inherited as optimized weights.
-The [main mixture and scale plan](../experiments/main-data/README.md) uses a 100B working base horizon:
+The [main mixture and scale plan](../experiments/main-data/README.md) uses an 80B working base horizon:
 35% code, 25% math, 30% natural web, 5% reference/science and 5% refined educational web. Prepare
-125B eligible unique tokens as selection headroom for 100B exposure; the plan distinguishes proposed exposure from
+100B eligible unique tokens as selection headroom for 80B exposure; the plan distinguishes proposed exposure from
 materialized supply and reserves separate context-extension/post-training budgets. These are working
-weights to qualify, not proven optima or source admission. The H100 reference projects to 2,160 base GPU-hours;
+weights to qualify, not proven optima or source admission. The H100 reference projects to 1,728 base GPU-hours;
 GH200 qualification must confirm the cost or reduce the horizon. The old 320–400B ambitions are
 deferred scale comparisons, not first-allocation targets.
 The weak [pilot completions](../experiments/pilot/completion-preview.json) establish an immature
@@ -351,8 +351,8 @@ acquisition, repetition, GPU work or training.
    preparation cost and regressions. Audit post-training sources now; evaluate their training
    recipes on useful parent checkpoints before committing the downstream stage budgets.
 
-Plan broad pretraining, capability-focused mid-training within the base horizon, then measured
-context mid-training toward 16K/32K, with 128K stretch, with short replay, followed by an SFT recipe spanning
+Plan broad pretraining, then separately budgeted capability/context/agentic mid-training toward
+16K/32K, with 128K stretch, using short replay, followed by an SFT recipe spanning
 short and long interactions. Preserve source-family identity and exclusions across every stage,
 including derived exercises, teacher traces and RL prompts. Exact continuation/extension stages,
 budgets and any later preference/RL phase remain to be frozen. Long-context qualification must

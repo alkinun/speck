@@ -61,9 +61,7 @@ def run_fixed_policy(
             "completion_rate": completed / len(outcomes) if outcomes else 0.0,
             "invalid_envelopes": invalid,
             "mean_reward": (
-                sum(outcome["reward"] for outcome in outcomes) / len(outcomes)
-                if outcomes
-                else 0.0
+                sum(outcome["reward"] for outcome in outcomes) / len(outcomes) if outcomes else 0.0
             ),
         },
         "transcript_sha256": _fingerprint([outcome["transcript"] for outcome in outcomes]),

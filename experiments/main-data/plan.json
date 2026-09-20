@@ -19,7 +19,7 @@
       "Record the comparison result and limitations, select a supported starting recipe, then freeze and launch main pretraining.",
       "Use useful stage checkpoints for capability/context and SFT/RL data comparisons before committing each downstream stage; charge each to its declared reservation."
     ],
-    "candidate_contrast": "Screen at most one code-bank contrast selected from fixed source audits and one natural-web source contrast against a shared eligible baseline. Checked-code substitution remains an alternative only with qualified supply. Confirm one selected intervention; no untested combination or broad weight sweep.",
+    "candidate_contrast": "Screen at most one code-bank contrast, one natural-web source contrast and one calibrated AI-generation/provenance-filter contrast against a shared eligible baseline. Checked-code substitution remains an alternative only with qualified supply. Confirm one selected intervention; no untested combination or broad weight sweep.",
     "data_design_contract": {
       "path": "experiments/main-data/data-design-contract.json",
       "status": "shared_design_requirements_only_no_source_admission"
@@ -114,26 +114,27 @@
     "budget_reservation": "compute.data_experiments_breakdown_gpu_hours.pretraining",
     "initialization": "Paired fresh initialization seeds; identical initial model tensors within each baseline/candidate pair, checked by hash. Fresh optimizer and data state per run; no trained common checkpoint.",
     "controls": "Fixed architecture/tokenizer/context/objective, matched total training tokens and schedule; predeclare the data contrast, domain weights, source families, validation mixture, endpoints and cost. Report actual GPU-hours separately.",
-    "selection": "Use fixed held-out source/domain loss and development capability/retention curves at matched exposures. Keep final tests untouched. If endpoints are uninformative or gains inconsistent, report inconclusive; retain a justified baseline or revise the design within the remaining budget before recording the main recipe decision. Short-run rankings do not establish a global optimum or guarantee 100B rankings.",
+    "selection": "Use fixed held-out source/domain loss and development capability/retention curves at matched exposures. Keep final tests untouched. If endpoints are uninformative or gains inconsistent, report inconclusive; retain a justified baseline or revise the design within the remaining budget before recording the main recipe decision. Short-run rankings do not establish a global optimum or guarantee 80B rankings.",
     "accounting": "All fresh-arm training, screening/confirmation evaluations, preparation, retries and allocated idle time charge to the 600-hour pretraining study cap. Main production starts fresh after selection; research tokens are not production exposure.",
-    "scope": "Pretraining study is 600 of the 900 data-research hours. Mid-training comparisons have 150 hours on useful base checkpoints; post-training comparisons have 150 hours on appropriate base/SFT parents. Freeze each stage recipe before its production work; these arms do not draw silently from production budgets.",
-    "design": "Proposed maximum baseline plus two single-factor candidates in screening, followed by baseline versus one selected candidate on two new paired seeds. Reserve confirmation and overhead first. No full-factorial sweep or combined winner without a direct comparison; design details in experiments/main-data/README.md.",
+    "scope": "Pretraining study is 600 of the 1,050 data-research hours. Mid-training comparisons have 300 hours on useful base checkpoints; post-training comparisons have 150 hours on appropriate base/SFT parents. Freeze each stage recipe before its production work; these arms do not draw silently from production budgets.",
+    "design": "Proposed maximum baseline plus three single-factor candidates in screening, followed by baseline versus one selected candidate on two new paired seeds. Reserve confirmation and overhead first. No full-factorial sweep or combined winner without a direct comparison; design details in experiments/main-data/README.md.",
     "schedule_hypothesis": "Cagliostro v3 motivates a late-phase math/synthetic reweighting under a warmup-stable-decay schedule. Treat it as a predeclared replacement or later ablation with total exposure, schedule, validation and source identities fixed; it is not a fourth screening arm or a data-only attribution.",
     "proposed_screening": {
-      "max_arms": 3,
+      "max_arms": 4,
       "paired_seed_count": 1,
-      "per_arm_training_gpu_hour_cap": 40,
+      "per_arm_training_gpu_hour_cap": 30,
       "token_horizon": null,
       "candidate_order": [
         "One code-bank contrast selected from the fixed source audits; checked-code substitution only if supply supports it.",
-        "Qualified FineWeb-Edu versus selected Ultra-FineWeb HQ in the broad natural-web bank at fixed share, with other banks and serialization fixed."
+        "Qualified FineWeb-Edu versus selected Ultra-FineWeb HQ in the broad natural-web bank at fixed share, with other banks and serialization fixed.",
+        "Calibrated AI-generation/provenance filtering versus the same eligible unfiltered bank; detector errors and coverage loss must be measured first."
       ],
-      "selection_boundary": "Exploratory only; all arms share one baseline contract. If both candidates pass their frozen screening criteria, prioritize code for confirmation; do not rank raw code/web loss deltas against each other. If no candidate passes, retain the eligible baseline or redesign within the unspent cap."
+      "selection_boundary": "Exploratory only; all arms share one baseline contract. Freeze a priority rule across eligible candidates before results; do not rank unrelated raw endpoint deltas against each other. If no candidate passes, retain the eligible baseline or redesign within the unspent cap."
     },
     "proposed_confirmation": {
       "arms": 2,
       "new_paired_seed_count": 2,
-      "per_arm_per_seed_training_gpu_hour_cap": 90,
+      "per_arm_per_seed_training_gpu_hour_cap": 60,
       "token_horizon": null,
       "initialization": "Fresh paired initial model tensors and optimizer/data state; confirmation seeds differ from screening. Reusing qualified training families is allowed and counted.",
       "selection_boundary": "Report each seed pair and family-level uncertainty separately. Inconsistent pairs or uninformative capability endpoints restrict claims; two seeds do not establish broad training robustness."
@@ -141,15 +142,15 @@
     "data_design_contract": "experiments/main-data/data-design-contract.json"
   },
   "main_pretraining": {
-    "target_tokens": 100000000000,
+    "target_tokens": 80000000000,
     "initial_context_tokens": 4096,
     "mixture": [
       {
         "id": "selected_web",
         "role": "Natural Ultra-FineWeb English",
         "weight_percent": 25,
-        "exposure_tokens": 25000000000,
-        "eligible_unique_token_preparation_target": 31250000000,
+        "exposure_tokens": 20000000000,
+        "eligible_unique_token_preparation_target": 25000000000,
         "candidate_sources": [
           "openbmb/Ultra-FineWeb"
         ],
@@ -161,8 +162,8 @@
         "id": "independent_web",
         "role": "FineWeb-Edu / DCLM coverage component",
         "weight_percent": 5,
-        "exposure_tokens": 5000000000,
-        "eligible_unique_token_preparation_target": 6250000000,
+        "exposure_tokens": 4000000000,
+        "eligible_unique_token_preparation_target": 5000000000,
         "candidate_sources": [
           "HuggingFaceFW/fineweb-edu",
           "mlfoundations/dclm-baseline-1.0-parquet",
@@ -176,8 +177,8 @@
         "id": "natural_code",
         "role": "Qualified natural code, tests and documentation",
         "weight_percent": 30,
-        "exposure_tokens": 30000000000,
-        "eligible_unique_token_preparation_target": 37500000000,
+        "exposure_tokens": 24000000000,
+        "eligible_unique_token_preparation_target": 30000000000,
         "candidate_sources": [
           "HuggingFaceTB/stack-edu",
           "openbmb/UltraData-Code:L2",
@@ -191,8 +192,8 @@
         "id": "checked_code",
         "role": "Checked code explanations, exercises and repair",
         "weight_percent": 5,
-        "exposure_tokens": 5000000000,
-        "eligible_unique_token_preparation_target": 6250000000,
+        "exposure_tokens": 4000000000,
+        "eligible_unique_token_preparation_target": 5000000000,
         "candidate_sources": [
           "qualified natural-code derivatives",
           "openbmb/UltraData-Code:L3 if lineage resolved"
@@ -204,8 +205,8 @@
         "id": "natural_math",
         "role": "Selected natural math and worked solutions",
         "weight_percent": 20,
-        "exposure_tokens": 20000000000,
-        "eligible_unique_token_preparation_target": 25000000000,
+        "exposure_tokens": 16000000000,
+        "eligible_unique_token_preparation_target": 20000000000,
         "candidate_sources": [
           "openbmb/UltraData-Math:L2",
           "HuggingFaceTB/finemath:finemath-4plus",
@@ -221,8 +222,8 @@
         "id": "refined_math",
         "role": "Checked refined math explanations and derivations",
         "weight_percent": 5,
-        "exposure_tokens": 5000000000,
-        "eligible_unique_token_preparation_target": 6250000000,
+        "exposure_tokens": 4000000000,
+        "eligible_unique_token_preparation_target": 5000000000,
         "candidate_sources": [
           "openbmb/UltraData-Math:L3"
         ],
@@ -233,8 +234,8 @@
         "id": "reference_science",
         "role": "Reference, science and technical documents",
         "weight_percent": 5,
-        "exposure_tokens": 5000000000,
-        "eligible_unique_token_preparation_target": 6250000000,
+        "exposure_tokens": 4000000000,
+        "eligible_unique_token_preparation_target": 5000000000,
         "candidate_sources": [
           "retained FineWiki",
           "retained peS2o",
@@ -247,8 +248,8 @@
         "id": "refined_web",
         "role": "Selected synthetic educational text",
         "weight_percent": 5,
-        "exposure_tokens": 5000000000,
-        "eligible_unique_token_preparation_target": 6250000000,
+        "exposure_tokens": 4000000000,
+        "eligible_unique_token_preparation_target": 5000000000,
         "candidate_sources": [
           "openbmb/Ultra-FineWeb-L3",
           "retained Cosmopedia v2 comparator"
@@ -259,42 +260,58 @@
     ],
     "code_percent": 35,
     "math_percent": 25,
-    "target_unique_eligible_tokens": 125000000000,
+    "target_unique_eligible_tokens": 100000000000,
     "default_passes": 1,
     "repetition_policy": "No automatic repetition. Any repeated source needs declared unique tokens, exposure, passes and revised freeze.",
     "synthetic_shortfall_policy": "Do not count held/rejected records or invent an undocumented join. Re-freeze within-domain natural/refined allocations or reduce horizon after measuring supply; no silent replacement.",
-    "checkpoint_policy": "Retain continuation and endpoint checkpoints. Plan the first release around 100B combined base tokens; freeze schedule, staged mixture and endpoint decay after qualified supply and measured GH200 cost. Any expansion requires a revised budget and manifest.",
-    "target_status": "100B first-allocation working horizon based on H100 cost; conditional on eligible supply and GH200/multiworker qualification, not a launch commitment",
-    "horizon_scope": "Combined pretraining and capability mid-training exposure. Initial bank totals assume the starting mixture; revise aggregate exposures when a staged mixture is frozen.",
+    "checkpoint_policy": "Retain continuation and endpoint checkpoints. Plan the first release around an 80B 4K-base working horizon plus separately accounted capability/context continuation; freeze schedule, staged mixture and endpoint decay after qualified supply and measured GH200 cost. Any return to 100B requires a revised budget and manifest.",
+    "target_status": "80B 4K-base first-allocation working horizon based on the revised 1,800-hour base reservation; conditional on eligible supply, long-context cost and GH200/multiworker qualification, not a launch commitment",
+    "horizon_scope": "4K base exposure is planned separately from 4K/16K/32K capability and context continuation. Initial bank totals assume the starting 80B mixture; revise aggregate exposures when staged mixtures are frozen.",
     "recipe_selection_gate": "Complete the bounded pretraining-data study and document selection or inconclusive outcome before freezing the main starting mixture. No useful pretrained base is required for these fresh-initialization arms. Current weights are preparation hypotheses."
   },
   "mid_training": {
     "capability_continuation": {
       "status": "planned_not_launch_ready",
-      "purpose": "Targeted code/math/repair/tool-use capability learning with broad-data replay",
+      "purpose": "Repository, code, math, repair, tool-use and long-horizon agentic capability learning with broad-data replay",
       "target_tokens": null,
-      "budget_ownership": "A portion of main_pretraining target_tokens and the main_pretraining GPU-hour reservation; no additional allowance",
-      "data_recipe": "Qualify task difficulty, source families, independent correctness, overlap/replay and language/task coverage; compare replay/source-only data with grounded augmentation and executable trajectories only when environments and validation qualify",
-      "objective": "Existing next-token objective initially; any masked repair objective requires an explicit qualified adapter",
-      "runtime_boundary": "Predeclared mixture phases exist; a dedicated changed-data checkpoint continuation contract remains to implement and qualify. Do not use a context-extension label for a data intervention.",
+      "budget_ownership": "Capability continuation is part of the 600-hour mid-training production reservation and is separately accounted from the 1,800-hour 4K base reservation; tokens remain unset until GH200 cost is measured.",
+      "data_recipe": "Qualify repository structure, dependency links, issues/PRs/commits, verified repairs, tool schemas, grounded workflows and executable trajectories. Report replay, unique, derived and trajectory tokens separately.",
+      "objective": "Existing next-token objective initially. Output/action-only loss masks require an explicit adapter, mask fingerprint, supervised-position counts and resume qualification.",
+      "runtime_boundary": "Use data continuation for changed 4K capability manifests and context continuation for 16K/32K stages. Do not use a context-extension label for a data intervention.",
+      "stages": [
+        {
+          "id": "capability_bridge_4k",
+          "maximum_context_tokens": 4096,
+          "purpose": "Repository structure, repair, tool schemas, short workflows and replay."
+        },
+        {
+          "id": "repository_reasoning_16k",
+          "maximum_context_tokens": 16384,
+          "purpose": "Multi-file repositories, issue/PR/commit context, dependency-aware repair and verified workflows."
+        },
+        {
+          "id": "agentic_continuation_32k",
+          "maximum_context_tokens": 32768,
+          "purpose": "Long coding tasks, repeated tool calls, test failures, recovery, summaries and state tracking."
+        }
+      ],
       "data_study": {
-        "contrast": "Replay/source-only control versus targeted code/math/repair/tool-use material at the same 4K context and next-token objective; add grounded or executable synthesis only as separately validated branches",
+        "contrast": "Screen replay, source-only repository data, grounded workflows and executable trajectories at 4K; separately screen selective loss masks and best-fit packing before 16K/32K production.",
         "parent_and_state": "Same useful parent checkpoint and optimizer state; identical declared schedule and cursor-reset policy. Requires a qualified changed-data branch.",
         "proposed_paired_seed_count": 1,
-        "per_arm_training_gpu_hour_cap": 25,
-        "primary_endpoint": "Predeclared code/math/tool-use development outcome; fixed source losses, general retention, downstream SFT convergence and early RL adaptation are guardrails",
+        "primary_endpoint": "Predeclared repository, coding, tool-use and recovery outcomes; source loss, short-task retention and downstream transfer are guardrails",
         "efficiency_endpoints": [
           "Capability versus mid-training tokens and allocated GPU-hours",
           "SFT convergence area and steps to a fixed development target under the same downstream recipe",
           "Early RL adaptation and final held-out transfer under the same rollout and verifier protocol",
           "Preparation, teacher/generation, validation, retry and discarded-trajectory cost counted separately"
         ],
-        "branch_controls": "Raw/source-only, grounded augmentation and executable trajectory branches are additive ablations; hold the downstream SFT/RL recipe fixed and do not treat context extension as a data branch",
+        "branch_controls": "Replay is the control. Source-only, grounded and executable branches are proxy candidates; only one candidate is confirmed at 1.2B. Context length and loss masking remain separate factors.",
         "packet": "experiments/main-data/mid-training-study-packet.json",
-        "downstream_accounting": "Linked SFT/RL efficiency evaluation is charged to the separate 150-hour post-training research reservation; it is not hidden in the 150-hour mid-training cap."
+        "downstream_accounting": "Linked SFT/RL efficiency evaluation is charged to the separate 150-hour post-training research reservation; it is not hidden in the 300-hour mid-training research cap."
       }
     },
-    "context_extension": "See context_extension for the separate additional exposure, length curriculum and budget; keep capability and length effects distinct",
+    "context_extension": "Context changes are the 16K/32K portion of the 600-hour mid-training production reservation; keep length effects distinct from data-family effects.",
     "data_design_contract": "experiments/main-data/data-design-contract.json"
   },
   "context_extension": {
@@ -317,7 +334,7 @@
       "math_science_technical_documents": 30,
       "cross_document_grounded_material": 20
     },
-    "boundary": "300-hour production reservation, starting from 4K and qualifying 16K then 32K. Stage tokens remain unset until measured cost/quality. 128K is a stretch requiring an explicit affordable revision; the former 8B/800h curriculum is retired. The separate 150-hour mid-training research cap covers comparisons, not additional production tokens.",
+    "boundary": "600-hour combined capability/context/agentic production reservation, starting from 4K and qualifying 16K then 32K. Stage tokens remain unset until measured cost/quality. 64K/128K requires an explicit later revision. The separate 300-hour mid-training research cap covers comparisons, not additional production tokens.",
     "mixture_control": "Compare unchanged preceding-stage domain weights repacked into coherent longer records against the proposed long-material/replay weights; neither has been validated for Speck.",
     "evaluation_additions": [
       "Held-out fixed-suffix NLL with increasing related prefix length",
@@ -326,9 +343,9 @@
     ],
     "stretch_context_tokens": 131072,
     "data_study": {
-      "contrast": "Same qualified parent and 16K context: unchanged domain proportions in coherent long records versus proposed long-domain reweighting. Both use the same short replay fraction and packing rules.",
+      "contrast": "Same qualified parent and 16K context: unchanged domain proportions in coherent long records versus a repository/agentic long mix. Both use the same short replay fraction and best-fit packing rules.",
       "proposed_paired_seed_count": 1,
-      "per_arm_training_gpu_hour_cap": 25,
+      "per_arm_training_gpu_hour_cap": 20,
       "primary_endpoint": "Candidate-versus-control fixed-suffix loss at the same long prefix length; also require benefit from related versus short/irrelevant prefixes, positional/multifile performance and short-task retention.",
       "limits": "Requires qualified fixed-suffix scoring and context/restart runtime. This pair does not isolate coherent packing or compare context lengths; 32K follows a separate production gate."
     },
@@ -406,10 +423,11 @@
         "gpu_hours_at_4k_padded_position_rate_only": 658.7861013974396
       }
     ],
-    "boundary": "4K-rate scenarios omit variable padding, long attention cost, evaluation, teacher generation, verification and retries. The 800-hour reservation covers SFT and any on-allocation teacher/verification/preference/RL work; additions must fit or displace work. No multi-epoch commitment. The separate 150-hour post-training data-research cap covers comparison arms and their overhead, not production SFT/RL exposure; charge every job once.",
+      "boundary": "4K-rate scenarios omit variable padding, long attention cost, evaluation, teacher generation, verification and retries. The 800-hour reservation covers SFT, optional verified-reward RL, teacher/verification work and final self-SFT; additions must fit or displace work. No multi-epoch commitment. The separate 150-hour post-training data-research cap covers comparison arms and their overhead, not production exposure; charge every job once.",
     "stage_design": {
       "sft": "Length-bucketed assistant-masked thinking and tool supervision; shorter qualified buckets first, then mixed short and long examples through the validated context ceiling. One unique-task inventory, explicit exposure and replay accounting.",
       "rl": "Proposed bounded GRPO-style verifiable-reward training after a useful SFT baseline; qualify implementation, rollout engine, task verifiers and recovery first. No qualified RL trainer currently exists in the repo.",
+      "final_self_sft": "After selecting the SFT or RL parent, freeze a prompt pool, generate tool-aware responses in pinned environments, verify and deduplicate them, mix with verified anchor data, and run final assistant-masked self-SFT. Preserve the pre-self-SFT parent and promote only on held-out transfer.",
       "rl_initial_scope": "Checkable math and sandboxed code tasks; proposed initial total context ceiling 16K, then 32K only if useful and affordable. Output and tool-step caps frozen separately. Agent/environment RL conditional on reliable executable tasks.",
       "rl_cost_boundary": "Charge rollout generation, reference-policy/scoring passes, updates, evaluation, retries and allocated idle GPUs. CPU sandbox costs recorded separately; no 128K RL commitment.",
       "release_selection": "Retain base and SFT checkpoints. Promote RL checkpoint only for measured gains without unacceptable regressions; otherwise release the SFT thinking assistant."
@@ -417,13 +435,14 @@
     "data_study": {
       "sft_contrast": "Eligible baseline thinking/tool data versus a declared outcome-verification selection from the same candidate pool; both exclude known-invalid examples. Hold task and length strata, serialization and masking fixed.",
       "sft_proposed_paired_seed_count": 2,
-      "sft_per_arm_per_seed_training_gpu_hour_cap": 25,
+      "sft_per_arm_per_seed_training_gpu_hour_cap": 20,
       "sft_exposure": "Same useful parent, fresh optimizer and paired data-order seeds. Match planned processed positions/bucket cycles and predeclare a supervised-token mismatch tolerance. Current SFT runs complete finite epochs; arbitrary supervised-token stopping is not implemented.",
       "sft_primary_endpoint": "Predeclared held-out code/math or tool-task success metric matching the selected intervention; protocol compliance and other capabilities are guardrails.",
-      "rl_scope": "Conditional fixed-SFT-policy prompt/rollout and verifier feasibility only in the 20-hour research slot. No RL training-data ablation promised. Policy optimization belongs to the separate 200-hour production cap after runtime/reward qualification.",
+      "rl_scope": "Conditional fixed-SFT-policy prompt/rollout and verifier feasibility only in the 20-hour research slot. Policy optimization belongs to the separate 200-hour production cap after runtime, reward and recovery qualification.",
+      "final_self_sft_scope": "A 30-hour pilot compares verified-anchor continuation with verified self-distillation plus anchor replay. Full final self-SFT remains within the 800-hour post-training production reservation and starts from the promoted RL checkpoint or selected SFT fallback.",
       "limits": "Selection changes task distribution and possibly supervision density; disclose remaining differences rather than attributing everything to verification. Final tests remain untouched.",
       "packet": "experiments/main-data/post-training-study-packet.json",
-      "downstream_accounting": "SFT comparison uses 100 hours, fixed-policy RL feasibility 20 hours and support 30 hours; production SFT/RL exposure remains in the separate 800-hour reservation."
+      "downstream_accounting": "SFT comparison uses 80 hours, fixed-policy RL feasibility 20 hours, final self-SFT pilot 30 hours and support 20 hours; production SFT/RL/self-SFT exposure remains in the separate 800-hour reservation."
     },
     "qualification_status": "experiments/corpus-audit/data-readiness.json records the full retained SFT structural census, unchanged deterministic samples at four serialized context ceilings, prompt links and bounded RL reference/schema inventory. Format compatibility is not answer quality or thinking/tool success. Preserve source records and missing-tail limitations; no admission or RL launch.",
     "data_design_contract": "experiments/main-data/data-design-contract.json"
@@ -436,25 +455,25 @@
     "reservations_gpu_hours": {
       "runtime_qualification": 100,
       "architecture_and_efficiency": 200,
-      "data_experiments": 900,
-      "main_4k_pretraining": 2300,
-      "context_extension": 300,
+      "data_experiments": 1050,
+      "main_4k_pretraining": 1800,
+      "capability_and_agentic_mid_training": 600,
       "post_training": 800,
-      "protected_recovery_and_evaluation": 400
+      "protected_recovery_and_evaluation": 450
     },
     "h100_full_trainer_tokens_per_second": 12859.198189903878,
     "h100_steady_optimizer_tokens_per_second": 13594.900661275025,
-    "main_pretraining_reference_gpu_hours": 2160.1485075163473,
-    "main_reference_four_gpu_days_at_perfect_scaling": 22.501546953295286,
+    "main_pretraining_reference_gpu_hours": 1728.1188050082777,
+    "main_reference_four_gpu_days_at_perfect_scaling": 18.00123755216956,
     "main_scenarios": [
       {
-        "tokens": 100000000000,
-        "role": "first-allocation working horizon, conditional on measured cost and supply",
-        "reference_gpu_hours": 2160.1485075163473,
-        "reference_four_gpu_days_perfect_scaling": 22.501546953295286,
-        "reference_four_gpu_days_at_80_percent_scaling": 28.126933691619104,
-        "minimum_effective_tokens_per_second_per_allocated_gpu_in_2300_hours": 12077.294685990339,
-        "program_gpu_hours_with_other_reservations": 4860.148507516347
+        "tokens": 80000000000,
+        "role": "revised first-allocation 4K-base working horizon, conditional on measured cost and supply",
+        "reference_gpu_hours": 1728.1188050082777,
+        "reference_four_gpu_days_perfect_scaling": 18.00123755216956,
+        "reference_four_gpu_days_at_80_percent_scaling": 22.50154694021195,
+        "minimum_effective_tokens_per_second_per_allocated_gpu_in_1800_hours": 12345.67901234568,
+        "program_gpu_hours_with_other_reservations": 4928.118805008278
       },
       {
         "tokens": 320000000000,
@@ -462,8 +481,8 @@
         "reference_gpu_hours": 6912.475224052311,
         "reference_four_gpu_days_perfect_scaling": 72.00495025054491,
         "reference_four_gpu_days_at_80_percent_scaling": 90.00618781318114,
-        "minimum_effective_tokens_per_second_per_allocated_gpu_in_2300_hours": 38647.34299516908,
-        "program_gpu_hours_with_other_reservations": 9612.475224052312
+        "minimum_effective_tokens_per_second_per_allocated_gpu_in_1800_hours": 49382.71604938272,
+        "program_gpu_hours_with_other_reservations": 10112.475224052312
       },
       {
         "tokens": 400000000000,
@@ -471,11 +490,11 @@
         "reference_gpu_hours": 8640.59403006539,
         "reference_four_gpu_days_perfect_scaling": 90.00618781318114,
         "reference_four_gpu_days_at_80_percent_scaling": 112.50773476647642,
-        "minimum_effective_tokens_per_second_per_allocated_gpu_in_2300_hours": 48309.178743961354,
-        "program_gpu_hours_with_other_reservations": 11340.59403006539
+        "minimum_effective_tokens_per_second_per_allocated_gpu_in_1800_hours": 61728.39506172839,
+        "program_gpu_hours_with_other_reservations": 11840.59403006539
       }
     ],
-    "boundary": "H100 measured full-trainer rate includes startup, validation and saves, not setup, external capability evaluation, transfer/idle or provider billing. No GH200/multiworker scaling claim. Effective rate divides aggregate throughput by every allocated GPU. Do not spend protected context/SFT/evaluation budgets on base expansion.",
+    "boundary": "H100 measured full-trainer rate includes startup, validation and saves, not setup, external capability evaluation, transfer/idle or provider billing. No GH200/multiworker scaling claim. Effective rate divides aggregate throughput by every allocated GPU. Do not spend protected mid-training/SFT/evaluation budgets on base expansion.",
     "allocation_interpretation": "The grant allocation is 5,000 total GPU-hours across four GH200s, equivalent to 1,250 four-GPU elapsed hours, within a nominal 90-day access window. Hardware and envelope are confirmed; access start, site details and throughput remain pending qualification.",
     "scaling_boundary": "Illustrative 80% efficiency is not measured. Four GPUs at H100 per-device speed yield 51,437 aggregate tokens/s at perfect scaling or 41,149 at 80%; GPU-hour cost is invariant at perfect scaling and rises with inefficiency. GH200 per-device gains require measurement.",
     "proposed_post_training_breakdown_gpu_hours": {
@@ -484,20 +503,20 @@
       "on_allocation_teacher_and_verification_work": 100
     },
     "proposed_protected_breakdown_gpu_hours": {
-      "comparative_and_final_evaluation": 200,
+      "comparative_and_final_evaluation": 250,
       "recovery_and_unresolved_cost_reserve": 200
     },
     "breakdown_status": "The 5000-hour research-and-release envelope is a planning cap, not a measured requirement or job authorization. Research includes each experiment's evaluation/preparation/retries; production phases have separate exposure ledgers.",
-    "reservation_revision": "Research-first allocation: runtime 100, architecture/efficiency 200, data research 900 (600/150/150), base/capability production 2300, context production 300, post-training production 800, protected evaluation/recovery 400. External H100 rentals remain separate; no repeat engineering pilot.",
+    "reservation_revision": "Research-first allocation: runtime 100, architecture/efficiency 200, data research 1,050 (600/300/150), 4K base production 1,800, combined capability/context/agentic mid-training production 600, post-training production 800 and protected evaluation/recovery 450. External H100 rentals remain separate; no repeat engineering pilot.",
     "main_budget_feasibility": {
-      "h100_rate_tokens_in_reserved_hours": 106474161012.40411,
-      "reference_margin_gpu_hours": 139.8514924836527,
-      "illustrative_80_percent_rate_tokens_in_reserved_hours": 85179328809.9233,
-      "boundary": "Linear H100 full-trainer extrapolation; not a guaranteed GH200 ceiling. At illustrative 80% of this effective per-allocated-GPU rate the horizon must shrink to about 85.2B to preserve the base reservation. Do not borrow protected stage budgets."
+      "h100_rate_tokens_in_reserved_hours": 83333333333.33333,
+      "reference_margin_gpu_hours": 71.88119499172231,
+      "illustrative_80_percent_rate_tokens_in_reserved_hours": 66666666666.666664,
+      "boundary": "Linear H100 full-trainer extrapolation; not a guaranteed GH200 ceiling. The revised 80B 4K-base horizon leaves little margin at the measured rate and roughly 66.7B at an illustrative 80% rate; long-context and agentic phases require separate measured costing. Do not borrow protected stage budgets."
     },
     "data_experiments_breakdown_gpu_hours": {
       "pretraining": 600,
-      "mid_training": 150,
+      "mid_training": 300,
       "post_training": 150
     },
     "proposed_research_breakdown_gpu_hours": {
@@ -508,28 +527,32 @@
       },
       "pretraining": {
         "screening_training": 120,
-        "confirmation_training": 360,
-        "preparation_evaluation_recovery": 120
+        "decay_training": 90,
+        "confirmation_training": 240,
+        "preparation_evaluation_recovery": 150
       },
       "mid_training": {
-        "capability_pair_training": 70,
-        "context_pair_training": 50,
-        "preparation_evaluation_recovery": 30
+        "proxy_screening_training": 120,
+        "objective_and_packing_training": 40,
+        "context_training": 40,
+        "confirmation_training": 80,
+        "preparation_evaluation_recovery": 20
       },
       "post_training": {
-        "sft_paired_training": 100,
+        "sft_paired_training": 80,
         "conditional_rl_prompt_feasibility": 20,
-        "preparation_evaluation_recovery": 30
+        "final_self_sft_pilot": 30,
+        "preparation_evaluation_recovery": 20
       }
     },
-    "research_subdivision_status": "Proposed spending ceilings inside the existing 200/600/150/150 reservations, not runnable jobs or additional GPU-hours. Training caps include trainer startup, saves and inline validation; shared support covers other on-allocation preparation, scoring, qualification and recovery. Account each operation once. Reduce scope or record an explicit revision if measured costs do not fit; no silent transfers from confirmation or production."
+    "research_subdivision_status": "Proposed spending ceilings inside the 200/600/300/150 reservations, not runnable jobs or additional GPU-hours. Training caps include trainer startup, saves and inline validation; shared support covers other on-allocation preparation, scoring, qualification and recovery. Account each operation once. Reduce scope or record an explicit revision if measured costs do not fit; no silent transfers from confirmation or production."
   },
   "storage": {
-    "base_uint16_token_id_bytes": 200000000000,
+    "base_uint16_token_id_bytes": 160000000000,
     "context_uint16_token_id_bytes": null,
     "local_scratch_working_allowance_bytes": 2000000000000,
     "boundary": "Token IDs only; indexes, masks, raw text, deduplication databases, checkpoints and backups cost extra. Two-TB scratch is a working allowance, not a measured footprint. Acquisition should be bounded and streamed.",
-    "prepared_125b_uint16_token_id_bytes": 250000000000
+    "prepared_100b_uint16_token_id_bytes": 200000000000
   },
   "input_receipts": {
     "experiments/pilot/h100-run.json": "7e289c7189080bd6d3a1436cebb73a3925e73e06351972a48efe716bbb460de4",
@@ -554,20 +577,20 @@
     "experiments/corpus-audit/code-application-origins.json": "49932682280ceb291dff7827520787e148c76783f5488c0f083d41323f1b0ac8",
     "experiments/corpus-audit/code-yield-result.json": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94",
     "experiments/corpus-audit/data-readiness.json": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549",
-    "experiments/main-data/data-study-packet.json": "0cde6c5aad7cda4e41608f37700ac1e79dfbb12550b9aee5782e86773f4d8332",
-    "experiments/main-data/source-readiness.json": "0c9ebecead7aa3a5803de9a9b2aa888c5026e397a75f7ff3f52d3641c616e9ec",
-    "experiments/main-data/mid-training-study-packet.json": "f971a4d5192f7582bd7114f929f5a02652921baf09bf520ff0da0b29a9e0cacf",
-    "experiments/main-data/post-training-study-packet.json": "1857383ee275626c1d9daa6fc05c72168dd890f563e06adc7f92aa2895ceab96",
-    "experiments/main-data/data-closeout.json": "5c688ff307f58bb422031eef2231de841b4b95fd0a29a287979de7b47f92135d",
+    "experiments/main-data/data-study-packet.json": "b15c981f375eaa6c610a7249d3da9a169e431b29d9806583fb3238ca0c8e6e18",
+    "experiments/main-data/source-readiness.json": "58800b809620f6c0355483711a427124482daaf4fe4d312eb5b2b321c3f99cf8",
+    "experiments/main-data/mid-training-study-packet.json": "df5c2710f893a347386bc848234c121e7b0c076fe37293a76158ef062755cac1",
+    "experiments/main-data/post-training-study-packet.json": "5840ea5e2833a5fed911d70d61126d3f85095bc66aa6650cb39a7df3fd13f4e8",
+    "experiments/main-data/data-closeout.json": "27f0b64f8de51133baea9f3f7d4cbf584ac1b4882a977bd40a33866adeb3291f",
     "experiments/main-data/frontier-data-research.json": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",
-    "experiments/main-data/data-design-contract.json": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f",
+    "experiments/main-data/data-design-contract.json": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58",
     "experiments/main-data/frontier-data-source-mapping.json": "1e8621483defe5ecfb9785c71a77f317b62b00ac522b5ad91c56bbb942faf473",
-    "experiments/main-data/candidate-manifest-preflight.json": "f81dd2f9cbd4bd3c43feaf67bd5fec39363823854b409af06141dbf8a0b00ea4",
-    "experiments/main-data/natural-web-candidate-manifest.json": "3f17ffcb129e818ace4228df863beacbf2f1283e2f79123295434b7b929c1e68",
-    "experiments/main-data/natural-code-candidate-manifest.json": "cbcc0b0786b7c92f6bdaaddf04c1c1f147e9004bdecc770cc659f2f3d7a0c483",
-    "experiments/main-data/math-candidate-manifest.json": "1e23a7c0441b8e3cfed1fcb941fcf863264d2b37a93824220ede9d6f7068081d",
-    "experiments/main-data/post-training-candidate-manifest.json": "16f1efc62727e21e6f24363eacbaf1b6b08c75f6609fc25d8eb867561966d3d2",
-    "experiments/main-data/post-training-audit-protocol.json": "a1722427604a4685621da0e53964d7ec0c4b1422a0225e4573788cc4a8fc353f",
+    "experiments/main-data/candidate-manifest-preflight.json": "d1017eb37735cb7252d1933771b5beb7e373ede9a5276a0dc11f99eb12202f8b",
+    "experiments/main-data/natural-web-candidate-manifest.json": "9e8a6b2b0d08fa448175f2541141c4e518ccc3a3482c442c41880055be6f6cc6",
+    "experiments/main-data/natural-code-candidate-manifest.json": "2932cfc4919914b3bf3b59ebcd942a0c66b8f3954daf92155a14505ab7ac1bd5",
+    "experiments/main-data/math-candidate-manifest.json": "24a31351c08a56946023166d6e96ed84b2a65bc4bd0b1701bf7977c74eb7e43e",
+    "experiments/main-data/post-training-candidate-manifest.json": "e1ed60db91b38f6fedd57e75e5e54709e6e8f09766c81d8704a5c0d1dd04370c",
+    "experiments/main-data/post-training-audit-protocol.json": "4a1c04e5436684640b3b3e65815f837b143780cdbf59625dfd290feedc54a34b",
     "experiments/main-data/post-training-research.json": "5036027c1aa274c3f7b0f1aa6b07ad3f4a80016c90a866eee7cf27b096604c99",
     "experiments/main-data/architecture-study-packet.json": "d506aa41460d265f0a7209a7fa1073ca4f1cf4defcd6e0fa5a6afff136e87846"
   },

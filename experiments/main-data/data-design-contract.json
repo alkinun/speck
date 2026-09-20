@@ -3,7 +3,7 @@
   "format_version": 1,
   "date": "2026-09-20",
   "status": "design_only_not_training_authority",
-  "purpose": "Make the reviewed frontier-data findings executable as shared requirements for source manifests and bounded data studies.",
+  "purpose": "Make the reviewed frontier-data findings executable as shared requirements for source manifests and bounded data studies across pretraining, mid-training and post-training.",
   "evidence_boundary": "This contract changes experiment metadata and admission requirements only. It does not admit a source, set mixture weights, authorize acquisition or change the 5,000-GPU-hour allocation.",
   "manifest_schema": {
     "required_fields": [
@@ -21,7 +21,9 @@
     ],
     "quality_vector": "Record the component scores, calibration/version and retained score distribution; a publisher score or one scalar cutoff is insufficient.",
     "dependency_metadata": "For long-context or repository-event records, record related-item identities, dependency type and an auditable dependency-distance value; use null with a reason when unavailable.",
-    "lineage": "Derived records bind source identities, transformation type, teacher/generator identity, generation settings and rejection reasons."
+    "lineage": "Derived records bind source identities, transformation type, teacher/generator identity, generation settings and rejection reasons.",
+    "trajectory_metadata": "Agent records bind episode, task, repository snapshot, environment image, tool schema, turn, branch, outcome, recovery labels and per-segment loss masks.",
+    "self_distillation_metadata": "Self-distilled records bind the teacher checkpoint, frozen prompt pool, decoding settings, verifier receipt, anchor mixture and rejected-output counts."
   },
   "bank_boundaries": [
     {
@@ -43,6 +45,10 @@
     {
       "id": "agent_trajectories",
       "rule": "Tool/environment trajectories retain schemas, turn order, observations, outcomes and recovery cases."
+    },
+    {
+      "id": "self_distillation",
+      "rule": "Model-generated post-training records remain derived data, retain teacher and verifier lineage, and are mixed with verified anchor data under an explicit promotion decision."
     }
   ],
   "sampling_policy": {
@@ -72,10 +78,11 @@
       ]
     },
     "capability_mid_training": {
-      "default": "Targeted code/math/repair/tool-use data; grounded or executable supervision is a separate validated branch.",
+      "default": "Targeted repository, code, math, repair, tool-use and executable workflow data; grounded or executable supervision is admitted only with environment, outcome and loss-mask evidence.",
       "measure": [
         "capability per continuation token and GPU-hour",
         "lineage/correctness coverage",
+        "tool-call validity, recovery and long-horizon coherence",
         "downstream SFT convergence and early RL adaptation"
       ]
     },
@@ -89,12 +96,13 @@
       ]
     },
     "post_training": {
-      "default": "Select supervised and rollout data by independently verified outcomes and reward reliability.",
+      "default": "Select supervised, rollout and self-distillation data by independently verified outcomes and reward reliability.",
       "measure": [
         "outcome validity",
         "supervised-token efficiency",
         "verifier agreement",
         "failure recovery",
+        "self-distillation rejection and anchor-replay coverage",
         "held-out transfer"
       ]
     }

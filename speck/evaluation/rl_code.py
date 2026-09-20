@@ -58,7 +58,10 @@ def run_code_feasibility(tasks, candidates, *, seconds=15, runner=run_python):
             "runner_failures": sum(row["status"] == "runner_failure" for row in executions),
         },
         "task_suite_sha256": _digest(
-            [{"id": task["id"], "test": task["test"], "entry_point": task["entry_point"]} for task in tasks]
+            [
+                {"id": task["id"], "test": task["test"], "entry_point": task["entry_point"]}
+                for task in tasks
+            ]
         ),
         "candidate_sha256": _digest(candidates),
         "boundary": "Fixed-policy code verification only. Tests are immutable and hidden from candidate code; no policy update is performed.",
@@ -73,7 +76,10 @@ def verify_code_feasibility(receipt, tasks):
     if receipt.get("status") != "fixed_policy_code_verification_only":
         raise ValueError("code feasibility cannot claim policy training")
     expected = _digest(
-        [{"id": task["id"], "test": task["test"], "entry_point": task["entry_point"]} for task in tasks]
+        [
+            {"id": task["id"], "test": task["test"], "entry_point": task["entry_point"]}
+            for task in tasks
+        ]
     )
     if receipt.get("task_suite_sha256") != expected:
         raise ValueError("code task suite identity changed")
@@ -117,9 +123,7 @@ def run_code_replay(task, candidates, *, attempts=1, seconds=15, runner=run_pyth
     for code in candidates:
         if not isinstance(code, str):
             raise ValueError("candidate code must be text")
-        executions.append(
-            runner(code, task["test"], task["entry_point"], seconds=seconds)
-        )
+        executions.append(runner(code, task["test"], task["entry_point"], seconds=seconds))
     passed = [execution.get("status") == "pass" for execution in executions]
     return {
         "format": "speck_code_replay_feasibility",
@@ -128,7 +132,9 @@ def run_code_replay(task, candidates, *, attempts=1, seconds=15, runner=run_pyth
         "task_id": task["id"],
         "attempts": len(executions),
         "executions": executions,
-        "first_pass_attempt": next((index + 1 for index, value in enumerate(passed) if value), None),
+        "first_pass_attempt": next(
+            (index + 1 for index, value in enumerate(passed) if value), None
+        ),
         "task_suite_sha256": _digest(
             {"id": task["id"], "test": task["test"], "entry_point": task["entry_point"]}
         ),
@@ -144,18 +150,22 @@ def verify_code_replay(receipt, task):
         raise ValueError("unsupported code replay receipt")
     if receipt.get("status") != "reset_replay_only_no_policy_updates":
         raise ValueError("code replay cannot claim policy training")
-    expected = _digest(
-        {"id": task["id"], "test": task["test"], "entry_point": task["entry_point"]}
-    )
+    expected = _digest({"id": task["id"], "test": task["test"], "entry_point": task["entry_point"]})
     if receipt.get("task_suite_sha256") != expected:
         raise ValueError("replay task suite identity changed")
     executions = receipt.get("executions", [])
     if receipt.get("attempts") != len(executions):
         raise ValueError("replay attempt count mismatch")
-    if receipt.get("outcome_sha256") != _digest([execution.get("status") for execution in executions]):
+    if receipt.get("outcome_sha256") != _digest(
+        [execution.get("status") for execution in executions]
+    ):
         raise ValueError("replay outcomes were changed")
     first_pass = next(
-        (index + 1 for index, execution in enumerate(executions) if execution.get("status") == "pass"),
+        (
+            index + 1
+            for index, execution in enumerate(executions)
+            if execution.get("status") == "pass"
+        ),
         None,
     )
     if receipt.get("first_pass_attempt") != first_pass:

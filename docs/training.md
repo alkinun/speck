@@ -74,14 +74,17 @@ records proposed run counts, finite-epoch SFT exposure matching and remaining ru
 These design rules are not executable launch manifests.
 
 The [capability mid-training efficiency packet](../experiments/main-data/mid-training-study-packet.json)
-adds a design-only comparison of replay/source-only, targeted raw and grounded data from one useful
-parent. It measures downstream SFT convergence and early RL adaptation under fixed recipes; executable
-trajectories remain conditional on environment and verifier qualification.
+defines a design-only four-arm proxy screen: replay, source-only repository data, grounded workflows
+and executable trajectories. It also separates selective loss/packing and context-transition studies,
+then confirms at most one candidate at 1.2B. Production mid-training is staged at 4K, 16K and 32K for
+repository reasoning and long-horizon agentic coding. Executable trajectories require pinned
+environments, tool schemas, hidden tests, outcome receipts and recovery labels.
 
 The [post-training data-study packet](../experiments/main-data/post-training-study-packet.json) fixes
-two paired-seed SFT selection arms and a fixed-policy RL prompt/verifier slot. It keeps structural
-format checks, independent outcome verification and environment success as separate gates; no policy
-update is implied by the research packet.
+two paired-seed SFT selection arms, a fixed-policy RL prompt/verifier slot, and a bounded final
+self-SFT pilot. It keeps structural format checks, independent outcome verification, environment
+success and self-distillation lineage as separate gates. No policy update or production self-SFT is
+implied by the research packet.
 
 ## Mid-training readiness
 
@@ -97,13 +100,14 @@ state. `--branch-kind context` allows a changed manifest and context configurati
 requires the same architecture, sequence length, optimizer semantics, schedule and world-size
 contract as the parent, resets only the data cursor, and retains the parent optimizer state. Data
 branches require `--branch-schedule inherit`; context branches remain the only path that changes
-sequence capacity. Qualify actual workloads separately. Any new masked repair objective also requires
-a validated adapter.
+sequence capacity. Qualify 4K, 16K and 32K workloads separately. Any output/action-only trajectory
+loss or masked repair objective also requires a validated adapter, mask fingerprint and resume test.
 
-Before executing either part of mid-training, freeze parent identity, objective, data, schedule,
-optimizer policy and cost, and qualify resume. Capability continuation consumes a portion of the
-base horizon; context extension uses its separately declared exposure. No production RL trainer
-exists yet; its data, rollout and verifier requirements are in [the program](program.md#conditional-rl).
+Before executing any mid-training stage, freeze parent identity, objective, data, schedule, optimizer
+policy and cost, and qualify resume. Capability, repository and agentic continuation use the combined
+600-hour mid-training production reservation; 16K/32K context changes are part of that reservation.
+No production RL trainer exists yet; its data, rollout and verifier requirements are in [the
+program](program.md#conditional-rl).
 
 ## Assistant training and generation
 

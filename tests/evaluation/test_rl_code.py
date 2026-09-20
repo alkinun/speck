@@ -7,7 +7,6 @@ from speck.evaluation.rl_code import (
     verify_code_replay,
 )
 
-
 TASKS = [
     {"id": "add", "entry_point": "solve", "test": "def check(solve): assert solve(2, 3) == 5"},
     {"id": "broken", "entry_point": "solve", "test": "def check(solve): assert solve(2, 3) == 5"},

@@ -26,10 +26,11 @@ def _artifact(path, expected):
 
 
 def validate(packet_path):
+    """Check study ceilings without admitting data, rewards or policy updates."""
     packet = json.loads(Path(packet_path).resolve().read_text())
     if packet.get("format") != "speck_post_training_data_study_packet":
         raise ValueError("unsupported post-training packet format")
-    if packet.get("format_version") != 1:
+    if packet.get("format_version") != 2:
         raise ValueError("unsupported post-training packet version")
     if packet.get("status") != "design_only_not_training_authority":
         raise ValueError("post-training packet must remain design-only")
@@ -46,13 +47,29 @@ def validate(packet_path):
     )
     if sft["training_gpu_hours"] != expected_sft:
         raise ValueError("SFT budget does not match arm and seed caps")
+    # This is a research comparison. Production self-SFT must fit the separate
+    # post-training ceiling rather than inheriting an additional allocation.
+    self_sft = packet["final_self_sft_pilot"]
+    if self_sft["training_gpu_hours"] != (
+        len(self_sft["arms"])
+        * self_sft["paired_seed_count"]
+        * self_sft["per_arm_training_gpu_hour_cap"]
+    ):
+        raise ValueError("self-SFT pilot budget does not match arm and seed caps")
     support = packet["support_and_reserve"]
     rl = packet["rl_feasibility"]
-    total = sft["training_gpu_hours"] + rl["gpu_hours"] + support["gpu_hours"]
+    total = (
+        sft["training_gpu_hours"]
+        + rl["gpu_hours"]
+        + self_sft["training_gpu_hours"]
+        + support["gpu_hours"]
+    )
     if total != 150 or support["budget_check"] != (
-        "100 SFT comparison + 20 RL feasibility + 30 support = 150 post-training-research GPU-hours."
+        "80 SFT comparison + 20 RL feasibility + 30 self-SFT pilot + 20 support = 150 post-training-research GPU-hours."
     ):
         raise ValueError("post-training research reservation must total 150 GPU-hours")
+    # Prompt/verifier feasibility cannot establish RL learning or adaptation:
+    # this slot samples a fixed policy and explicitly excludes gradient updates.
     if rl["status"] != "conditional_fixed_policy_only":
         raise ValueError("RL slot must remain fixed-policy feasibility only")
     if "policy updates" not in rl["boundary"]:
@@ -65,6 +82,7 @@ def validate(packet_path):
         "sft_arms": len(sft["arms"]),
         "sft_gpu_hours": sft["training_gpu_hours"],
         "rl_feasibility_gpu_hours": rl["gpu_hours"],
+        "self_sft_pilot_gpu_hours": self_sft["training_gpu_hours"],
         "support_gpu_hours": support["gpu_hours"],
         "total_gpu_hours": total,
         "training_admitted": False,

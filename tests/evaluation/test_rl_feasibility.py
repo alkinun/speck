@@ -5,9 +5,19 @@ from speck.evaluation.tools import SCENARIOS
 
 
 def _call(operation, a, b, identity="1"):
-    return "<tool_calls>" + json.dumps(
-        [{"id": identity, "name": "calculate", "arguments": {"operation": operation, "a": a, "b": b}}]
-    ) + "</tool_calls>"
+    return (
+        "<tool_calls>"
+        + json.dumps(
+            [
+                {
+                    "id": identity,
+                    "name": "calculate",
+                    "arguments": {"operation": operation, "a": a, "b": b},
+                }
+            ]
+        )
+        + "</tool_calls>"
+    )
 
 
 def test_fixed_policy_receipt_covers_success_failure_and_no_tool_cases():
