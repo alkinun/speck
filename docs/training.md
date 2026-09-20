@@ -142,7 +142,9 @@ A sample's fit percentage is an estimate, not a prepared training count or quali
 
 The [post-training audit protocol](../experiments/main-data/post-training-audit-protocol.json) extends
 this structural audit with fixed outcome strata, tool-trajectory checks, deterministic environment
-controls and a bounded fixed-policy RL panel. It must close before a post-training study arm is selected.
+controls, a reasoning-mode measurement panel and a bounded fixed-policy RL panel. The RL panel records
+correctness-first length-efficiency curves and truncation/shortcut controls before any policy update.
+It must close before a post-training study arm is selected.
 
 SFT can initialize directly from a completed native base checkpoint. Bind its model and metadata
 hashes with `speck.export.pretrained.native_pretrained_source(directory, step)` and use the returned

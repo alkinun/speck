@@ -160,7 +160,11 @@
     },
     "post_training_audit_protocol": {
       "path": "experiments/main-data/post-training-audit-protocol.json",
-      "sha256": "9b90084b25ff6591e8773f6d65f578dac1ec86f86164da5465606c370fa09db1"
+      "sha256": "a1722427604a4685621da0e53964d7ec0c4b1422a0225e4573788cc4a8fc353f"
+    },
+    "post_training_research": {
+      "path": "experiments/main-data/post-training-research.json",
+      "sha256": "5036027c1aa274c3f7b0f1aa6b07ad3f4a80016c90a866eee7cf27b096604c99"
     }
   },
   "launch_boundary": "This closeout is an evidence handoff. It does not authorize corpus acquisition, source substitution, training, repetition, GPU spending or publication claims.",

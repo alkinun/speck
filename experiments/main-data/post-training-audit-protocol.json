@@ -33,6 +33,10 @@
     "qualification_rules": {
       "path": "experiments/main-data/qualification-rules.json",
       "sha256": "6279b75e5515a136b795056b6405745b551c3835e7956b551dd1c070bc2310b0"
+    },
+    "post_training_research": {
+      "path": "experiments/main-data/post-training-research.json",
+      "sha256": "5036027c1aa274c3f7b0f1aa6b07ad3f4a80016c90a866eee7cf27b096604c99"
     }
   },
   "audit_order": [
@@ -40,6 +44,7 @@
     "Run the deterministic structural SFT audit and freeze row/task-family exclusions.",
     "Run bounded independent outcome and tool-trajectory checks on eligible rows only.",
     "Bind supervised/context token counts and matched SFT strata for the two research arms.",
+    "Measure reasoning-mode and budget-control behavior on a useful SFT parent without creating a launch arm.",
     "Qualify fixed-policy RL prompts, verifiers and deterministic tool controls after a useful SFT parent exists."
   ],
   "sft_structural_audit": {
@@ -120,6 +125,22 @@
       "Adapter-only conversion remains a format intervention and must be reported separately."
     ]
   },
+  "reasoning_control_panel": {
+    "status": "planned_evaluation_only_after_useful_sft_parent",
+    "conditions": [
+      "always-thinking release baseline",
+      "explicit hybrid mode only when both modes are represented in training data",
+      "three task-matched requested budgets with actual reasoning-token counts"
+    ],
+    "required_measurements": [
+      "correctness and tool success by task family",
+      "requested versus realized reasoning tokens",
+      "quality per generated token and per wall-clock cost",
+      "mode-following, format, truncation and long-task regression rates"
+    ],
+    "promotion_rule": "Keep the always-thinking baseline if a candidate mode or budget bucket does not improve its intended quality-cost frontier without regressions.",
+    "boundary": "Evaluation and fixed-policy measurement only; no new SFT arm, policy update or release interface is authorized."
+  },
   "rl_feasibility_panel": {
     "status": "conditional_fixed_policy_only",
     "parent": "Selected SFT checkpoint after the SFT comparison or documented baseline-only outcome.",
@@ -136,6 +157,8 @@
       "solvable and unsolvable strata",
       "verifier validity and agreement",
       "rollout length/tool-step/retry cost",
+      "reasoning-token length and quality-cost Pareto measurements",
+      "truncation, repetition, shortcut and verifier-hacking controls",
       "environment recovery",
       "held-out transfer"
     ],
@@ -143,6 +166,7 @@
       "fixed-policy success/failure/recovery curves",
       "verifier pass validity",
       "difficulty and cost distributions",
+      "correctness-first length-efficiency curves by task family",
       "decision on policy-training infrastructure"
     ],
     "boundary": "No policy updates, RL-data ablation or production RL commitment."
