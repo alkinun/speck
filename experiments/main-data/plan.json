@@ -51,6 +51,10 @@
     "post_training_audit_protocol": {
       "path": "experiments/main-data/post-training-audit-protocol.json",
       "status": "design_only_not_training_authority"
+    },
+    "post_training_research": {
+      "path": "experiments/main-data/post-training-research.json",
+      "status": "reviewed_hypotheses_not_training_authority"
     }
   },
   "model": {
@@ -558,7 +562,8 @@
     "experiments/main-data/natural-code-candidate-manifest.json": "ebaf0bb386b4ba81e4c5400435c5652b00acacc5634570afaf8aaedd666fbae1",
     "experiments/main-data/math-candidate-manifest.json": "cbf18ff1bc36cf2caa566b21536f3e6f9e3d8749c8bf57d513e7ced6ac3e2610",
     "experiments/main-data/post-training-candidate-manifest.json": "38b1da8ff316c6a6a7ddc7580cb144367489eb73829032471daa28ee595cac9b",
-    "experiments/main-data/post-training-audit-protocol.json": "9b90084b25ff6591e8773f6d65f578dac1ec86f86164da5465606c370fa09db1"
+    "experiments/main-data/post-training-audit-protocol.json": "9b90084b25ff6591e8773f6d65f578dac1ec86f86164da5465606c370fa09db1",
+    "experiments/main-data/post-training-research.json": "5036027c1aa274c3f7b0f1aa6b07ad3f4a80016c90a866eee7cf27b096604c99"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

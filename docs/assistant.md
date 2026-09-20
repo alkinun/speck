@@ -5,11 +5,13 @@ Thinking SFT and conditional verified-reward RL form the post-training part of t
 The conversation targets below are for SFT. RL needs a separately qualified inventory of task
 prompts, reference answers/tests, verifiers and policy outcomes; it is not counted as SFT rows.
 
-The final product is an always-thinking assistant focused on agentic coding, general coding,
-mathematical reasoning and tool-mediated tasks. It has no supported non-thinking toggle or purely
-instruct mode. Short tasks may need brief reasoning; difficult tasks may need deeper reasoning and
-multiple tool steps. A possible hybrid effort policy must preserve the thinking contract. This is
-a release/training objective, not an established capability of the current base checkpoint.
+The release baseline is an always-thinking assistant focused on agentic coding, general coding,
+mathematical reasoning and tool-mediated tasks. A non-thinking or low/medium/high budget control is
+not a supported release feature yet. It remains a bounded research question: a chat-template flag or
+token cap is only useful if the model is trained to follow it and retains quality, format and
+long-task behavior. Short tasks may need brief reasoning; difficult tasks may need deeper reasoning
+and multiple tool steps. See the [post-training research synthesis](../experiments/main-data/post-training-research.json)
+for the promotion test and RL length-efficiency guardrails.
 
 The completed hardware rehearsal used complete 4K conversations, the frozen 32K base tokenizer,
 and chat format v2 with its existing three role IDs. Context-only assistant turns retain weight

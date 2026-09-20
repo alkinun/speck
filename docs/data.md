@@ -293,6 +293,11 @@ eligible supply.
 The [post-training candidate manifest](../experiments/main-data/post-training-candidate-manifest.json)
 binds the 500K-row assistant census and 44,369 reward-prompt rows. Structural serializability,
 independent outcomes, tool trajectories and fixed-policy RL feasibility remain separate gates.
+The [post-training research synthesis](../experiments/main-data/post-training-research.json) keeps
+general SFT, reasoning SFT, agent trajectories, RL prompts, preference/critique data and on-policy
+teacher feedback as separate banks. It retains the always-thinking release baseline while defining
+a bounded check for hybrid or token-budget control. Correctness remains primary in RL; any efficiency
+preference is delayed, soft and task-conditioned, with truncation, shortcut and verifier-hacking checks.
 
 The intended pretraining composition is selected broad natural text, meaningful code exposure,
 math/science, reference/documents and a controlled refined/synthetic component. Preserve everyday,

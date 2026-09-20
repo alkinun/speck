@@ -20,6 +20,22 @@ cadence. This prioritizes one testable data intervention while preserving indepe
 | [DeepSeek-V3 report](https://arxiv.org/abs/2412.19437) | A large MoE combines broad pretraining, systems work, SFT, and RL; it reports 14.8T pretraining tokens and 2.788M H800 GPU-hours for full training. | Learn from staged capability development and cost accounting. Its MoE, MLA, FP8 stack, and hardware totals are not a drop-in recipe for our scale. |
 | [DeepSeek-R1 report](https://arxiv.org/abs/2501.12948), sections 2.3–2.4 and 4 | Cold-start examples address readability/language problems; verified rewards improve reasoning. Distilled small models use curated teacher samples, and the paper compares distillation with small-model RL. | Prefer a measurable SFT/distillation baseline before building RL infrastructure. Better math scores do not establish reliable tool use, instruction following, or general quality. |
 
+## Post-training research synthesis — 2026-09-20
+
+The detailed review is recorded in [post-training-research.json](../experiments/main-data/post-training-research.json). It covers MiniCPM5, Qwen3, GLM-4.5, Kimi K1.5/K2, DeepSeek-R1, Phi-4-reasoning, OLMo 3, SmolLM3, Nemotron Nano 2, on-policy distillation and DAPO. The common pattern is a staged pipeline: a capability prior, small high-quality cold-start SFT, reasoning or agent distillation, specialist verified-reward or preference training, then general capability repair or on-policy distillation. The data banks and their evidence requirements matter more to this program than published ratios or headline scores.
+
+MiniCPM is the closest operational reference for our scale. Its public recipe separates reasoning/general SFT, specialist RL teachers and on-policy distillation, then merges the specialists. Qwen3 reports a large cost advantage for on-policy distillation over direct RL in its tested 8B comparison. GLM-4.5 and Kimi show why agent trajectories, verifiable rewards and non-verifiable rubric feedback need separate inventories. DeepSeek-R1 and Phi-4-reasoning support the cheaper sequence for a small model: teach useful reasoning with curated SFT or distillation, then use outcome-based RL as a finisher. OLMo 3 and SmolLM3 demonstrate the value of releasing intermediate stage data and checkpoints so the contribution of each stage can be measured.
+
+These reports do not justify copying their teacher sizes, token counts, reward models or compute. Our first executable sequence remains structural SFT audit, independent outcome checks, tool replay, then fixed-policy verifier feasibility. Teacher generation, rejected rows, verifier work, rollouts and policy updates remain separate ledgers. No source is admitted by this review.
+
+### Reasoning budgets and efficient RL
+
+The evidence supports studying reasoning control, but not shipping a low/medium/high interface by default. Qwen3 exposes think/no-think and a thinking budget; MiniCPM5 exposes a think switch; Kimi K1.5 warms up its length penalty; DAPO uses a soft overlong region; Kimi K2.5 reports length overfitting under rigid budget constraints. A requested cap is an inference control, while a learned budget policy requires explicit training examples and held-out mode-following tests.
+
+Speck therefore keeps the always-thinking release baseline. On a useful SFT parent, a bounded evaluation may compare always-thinking, explicitly trained hybrid mode, and three task-matched budget buckets. Promotion requires a quality/token and quality/latency frontier with no mode, format, truncation or long-task regression. For RL, correctness and safety remain primary; apply a delayed, soft, task-conditioned efficiency preference only after the verifier passes. Report Pareto curves, truncation and shortcut rates, and performance when the inference budget is increased. A global reward for shorter chains is not acceptable because it can reward guessing and incomplete tool work.
+
+This changes the post-training questions and audit outputs inside the existing reservations. It does not add a training arm, alter the always-thinking contract, admit a corpus or expand the 5,000-GPU-hour envelope.
+
 ## Frontier data engineering synthesis — 2026-09-20
 
 The supplied survey of DeepSeek, Kimi, GLM, MiniMax and MiMo reports a consistent shift from a
