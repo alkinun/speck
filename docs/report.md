@@ -133,8 +133,12 @@ runs to 100B. A later useful-checkpoint continuation study answers a separate qu
 retroactively justify the original mixture. The 600-hour pretraining study includes screening and
 confirmation, evaluations and overhead. Mid-training and post-training data studies each have
 150 hours: start comparison arms from the same useful parent, hold the objective and exposure fixed
-where testing data effects, and declare any combined intervention. The proposed mid-training pairs
-have one seed each; SFT has two paired seeds with processed/supervised exposure differences reported.
+where testing data effects, and declare any combined intervention. Capability mid-training is also an
+efficiency study: compare replay/source-only data with validated grounded or executable supervision,
+then report capability per mid-training token and GPU-hour, SFT convergence, early RL adaptation and
+held-out transfer under the same downstream recipe. Context extension remains a separate systems/data
+question. The proposed mid-training pairs have one seed each; SFT has two paired seeds with
+processed/supervised exposure differences reported.
 RL research currently covers fixed-policy prompt/verifier feasibility, not a policy-training data
 ablation. Charge comparisons separately from production. Report inconclusive results and downstream
 recipe decisions as well as gains.

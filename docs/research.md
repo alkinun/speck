@@ -1,6 +1,6 @@
 # Research informing data and training
 
-Reviewed 2026-09-19 using primary papers and official releases. These are lessons and comparisons,
+Reviewed 2026-09-20 using primary papers and official releases. These are lessons and comparisons,
 not a promise to reproduce another lab's scores or compute budget. The decisions live in [PLAN.md](../PLAN.md).
 Use these references to inform pretraining, mid-training and post-training data and actual training.
 Attention/size choices provide supporting context; MoE, attention residuals and broader architecture
@@ -19,6 +19,23 @@ cadence. This prioritizes one testable data intervention while preserving indepe
 | [MiniCPM5-2B release](https://github.com/OpenBMB/MiniCPM) | The September 7 release describes capability-focused mid-training, 400B SFT tokens, and merging specialist RL teachers through distillation. | A stronger small-model reference, not another architecture lane. It reinforces the importance of post-training and executable agent evaluation. |
 | [DeepSeek-V3 report](https://arxiv.org/abs/2412.19437) | A large MoE combines broad pretraining, systems work, SFT, and RL; it reports 14.8T pretraining tokens and 2.788M H800 GPU-hours for full training. | Learn from staged capability development and cost accounting. Its MoE, MLA, FP8 stack, and hardware totals are not a drop-in recipe for our scale. |
 | [DeepSeek-R1 report](https://arxiv.org/abs/2501.12948), sections 2.3–2.4 and 4 | Cold-start examples address readability/language problems; verified rewards improve reasoning. Distilled small models use curated teacher samples, and the paper compares distillation with small-model RL. | Prefer a measurable SFT/distillation baseline before building RL infrastructure. Better math scores do not establish reliable tool use, instruction following, or general quality. |
+
+## MidTool review — 2026-09-20
+
+Reviewed [MidTool: Mid-training Data Synthesis for Agentic Tool Use](https://arxiv.org/abs/2608.20314), including its data construction, ablation and optimization analyses. The paper trains Qwen3-4B-Base and Qwen3-8B-Base on a 20.3B-token mixture spanning web, PDF, code and tool artifacts, then keeps the downstream SFT/RL recipe fixed while comparing mid-training corpora. Its mixture contains filtered source data, context-grounded augmentation and native executable trajectories.
+
+The useful result for Speck is about data and optimization. In the fixed downstream comparison, processed source data alone improves tool-use outcomes over no mid-training; context-grounded and native trajectory branches help different endpoints; and the combined mixture is the only variant that improves all reported metrics. The authors also report lower SFT loss and faster early RL adaptation after mid-training, which makes downstream quality per SFT/RL token and per GPU-hour a first-class outcome. These results support testing mid-training as a capability prior, not merely as extra token exposure.
+
+The paper does not establish a universal mixture or a direct intelligence-per-FLOP scaling law for Speck. It uses 32 H200s for mid-training, 8 B200s for RL, strong teacher models, a tool-use-specific corpus and a fixed downstream recipe. Its deep-search transfer remains weak, and its own limitations leave the interaction between mid-training and post-training open. We therefore borrow the causal structure, validation requirements and efficiency measurements, not its ratios, teachers or compute assumptions.
+
+### Changes to the Speck study design
+
+- Keep broad pretraining and capability mid-training within the same exposure accounting, but make capability mid-training a deliberate data intervention with a useful parent checkpoint.
+- Compare a replay/source-only control with targeted grounded material and, only where environments and validation are qualified, executable trajectory data. Hold SFT/RL data, optimizer policy and evaluation identities fixed across these arms.
+- Report downstream capability versus mid-training tokens and GPU-hours, SFT convergence area/steps to a fixed target, early RL adaptation and final held-out transfer. Count source preparation, teacher generation, validation, retries and discarded trajectories.
+- Keep context extension separate from capability mid-training. A longer sequence is a systems and representation change; it cannot be used to attribute a data-mixture gain.
+
+This adds a sharper question inside the existing 150-hour mid-training research reservation. It does not create a new production allowance, architecture arm or training admission.
 
 ## Practical conclusions
 

@@ -36,7 +36,7 @@ measure. The [program overview](docs/program.md#training-lifecycle) defines stag
 | Area | Preparation target | Still to resolve |
 | --- | --- | --- |
 | Pretraining | 100B working base horizon including capability mid-training; initial 35% code, 25% math, 40% supporting material | Qualified source supply and measured GH200 cost; H100 reference implies 106.5B within the base reservation |
-| Capability mid-training | Targeted code/math/repair continuation with broad-data replay, within the base horizon | Token split, mixture, objective and changed-data continuation support remain to be qualified |
+| Capability mid-training | Targeted code/math/repair/tool-use continuation with broad-data replay, within the base horizon | Token split, source-only versus validated synthesis, objective and changed-data continuation support remain to be qualified; measure downstream quality per token and GPU-hour |
 | Context mid-training | 300-hour production cap; 16K then 32K qualification, with 128K stretch and token counts unset | Memory, useful-context learning, positional behavior and stage costs |
 | Thinking SFT | 1.5M unique qualified conversations, within a 1–2M range | Correctness, source-family deduplication, complete long examples and supervised/context token totals |
 | Reward training | Conditional verifiable math/code rewards after useful SFT | Trainer, rollout integration, verifiers, recovery and affordable measured benefit |
@@ -113,7 +113,9 @@ historical; do not repeat the completed pilot because a preparation document sti
    and development capability curves; keep final tests untouched. Record the result and limitations,
    then freeze the main mixture and schedule. Pretraining data research has 600 hours; reserve
    confirmation/evaluation cost before screening. The other 300 data-research hours belong to
-   mid-training and post-training comparisons, 150 each, on useful parent checkpoints.
+   mid-training and post-training comparisons, 150 each, on useful parent checkpoints. The mid-training
+   comparison will separate replay/source-only data from validated grounded or executable supervision and
+   report downstream capability and SFT/RL optimization efficiency per token and GPU-hour.
 6. **Pretrain, mid-train, post-train, evaluate and release through gates.** Freeze capability
    continuation and context extension separately, with their data, objectives and budget ownership.
    Preserve stage checkpoints and source-wise learning curves. Use useful stage checkpoints for

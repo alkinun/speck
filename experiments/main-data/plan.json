@@ -227,18 +227,25 @@
   "mid_training": {
     "capability_continuation": {
       "status": "planned_not_launch_ready",
-      "purpose": "Targeted code/math/repair learning with broad-data replay",
+      "purpose": "Targeted code/math/repair/tool-use capability learning with broad-data replay",
       "target_tokens": null,
       "budget_ownership": "A portion of main_pretraining target_tokens and the main_pretraining GPU-hour reservation; no additional allowance",
-      "data_recipe": "Qualify task difficulty, source families, independent correctness, overlap/replay and language/task coverage; mixture and replay share remain unfrozen",
+      "data_recipe": "Qualify task difficulty, source families, independent correctness, overlap/replay and language/task coverage; compare replay/source-only data with grounded augmentation and executable trajectories only when environments and validation qualify",
       "objective": "Existing next-token objective initially; any masked repair objective requires an explicit qualified adapter",
       "runtime_boundary": "Predeclared mixture phases exist; a dedicated changed-data checkpoint continuation contract remains to implement and qualify. Do not use a context-extension label for a data intervention.",
       "data_study": {
-        "contrast": "Selected targeted code/math/repair mixture plus replay versus the preceding-stage mixture at the same 4K context and next-token objective.",
+        "contrast": "Replay/source-only control versus targeted code/math/repair/tool-use material at the same 4K context and next-token objective; add grounded or executable synthesis only as separately validated branches",
         "parent_and_state": "Same useful parent checkpoint and optimizer state; identical declared schedule and cursor-reset policy. Requires a qualified changed-data branch.",
         "proposed_paired_seed_count": 1,
         "per_arm_training_gpu_hour_cap": 35,
-        "primary_endpoint": "Predeclared code/math development outcome; fixed source losses and general retention are guardrails. Combined mixture claim only."
+        "primary_endpoint": "Predeclared code/math/tool-use development outcome; fixed source losses, general retention, downstream SFT convergence and early RL adaptation are guardrails",
+        "efficiency_endpoints": [
+          "Capability versus mid-training tokens and allocated GPU-hours",
+          "SFT convergence area and steps to a fixed development target under the same downstream recipe",
+          "Early RL adaptation and final held-out transfer under the same rollout and verifier protocol",
+          "Preparation, teacher/generation, validation, retry and discarded-trajectory cost counted separately"
+        ],
+        "branch_controls": "Raw/source-only, grounded augmentation and executable trajectory branches are additive ablations; hold the downstream SFT/RL recipe fixed and do not treat context extension as a data branch"
       }
     },
     "context_extension": "See context_extension for the separate additional exposure, length curriculum and budget; keep capability and length effects distinct"
