@@ -376,7 +376,9 @@
       "sft_exposure": "Same useful parent, fresh optimizer and paired data-order seeds. Match planned processed positions/bucket cycles and predeclare a supervised-token mismatch tolerance. Current SFT runs complete finite epochs; arbitrary supervised-token stopping is not implemented.",
       "sft_primary_endpoint": "Predeclared held-out code/math or tool-task success metric matching the selected intervention; protocol compliance and other capabilities are guardrails.",
       "rl_scope": "Conditional fixed-SFT-policy prompt/rollout and verifier feasibility only in the 20-hour research slot. No RL training-data ablation promised. Policy optimization belongs to the separate 200-hour production cap after runtime/reward qualification.",
-      "limits": "Selection changes task distribution and possibly supervision density; disclose remaining differences rather than attributing everything to verification. Final tests remain untouched."
+      "limits": "Selection changes task distribution and possibly supervision density; disclose remaining differences rather than attributing everything to verification. Final tests remain untouched.",
+      "packet": "experiments/main-data/post-training-study-packet.json",
+      "downstream_accounting": "SFT comparison uses 100 hours, fixed-policy RL feasibility 20 hours and support 30 hours; production SFT/RL exposure remains in the separate 800-hour reservation."
     },
     "qualification_status": "experiments/corpus-audit/data-readiness.json records the full retained SFT structural census, unchanged deterministic samples at four serialized context ceilings, prompt links and bounded RL reference/schema inventory. Format compatibility is not answer quality or thinking/tool success. Preserve source records and missing-tail limitations; no admission or RL launch."
   },
@@ -507,7 +509,8 @@
     "experiments/corpus-audit/data-readiness.json": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549",
     "experiments/main-data/data-study-packet.json": "f20ab236d8bf8dd9554d04e7f4ac9713dd54b1a58c74a42ca915d543f16f2a89",
     "experiments/main-data/source-readiness.json": "a1863aae08a1ce1993765a57763f8aad2b92dc9b0de62f156979bb8f93829fee",
-    "experiments/main-data/mid-training-study-packet.json": "8227891bca9aa3a0263bf7e6bd82dd6512b091cf9062c0278f1f40d411cf638f"
+    "experiments/main-data/mid-training-study-packet.json": "8227891bca9aa3a0263bf7e6bd82dd6512b091cf9062c0278f1f40d411cf638f",
+    "experiments/main-data/post-training-study-packet.json": "970cdf7435d3edb713e6e8688c85cf37c4d8cb22de637d4c44be03dde3157462"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

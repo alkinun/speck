@@ -78,6 +78,11 @@ adds a design-only comparison of replay/source-only, targeted raw and grounded d
 parent. It measures downstream SFT convergence and early RL adaptation under fixed recipes; executable
 trajectories remain conditional on environment and verifier qualification.
 
+The [post-training data-study packet](../experiments/main-data/post-training-study-packet.json) fixes
+two paired-seed SFT selection arms and a fixed-policy RL prompt/verifier slot. It keeps structural
+format checks, independent outcome verification and environment success as separate gates; no policy
+update is implied by the research packet.
+
 ## Mid-training readiness
 
 The base loader supports token-endpoint mixture phases declared in one immutable packed manifest.

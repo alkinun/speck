@@ -63,6 +63,17 @@ PYTHONPATH=. python experiments/main-data/check_mid_training_study.py \
 
 The packet reserves 150 GPU-hours for mid-training research. Linked SFT/RL convergence and adaptation measurements belong to the separate post-training research reservation and must use the same downstream recipe across retained arms.
 
+## Post-training data-study packet
+
+[post-training-study-packet.json](post-training-study-packet.json) binds the linked SFT and RL-feasibility comparison. It uses two outcome-selection SFT arms with two paired seeds, then a fixed-policy prompt/verifier slot; it does not authorize policy updates or production RL. Validate it offline:
+
+```bash
+PYTHONPATH=. python experiments/main-data/check_post_training_study.py \
+  experiments/main-data/post-training-study-packet.json
+```
+
+The packet reserves 100 GPU-hours for SFT comparison, 20 for RL feasibility and 30 for support. Existing 500K-row stock remains format and context evidence until source, family, correctness and held-out gates close.
+
 The [source-readiness matrix](source-readiness.json) is the companion evidence index. It records the retained inventory, source-of-truth receipts, open gates and blocked arm status for each candidate bank. Validate it offline:
 
 ```bash

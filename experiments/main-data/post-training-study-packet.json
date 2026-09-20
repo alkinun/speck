@@ -1,0 +1,115 @@
+{
+  "format": "speck_post_training_data_study_packet",
+  "format_version": 1,
+  "status": "design_only_not_training_authority",
+  "date": "2026-09-20",
+  "purpose": "Bind a post-training data comparison that measures verified supervision value and conditional RL prompt feasibility from the same useful parent.",
+  "source_of_truth": {
+    "working_plan": {
+      "path": "experiments/main-data/plan.json",
+      "status": "working_targets_not_launch_settings"
+    },
+    "data_readiness": {
+      "path": "experiments/corpus-audit/data-readiness.json",
+      "sha256": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549"
+    },
+    "qualification_rules": {
+      "path": "experiments/main-data/qualification-rules.json",
+      "sha256": "6279b75e5515a136b795056b6405745b551c3835e7956b551dd1c070bc2310b0"
+    },
+    "source_readiness": {
+      "path": "experiments/main-data/source-readiness.json",
+      "sha256": "a1863aae08a1ce1993765a57763f8aad2b92dc9b0de62f156979bb8f93829fee"
+    }
+  },
+  "common_contract": {
+    "parent": "SFT arms start from the same useful parent checkpoint with model and tokenizer identities hash-bound. RL feasibility uses the selected SFT checkpoint and does not update policy weights.",
+    "sft": "Fresh optimizer and paired data-order seeds; same task and length strata, chat serialization, assistant-only masks, schedule, supervised-token target and evaluation identities.",
+    "rl": "Fixed-policy prompt, rollout and verifier feasibility only. No policy optimization or RL training-data ablation is promised by this packet.",
+    "context": "Train only within the qualified context ceiling. Complete conversations are required; no silent truncation or fabricated reasoning/tool observations.",
+    "accounting": "Count source preparation, teacher/reference generation, validation, rejected rows, retries, rollouts, scoring, training and allocated idle time separately and once.",
+    "evaluation": "Keep task families, source families and final tests disjoint from every training, teacher-generation and prompt-selection path."
+  },
+  "sft": {
+    "status": "candidate_only_pending_qualified_parent_and_data",
+    "arms": [
+      {
+        "id": "candidate_pool_control",
+        "role": "Eligible baseline selection from the common candidate pool",
+        "factor": "selection_control",
+        "status": "candidate_only_pending_source_and_family_gates",
+        "contract": "Use the predeclared task, length and category strata without outcome-verification selection."
+      },
+      {
+        "id": "outcome_verified_selection",
+        "role": "Outcome-verification selection from the same candidate pool",
+        "factor": "verification_selection",
+        "status": "candidate_only_pending_independent_outcome_gates",
+        "contract": "Select using independent code/math/tool outcome evidence while preserving the same strata, parent, serialization, mask and supervised-token target. Report selection-induced task and length differences."
+      }
+    ],
+    "paired_seed_count": 2,
+    "per_arm_per_seed_training_gpu_hour_cap": 25,
+    "training_gpu_hours": 100,
+    "primary_endpoint": "Predeclared held-out code, math or tool-task success metric matching the selection intervention.",
+    "efficiency_endpoints": [
+      "Success and retention per supervised token and allocated GPU-hour",
+      "SFT loss area and steps to a fixed development target",
+      "Reasoning length, assistant-token density and context-token exposure",
+      "Preparation, verification, teacher/reference and rejected-row cost"
+    ],
+    "guardrails": [
+      "General instruction and protocol compliance",
+      "Source-held-out loss and task-family retention",
+      "Tool-call schema validity and unresolved-call rate",
+      "Output length and failure-denominator changes"
+    ]
+  },
+  "rl_feasibility": {
+    "status": "conditional_fixed_policy_only",
+    "gpu_hours": 20,
+    "parent": "Selected SFT checkpoint after the SFT comparison, or a documented baseline-only outcome.",
+    "scope": "Sample candidate math and sandboxed-code prompt strata; run fixed-policy rollouts and verifiers with no gradient updates.",
+    "required_evidence": [
+      "Pinned prompt families and held-out references/tests",
+      "Verifier validity, deliberately wrong controls and failure reasons",
+      "Solvable and unsolvable difficulty strata",
+      "Rollout length, tool-step, retry and environment recovery cost",
+      "Agreement between in-environment outcomes and held-out task transfer"
+    ],
+    "primary_outputs": [
+      "Verifier pass validity and non-vacuous success/failure groups",
+      "Prompt difficulty and rollout cost distribution",
+      "Fixed-policy success, failure and recovery curves",
+      "Decision on whether policy-training infrastructure is justified"
+    ],
+    "boundary": "This slot does not fund an RL data comparison, policy updates or a production RL commitment."
+  },
+  "support_and_reserve": {
+    "gpu_hours": 30,
+    "includes": [
+      "SFT manifest and mask checks",
+      "held-out split and source-family checks",
+      "evaluation and result packaging",
+      "rollout/verifier setup and recovery",
+      "retries and allocated idle time"
+    ],
+    "budget_check": "100 SFT comparison + 20 RL feasibility + 30 support = 150 post-training-research GPU-hours."
+  },
+  "required_gates_before_first_arm": [
+    "Useful parent, tokenizer/chat format and checkpoint identities are hash-bound.",
+    "SFT rows pass source-use, task-family, exact/near-duplicate and final-evaluation partition gates.",
+    "Complete conversations, assistant masks, supervised-token counts and context ceilings are measured without truncation.",
+    "Outcome-verification selection uses independent checks and records rejected, unresolved and invalid cases.",
+    "RL prompts, references/tests, environments and verifiers are pinned and pass non-vacuous controls.",
+    "SFT and fixed-policy evaluation cost fits the 150-hour research reservation; production exposure remains separate."
+  ],
+  "required_outputs_for_report": [
+    "Unique tasks, source families, total/context/supervised tokens and reasoning lengths by arm.",
+    "Per-arm success, retention, convergence and cost curves with paired-seed variation.",
+    "Outcome-verification coverage, unresolved cases and false-positive/negative controls.",
+    "Fixed-policy RL feasibility, verifier reliability, rollout failures and environment cost.",
+    "Negative, inconclusive and baseline-only outcomes with the same detail as selected results."
+  ],
+  "boundary": "No post-training arm is launch-ready from this packet. It defines SFT data selection and conditional RL feasibility only; a future launch must bind a useful parent, qualified manifests, chat/mask fingerprints, evaluation partitions, verifier/runtime receipts and an explicit launch receipt."
+}
