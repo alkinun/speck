@@ -131,7 +131,8 @@ Checked-code substitution does not isolate synthesis, selection and verification
 Publish the selection decision, unfavorable/inconclusive results and limits on extrapolating short
 runs to 100B. A later useful-checkpoint continuation study answers a separate question and cannot
 retroactively justify the original mixture. The 600-hour pretraining study includes screening and
-confirmation, evaluations and overhead. Mid-training and post-training data studies each have
+confirmation, evaluations and overhead. The [mid-training packet](../experiments/main-data/mid-training-study-packet.json)
+and [post-training packet](../experiments/main-data/post-training-study-packet.json) each reserve
 150 hours: start comparison arms from the same useful parent, hold the objective and exposure fixed
 where testing data effects, and declare any combined intervention. Capability mid-training is also an
 efficiency study: compare replay/source-only data with validated grounded or executable supervision,
