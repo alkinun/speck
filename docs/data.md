@@ -276,6 +276,10 @@ The [candidate manifest preflight](../experiments/main-data/candidate-manifest-p
 the shared fields to all 12 candidates. It records five pinned identities, zero complete manifests and
 zero established eligible tokens, so the next work is qualification rather than training.
 
+The first source-specific application is the [natural-web candidate manifest](../experiments/main-data/natural-web-candidate-manifest.json).
+It records the FineWeb-Edu control, the Ultra-FineWeb HQ route, their bounded exact-overlap result and
+the evidence still required before the web contrast can enter screening.
+
 The intended pretraining composition is selected broad natural text, meaningful code exposure,
 math/science, reference/documents and a controlled refined/synthetic component. Preserve everyday,
 nontechnical topics and varied prose as well as difficult educational material. Retain source-family

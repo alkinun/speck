@@ -86,6 +86,10 @@ manifest. It changes design metadata only; it does not admit sources or alter th
 The [candidate manifest preflight](experiments/main-data/candidate-manifest-preflight.json) applies
 those fields to all 12 candidates and currently finds no complete manifest or eligible token.
 
+The [natural-web candidate manifest](experiments/main-data/natural-web-candidate-manifest.json) is the
+first source-specific application. It preserves the measured FineWeb-Edu/Ultra-FineWeb overlap while
+keeping the web contrast blocked until its remaining gates close.
+
 1. **Map the reviewed research to source evidence.** The
    [source-mapping receipt](experiments/main-data/frontier-data-source-mapping.json) now attaches each
    finding to pinned local audits and records the remaining gate implications. Extend it with a source

@@ -101,6 +101,10 @@ measurement gaps. It is an evidence index, not a source-admission decision.
 The [candidate manifest preflight](candidate-manifest-preflight.json) normalizes those requirements
 across all 12 candidates. It currently finds zero complete manifests and zero eligible tokens; this is
 the checklist for source-specific qualification, not a launch manifest.
+
+The [natural-web candidate manifest](natural-web-candidate-manifest.json) is the first source-specific
+application. It binds the FineWeb-Edu control and Ultra-FineWeb HQ candidate, preserves the measured
+overlap, and leaves source-use, family, contamination, eligible-supply and runtime gates open.
 Its horizon accounting records the 100B/125B working target separately from the current one-pass bounds: retained code evidence bounds a 30% share at 1.589B total tokens before exclusions, and HQ tokens distinct from retained FineWeb-Edu bound a 25% share at 1.405B. These are constraints, not qualified supply.
 The HQ comparison retains FineWeb-Edu as the control, keeps the pinned L1/HQ route as a candidate, and adopts no score cutoff or automatic repair rule; its sampled panels establish review evidence, not eligible yield.
 The natural-code route is similarly bounded: the retained Stack-Edu census has 0 eligible tokens established, the fixed Stack-Edu/Stack v3 cohorts retain all 44 family holds, and unresolved origins/404s remain outside any arm. Checked-code substitution stays separate until provenance and correctness gates close.

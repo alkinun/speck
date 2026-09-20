@@ -1,0 +1,187 @@
+{
+  "format": "speck_natural_web_candidate_manifest",
+  "format_version": 1,
+  "date": "2026-09-20",
+  "status": "candidate_manifest_not_admitted",
+  "purpose": "Bind the existing FineWeb-Edu control and Ultra-FineWeb HQ candidate evidence for the bounded pretraining web contrast.",
+  "evidence_boundary": "This manifest records retained inventory and bounded comparison evidence only. It does not establish rights, eligible supply, population-wide quality, contamination clearance or training authority.",
+  "source_of_truth": {
+    "source_readiness": {
+      "path": "experiments/main-data/source-readiness.json",
+      "sha256": "fb04c0d3f3b3ee72048858629ea8b0faed69d7d4f8a942c1a5a116ecaadd51d8"
+    },
+    "data_design_contract": {
+      "path": "experiments/main-data/data-design-contract.json",
+      "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
+    },
+    "web_hq_audit": {
+      "path": "experiments/corpus-audit/web-hq-stratified.json",
+      "sha256": "2c508679bfb7340799e99c77f8bbbf97d29957c5511829f0e07318647bd5d024"
+    },
+    "web_filter_validation": {
+      "path": "experiments/corpus-audit/web-filter-validation.json",
+      "sha256": "b390a64790f1b9ab83f0a54350805275810031e1afc13a5f7724b02127ab7879"
+    },
+    "data_readiness": {
+      "path": "experiments/corpus-audit/data-readiness.json",
+      "sha256": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549"
+    }
+  },
+  "common_contract": {
+    "stage": "pretraining natural-web bank only",
+    "transformation_type": "natural_source_records; no generated rewrites admitted by this manifest",
+    "source_family": "FineWeb-Edu and Ultra-FineWeb HQ remain separate source families until the joint graph is frozen",
+    "quality_vector": "Retain source score distributions, extraction/review flags and coverage strata; no new cutoff is selected here.",
+    "coverage_strata": [
+      "score_band",
+      "document_length",
+      "language_or_locale_when_present",
+      "source_domain_or_topic",
+      "extraction_review_status"
+    ],
+    "dependency_metadata": "Not required for this natural-web contrast; long-context dependency fields remain open for context-specific manifests.",
+    "contamination_status": "open; benchmark-family joins and evaluation firewall are not complete.",
+    "lineage": "Bind source revision/configuration, retained manifest and processing receipt before admission.",
+    "unique_tokens": "Report raw, retained, exact-unique, cross-source-distinct and eligible tokens separately.",
+    "exposure_tokens": "not set; frozen only after source gates and common-horizon cost qualification.",
+    "repetition_count": "not set; automatic repetition is prohibited."
+  },
+  "candidates": [
+    {
+      "id": "fineweb_edu",
+      "role": "web_control",
+      "identity": {
+        "revision": "not pinned in current source-readiness matrix",
+        "configuration": "retained FineWeb-Edu stock; exact release/configuration decision open"
+      },
+      "inventory": {
+        "documents": 2097270,
+        "retained_tokens": 2306703052,
+        "within_source_exact_duplicate_copies": 0
+      },
+      "quality_and_coverage_evidence": [
+        {
+          "path": "experiments/corpus-audit/natural-web-inspection.json",
+          "field": "validation.cross_source_scope"
+        },
+        {
+          "path": "experiments/corpus-audit/web-filter-validation.json",
+          "field": "comparison"
+        }
+      ],
+      "gate_status": {
+        "source_use": "open_no_named_decision",
+        "family_partition": "open_joint_graph",
+        "correctness": "not_applicable_for_natural_text_quality_review_open",
+        "finite_supply": "retained_count_only_not_eligible_count",
+        "runtime": "open"
+      },
+      "admitted": false,
+      "blockers": [
+        "source-use and notice decision",
+        "joint family/benchmark partition",
+        "eligible-token accounting",
+        "measured comparison cost"
+      ]
+    },
+    {
+      "id": "ultrafineweb_hq",
+      "role": "web_candidate",
+      "identity": {
+        "revision": "02c85641e3d19a854be2e09139c25adaa9518063",
+        "route": "pinned HQ/L1 candidate route; cutoff and review flags unchanged"
+      },
+      "inventory": {
+        "documents": 290761,
+        "raw_tokens": 351718255,
+        "exact_unique_tokens": 351555487,
+        "distinct_from_retained_fineweb_edu_tokens": 351237925,
+        "exact_duplicate_copies": 162,
+        "exact_duplicate_tokens": 162768,
+        "shared_unique_documents_with_fineweb_edu": 313,
+        "shared_tokens_with_fineweb_edu": 317562
+      },
+      "quality_and_coverage_evidence": [
+        {
+          "path": "experiments/corpus-audit/web-hq-stratified.json",
+          "field": "review"
+        },
+        {
+          "path": "experiments/corpus-audit/web-filter-validation.json",
+          "field": "comparison"
+        },
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "pretraining.hq"
+        },
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "pretraining.cross_source_exact_overlap"
+        }
+      ],
+      "gate_status": {
+        "source_use": "open_named_decision_and_cutoff_review",
+        "family_partition": "open_joint_graph",
+        "correctness": "not_applicable_for_natural_text_quality_review_open",
+        "finite_supply": "retained_count_only_not_eligible_count",
+        "runtime": "open"
+      },
+      "admitted": false,
+      "blockers": [
+        "source-use and notice decision",
+        "joint family/benchmark partition",
+        "review flags and cutoff decision",
+        "eligible-token accounting",
+        "measured comparison cost",
+        "full-shard eligible-token census under frozen exclusions",
+        "source-aware repair and provenance review"
+      ]
+    }
+  ],
+  "measured_overlap": {
+    "hq_exact_unique_tokens": 351555487,
+    "hq_tokens_distinct_from_retained_fineweb_edu": 351237925,
+    "shared_unique_documents": 313,
+    "shared_tokens": 317562,
+    "hq_exact_duplicate_copies": 162,
+    "hq_exact_duplicate_tokens": 162768,
+    "interpretation": "A bounded exact-overlap accounting result; it does not close family, semantic-near-duplicate, rights, quality or eligible-supply gates."
+  },
+  "comparison_contract": {
+    "contrast": "FineWeb-Edu control versus Ultra-FineWeb HQ candidate at one fixed natural-web bank share.",
+    "held_constant": [
+      "all other banks",
+      "tokenizer",
+      "serialization",
+      "packing",
+      "objective",
+      "context",
+      "exposure",
+      "validation and evaluation families"
+    ],
+    "not_allowed": [
+      "simultaneously tuning score cutoff",
+      "repairing extraction in only one arm",
+      "counting overlap twice",
+      "using retained counts as eligible supply",
+      "starting before runtime/common-horizon qualification"
+    ],
+    "study_slot": "pretraining screening web_bank_candidate; one of at most two screening interventions"
+  },
+  "required_before_screening": [
+    "Named source-use and notice decision for both candidates.",
+    "Pinned FineWeb-Edu release/configuration and complete joint family/benchmark graph.",
+    "Source-aware quality and extraction decision with coverage strata and accepted/rejected accounting.",
+    "Benchmark contamination firewall and held-out evaluation families.",
+    "Eligible unique-token counts sufficient for the common horizon.",
+    "Measured GH200 cost and common comparison horizon."
+  ],
+  "next_actions": [
+    "Resolve the FineWeb-Edu release/configuration identity and source-use decision.",
+    "Extend exact overlap into the joint family/near-duplicate and benchmark graph.",
+    "Turn review flags into an explicit source-aware extraction decision without silently changing the HQ cutoff.",
+    "Compute eligible tokens after exclusions and preserve the distinct-token overlap bound.",
+    "Keep both candidates outside the study arm until a revised source-readiness receipt closes the gates."
+  ],
+  "admission_boundary": "This is a launch-blocked candidate manifest. It does not admit either web source, authorize acquisition or change the pretraining study budget."
+}
