@@ -10,6 +10,10 @@ defines stage boundaries; [model notes](../../docs/model.md) cover supporting at
 Broader architecture research belongs to later releases. Our base starts from scratch; the future
 50,000-hour allocation is not assumed funded.
 
+The [data preparation closeout](data-closeout.json) freezes the current evidence-only corpus pass.
+External dataset research is the next input; no source is admitted and no study packet authorizes
+acquisition or training until the closeout gates are updated with pinned evidence.
+
 ## Scale
 
 Use **100B combined pretraining and capability mid-training tokens as the first-allocation

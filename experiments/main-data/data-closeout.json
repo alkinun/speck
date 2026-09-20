@@ -1,0 +1,136 @@
+{
+  "format": "speck_data_preparation_closeout",
+  "format_version": 1,
+  "date": "2026-09-20",
+  "status": "preparation_complete_external_research_intake_pending",
+  "purpose": "Freeze the current evidence-only data state before integrating externally compiled dataset research. This receipt closes local deterministic preparation; it does not admit sources or authorize acquisition or training.",
+  "completed_scope": [
+    {
+      "area": "retained_inventory_and_overlap",
+      "evidence": "data_readiness",
+      "state": "complete_for_current_retained_receipts",
+      "boundary": "Exact counts, tokenizer/index reconciliation, cross-source exact and normalized diagnostics, length bands and retained-bank bounds are recorded. Eligible supply remains zero until gates close."
+    },
+    {
+      "area": "natural_web",
+      "evidence": "source_readiness.ultrafineweb_hq",
+      "state": "bounded_qualification_complete",
+      "boundary": "HQ/control inventory, overlap, extraction follow-up and review panels are recorded. Source-use, cutoff, family graph and eligible yield remain open."
+    },
+    {
+      "area": "natural_code",
+      "evidence": "source_readiness.stack_edu_and_stack_v3",
+      "state": "bounded_qualification_complete",
+      "boundary": "Cohort reading, origin recovery and benchmark/family holds are recorded. Quota-blocked origins, notices, semantic usefulness and eligible yield remain open."
+    },
+    {
+      "area": "natural_and_refined_math",
+      "evidence": "source_readiness.finemath_4plus_ultradata_math_l2_preview_infiwebmath_4plus",
+      "state": "bounded_qualification_complete",
+      "boundary": "Inventory, overlap, configuration diagnostics and arithmetic triage are recorded. One likely source transcription error is held; broader correctness, source-use, family graph and supply remain open."
+    },
+    {
+      "area": "assistant_and_reward_data",
+      "evidence": "data_readiness.reward_data_and_recipe_review",
+      "state": "format_and_context_inventory_complete",
+      "boundary": "SFT format/context, tool-aware rehearsal and bounded RL inventory are recorded. Source rights, correctness, outcome verification, long-tail coverage and stage eligibility remain open."
+    },
+    {
+      "area": "candidate_reviews",
+      "evidence": "recipe_review",
+      "state": "public_card_and_bounded_sample_review_complete",
+      "boundary": "OpenMath, FineMath/InfiWebMath and SmolTalk reviews are pinned. Viewer responses are not revision-proof and no candidate is admitted."
+    },
+    {
+      "area": "study_design",
+      "evidence": "pretraining_study_mid_training_study_post_training_study",
+      "state": "design_only_complete",
+      "boundary": "Research contrasts, controls, budgets and gates are fixed. No packet authorizes acquisition, training or production mixture selection."
+    }
+  ],
+  "gate_summary": {
+    "source_use": {
+      "status": "open",
+      "decision_needed": "Named rights/notice/applicability decision per selected source and transformation."
+    },
+    "family_partition": {
+      "status": "open",
+      "decision_needed": "Frozen exact/near-duplicate/source-family graph with disjoint training, development and final evaluation families."
+    },
+    "correctness": {
+      "status": "open",
+      "decision_needed": "Independent checks for worked math, generated solutions, code exercises, SFT outcomes and reward references."
+    },
+    "finite_supply": {
+      "status": "open",
+      "decision_needed": "Accepted unique tokens/rows, exclusions, storage/acquisition cost and repetition policy per declared bank."
+    },
+    "runtime": {
+      "status": "open",
+      "decision_needed": "GH200 single/four-worker qualification and common comparison horizon."
+    }
+  },
+  "external_research_intake": {
+    "required_fields": [
+      "dataset_or_source_name_and_role",
+      "publisher_url_and_pinned_revision_config_split",
+      "provenance_and_source_use_or_license_evidence",
+      "processing_filter_deduplication_and_contamination_method",
+      "quality_correctness_or_outcome_validation_evidence",
+      "raw_retained_eligible_and_tokenized_counts_with_sampling_frame",
+      "reported_comparison_baseline_model_training_budget_and_metrics",
+      "known_limitations_and_failed_or_inconclusive_results",
+      "reproduction_artifacts_or_receipt_hashes"
+    ],
+    "merge_targets": [
+      "experiments/corpus-audit/recipe-review.json",
+      "experiments/main-data/source-readiness.json",
+      "experiments/main-data/data-study-packet.json",
+      "experiments/main-data/mid-training-study-packet.json",
+      "experiments/main-data/post-training-study-packet.json",
+      "docs/data.md",
+      "docs/research.md"
+    ],
+    "admission_rule": "Research notes update hypotheses and candidate metadata only. A source enters a study arm only after all five gates close in a revised source-readiness matrix and a finite manifest is hash-bound.",
+    "do_not_infer": [
+      "quality from publisher scores or model-card claims",
+      "correctness from format validity or answer agreement",
+      "source rights from host URLs or public visibility",
+      "population overlap from bounded samples",
+      "eligible supply from retained inventory",
+      "training value from a confounded architecture, schedule or token-horizon comparison"
+    ]
+  },
+  "source_of_truth": {
+    "data_readiness": {
+      "path": "experiments/corpus-audit/data-readiness.json",
+      "sha256": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549"
+    },
+    "recipe_review": {
+      "path": "experiments/corpus-audit/recipe-review.json",
+      "sha256": "42c0c6d6822b52ee3449f1917e997d039848e40a2ed5903b317d375705508948"
+    },
+    "source_readiness": {
+      "path": "experiments/main-data/source-readiness.json",
+      "sha256": "105113484a6073e4300c8d470e3ef614812d57d780a26786b2687e982cec3713"
+    },
+    "pretraining_study": {
+      "path": "experiments/main-data/data-study-packet.json",
+      "sha256": "f20ab236d8bf8dd9554d04e7f4ac9713dd54b1a58c74a42ca915d543f16f2a89"
+    },
+    "mid_training_study": {
+      "path": "experiments/main-data/mid-training-study-packet.json",
+      "sha256": "56574c25ad7893c020b6e52abb851946ff61ae8c45ac8ac4fa4e944d3736121e"
+    },
+    "post_training_study": {
+      "path": "experiments/main-data/post-training-study-packet.json",
+      "sha256": "8f5927edf1afb23f8b97021440b34ef99ed69086f5900085a27fa209b2dbb68a"
+    },
+    "qualification_rules": {
+      "path": "experiments/main-data/qualification-rules.json",
+      "sha256": "6279b75e5515a136b795056b6405745b551c3835e7956b551dd1c070bc2310b0"
+    }
+  },
+  "launch_boundary": "This closeout is an evidence handoff. It does not authorize corpus acquisition, source substitution, training, repetition, GPU spending or publication claims.",
+  "next_action": "Integrate the externally compiled dataset research into the listed merge targets, preserving every pinned identity and open gate. Do not reopen completed local audits unless the new evidence changes a source identity or a declared comparison."
+}

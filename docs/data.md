@@ -267,6 +267,19 @@ nontechnical topics and varied prose as well as difficult educational material. 
 identity across original pages, rewrites, Q&A and instruction derivatives; several dataset names
 can represent the same underlying information. Review source-use evidence per component.
 
+## Data preparation closeout — 2026-09-20
+
+The [data closeout receipt](../experiments/main-data/data-closeout.json) freezes the evidence-only
+preparation pass. Retained inventories, web/code/math qualification packets, assistant and reward
+format audits, candidate card reviews, bounded diagnostics and the three design-only study packets
+are complete for the current local evidence. No source is admitted: rights, family partitions,
+independent correctness, finite eligible supply and GH200 cost remain explicit gates.
+
+The next data change is integration of the external dataset research into the closeout's listed
+merge targets. Preserve pinned revisions and existing receipts, attach new claims to a sampling
+frame and baseline, and revise source readiness only when the five gates are supported. The closeout
+does not authorize new acquisition, repetition, GPU work or training.
+
 ### Next deliverables and decisions
 
 1. Complete origin/source-use and semantic-quality assessment on the

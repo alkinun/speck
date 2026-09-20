@@ -76,13 +76,23 @@ historical; do not repeat the completed pilot because a preparation document sti
 
 ## Immediate order of work
 
-1. **Complete main-data eligibility and coverage.** The bounded Python/JS/TS practical checks are
+The local data-preparation pass is now closed for the current evidence. The
+[data closeout](experiments/main-data/data-closeout.json) is the handoff point for externally
+compiled dataset research. Integrate that research before changing source identities, candidate
+weights or study arms; keep all five source-readiness gates explicit.
+
+1. **Integrate external dataset research into the data handoff.** Attach each finding to a pinned
+   source/configuration, sampling frame, processing method, baseline, measured result and limitation.
+   Update the candidate review and source-readiness matrix only when the evidence supports the
+   corresponding gate. Do not reopen completed deterministic audits or infer eligibility from a
+   paper's headline result.
+2. **After research intake, complete main-data eligibility and coverage.** The bounded Python/JS/TS practical checks are
    complete and [recorded](experiments/corpus-audit/practical-code-checks.json). The
    [qualification packet](experiments/main-data/QUALIFICATION.md) pins broader exclusion inputs
    and defines family separation. LiveCodeBench release-v6 public-text coverage is now pinned;
    finish the full source-family graph and intended scoring coverage before exercise derivation.
    The 16-row UltraData-Code L3 preview remains held for lineage.
-2. **Turn the completed data inventory into finite eligible arms.** The
+3. **Turn the completed data inventory into finite eligible arms.** The
    [source-readiness matrix](experiments/main-data/source-readiness.json) binds the retained inventories,
    gate status and one-pass horizon bounds to the design-only data packet. The
    [data-readiness closeout](experiments/corpus-audit/data-readiness.json) measures full retained HQ
@@ -97,16 +107,16 @@ historical; do not repeat the completed pilot because a preparation document sti
    Qualify additional supply or explicitly revise the finite research recipe/horizon; no silent replay
    or reassignment of synthetic shares. Use the measured assistant lengths and RL prompt links before
    selecting downstream packs. Adapter compatibility does not establish tool-task success.
-3. **Prepare the reference-model GH200 packet before access.** Bind current source and exact inputs,
+4. **Prepare the reference-model GH200 packet before access.** Bind current source and exact inputs,
    checks, workload sizes, measurements and stop conditions. Rebuild the historical transfer bundle;
    do not treat its old source commit as the current release. No paid run starts from this outline.
-4. **On access, qualify one worker then four.** Measure actual topology/ARM64 dependencies, kernels,
+5. **On access, qualify one worker then four.** Measure actual topology/ARM64 dependencies, kernels,
    batching, optimizer, communication, sustained throughput, restart/export and scheduler behavior.
    Declare every allocated GPU, including idle devices. Use results to cost the architecture/data
    studies and inform the main schedule, batch and horizon before the subsequent research gates.
    Reduce the 100B working horizon if measured
    cost or supply requires it.
-5. **Complete the bounded architecture study, then research the starting recipe.** Use the
+6. **Complete the bounded architecture study, then research the starting recipe.** Use the
    200-hour architecture/efficiency cap to answer one consequential question and freeze the backbone.
    Run data screening and confirmation from
    matched fresh initializations after source/runtime qualification. Use fixed held-out source losses
@@ -116,7 +126,7 @@ historical; do not repeat the completed pilot because a preparation document sti
    mid-training and post-training comparisons, 150 each, on useful parent checkpoints. The mid-training
    comparison will separate replay/source-only data from validated grounded or executable supervision and
    report downstream capability and SFT/RL optimization efficiency per token and GPU-hour.
-6. **Pretrain, mid-train, post-train, evaluate and release through gates.** Freeze capability
+7. **Pretrain, mid-train, post-train, evaluate and release through gates.** Freeze capability
    continuation and context extension separately, with their data, objectives and budget ownership.
    Preserve stage checkpoints and source-wise learning curves. Use useful stage checkpoints for
    downstream data comparisons before committing their stage budgets. Qualify context stages before
