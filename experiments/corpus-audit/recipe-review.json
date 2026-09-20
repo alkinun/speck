@@ -101,7 +101,7 @@
       "card_sha256": "8d0513c2f85e6ee1258f109017c2565f638cc10a72f1ffbee34ab8601c0dc199",
       "metadata_sha256": "a98a62bdcdfcec238fd0bbdf6cef438801759d06f00405fd1d0dd8470b56198e",
       "metadata_url": "https://huggingface.co/api/datasets/nvidia/OpenMathInstruct-2",
-      "status": "public_metadata_and_card_review_only",
+      "status": "public_card_review_and_bounded_viewer_diagnostic",
       "training_admitted": false,
       "review_boundary": "14M synthetic math problem-solution pairs; contamination explorer and source/test lineage require review before any use.",
       "review_findings": [
@@ -136,9 +136,9 @@
       "card_sha256": "77b9162c99fc6b5944da8793f18fb99c3b520ab7cdce0cc67ec8a1e47871da61",
       "metadata_sha256": "4f687cec8c84c19b28bbbba61c70fb0c6aadc5f1e26129a958492ffd2570019e",
       "metadata_url": "https://huggingface.co/api/datasets/HuggingFaceTB/finemath",
-      "status": "public_metadata_and_card_review_only",
+      "status": "public_card_review_and_bounded_viewer_diagnostic",
       "training_admitted": false,
-      "review_boundary": "FineMath and InfiMM-WebMath configurations are metadata candidates; retained FineMath 4+ evidence remains a separate stock identity.",
+      "review_boundary": "FineMath and InfiWebMath configurations have separate bounded viewer diagnostics; retained FineMath 4+ evidence remains a separate stock identity.",
       "review_findings": [
         "The card describes FineMath-3+ and FineMath-4+ plus separate InfiMM-WebMath-3+ and -4+ configurations.",
         "The published pipeline uses classifier filtering, deduplication and 13-gram benchmark decontamination; the card reports that deduplicating pages repeated between FineMath and InfiWebMath changes measured performance.",
@@ -148,7 +148,21 @@
         "Keep each configuration and release revision as a separate source family.",
         "Reconcile benchmark decontamination with Speck's held-out graph and measure cross-configuration overlap.",
         "Check mathematical extraction, completeness and correctness independently before assigning a refined share."
-      ]
+      ],
+      "bounded_sample": {
+        "receipt_path": "experiments/corpus-audit/finemath-config-sample.json",
+        "receipt_sha256": "3a6a7734e4cc84048b851d8fc0a9dd87e67df942e61258d1bd782db2f7f3ff57",
+        "audit_script": "experiments/corpus-audit/audit_finemath_configs.py",
+        "audit_script_sha256": "a165680fb8aa3140e370a59f2a2baca2c63c5edc524c61f94558a60c7355d146",
+        "rows_per_config": {
+          "finemath-4plus": 64,
+          "infiwebmath-3plus": 64
+        },
+        "exact_normalized_text_overlap": 0,
+        "exact_url_overlap": 0,
+        "independent_correctness": false,
+        "viewer_revision_verified": false
+      }
     },
     {
       "repository": "HuggingFaceTB/smoltalk",
@@ -174,7 +188,7 @@
       ]
     }
   ],
-  "boundary": "Public metadata/cards only; no new dataset payloads, access acceptance, training admission, or GPU jobs. Pins describe this review, not the identity of older retained stock.",
+  "boundary": "Public metadata/card reviews plus explicitly linked bounded viewer diagnostics; no bulk corpus acquisition, access acceptance, training admission or GPU jobs. Card pins do not verify live-viewer revisions or identify older retained stock.",
   "local_evidence": {
     "sft_stock_audit": {
       "original_path": "/mnt/speck-data/speck/flagship-preparation-20260917/sft-audit.json",

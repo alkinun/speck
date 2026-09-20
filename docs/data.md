@@ -219,8 +219,9 @@ and the existing stock's length-selection bias.
 ### Focused candidate queue
 
 [recipe-review.json](../experiments/corpus-audit/recipe-review.json) pins the ten newly reviewed
-public cards and snapshots existing local SFT receipts. New cards were inspected; new corpus
-payloads were not acquired. These revision pins are separate from older stock identities.
+public cards, snapshots existing local SFT receipts and links bounded viewer-sample diagnostics.
+The viewer samples are separate from bulk acquisition and older retained-stock identities;
+card revision pins do not establish the revision served by the live viewer.
 
 | Priority | Source | Specific question |
 | --- | --- | --- |
@@ -228,7 +229,7 @@ payloads were not acquired. These revision pins are separate from older stock id
 | First: code | Retained Stack-Edu, Stack v3 and qualified checked exercises | Can we improve practical coding with verified task/solution pairs while retaining languages, libraries, tests and documentation? Follow the existing code plan. |
 | First: thinking assistant | UltraData-SFT `think`, retained agent traces and selected [SmolTalk2](https://huggingface.co/datasets/HuggingFaceTB/smoltalk2) reasoning components | Qualify code/math reasoning and complete tool trajectories; retain brief reasoning for simple tasks, with no non-thinking mode. |
 | First: math | UltraData-Math L2/L3 and [Nemotron-CC-Math-v1](https://huggingface.co/datasets/nvidia/Nemotron-CC-Math-v1) `4plus` against FineMath | Compare extraction, worked-solution correctness and unique source coverage. Nemotron's published continuation comparison uses an 8B model, not ours. |
-| Next: synthetic math candidates | [OpenMathInstruct-2](https://huggingface.co/datasets/nvidia/OpenMathInstruct-2) and FineMath's [InfiWebMath 3+](https://huggingface.co/datasets/HuggingFaceTB/finemath/tree/main/infiwebmath-3plus) subset | Measure teacher provenance, answer/oracle correctness, contamination against math evaluations, length tails and cross-source overlap before considering a small synthetic/refined-math share. These are review candidates, not retained or admitted stock. |
+| Next: additional math candidates | Synthetic [OpenMathInstruct-2](https://huggingface.co/datasets/nvidia/OpenMathInstruct-2) and filtered web [InfiWebMath 3+](https://huggingface.co/datasets/HuggingFaceTB/finemath/tree/main/infiwebmath-3plus) | Measure source provenance, teacher provenance for generated solutions, independent correctness, contamination, length tails and cross-source overlap. These remain review candidates outside the retained training inventory. |
 | Next: staged mixture | The [Cagliostro v3 recipe](research.md#cagliostro-v3-review--2026-09-20) and its late math reweighting | Test phase-conditioned weights only as a predeclared replacement or later ablation with schedule, total exposure and validation fixed. Do not add a fourth screening arm or attribute a cooldown result to data alone. |
 | Next: documents | English [FinePDFs-Edu](https://huggingface.co/datasets/HuggingFaceFW/finepdfs-edu), alongside retained papers/reference material | Inspect educational document coverage, extraction/figure dependencies and intact long-document supply for context extension. Educational filtering alone does not certify long-range coherence. |
 | Secondary task/reference pool | [Dolci-Instruct-SFT](https://huggingface.co/datasets/allenai/Dolci-Instruct-SFT), UltraData-SFT `no_think` | Candidate tasks/reference answers only; any derived thinking examples need verified reasoning. Do not directly import a non-thinking response mode. |
@@ -239,6 +240,16 @@ checks 80 fixed-offset rows for schema, source strata, lengths and boxed-answer 
 It finds zero exact normalized matches against the pinned 1,319-row GSM8K evaluation file, while
 10 sampled rows carry GSM8K-derived source labels. This is diagnostic evidence only: MATH, derived
 variants, semantic overlap, independent correctness and source-use decisions remain open.
+
+The [FineMath/InfiWebMath diagnostic](../experiments/corpus-audit/finemath-config-sample.json)
+checks 64 rows from each configuration and finds no exact normalized text or literal URL overlap
+between these samples. FineMath exposes top-level crawl/WARC and language fields absent from the
+InfiWebMath schema; missing fields do not establish missing provenance in nested metadata.
+The sampled continuous-score minima are 3.5 for FineMath 4+ and 2.546875 for InfiWebMath 3+:
+configuration labels must not be implemented as equivalent continuous-score cutoffs.
+Reported token counts use upstream metadata, not the Speck tokenizer. These small, fixed-offset
+samples establish neither population overlap nor relative quality. Next, compare pinned source
+files, join held-out families and review complete worked solutions with independent checks.
 
 The intended pretraining composition is selected broad natural text, meaningful code exposure,
 math/science, reference/documents and a controlled refined/synthetic component. Preserve everyday,

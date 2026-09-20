@@ -1,0 +1,315 @@
+{
+  "boundary": "Schema, URL hosts, metadata presence, score/length summaries and bounded exact-key overlap only. No raw text is retained; no correctness, source-use, finite-supply, contamination clearance or training admission follows.",
+  "bounded_overlap": {
+    "boundary": "Text uses NFKC, collapsed whitespace and case folding; URLs use literal equality. Matches cover these 128 rows only; semantic, n-gram, benchmark and population overlap are not measured.",
+    "exact_normalized_text_overlap": 0,
+    "exact_url_overlap": 0,
+    "normalized_text_keys": {
+      "finemath-4plus": 64,
+      "infiwebmath-3plus": 64
+    }
+  },
+  "checked_utc": "2026-09-20T07:13:42.771917+00:00",
+  "config_summaries": {
+    "finemath-4plus": {
+      "char_count": {
+        "max": 33334,
+        "median": 2397.5,
+        "min": 217,
+        "present": 64
+      },
+      "int_score": {
+        "max": 5,
+        "median": 4.0,
+        "min": 4,
+        "present": 64
+      },
+      "language_counts": {
+        "en": 64
+      },
+      "metadata_present": 64,
+      "rows": 64,
+      "score": {
+        "max": 4.71875,
+        "median": 3.859375,
+        "min": 3.5,
+        "present": 64
+      },
+      "token_count": {
+        "max": 8893,
+        "median": 645.0,
+        "min": 86,
+        "present": 64
+      },
+      "url_hosts": {
+        "ambitiousbaba.com": 2,
+        "andrewshitov.com": 1,
+        "apcalc2008.pbworks.com": 1,
+        "artofproblemsolving.com": 1,
+        "athensmutualaid.net": 1,
+        "certisured.com": 1,
+        "convertoctopus.com": 2,
+        "dailybrainteaser.blogspot.com": 1,
+        "docplayer.net": 1,
+        "electronics.stackexchange.com": 1,
+        "esingaporemath.com": 1,
+        "ex.burnettmediagroup.com": 1,
+        "forum.allaboutcircuits.com": 1,
+        "gdevtest.geeksforgeeks.org": 1,
+        "graduateassignmenthelp.com": 1,
+        "im.kendallhunt.com": 1,
+        "itzone.com.vn": 1,
+        "joshisanerd.com": 1,
+        "maslinandco.com": 1,
+        "mathhelpforum.com": 1,
+        "mathphysics.com": 1,
+        "mathwaycalculus.com": 1,
+        "mymathforum.com": 1,
+        "prezi.com": 1,
+        "puzzle.queryhome.com": 1,
+        "puzzling.stackexchange.com": 1,
+        "science.answers.com": 1,
+        "socratic.org": 3,
+        "stackoverflow.com": 1,
+        "studylib.net": 1,
+        "tsm2.blogspot.com": 1,
+        "unlearningmath.com": 1,
+        "vectorlinux.com": 1,
+        "web2.0calc.com": 2,
+        "www.12000.org": 1,
+        "www.ask.com": 1,
+        "www.brainbashers.com": 1,
+        "www.clutchprep.com": 1,
+        "www.coursehero.com": 2,
+        "www.cscodehelp.com": 1,
+        "www.enotes.com": 1,
+        "www.fmaths.com": 1,
+        "www.gradesaver.com": 1,
+        "www.hackmath.net": 1,
+        "www.jiskha.com": 4,
+        "www.nytimes.com": 1,
+        "www.physicsforums.com": 2,
+        "www.sawaal.com": 1,
+        "www.securitysales.com": 1,
+        "www.slidesearchengine.com": 1,
+        "www.teacherspayteachers.com": 1,
+        "www.weegy.com": 1,
+        "www.wyzant.com": 1,
+        "www.yaclass.in": 1
+      }
+    },
+    "infiwebmath-3plus": {
+      "char_count": {
+        "max": 48434,
+        "median": 3507.5,
+        "min": 414,
+        "present": 64
+      },
+      "int_score": {
+        "max": 5,
+        "median": 3.0,
+        "min": 3,
+        "present": 64
+      },
+      "language_counts": {},
+      "metadata_present": 64,
+      "rows": 64,
+      "score": {
+        "max": 4.71875,
+        "median": 3.3125,
+        "min": 2.546875,
+        "present": 64
+      },
+      "token_count": {
+        "max": 11673,
+        "median": 839.0,
+        "min": 127,
+        "present": 64
+      },
+      "url_hosts": {
+        "aic-components.com": 1,
+        "answers.everydaycalculation.com": 2,
+        "blender.stackexchange.com": 1,
+        "casestudyhelp.com": 1,
+        "ch.mathworks.com": 1,
+        "childrenspolicycoalition.org": 1,
+        "comonad.com": 1,
+        "cstheory.stackexchange.com": 1,
+        "edurev.in": 1,
+        "elimbure.com": 1,
+        "encyclopediaofmath.org": 1,
+        "exploringbits.com": 1,
+        "forums.fast.ai": 1,
+        "fr.slideserve.com": 2,
+        "freeteacherworksheets.netlify.app": 1,
+        "gottwurfelt.com": 1,
+        "itprospt.com": 1,
+        "ivypanda.com": 1,
+        "jeremykun.com": 1,
+        "jimtassano.com": 1,
+        "lavelle.chem.ucla.edu": 1,
+        "math.stackexchange.com": 1,
+        "myprojectideas.com": 1,
+        "nazarethsr.org": 1,
+        "numbermatics.com": 2,
+        "olympiacapitalresearch.com": 1,
+        "opnworks.com": 1,
+        "philmintz.tripod.com": 1,
+        "physics.stackexchange.com": 2,
+        "pipingdesigner.co": 1,
+        "powerbiconsultingservices.com": 1,
+        "proofwiki.org": 1,
+        "raftulcuinitiativa.provobis.ro": 1,
+        "robertvienneau.blogspot.com": 1,
+        "selfstudy365.com": 1,
+        "sites.science.oregonstate.edu": 1,
+        "socratic.org": 1,
+        "stats.stackexchange.com": 1,
+        "studysoup.com": 1,
+        "theinfolist.com": 1,
+        "thinkmath.edc.org": 1,
+        "users.rust-lang.org": 1,
+        "uwaterloo.ca": 1,
+        "www.arteglass.com.tr": 1,
+        "www.clutchprep.com": 1,
+        "www.convertunits.com": 1,
+        "www.dyclassroom.com": 1,
+        "www.easycalculation.com": 1,
+        "www.esaral.com": 1,
+        "www.get-digital-help.com": 1,
+        "www.gradesaver.com": 1,
+        "www.ncetm.org.uk": 1,
+        "www.numberempire.com": 1,
+        "www.physicsforums.com": 1,
+        "www.refreshnotes.com": 1,
+        "www.sarthaks.com": 1,
+        "www.shaalaa.com": 1,
+        "www.thoughtco.com": 1,
+        "www.tutorialspoint.com": 1,
+        "www.wideworldschoolsupplies.com": 1
+      }
+    }
+  },
+  "configs": {
+    "finemath-4plus": {
+      "features": [
+        "url",
+        "fetch_time",
+        "content_mime_type",
+        "warc_filename",
+        "warc_record_offset",
+        "warc_record_length",
+        "text",
+        "token_count",
+        "char_count",
+        "metadata",
+        "score",
+        "int_score",
+        "crawl",
+        "snapshot_type",
+        "language",
+        "language_score"
+      ],
+      "schema_validated": true
+    },
+    "infiwebmath-3plus": {
+      "features": [
+        "url",
+        "metadata",
+        "score",
+        "int_score",
+        "token_count",
+        "char_count",
+        "text"
+      ],
+      "schema_validated": true
+    }
+  },
+  "corpus_code_executed": false,
+  "dataset": "HuggingFaceTB/finemath",
+  "format": "speck_finemath_config_bounded_sample",
+  "format_version": 1,
+  "responses": [
+    {
+      "config": "finemath-4plus",
+      "length": 16,
+      "offset": 0,
+      "response_sha256": "1ea65dea26f64ab22cb9799a00b968c245534b14b37ddb723cf05cb8b4d2fa0e",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=HuggingFaceTB%2Ffinemath&config=finemath-4plus&split=train&offset=0&length=16"
+    },
+    {
+      "config": "finemath-4plus",
+      "length": 16,
+      "offset": 1000000,
+      "response_sha256": "7128533249cc18ec53ad348fed1a03f3dd77f9fc2518631c583ecf6d1a1e01e8",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=HuggingFaceTB%2Ffinemath&config=finemath-4plus&split=train&offset=1000000&length=16"
+    },
+    {
+      "config": "finemath-4plus",
+      "length": 16,
+      "offset": 5000000,
+      "response_sha256": "acba0bbf0447be5205847a294a1776ab5f494d30143d3bc086db43beffe3d772",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=HuggingFaceTB%2Ffinemath&config=finemath-4plus&split=train&offset=5000000&length=16"
+    },
+    {
+      "config": "finemath-4plus",
+      "length": 16,
+      "offset": 6000000,
+      "response_sha256": "f7dc77900b85c995a7b007e0e1e92dad333048679e8848e405e807b5dc6257c7",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=HuggingFaceTB%2Ffinemath&config=finemath-4plus&split=train&offset=6000000&length=16"
+    },
+    {
+      "config": "infiwebmath-3plus",
+      "length": 16,
+      "offset": 0,
+      "response_sha256": "ab2689f19dcf92bc6df47f7f6eb3ac3698b1d258d6e8eca89096b3820ee90ffd",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=HuggingFaceTB%2Ffinemath&config=infiwebmath-3plus&split=train&offset=0&length=16"
+    },
+    {
+      "config": "infiwebmath-3plus",
+      "length": 16,
+      "offset": 1000000,
+      "response_sha256": "d9597f6a54c6d168c0aa3106cf70358dd660a072eec04be930d1112515ae8024",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=HuggingFaceTB%2Ffinemath&config=infiwebmath-3plus&split=train&offset=1000000&length=16"
+    },
+    {
+      "config": "infiwebmath-3plus",
+      "length": 16,
+      "offset": 5000000,
+      "response_sha256": "438cdf7eb174718f2d60941ff86f62076796271143ba9e0692592ab127a1422c",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=HuggingFaceTB%2Ffinemath&config=infiwebmath-3plus&split=train&offset=5000000&length=16"
+    },
+    {
+      "config": "infiwebmath-3plus",
+      "length": 16,
+      "offset": 7000000,
+      "response_sha256": "3ffc8bd2f9d23f44ee4dea54ed57367ffac7ccb28557bffc2f7302674fbb296b",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=HuggingFaceTB%2Ffinemath&config=infiwebmath-3plus&split=train&offset=7000000&length=16"
+    }
+  ],
+  "revision_boundary": "The live dataset viewer is not revision-pinned. Response hashes identify the sampled API payloads, not a verified join to the separately pinned dataset card or retained stock.",
+  "sample_design": {
+    "offsets": {
+      "finemath-4plus": [
+        0,
+        1000000,
+        5000000,
+        6000000
+      ],
+      "infiwebmath-3plus": [
+        0,
+        1000000,
+        5000000,
+        7000000
+      ]
+    },
+    "rows_per_config": {
+      "finemath-4plus": 64,
+      "infiwebmath-3plus": 64
+    },
+    "rows_per_offset": 16,
+    "selection": "Fixed valid offsets within each documented train split; diagnostic sample, not a population estimate."
+  },
+  "split": "train",
+  "training_admitted": false
+}
