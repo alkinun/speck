@@ -96,11 +96,16 @@ such; mixture-phase support alone is not evidence of a qualified changed-data co
 For SFT, explain assistant-only masks, complete conversations, tool serialization, brief/deep reasoning
 and actual task outcomes. Count processed context, padding, supervised reasoning and final-answer
 tokens separately. The always-thinking protocol does not make formatting evidence of reasoning quality.
+The [post-training research synthesis](../experiments/main-data/post-training-research.json) defines the
+separate general, reasoning, agent, verifier, preference and on-policy-feedback data banks. Treat any
+hybrid or token-budget control as an evaluated hypothesis, not a release feature.
 
 For any executed RL stage, describe prompt selection/difficulty, reference answers, code tests and
 verifiers, rollout limits, reward definitions and optimization. Report all-fail/all-pass groups,
-reward failures, reasoning-length growth, held-out transfer and general regressions. Count generation,
-scoring, updates and retries. Preserve the SFT checkpoint and explain whether RL justified promotion.
+reward failures, reasoning-length growth, task-conditioned quality/token curves, held-out transfer and
+general regressions. Count generation, scoring, updates and retries. Preserve the SFT checkpoint and
+explain whether RL justified promotion. Correctness must be established before applying any efficiency
+preference to response length.
 RL remains planned until its runtime and verifiers are qualified; an RL dataset is not an RL result.
 
 ## 4. Model choices and implementation

@@ -176,8 +176,8 @@ SFT trajectories. Verifier qualification, source-use decisions and a useful pare
 
 The [post-training audit protocol](../experiments/main-data/post-training-audit-protocol.json) fixes
 the bounded review order: structural SFT audit, stratified independent outcome checks, tool-trajectory
-validation, then fixed-policy verifier feasibility. It keeps query-only prompts separate from successful
-assistant trajectories and does not authorize SFT or RL.
+validation, reasoning-mode measurement, then fixed-policy verifier feasibility. It keeps query-only
+prompts separate from successful assistant trajectories and does not authorize SFT or RL.
 
 ## Stage and budget ownership
 
