@@ -214,9 +214,9 @@ def arguments(argv=None):
     )
     parser.add_argument(
         "--branch-kind",
-        choices=("same", "context"),
+        choices=("same", "context", "data"),
         default="same",
-        help="same-recipe comparison or explicit progressive-context continuation",
+        help="same-recipe comparison, progressive-context continuation, or changed-data continuation",
     )
     parser.add_argument(
         "--no-compile",
@@ -387,12 +387,23 @@ class BaseTrainer:
         if not self.branching and self.cli.branch_schedule != "inherit":
             raise ValueError("--branch-schedule new requires --branch-from")
         if not self.branching and self.cli.branch_kind != "same":
-            raise ValueError("--branch-kind context requires --branch-from")
+            raise ValueError("a non-same branch kind requires --branch-from")
         if self.branching and self.cli.branch_kind == "context":
             if self.cli.branch_schedule != "new":
                 raise ValueError("context branches require --branch-schedule new")
-            if args.training_phase != "context_extension":
-                raise ValueError("context branches require training_phase context_extension")
+            required_phase = "context_extension"
+            if args.training_phase != required_phase:
+                raise ValueError(
+                    f"{self.cli.branch_kind} branches require training_phase {required_phase}"
+                )
+        if self.branching and self.cli.branch_kind == "data":
+            if self.cli.branch_schedule != "inherit":
+                raise ValueError("data branches require --branch-schedule inherit")
+            required_phase = "data_continuation"
+            if args.training_phase != required_phase:
+                raise ValueError(
+                    f"{self.cli.branch_kind} branches require training_phase {required_phase}"
+                )
         if args.resume is None and latest(args.output_dir) is not None:
             raise FileExistsError(
                 f"checkpoints already exist: {args.output_dir}; pass --resume STEP"
@@ -419,7 +430,7 @@ class BaseTrainer:
             if self.metadata
             else args.data_token_offset
         )
-        if self.parent_metadata and self.cli.branch_kind == "context":
+        if self.parent_metadata and self.cli.branch_kind in ("context", "data"):
             self.data_token_offset = 0
 
     def _initialize_runtime(self):
@@ -632,6 +643,7 @@ class BaseTrainer:
         if parent_metadata is None:
             raise RuntimeError("branch metadata was not loaded")
         context_branch = self.cli.branch_kind == "context"
+        data_branch = self.cli.branch_kind == "data"
         stored_config = ArchitectureConfig.from_dict(parent_metadata["config"]).settings()
         architecture_matches = (
             context_compatible_architecture(
@@ -642,7 +654,9 @@ class BaseTrainer:
             if context_branch
             else stored_config == self.config.settings()
         )
-        manifest_matches = context_branch or parent_metadata["manifest"] == self.manifest_hash
+        manifest_matches = (context_branch or data_branch) or (
+            parent_metadata["manifest"] == self.manifest_hash
+        )
         if not architecture_matches or not manifest_matches:
             raise ValueError("branch parent does not match the model or dataset")
         branch_settings = {**vars(self.args), "world_size": self.world_size}
@@ -671,7 +685,7 @@ class BaseTrainer:
             )
         self.model.load_state_dict(model_state)
         self.optimizer.load_state_dict(optimizer_state)
-        if context_branch:
+        if context_branch or data_branch:
             self.data_state = None
         else:
             self.data_state = parent_metadata["data_state"]

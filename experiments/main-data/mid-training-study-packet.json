@@ -3,7 +3,7 @@
   "format_version": 1,
   "status": "design_only_not_training_authority",
   "date": "2026-09-20",
-  "purpose": "Bind a bounded capability mid-training comparison that measures data value and downstream optimization efficiency from a useful parent checkpoint.",
+  "purpose": "Bind bounded capability and context mid-training comparisons that measure data value and downstream optimization efficiency from a useful parent checkpoint.",
   "research_basis": "The MidTool review in docs/research.md motivates separating raw source, grounded augmentation and executable trajectory supervision while holding downstream post-training fixed.",
   "source_of_truth": {
     "working_plan": {
@@ -12,7 +12,7 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "fb04c0d3f3b3ee72048858629ea8b0faed69d7d4f8a942c1a5a116ecaadd51d8"
+      "sha256": "0c9ebecead7aa3a5803de9a9b2aa888c5026e397a75f7ff3f52d3641c616e9ec"
     },
     "qualification_rules": {
       "path": "experiments/main-data/qualification-rules.json",
@@ -90,26 +90,53 @@
     ]
   },
   "screening": {
-    "maximum_arms": 3,
+    "maximum_arms": 2,
     "paired_seed_count": 1,
-    "training_gpu_hours": 75,
-    "per_arm_training_cap_gpu_hours": 25,
-    "order": "Run the replay control and only candidates whose source, derivation and validation gates pass. Protect confirmation and linked downstream evaluation reservations.",
+    "training_gpu_hours": 70,
+    "per_arm_training_cap_gpu_hours": 35,
+    "order": "Run the replay control paired with exactly one candidate whose source, derivation and validation gates pass. Keep the other candidate options conditional and protect linked downstream evaluation reservations.",
     "primary_evidence": "Capability and source/domain loss at matched mid-training exposure, with retention and preparation cost.",
     "efficiency_evidence": "Compare capability per mid-training token and GPU-hour, plus the downstream SFT convergence curve under the fixed recipe.",
     "failure_rule": "If targeted data does not improve the predeclared endpoint or worsens retention/cost, retain the eligible replay control or record an explicit redesign."
   },
   "confirmation": {
-    "arms": 2,
-    "new_paired_seed_count": 1,
-    "training_gpu_hours": 50,
-    "per_arm_per_seed_cap_gpu_hours": 25,
-    "selected_candidate": "One screening candidate, or a documented control-only/inconclusive outcome.",
+    "arms": 0,
+    "new_paired_seed_count": 0,
+    "training_gpu_hours": 0,
+    "per_arm_per_seed_cap_gpu_hours": 0,
+    "selected_candidate": "The capability comparison is the replay control paired with exactly one selected candidate; the remaining candidate options stay conditional.",
     "controls": "Same useful parent identity, declared optimizer policy, exposure, validation, downstream SFT recipe and final-test boundary.",
-    "claim_boundary": "One paired confirmation seed supports a bounded data/optimization result, not a global mixture optimum or guaranteed scaling law."
+    "claim_boundary": "The paired capability comparison supports a bounded data/optimization result, not a global mixture optimum or guaranteed scaling law."
+  },
+  "context_study": {
+    "purpose": "Separate context-extension data value from capability-data value while preserving the selected capability-production endpoint.",
+    "status": "candidate_only_pending_context_continuation_qualification",
+    "arms": [
+      {
+        "id": "context_repack_control",
+        "role": "Unchanged-domain replay repacked into coherent long records",
+        "contract": "Keep the selected domain weights and source-family boundaries unchanged while increasing sequence length."
+      },
+      {
+        "id": "context_long_reweighted",
+        "role": "Long-context candidate mix",
+        "contract": "Use the proposed long mix only after repository/import/document relationships, grounded cross-document records and family reuse are qualified."
+      }
+    ],
+    "context_schedule": "4K parent to 16K comparison; 32K remains a gated production step.",
+    "paired_seed_count": 1,
+    "training_gpu_hours": 50,
+    "per_arm_training_cap_gpu_hours": 25,
+    "endpoints": [
+      "fixed-suffix loss with related prefixes",
+      "retrieval across positions and multi-file/document tasks",
+      "short-task retention",
+      "source-family reuse and preparation cost"
+    ],
+    "boundary": "This comparison is inside the declared 150-hour mid-training research envelope and is distinct from the selected 300-hour context production run."
   },
   "support_and_reserve": {
-    "gpu_hours": 25,
+    "gpu_hours": 30,
     "includes": [
       "manifest and lineage checks",
       "packing and replay checks",
@@ -117,7 +144,7 @@
       "SFT convergence evaluation packaging",
       "retries, recovery and allocated idle time"
     ],
-    "budget_check": "75 screening + 50 confirmation + 25 support = 150 mid-training-research GPU-hours."
+    "budget_check": "70 capability comparison + 50 context comparison + 30 support = 150 mid-training-research GPU-hours."
   },
   "linked_downstream_evaluation": {
     "budget_owner": "post_training_research_150_gpu_hours",

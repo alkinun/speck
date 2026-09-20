@@ -92,10 +92,13 @@ compatible with an ordinary checkpoint branch.
 
 `--branch-kind same` requires the parent's model and data manifest, and inherits optimizer/data
 state. `--branch-kind context` allows a changed manifest and context configuration under
-`training_phase: context_extension`, resets the data cursor and retains optimizer state. Qualify
-actual long-context workloads separately. A dedicated changed-data continuation contract remains
-to be implemented/qualified for capability mid-training and any later continuation-data arms; do not
-mislabel those as context runs. Any new masked repair objective also requires a validated adapter.
+`training_phase: context_extension`, resets the data cursor and retains optimizer state. The explicit
+`--branch-kind data` path allows a changed manifest under `training_phase: data_continuation`; it
+requires the same architecture, sequence length, optimizer semantics, schedule and world-size
+contract as the parent, resets only the data cursor, and retains the parent optimizer state. Data
+branches require `--branch-schedule inherit`; context branches remain the only path that changes
+sequence capacity. Qualify actual workloads separately. Any new masked repair objective also requires
+a validated adapter.
 
 Before executing either part of mid-training, freeze parent identity, objective, data, schedule,
 optimizer policy and cost, and qualify resume. Capability continuation consumes a portion of the
@@ -139,6 +142,24 @@ The audit counts every row and tokenizes a deterministic sample per source/subse
 hashes, tokenizer identity, rejection reasons, and complete-conversation fit without truncation.
 Pass conversation shards only: Hugging Face `cache-*.arrow` files can contain shuffle indices.
 A sample's fit percentage is an estimate, not a prepared training count or quality score.
+
+After structural adaptation, run the separate outcome gate in
+`speck.training.sft_verify.verify_sft_outcomes`. Rows must declare one of `exact_text`, `code`,
+or `tool` under `verification`; rows without a declaration remain `unverified`. Exact answers are
+compared literally after trimming, code rows execute the frozen tests through the fail-closed
+sandbox, and tool rows replay the declared calls against the deterministic tool implementation
+before checking the recorded results and final answer. Validate the resulting receipt with
+`verify_sft_outcome_receipt` and retain its input fingerprint. This receipt is a selection and
+analysis artifact, not a replacement for held-out evaluation or structural SFT validation.
+Use `select_verified_sft_rows(rows, receipt)` for downstream selection; it fails if the row order
+or contents differ from the receipt's input fingerprint.
+
+The same gate is available for local shards:
+
+```bash
+uv run --no-sync python -m scripts.sft_verify /external/cache/sft-train.parquet \
+  --output /external/reports/sft-outcomes.json
+```
 
 The [post-training audit protocol](../experiments/main-data/post-training-audit-protocol.json) extends
 this structural audit with fixed outcome strata, tool-trajectory checks, deterministic environment

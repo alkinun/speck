@@ -41,8 +41,8 @@ def validate(packet_path):
     screening = packet["screening"]
     confirmation = packet["confirmation"]
     support = packet["support_and_reserve"]
-    if screening["maximum_arms"] != len(packet["arms"]):
-        raise ValueError("screening arm count does not match arm definitions")
+    if screening["maximum_arms"] != 2:
+        raise ValueError("capability comparison must remain a paired control/candidate study")
     if screening["training_gpu_hours"] != (
         screening["maximum_arms"] * screening["per_arm_training_cap_gpu_hours"]
     ):
@@ -53,11 +53,16 @@ def validate(packet_path):
         * confirmation["per_arm_per_seed_cap_gpu_hours"]
     ):
         raise ValueError("confirmation budget does not match its seed and arm caps")
-    total = (
-        screening["training_gpu_hours"] + confirmation["training_gpu_hours"] + support["gpu_hours"]
-    )
+    context = packet["context_study"]
+    if context["training_gpu_hours"] != (
+        len(context["arms"])
+        * context["paired_seed_count"]
+        * context["per_arm_training_cap_gpu_hours"]
+    ):
+        raise ValueError("context budget does not match its arm and seed caps")
+    total = screening["training_gpu_hours"] + context["training_gpu_hours"] + support["gpu_hours"]
     if total != 150 or support["budget_check"] != (
-        "75 screening + 50 confirmation + 25 support = 150 mid-training-research GPU-hours."
+        "70 capability comparison + 50 context comparison + 30 support = 150 mid-training-research GPU-hours."
     ):
         raise ValueError("mid-training research reservation must total 150 GPU-hours")
     if (
@@ -72,9 +77,10 @@ def validate(packet_path):
     return {
         "format": packet["format"],
         "status": packet["status"],
-        "arms": len(packet["arms"]),
+        "candidate_options": len(packet["arms"]),
         "screening_gpu_hours": screening["training_gpu_hours"],
         "confirmation_gpu_hours": confirmation["training_gpu_hours"],
+        "context_gpu_hours": context["training_gpu_hours"],
         "support_gpu_hours": support["gpu_hours"],
         "total_gpu_hours": total,
         "training_admitted": False,

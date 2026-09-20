@@ -1,5 +1,7 @@
 # Data
 
+The stage-specific policy for the 5,000 GPU-hour program is in [`data-strategy.md`](data-strategy.md). This document describes the shared data contract and implementation details; the strategy document defines where natural, derived and synthetic records may enter.
+
 The goal and next work are defined in [PLAN.md](../PLAN.md), with the complete outline in
 [the program overview](program.md). The engineering pilot is complete. Prepare the main corpus
 against the working mixture and actual eligible supply; frozen pilot shares are historical.

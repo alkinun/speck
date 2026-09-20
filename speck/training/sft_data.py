@@ -18,6 +18,7 @@ from speck.operations.runtime import base_dir, dist_info
 from speck.provenance.io import atomic_json as _write_json
 from speck.provenance.io import file_sha256 as _file_hash
 from speck.tokenization.chat import ChatFormatError, decode_chat_record
+from speck.tokenization.tools import adapt_conversation
 from speck.training.step import assert_finite, set_optimizer_lr
 
 FORMAT_VERSION = 3
@@ -247,10 +248,10 @@ def prepare_sft_dataset(
                     try:
                         if not completion_format:
                             row = decode_chat_record(row)
-                        if row.get("tools"):
-                            raise ChatFormatError(
-                                "tool definitions require a tool-aware chat format"
-                            )
+                            if row.get("tools") or any(
+                                message.get("tool_calls") for message in row["messages"]
+                            ):
+                                row = adapt_conversation(row)
                         if completion_format:
                             tokens, mask = encode_completion(row, tokenizer)
                         else:

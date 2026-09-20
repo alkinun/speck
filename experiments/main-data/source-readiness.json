@@ -7,7 +7,7 @@
   "source_of_truth": {
     "data_study_packet": {
       "path": "experiments/main-data/data-study-packet.json",
-      "sha256": "62a38d4c5278e151e229681208c8e877f6ead5ceef032d7b0b0dbffdf91b3213"
+      "sha256": "0cde6c5aad7cda4e41608f37700ac1e79dfbb12550b9aee5782e86773f4d8332"
     },
     "data_readiness": {
       "path": "experiments/corpus-audit/data-readiness.json",

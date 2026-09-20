@@ -530,10 +530,41 @@ def test_local_json_messages_preserve_weights_and_reject_long_or_tool_rows(tmp_p
     long = {
         **row,
         "messages": [
-            json.dumps(m) for m in [messages[0], {"role": "assistant", "content": "A" * 200}]
+            json.dumps(m) for m in [messages[0], {"role": "assistant", "content": "A" * 5000}]
         ],
     }
-    tool = {**row, "tools": [json.dumps({"type": "function", "function": {"name": "lookup"}})]}
+    tool = {
+        "messages": [
+            json.dumps({"role": "user", "content": "Look this up."}),
+            json.dumps(
+                {
+                    "role": "assistant",
+                    "content": "<think>Use lookup.</think>",
+                    "tool_calls": [
+                        {
+                            "id": "call-1",
+                            "type": "function",
+                            "function": {"name": "lookup", "arguments": "{}"},
+                        }
+                    ],
+                }
+            ),
+            json.dumps({"role": "tool", "tool_call_id": "call-1", "content": "result"}),
+            json.dumps({"role": "assistant", "content": "Here is the result."}),
+        ],
+        "tools": [
+            json.dumps(
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "lookup",
+                        "parameters": {"type": "object", "properties": {}},
+                    },
+                }
+            )
+        ],
+        "source": "fixture",
+    }
     paths = [tmp_path / "train.parquet", tmp_path / "val.parquet"]
     pq.write_table(pa.Table.from_pylist([row, long, tool]), paths[0])
     pq.write_table(pa.Table.from_pylist([row]), paths[1])
@@ -552,16 +583,15 @@ def test_local_json_messages_preserve_weights_and_reject_long_or_tool_rows(tmp_p
         ],
     }
     output = tmp_path / "packed"
-    manifest = prepare_sft_dataset(config, tokenizer, [128], output, source_dir=tmp_path)
-    assert manifest["splits"]["train"]["samples"] == 1
+    manifest = prepare_sft_dataset(config, tokenizer, [2048], output, source_dir=tmp_path)
+    assert manifest["splits"]["train"]["samples"] == 2
     assert manifest["splits"]["train"]["truncated_samples"] == 0
     assert manifest["splits"]["train"]["rejection_reasons"] == {
         "conversation exceeds sequence limit": 1,
-        "tool definitions require a tool-aware chat format": 1,
     }
-    tokens = np.fromfile(output / "train.128.tokens.bin", dtype="<u2")
-    mask = np.fromfile(output / "train.128.mask.bin", dtype="u1")
-    assert tokens[mask.astype(bool)].tolist() == tokenizer.base.encode("Target") + [
-        tokenizer.eos_id
-    ]
+    tokens = np.fromfile(output / "train.2048.tokens.bin", dtype="<u2")
+    mask = np.fromfile(output / "train.2048.mask.bin", dtype="u1")
+    supervised = tokens[mask.astype(bool)].tolist()
+    assert supervised[: len(tokenizer.base.encode("Target"))] == tokenizer.base.encode("Target")
+    assert tokenizer.base.encode("Here is the result.")[0] in supervised
     verify_sft_dataset(output, manifest)

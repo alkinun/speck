@@ -12,7 +12,7 @@
     },
     "study_packet": {
       "path": "experiments/main-data/post-training-study-packet.json",
-      "sha256": "1ecb95b3fc9e318cba2693ff1e192c70e7dde0146f4b8aa646d61d93420d33cb"
+      "sha256": "1857383ee275626c1d9daa6fc05c72168dd890f563e06adc7f92aa2895ceab96"
     },
     "data_readiness": {
       "path": "experiments/corpus-audit/data-readiness.json",

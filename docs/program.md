@@ -13,7 +13,7 @@ No GPU run starts from this document.
 | --- | --- |
 | Reference, to test | 1.2B total/all-active KDA/GQA model; one bounded attention-baseline comparison before backbone freeze; no MoE or size sweep |
 | Selected | Pretrain from scratch; preserve base and thinking-assistant releases; one thinking protocol with variable effort |
-| Confirmed envelope | 5,000 total GPU-hours across four GH200s; access/site details remain unconfirmed |
+| Confirmed envelope | 5,000 total GPU-hours across four GH200s, with a nominal 90-day access window; start date/site details remain unconfirmed |
 | Working recipe | 35% code, 25% math, 40% supporting data; 100B working horizon, subject to supply and measured GH200 cost |
 | Working stages | Capability mid-training within the base horizon; 16K/32K context qualification within 300 hours; 128K stretch, token counts unfrozen; 1.5M SFT conversations within 1–2M; RL conditional |
 | Measured | H100 engineering pilot, development evaluation and backups complete; the 105M-token base is weak |
@@ -55,7 +55,8 @@ Dataset inspection alone does not establish how well a model learns from a mixtu
 
 Four GH200s, 5,000 total GPU-hours: at four continuously allocated GPUs this is 1,250 elapsed hours
 or 52.1 days. The historical roughly 90-day access window is not 90 days of continuous four-GPU
-compute. CPU acquisition/verification, disk and external teacher API costs need separate ledgers.
+compute. The grant allocation is confirmed, but the access start date and site/runtime details are
+not yet confirmed. CPU acquisition/verification, disk and external teacher API costs need separate ledgers.
 Release GPU allocations during CPU-only waits where the provider permits it; count every allocated
 GPU, including idle devices. A trainer stop is not necessarily a provider billing stop.
 
@@ -265,7 +266,12 @@ positions separately. The measured 4K SFT rate is not a long-context throughput 
 
 ### Conditional RL
 
-RL is planned, not implemented/qualified as a production pipeline here. The working candidate is
+RL is planned, not implemented/qualified as a production pipeline here. The fixed-policy feasibility
+harnesses in [`speck/evaluation/rl_feasibility.py`](../speck/evaluation/rl_feasibility.py) and
+[`speck/evaluation/rl_code.py`](../speck/evaluation/rl_code.py) now provide deterministic tool
+episodes, test-backed code-task receipts, reset/replay accounting, transcript/task-suite fingerprints
+and bounded diagnostic rewards; they perform no policy updates. Failed attempts remain visible and
+cannot be hidden by a later successful retry. The working candidate is
 GRPO-style training with verifiable rewards, after a useful SFT baseline. The primary reference is
 [DeepSeekMath](https://arxiv.org/abs/2402.03300); its results do not establish gains for Speck.
 Use checked math answers and sandboxed executable code tests first; add repository/tool episodes

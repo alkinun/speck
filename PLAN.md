@@ -9,7 +9,7 @@ Update these in place. Historical proposals and failures remain in Git and their
 ## Goal and selected decisions
 
 Develop a useful model from scratch through a measured data recipe spanning pretraining,
-mid-training and post-training, then release the base and an always-thinking assistant with an
+mid-training and post-training, then release the base and a coding-centered generalist assistant with an
 open technical report. Primary uses are agentic coding, normal coding, math reasoning and tools;
 general usefulness remains a regression check. The first paper centers on data, training and
 capability development. External models are comparators or qualified teachers, not our base initialization.
@@ -19,7 +19,8 @@ capability development. External models are comparators or qualified teachers, n
   intermediate width 5120, tied embeddings, sigmoid KDA gates. One bounded architecture/efficiency comparison before backbone freeze; no MoE or size sweep.
 - **Tokenizer fixed:** Mistral 32K; 32,003 embedding rows include three assistant role IDs.
 - **Compute envelope:** 5,000 total GPU-hours across four GH200s, equivalent to 1,250 hours with
-  all four allocated. Site/access and GH200 throughput remain unconfirmed.
+  all four allocated, within a nominal 90-day access window. The allocation is confirmed; access
+  start timing, site details and GH200 throughput remain unconfirmed.
 - **Behavior selected:** one always-thinking protocol with brief/deep reasoning and tool actions;
   no supported non-thinking response mode. Preserve separate base and assistant checkpoints.
 - **Context target:** start at 4K, qualify 16K then 32K within 300 production GPU-hours; 128K is a stretch.
@@ -35,7 +36,7 @@ measure. The [program overview](docs/program.md#training-lifecycle) defines stag
 
 | Area | Preparation target | Still to resolve |
 | --- | --- | --- |
-| Pretraining | 100B working base horizon including capability mid-training; initial 35% code, 25% math, 40% supporting material | Qualified source supply and measured GH200 cost; H100 reference implies 106.5B within the base reservation |
+| Pretraining | 100B working base horizon including capability mid-training; initial 35% code, 25% math, 40% supporting material; explicit natural/curated/derived decay study | Qualified source supply and measured GH200 cost; H100 reference implies 106.5B within the base reservation |
 | Capability mid-training | Targeted code/math/repair/tool-use continuation with broad-data replay, within the base horizon | Token split, source-only versus validated synthesis, objective and changed-data continuation support remain to be qualified; measure downstream quality per token and GPU-hour |
 | Context mid-training | 300-hour production cap; 16K then 32K qualification, with 128K stretch and token counts unset | Memory, useful-context learning, positional behavior and stage costs |
 | Thinking SFT | 1.5M unique qualified conversations, within a 1–2M range | Correctness, source-family deduplication, complete long examples and supervised/context token totals |
@@ -128,7 +129,7 @@ bounded order and stop rules for closing those gates.
    The working eight-bank mixture still lacks qualified checked-code/refined-math supply. Retained
    HQ and natural-code totals also bound one-pass horizons below the maximum study-hour envelopes.
    Qualify additional supply or explicitly revise the finite research recipe/horizon; no silent replay
-   or reassignment of synthetic shares. Use the measured assistant lengths and RL prompt links before
+   or reassignment of derived-data shares. Use the measured assistant lengths and RL prompt links before
    selecting downstream packs. Adapter compatibility does not establish tool-task success.
 4. **Prepare the reference-model GH200 packet before access.** Bind current source and exact inputs,
    checks, workload sizes, measurements and stop conditions. Rebuild the historical transfer bundle;
@@ -171,7 +172,7 @@ Exact launch settings still depend on the evidence below; preparation receipts a
 | --- | --- | --- |
 | Direction and budget | Data-centered report; bounded architecture study; stage ownership totals 5,000 hours | Costed arms, confirmation allowance and stop rules within each cap |
 | Data | Pinned candidates, deterministic samples, exclusion methods and retained-stock counts | Qualified finite arm manifests, source-use decisions, family splits, eligible tokens and packing checks |
-| Backbone and runtime | 1.2B reference, proposed parameter-matched GQA control and completed H100 engineering baseline | Control/GH200 qualification, FLOP accounting, recovery and measured cost; freeze backbone before data comparisons |
+| Backbone and runtime | 1.2B reference, proposed parameter-matched GQA control and completed H100 engineering baseline | GH200/four-worker qualification, FLOP accounting, recovery and measured cost; freeze backbone before data comparisons |
 | Evaluation | Pilot development evidence and pinned exclusion inputs | Primary endpoints, development/final partitions, regression tolerances and comparator protocol |
 | Downstream stages | Stage objectives and separate research/production reservations | Useful parent checkpoints; qualified changed-data continuation, context and conditional RL paths |
 

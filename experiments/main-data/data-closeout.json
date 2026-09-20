@@ -112,19 +112,19 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "fb04c0d3f3b3ee72048858629ea8b0faed69d7d4f8a942c1a5a116ecaadd51d8"
+      "sha256": "0c9ebecead7aa3a5803de9a9b2aa888c5026e397a75f7ff3f52d3641c616e9ec"
     },
     "pretraining_study": {
       "path": "experiments/main-data/data-study-packet.json",
-      "sha256": "62a38d4c5278e151e229681208c8e877f6ead5ceef032d7b0b0dbffdf91b3213"
+      "sha256": "0cde6c5aad7cda4e41608f37700ac1e79dfbb12550b9aee5782e86773f4d8332"
     },
     "mid_training_study": {
       "path": "experiments/main-data/mid-training-study-packet.json",
-      "sha256": "66943bd323c666a563be3aeb9bd08215dceac987b762419e7a89f380edadaf05"
+      "sha256": "f971a4d5192f7582bd7114f929f5a02652921baf09bf520ff0da0b29a9e0cacf"
     },
     "post_training_study": {
       "path": "experiments/main-data/post-training-study-packet.json",
-      "sha256": "1ecb95b3fc9e318cba2693ff1e192c70e7dde0146f4b8aa646d61d93420d33cb"
+      "sha256": "1857383ee275626c1d9daa6fc05c72168dd890f563e06adc7f92aa2895ceab96"
     },
     "qualification_rules": {
       "path": "experiments/main-data/qualification-rules.json",
@@ -140,23 +140,23 @@
     },
     "candidate_manifest_preflight": {
       "path": "experiments/main-data/candidate-manifest-preflight.json",
-      "sha256": "4cf5423b096f1cfbd1289b85809a015fba494b2e05986f3c4987b8a97ded0058"
+      "sha256": "f81dd2f9cbd4bd3c43feaf67bd5fec39363823854b409af06141dbf8a0b00ea4"
     },
     "natural_web_manifest": {
       "path": "experiments/main-data/natural-web-candidate-manifest.json",
-      "sha256": "a099f269b0b466d76c3bd914d7ac69bc8241ada17332509eaeaafa4665d4ed17"
+      "sha256": "3f17ffcb129e818ace4228df863beacbf2f1283e2f79123295434b7b929c1e68"
     },
     "natural_code_manifest": {
       "path": "experiments/main-data/natural-code-candidate-manifest.json",
-      "sha256": "ebaf0bb386b4ba81e4c5400435c5652b00acacc5634570afaf8aaedd666fbae1"
+      "sha256": "cbcc0b0786b7c92f6bdaaddf04c1c1f147e9004bdecc770cc659f2f3d7a0c483"
     },
     "math_manifest": {
       "path": "experiments/main-data/math-candidate-manifest.json",
-      "sha256": "cbf18ff1bc36cf2caa566b21536f3e6f9e3d8749c8bf57d513e7ced6ac3e2610"
+      "sha256": "1e23a7c0441b8e3cfed1fcb941fcf863264d2b37a93824220ede9d6f7068081d"
     },
     "post_training_manifest": {
       "path": "experiments/main-data/post-training-candidate-manifest.json",
-      "sha256": "38b1da8ff316c6a6a7ddc7580cb144367489eb73829032471daa28ee595cac9b"
+      "sha256": "16f1efc62727e21e6f24363eacbaf1b6b08c75f6609fc25d8eb867561966d3d2"
     },
     "post_training_audit_protocol": {
       "path": "experiments/main-data/post-training-audit-protocol.json",

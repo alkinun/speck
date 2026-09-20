@@ -49,8 +49,8 @@ supply, and exposure/replay is distinct from unique eligible material.
 ## The first executable data-study packet
 
 [data-study-packet.json](data-study-packet.json) is the next bounded experiment artifact. It binds
-one common baseline, one code-bank contrast and one natural-web contrast, with at most three screening
-arms and a protected confirmation comparison. It fixes the tokenizer, 4K context, objective,
+one common baseline, one code-bank contrast and one natural-web contrast, followed by an explicit
+three-way decay comparison. It fixes the tokenizer, 4K context, objective,
 serialization, exposure accounting and evaluation boundaries while leaving source admission open.
 
 Validate the packet and its source-of-truth hashes offline:
@@ -78,7 +78,10 @@ PYTHONPATH=. python experiments/main-data/check_mid_training_study.py \
   experiments/main-data/mid-training-study-packet.json
 ```
 
-The packet reserves 150 GPU-hours for mid-training research. Linked SFT/RL convergence and adaptation measurements belong to the separate post-training research reservation and must use the same downstream recipe across retained arms.
+The packet reserves 150 GPU-hours for mid-training research. Capability data interventions must use
+`--branch-kind data` with `training_phase: data_continuation`; context interventions must use the
+separate context branch. Linked SFT/RL convergence and adaptation measurements belong to the separate
+post-training research reservation and must use the same downstream recipe across retained arms.
 
 ## Post-training data-study packet
 
@@ -177,6 +180,8 @@ pretraining starts fresh after the recipe decision. Neither research exposure no
 the main model's 100B horizon.
 
 Capability arms branch from the same preserved 4K production milestone before final LR decay.
+The decay study branches from one matched stable checkpoint and compares natural, curated-natural
+and small verified-derived enrichment under the same decay schedule.
 Context arms use the selected capability-production endpoint; SFT arms use the same qualified
 post-context base, and RL prompt checks use the selected production SFT checkpoint. After each
 downstream research decision, production starts again from its unchanged parent using the selected
@@ -189,7 +194,7 @@ These are proposed ceilings within existing reservations, not measured durations
 | Reservation | Training / study slots | Shared support | Total GPU-hours |
 | --- | --- | ---: | ---: |
 | Architecture | Two arms × one seed × 60h = 120h; profiling 40h | 40h | 200 |
-| Pretraining data | Up to three screening arms × 40h = 120h; two confirmation arms × two new seeds × 90h = 360h | 120h | 600 |
+| Pretraining data | Base screen: three arms × 40h = 120h; decay screen: three arms × 30h = 90h; confirmation: two arms × two new seeds × 60h = 240h | 150h | 600 |
 | Mid-training data | Capability pair: two × 35h = 70h; context pair: two × 25h = 50h | 30h | 150 |
 | Post-training data | SFT: two arms × two seeds × 25h = 100h; conditional RL prompt feasibility 20h | 30h | 150 |
 
@@ -203,7 +208,7 @@ updates must fit its separate 200h production subdivision.
 Freeze one common token horizon per base-training comparison from the slowest arm's measured cost,
 qualified unique supply and required learning signal, rounded to complete updates. Equal per-arm
 hour caps are safety ceilings, not instructions to train each arm until its clock expires.
-At the historical H100 rate, 40h and 90h correspond to approximately 1.85B and 4.17B tokens before
+At the historical H100 rate, 30h, 40h and 60h correspond to approximately 1.39B, 1.85B and 2.78B tokens before
 external scoring/setup costs. These illustrate scale only; they are not GH200 forecasts or selected
 horizons. A longer confirmation horizon needs its own schedule frozen before it starts.
 
@@ -382,8 +387,8 @@ distributed execution, stage promotion criteria and release evaluation.
 
 ## Compute allocation
 
-The program reserves four GH200s and 5,000 total GPU-hours; provider access and hardware throughput
-remain unconfirmed. Use this reservation without treating previous rental reservations
+The grant allocation confirms four GH200s and 5,000 total GPU-hours within a nominal 90-day window;
+the access start, site details and hardware throughput remain unconfirmed. Use this reservation without treating previous rental reservations
 as actual provider billing:
 
 | Work | GPU-hours reserved |
@@ -415,7 +420,8 @@ These elapsed times assume each device matches the measured H100 before communic
 in aggregate at perfect scaling, or 41.1K at 80%. They consume four GPU-hours per elapsed hour:
 5,000 aggregate GPU-hours permit 1,250 four-GPU hours (52.1 days), not 5,000 machine-hours.
 The recorded 90-day access window does not establish 90 days of continuous four-GPU funding.
-The allowance is **5,000 total GPU-hours**. Provider access remains unconfirmed; the budget
+The allowance is **5,000 total GPU-hours**. The allocation is confirmed, but provider start timing
+and runtime qualification remain unconfirmed; the budget
 interpretation is explicit.
 
 At the H100 reference rate, keeping the other 2,700 reserved GPU-hours brings the full program to

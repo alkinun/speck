@@ -306,6 +306,24 @@ def test_context_branch_only_freezes_optimizer_semantics():
     assert changed_context_settings(previous, {**current, "optimizer": "adamw"}) == ["optimizer"]
 
 
+def test_data_branch_is_an_explicit_branch_kind():
+    assert arguments(["experiment", "--branch-kind", "data"]).branch_kind == "data"
+
+
+def test_data_branch_keeps_the_training_recipe_fixed():
+    previous = {
+        "deterministic": True,
+        "sequence_length": 4_096,
+        "optimizer": "adamw",
+        "world_size": 4,
+        "lr": 1e-3,
+    }
+    assert changed_branch_settings(previous, dict(previous)) == []
+    assert changed_branch_settings(previous, {**previous, "sequence_length": 16_384}) == [
+        "sequence_length"
+    ]
+
+
 def test_context_architecture_only_allows_positional_changes():
     experiment = historical_repository() / "experiments" / "Speck1-140M"
     model = load_experiment(experiment, "model")["model"]

@@ -55,11 +55,18 @@ def validate(packet_path):
         * confirmation["per_arm_per_seed_cap_gpu_hours"]
     ):
         raise ValueError("confirmation budget does not match its seed and arm caps")
-    total = (
-        screening["training_gpu_hours"] + confirmation["training_gpu_hours"] + support["gpu_hours"]
-    )
+    decay = packet["decay_study"]
+    if decay["training_gpu_hours"] != (
+        len(decay["arms"])
+        * decay["paired_seed_count"]
+        * decay["per_arm_training_cap_gpu_hours"]
+    ):
+        raise ValueError("decay budget does not match its arm and seed caps")
+    if len(decay["arms"]) != 3:
+        raise ValueError("decay study must contain natural, curated and derived arms")
+    total = screening["training_gpu_hours"] + decay["training_gpu_hours"] + confirmation["training_gpu_hours"] + support["gpu_hours"]
     if total != 600 or support["budget_check"] != (
-        "120 screening + 360 confirmation + 120 support = 600 pretraining-data-research GPU-hours."
+        "120 base screening + 90 decay screening + 240 confirmation + 150 support = 600 pretraining-data-research GPU-hours."
     ):
         raise ValueError("pretraining data-study reservation must total 600 GPU-hours")
     required = packet["required_gates_before_first_arm"]
@@ -72,6 +79,7 @@ def validate(packet_path):
         "status": packet["status"],
         "arms": len(packet["arms"]),
         "screening_gpu_hours": screening["training_gpu_hours"],
+        "decay_gpu_hours": decay["training_gpu_hours"],
         "confirmation_gpu_hours": confirmation["training_gpu_hours"],
         "support_gpu_hours": support["gpu_hours"],
         "total_gpu_hours": total,
