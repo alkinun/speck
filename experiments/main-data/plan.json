@@ -35,6 +35,10 @@
     "natural_web_manifest": {
       "path": "experiments/main-data/natural-web-candidate-manifest.json",
       "status": "candidate_manifest_not_admitted"
+    },
+    "natural_code_manifest": {
+      "path": "experiments/main-data/natural-code-candidate-manifest.json",
+      "status": "candidate_manifest_not_admitted"
     }
   },
   "model": {
@@ -533,12 +537,13 @@
     "experiments/main-data/source-readiness.json": "fb04c0d3f3b3ee72048858629ea8b0faed69d7d4f8a942c1a5a116ecaadd51d8",
     "experiments/main-data/mid-training-study-packet.json": "66943bd323c666a563be3aeb9bd08215dceac987b762419e7a89f380edadaf05",
     "experiments/main-data/post-training-study-packet.json": "1ecb95b3fc9e318cba2693ff1e192c70e7dde0146f4b8aa646d61d93420d33cb",
-    "experiments/main-data/data-closeout.json": "ad72657d29c1eb02bb777bb6dcda90bd05735212f010010229d21189a8ff2fa9",
+    "experiments/main-data/data-closeout.json": "a4cd9c8c0867ddc8322bbf4f8e31088d67dcf9ee7589a66b8f74e32623002608",
     "experiments/main-data/frontier-data-research.json": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",
     "experiments/main-data/data-design-contract.json": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f",
     "experiments/main-data/frontier-data-source-mapping.json": "1e8621483defe5ecfb9785c71a77f317b62b00ac522b5ad91c56bbb942faf473",
     "experiments/main-data/candidate-manifest-preflight.json": "4cf5423b096f1cfbd1289b85809a015fba494b2e05986f3c4987b8a97ded0058",
-    "experiments/main-data/natural-web-candidate-manifest.json": "a099f269b0b466d76c3bd914d7ac69bc8241ada17332509eaeaafa4665d4ed17"
+    "experiments/main-data/natural-web-candidate-manifest.json": "a099f269b0b466d76c3bd914d7ac69bc8241ada17332509eaeaafa4665d4ed17",
+    "experiments/main-data/natural-code-candidate-manifest.json": "ebaf0bb386b4ba81e4c5400435c5652b00acacc5634570afaf8aaedd666fbae1"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

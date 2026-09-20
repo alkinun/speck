@@ -280,6 +280,11 @@ The first source-specific application is the [natural-web candidate manifest](..
 It records the FineWeb-Edu control, the Ultra-FineWeb HQ route, their bounded exact-overlap result and
 the evidence still required before the web contrast can enter screening.
 
+The [natural-code candidate manifest](../experiments/main-data/natural-code-candidate-manifest.json)
+binds the retained Stack-Edu census, the bounded Stack v3 cohort and the unavailable checked-code
+route. It keeps natural code separate from verified exercises and records the current zero-eligible-
+token boundary.
+
 The intended pretraining composition is selected broad natural text, meaningful code exposure,
 math/science, reference/documents and a controlled refined/synthetic component. Preserve everyday,
 nontechnical topics and varied prose as well as difficult educational material. Retain source-family

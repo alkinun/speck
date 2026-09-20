@@ -89,6 +89,9 @@ those fields to all 12 candidates and currently finds no complete manifest or el
 The [natural-web candidate manifest](experiments/main-data/natural-web-candidate-manifest.json) is the
 first source-specific application. It preserves the measured FineWeb-Edu/Ultra-FineWeb overlap while
 keeping the web contrast blocked until its remaining gates close.
+The [natural-code candidate manifest](experiments/main-data/natural-code-candidate-manifest.json)
+does the same for Stack-Edu, Stack v3 and the separate checked-code route; it records zero eligible
+code tokens and keeps the code contrast blocked.
 
 1. **Map the reviewed research to source evidence.** The
    [source-mapping receipt](experiments/main-data/frontier-data-source-mapping.json) now attaches each
