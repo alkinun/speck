@@ -1,6 +1,6 @@
 {
   "format": "speck_code_expansion_feasibility",
-  "date": "2026-09-19",
+  "date": "2026-09-20",
   "repository_revision_before_changes": "81cb73d0caf978a3031b9dd67fdeee69e8235f5e",
   "status": "pinned_inventory_and_bounded_new_shard_probe_not_training_admission",
   "training_admitted": false,
@@ -8,15 +8,15 @@
   "corpus_code_executed": false,
   "gpu_hours": 0,
   "working_demand": {
-    "base_horizon_tokens": 100000000000,
-    "natural_code_exposure_tokens": 30000000000,
-    "natural_code_unique_preparation_tokens": 37500000000,
-    "checked_code_exposure_tokens": 5000000000,
-    "checked_code_unique_preparation_tokens": 6250000000,
+    "base_horizon_tokens": 80000000000,
+    "natural_code_exposure_tokens": 24000000000,
+    "natural_code_unique_preparation_tokens": 30000000000,
+    "checked_code_exposure_tokens": 4000000000,
+    "checked_code_unique_preparation_tokens": 5000000000,
     "retained_natural_code_tokens_before_joint_eligibility": 476774847,
-    "retained_share_of_natural_exposure_percent": 1.5892494900000003,
-    "natural_unique_preparation_gap_even_if_all_stock_qualified": 37023225153,
-    "boundary": "Current working plan arithmetic, not admission or automatic repetition. Original census receipt retains its historical denominator."
+    "retained_share_of_natural_exposure_percent": 1.9865618625000003,
+    "natural_unique_preparation_gap_even_if_all_stock_qualified": 29523225153,
+    "boundary": "Working-demand fields follow the 2026-09-20 numeric plan; the bounded acquisition observations retain their 2026-09-19 audit scope. This is not admission or authorization for automatic repetition."
   },
   "upstream_inventory": {
     "stack_edu": {

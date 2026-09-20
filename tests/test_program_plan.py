@@ -76,3 +76,17 @@ def test_matching_receipt_counted(tmp_path, plan):
     receipt.write_text("{}")
     plan["input_receipts"] = {str(receipt): checker._sha256(receipt)}
     assert validate_plan(tmp_path, plan)["input_receipts_checked"] == 1
+
+
+def test_stale_readiness_horizon_rejected(tmp_path, plan, monkeypatch):
+    original_load = checker._load
+
+    def stale_load(path):
+        value = original_load(path)
+        if path == "experiments/main-data/source-readiness.json":
+            value["horizon_accounting"]["working_target"]["total_exposure_tokens"] = 100_000_000_000
+        return value
+
+    monkeypatch.setattr(checker, "_load", stale_load)
+    with pytest.raises(ValueError, match="source-readiness horizon"):
+        validate_plan(tmp_path, plan)

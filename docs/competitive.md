@@ -43,8 +43,9 @@ matched controls and screening/confirmation endpoints; do not assume efficiency 
 The current 5,000-total-GPU-hour allowance does not support a confident broad best-in-class release
 claim. A narrow competitive product is a hypothesis to test: reliable Python/JavaScript/TypeScript
 repository repair and tool execution with bounded reasoning cost. Math and general instruction
-following remain required capabilities/regression checks. Qualify 16K/32K within 300 context hours;
-128K is a stretch, with no advertised advantage before useful-context and cost measurements.
+following remain required capabilities/regression checks. Qualify 16K/32K within the combined
+600-hour capability/context/agentic mid-training reservation; 64K/128K is deferred, with no
+advertised advantage before useful-context and cost measurements.
 
 The first hardware work should establish whether our execution is unnecessarily limiting scale.
 The H100 measurements used deterministic eager execution, FP32 parameters/optimizer and BF16

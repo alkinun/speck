@@ -12,7 +12,7 @@ tests, documentation and correct worked explanations should establish useful fou
 reasoning-SFT. Preserve practical API use, debugging and repository relationships alongside
 algorithmic exercises. The pilot's code weight is an engineering setting, not the final target.
 Long-context preparation should retain coherent repository units and dependencies for 16K/32K
-qualification, with 128K as a stretch;
+qualification; 64K/128K is deferred until a later measured revision;
 an arbitrary concatenation of unrelated files is not repository-level supervision. Split original
 repositories and derived tasks together to protect held-out repair and agent evaluations.
 

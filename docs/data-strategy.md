@@ -37,7 +37,9 @@ The research controls are replay, source-only repository data, grounded workflow
 
 SFT begins with structurally valid, outcome-verified candidate selection. Tool conversations must pass the repository's tool-aware adapter and schema checks; structural serializability alone is not correctness. The research comparison is candidate-pool control versus outcome-verified selection with paired seeds.
 
-The release baseline remains the qualified always-thinking protocol. A direct-response mode may be evaluated as an SFT/control variant, but it cannot replace the release contract without explicit latency, quality, tool-use and long-task evidence.
+The release baseline remains the qualified always-thinking protocol. An alternative direct-response
+behavior may be evaluated as a research control, but it is not a release mode unless a later
+decision records explicit latency, quality, tool-use and long-task evidence.
 
 RL is conditional. First qualify the trainer, rollout isolation, deterministic environments, verifiers, failure/recovery cases and held-out tests in a fixed-policy feasibility study. Only then can verified-reward RL enter production. Synthetic data is most acceptable here when it is generated inside pinned, testable environments or used for self-distillation; it remains separately attributed and must earn its place on held-out transfer, not training reward alone.
 

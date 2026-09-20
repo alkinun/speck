@@ -165,8 +165,9 @@ The first model and paper center on data quality, coverage and learnability thro
 mid-training and post-training. Keep the selected model fixed; attention/size rationale and measured
 trade-offs have a bounded 200-hour study before backbone freeze. Broader architecture research
 belongs to later releases; data experiments have a separate 1,050-hour allocation.
-The [program lifecycle](program.md#training-lifecycle) defines capability continuation, context
-16K/32K context qualification with 128K stretch, thinking SFT and conditional RL with separate data objectives.
+The [program lifecycle](program.md#training-lifecycle) defines capability continuation, 16K/32K
+context qualification, thinking SFT and conditional RL with separate data objectives. 64K/128K is
+deferred until a later measured revision.
 This is a direction for the main recipe; the pilot weights are not inherited as optimized weights.
 The [main mixture and scale plan](../experiments/main-data/README.md) uses an 80B working base horizon:
 35% code, 25% math, 30% natural web, 5% reference/science and 5% refined educational web. Prepare
@@ -352,7 +353,7 @@ acquisition, repetition, GPU work or training.
    recipes on useful parent checkpoints before committing the downstream stage budgets.
 
 Plan broad pretraining, then separately budgeted capability/context/agentic mid-training toward
-16K/32K, with 128K stretch, using short replay, followed by an SFT recipe spanning
+16K/32K, using short replay, followed by an SFT recipe spanning
 short and long interactions. Preserve source-family identity and exclusions across every stage,
 including derived exercises, teacher traces and RL prompts. Exact continuation/extension stages,
 budgets and any later preference/RL phase remain to be frozen. Long-context qualification must

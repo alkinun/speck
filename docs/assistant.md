@@ -67,7 +67,8 @@ choose final training weights from supervised/total-context tokens rather than t
 The initial cost model assumes one pass. Inventory lengths do not set the qualified context ceiling
 or the average conversation size.
 
-Context production qualifies 16K/32K within 300 hours; approximately 128K is a stretch.
+Context production qualifies 16K/32K within the combined 600-hour capability/context/agentic
+mid-training reservation; 64K/128K is deferred until a later measured revision.
 Longer inventory remains separate from the qualified training ceiling. The 4K rehearsal above is an initial
 engineering phase, not a maximum length policy for future SFT. Preserve complete long reasoning,
 document QA and agent trajectories for extension and later SFT. Keep short interactions represented

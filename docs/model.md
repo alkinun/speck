@@ -17,7 +17,7 @@ independently and preserve this historical reference configuration.
 - Three KDA recurrent blocks followed by one global GQA block, repeated six times.
 - Dense SwiGLU feed-forward layers throughout, intermediate width 5120; no expert routing.
 - Tied embeddings and the frozen Mistral tokenizer, with 32,003 embedding rows including role IDs.
-- Start at 4K; qualify 16K then 32K. Approximately 128K is a stretch within an explicit cost revision.
+- Start at 4K; qualify 16K then 32K. Defer 64K/128K until a later explicit cost and quality revision.
 
 Dense here describes the all-active feed-forward computation. The KDA/GQA token-mixing hybrid
 is the reference backbone for the study. Its recurring layers and global layers are not an MoE mechanism.

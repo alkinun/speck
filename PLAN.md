@@ -146,7 +146,7 @@ bounded order and stop rules for closing those gates.
    and development capability curves; keep final tests untouched. Record the result and limitations,
    then freeze the main mixture and schedule. Pretraining data research has 600 hours; reserve
    confirmation/evaluation cost before screening. The other 300 data-research hours belong to
-   mid-training and post-training comparisons, 150 each, on useful parent checkpoints. The mid-training
+   mid-training and post-training comparisons, 300 and 150 hours respectively, on useful parent checkpoints. The mid-training
    comparison will separate replay/source-only data from validated grounded or executable supervision and
    report downstream capability and SFT/RL optimization efficiency per token and GPU-hour.
 7. **Pretrain, mid-train, post-train, evaluate and release through gates.** Freeze capability
@@ -197,7 +197,7 @@ Each experiment includes its preparation, evaluations, retries and allocated idl
 exposures are separate. Capability production is separately budgeted in the 600-hour mid-training
 reservation; the 80B 4K-base horizon uses the 1,800-hour base reservation.
 The [overview](docs/program.md#compute-and-allocation) records subdivisions and gates. Context tokens
-remain unset until measured qualification; 128K is optional. The protected reserve is smaller and
+remain unset until measured qualification; 64K/128K is deferred. The protected reserve is smaller and
 must remain explicit. Completed external rental costs stay separate from this allocation.
 
 At the measured H100 full-trainer rate, the revised 1,800-hour 4K reservation supports about 83.3B

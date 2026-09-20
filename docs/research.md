@@ -327,7 +327,7 @@ synthetic rewrites and task trajectories require separate lineage and evaluation
   the source set changes. Apply those principles through our existing pipeline.
 
 This review adds a qualification candidate, not another training arm or infrastructure framework.
-Keep the 200-hour architecture study and 600/150/150-hour data research split. No mixture weights,
+Keep the 200-hour architecture study and 600/300/150-hour data research split. No mixture weights,
 production reservations, frozen evidence or training admissions change.
 
 The subsequent [Stack v3 feasibility probe](coding.md#stack-v3-feasibility--2026-09-19) completes
@@ -378,7 +378,7 @@ come from a substantially larger model/program and different attention architect
   adapter/objective contract before admission; pasting raw patches into a pack is not equivalent.
 - Add unchanged-domain repacking as the context-extension control, plus fixed-suffix loss and
   position-stratified task checks. Under the revised 300-hour mid-training research cap, leave stage tokens unset
-  until measured qualification; 128K is a stretch. No context behavior is inherited from this paper.
+  until measured qualification; 64K/128K is deferred. No context behavior is inherited from this paper.
 - Preserve our supervised thinking baseline and bounded natural/refined comparisons. The report
   does not establish that abandoning synthetic data or starting our small model with RL is better.
   Its private processing pipeline is a research reference, not an acquired corpus.

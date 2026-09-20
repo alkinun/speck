@@ -829,9 +829,9 @@
   "launch_boundary": "This matrix records evidence and blockers only. It does not authorize acquisition, corpus execution, training, source substitution, repetition or a production mixture. A launch requires a revised packet with admitted manifests, rights/notice records, disjoint evaluation families, measured cost and a clean launch receipt.",
   "horizon_accounting": {
     "working_target": {
-      "total_exposure_tokens": 100000000000,
+      "total_exposure_tokens": 80000000000,
       "preparation_factor": 1.25,
-      "minimum_unique_preparation_tokens": 125000000000,
+      "minimum_unique_preparation_tokens": 100000000000,
       "status": "working_target_not_qualified_horizon"
     },
     "observed_union": {

@@ -63,6 +63,30 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
     if sum(item["eligible_unique_token_preparation_target"] for item in mixture) != unique_target:
         raise ValueError("main mixture preparation targets do not match the eligible-token target")
 
+    # Current evidence indexes repeat the working horizon so that a stale
+    # readiness receipt cannot silently describe the superseded 100B target.
+    readiness = _load("experiments/main-data/source-readiness.json")
+    readiness_target = readiness["horizon_accounting"]["working_target"]
+    if (
+        readiness_target["total_exposure_tokens"] != target
+        or readiness_target["minimum_unique_preparation_tokens"] != unique_target
+    ):
+        raise ValueError("source-readiness horizon drifts from the working plan")
+
+    code_expansion = _load("experiments/corpus-audit/code-expansion.json")["working_demand"]
+    natural_code = next(item for item in mixture if item["id"] == "natural_code")
+    checked_code = next(item for item in mixture if item["id"] == "checked_code")
+    if (
+        code_expansion["base_horizon_tokens"] != target
+        or code_expansion["natural_code_exposure_tokens"] != natural_code["exposure_tokens"]
+        or code_expansion["natural_code_unique_preparation_tokens"]
+        != natural_code["eligible_unique_token_preparation_target"]
+        or code_expansion["checked_code_exposure_tokens"] != checked_code["exposure_tokens"]
+        or code_expansion["checked_code_unique_preparation_tokens"]
+        != checked_code["eligible_unique_token_preparation_target"]
+    ):
+        raise ValueError("code-expansion demand drifts from the working mixture")
+
     # Packets own run counts. Reconcile their components, not just the grand
     # total: two conflicting designs can both sum to the same reservation.
     pre = _load("experiments/main-data/data-study-packet.json")
