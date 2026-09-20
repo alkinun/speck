@@ -285,6 +285,11 @@ binds the retained Stack-Edu census, the bounded Stack v3 cohort and the unavail
 route. It keeps natural code separate from verified exercises and records the current zero-eligible-
 token boundary.
 
+The [math candidate manifest](../experiments/main-data/math-candidate-manifest.json) keeps natural
+worked material, filtered web math, refined/generated solutions and unavailable sources separate. The
+InfiWebMath arithmetic review remains a triage diagnostic; it does not certify solution correctness or
+eligible supply.
+
 The intended pretraining composition is selected broad natural text, meaningful code exposure,
 math/science, reference/documents and a controlled refined/synthetic component. Preserve everyday,
 nontechnical topics and varied prose as well as difficult educational material. Retain source-family

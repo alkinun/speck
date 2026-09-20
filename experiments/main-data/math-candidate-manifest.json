@@ -1,0 +1,402 @@
+{
+  "format": "speck_math_candidate_manifest",
+  "format_version": 1,
+  "date": "2026-09-20",
+  "status": "candidate_manifest_not_admitted",
+  "purpose": "Bind retained and bounded math-source evidence while separating natural worked material, filtered web math, refined/generated solutions and unavailable candidates.",
+  "evidence_boundary": "This manifest records inventory and bounded diagnostics only. It does not establish mathematical correctness, source rights, contamination clearance, eligible supply or training authority.",
+  "source_of_truth": {
+    "source_readiness": {
+      "path": "experiments/main-data/source-readiness.json",
+      "sha256": "fb04c0d3f3b3ee72048858629ea8b0faed69d7d4f8a942c1a5a116ecaadd51d8"
+    },
+    "data_design_contract": {
+      "path": "experiments/main-data/data-design-contract.json",
+      "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
+    },
+    "data_readiness": {
+      "path": "experiments/corpus-audit/data-readiness.json",
+      "sha256": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549"
+    },
+    "finemath_sample": {
+      "path": "experiments/corpus-audit/finemath-config-sample.json",
+      "sha256": "3a6a7734e4cc84048b851d8fc0a9dd87e67df942e61258d1bd782db2f7f3ff57"
+    },
+    "infiwebmath_diagnostic": {
+      "path": "experiments/corpus-audit/infiwebmath-4plus-arithmetic.json",
+      "sha256": "423f0d0c11c23cd2ad62262db09441eaf32760f6307d92cea0734f08fe393a4a"
+    },
+    "infiwebmath_review": {
+      "path": "experiments/corpus-audit/infiwebmath-4plus-arithmetic-review.json",
+      "sha256": "0f150799d621b85d39b1742a682d78c99fece8ff0e46c8fb0d10fd14053b3412"
+    },
+    "recipe_review": {
+      "path": "experiments/corpus-audit/recipe-review.json",
+      "sha256": "42c0c6d6822b52ee3449f1917e997d039848e40a2ed5903b317d375705508948"
+    }
+  },
+  "common_contract": {
+    "stage": "pretraining math/support bank; refined/generated math remains a separate family",
+    "transformation_type": "natural worked material, filtered web math and generated/refined solutions are distinct identities",
+    "source_family": "Keep FineMath, UltraData-Math, InfiWebMath and generated teacher families separate until the joint graph is frozen.",
+    "quality_vector": "Record source score, extraction completeness, notation preservation, solution status, teacher/source provenance and independent-check outcome.",
+    "coverage_strata": [
+      "source_configuration",
+      "problem_domain",
+      "difficulty",
+      "solution_length",
+      "notation_or_format",
+      "source_host_or_provenance",
+      "benchmark_family"
+    ],
+    "dependency_metadata": "Record prompt/solution/source links and derivation context; null is explicit when a bounded sample lacks lineage.",
+    "contamination_status": "open; exact GSM8K checks and bounded overlaps do not establish population-wide benchmark clearance.",
+    "lineage": "Bind dataset revision/configuration, original source or teacher, transformations and rejection reasons separately.",
+    "unique_tokens": "Report retained, sampled, rejected and eligible Mistral tokens separately; sample counts are not population yield.",
+    "exposure_tokens": "not set; no math source currently supports a production exposure claim.",
+    "repetition_count": "not set; repetition cannot fill a correctness or supply gap."
+  },
+  "candidates": [
+    {
+      "id": "finemath_4plus",
+      "role": "natural_math_support",
+      "identity": "Retained stock identity is separate from bounded viewer configurations; exact retained source release/configuration decision remains open.",
+      "inventory": {
+        "documents": 753071,
+        "retained_tokens": 1124167472,
+        "within_normalized_duplicate_copies": 0,
+        "host_metadata_missing": 0
+      },
+      "measured_preflight": {
+        "retained_stock": {
+          "documents": 753071,
+          "tokens": 1124167472,
+          "host_count": 55122,
+          "eligible_tokens_established": 0
+        },
+        "candidate_directory_view": {
+          "remaining_documents": 744508,
+          "remaining_tokens": 1105391968,
+          "removed_documents": 8563,
+          "removed_tokens": 18775504,
+          "removed_token_fraction": 0.01670169656002998,
+          "recall": "incomplete_conservative_v1"
+        },
+        "numeric_template_census": {
+          "repeated_families": 2,
+          "documents_in_repeated_families": 4,
+          "tokens_in_repeated_families": 1967,
+          "blanket_numeric_deduplication": false
+        },
+        "decision": "retain_source_and_directory_view_as_reversible_candidate; correctness and joint family gates remain open",
+        "training_admitted": false
+      },
+      "quality_and_coverage_evidence": [
+        {
+          "path": "experiments/corpus-audit/finemath-config-sample.json",
+          "field": "config_summaries"
+        },
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "pretraining.math.sources.finemath_4plus"
+        },
+        {
+          "path": "experiments/corpus-audit/followup.json",
+          "field": "math_census_and_directory_candidate"
+        }
+      ],
+      "gate_status": {
+        "source_use": "open_named_decision",
+        "family_partition": "open_joint_graph",
+        "correctness": "open_independent_solution_checks",
+        "finite_supply": "retained_count_only_not_eligible_count",
+        "runtime": "open"
+      },
+      "admitted": false,
+      "blockers": [
+        "source-use decision",
+        "family partition",
+        "independent correctness",
+        "eligible-token accounting",
+        "independent solution correctness and completeness checks",
+        "joint source-family and evaluation partition",
+        "candidate directory policy not yet frozen"
+      ]
+    },
+    {
+      "id": "ultradata_math_l2_preview",
+      "role": "natural_math_support",
+      "identity": "Preview identity has no host metadata for all retained rows; source revision/configuration is not fully bound.",
+      "inventory": {
+        "documents": 169058,
+        "retained_tokens": 384788210,
+        "within_normalized_duplicate_copies": 0,
+        "host_metadata_missing": 169058
+      },
+      "measured_preflight": {
+        "retained_stock": {
+          "documents": 169058,
+          "tokens": 384788210,
+          "host_missing_documents": 169058,
+          "eligible_tokens_established": 0
+        },
+        "within_normalized_duplicates": {
+          "copies": 0,
+          "tokens": 0
+        },
+        "cross_source_normalized_link": {
+          "unique_contents": 1,
+          "finemath_tokens_using_max_per_group": 1216,
+          "l2_tokens_using_max_per_group": 1309,
+          "byte_identical": false,
+          "automatic_removal": false
+        },
+        "decision": "retain_as_natural_math_candidate_only; resolve host lineage and independently check solutions before admission",
+        "training_admitted": false
+      },
+      "quality_and_coverage_evidence": [
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "pretraining.math.sources.ultradata_math_l2_preview"
+        },
+        {
+          "path": "experiments/corpus-audit/result.json",
+          "field": "sources[id=ultradata_math_l2_preview]"
+        }
+      ],
+      "gate_status": {
+        "source_use": "open_host_lineage_and_named_decision",
+        "family_partition": "open_joint_graph",
+        "correctness": "open_independent_solution_checks",
+        "finite_supply": "retained_count_only_not_eligible_count",
+        "runtime": "open"
+      },
+      "admitted": false,
+      "blockers": [
+        "host/source lineage",
+        "source-use decision",
+        "family partition",
+        "independent correctness",
+        "eligible-token accounting",
+        "all rows lack host metadata",
+        "independent solution correctness and completeness checks",
+        "joint source-family and evaluation partition"
+      ]
+    },
+    {
+      "id": "infiwebmath_4plus",
+      "role": "filtered_web_math_support",
+      "identity": {
+        "repository": "HuggingFaceTB/finemath",
+        "config": "infiwebmath-4plus",
+        "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594"
+      },
+      "inventory": {
+        "source_rows": 196757,
+        "bounded_sample_records": 3725,
+        "bounded_sample_training_bytes": 18000388,
+        "bounded_sample_evaluation_bytes": 1807642,
+        "qualified_supply_tokens": null
+      },
+      "measured_preflight": {
+        "receipt_sha256": "423f0d0c11c23cd2ad62262db09441eaf32760f6307d92cea0734f08fe393a4a",
+        "audit_script": "experiments/corpus-audit/audit_math_arithmetic.py",
+        "audit_script_sha256": "8eee02d83d1b56e5be88f9454ee503307240abf39d2d4dca270d552863b12d48",
+        "lines_seen": 292452,
+        "candidate_lines": 312,
+        "oracle_parsed_lines": 276,
+        "numerically_consistent_lines": 260,
+        "flagged_lines": 16,
+        "rows_with_flags": 6,
+        "interpretation": "All 16 parser flags have a bounded triage classification; one likely source transcription error remains a quality hold. Matching lines still do not certify solution correctness.",
+        "manual_review_receipt": "experiments/corpus-audit/infiwebmath-4plus-arithmetic-review.json",
+        "manual_review_sha256": "0f150799d621b85d39b1742a682d78c99fece8ff0e46c8fb0d10fd14053b3412",
+        "manual_review_status": "classified_triage_complete; correctness gate remains open",
+        "flag_classification_counts": {
+          "contextual_binary_arithmetic": {
+            "flagged_lines": 2,
+            "rows": 1
+          },
+          "intentional_counterexample": {
+            "flagged_lines": 2,
+            "rows": 1
+          },
+          "contextual_pattern_puzzle": {
+            "flagged_lines": 10,
+            "rows": 2
+          },
+          "extraction_or_truncation": {
+            "flagged_lines": 1,
+            "rows": 1
+          },
+          "source_or_transcription_error": {
+            "flagged_lines": 1,
+            "rows": 1
+          }
+        }
+      },
+      "quality_and_coverage_evidence": [
+        {
+          "path": "experiments/corpus-audit/infiwebmath-4plus-arithmetic.json",
+          "field": "input_and_arithmetic_diagnostic"
+        },
+        {
+          "path": "experiments/corpus-audit/infiwebmath-4plus-arithmetic-review.json",
+          "field": "decision"
+        },
+        {
+          "path": "experiments/corpus-audit/recipe-review.json",
+          "field": "reviews[repository=HuggingFaceTB/finemath]"
+        }
+      ],
+      "gate_status": {
+        "source_use": "open_manual_terms_decision",
+        "family_partition": "open_joint_graph",
+        "correctness": "open_arithmetic_triage_manual_review",
+        "finite_supply": "sample_only_not_eligible_count",
+        "runtime": "open"
+      },
+      "admitted": false,
+      "blockers": [
+        "source-use and upstream page terms decision",
+        "joint source-family and evaluation partition",
+        "independent solution correctness and completeness checks",
+        "one likely source transcription error remains held; surrounding solutions are not certified",
+        "eligible-token accounting"
+      ]
+    },
+    {
+      "id": "nemotron_cc_math_4plus",
+      "role": "math_support_candidate_unavailable",
+      "identity": {
+        "repository": "nvidia/Nemotron-CC-Math-v1",
+        "revision": "397a2502f2028c659ba411a6c4935b464a7f03aa"
+      },
+      "inventory": {
+        "listed_files": 46,
+        "unusable_lfs_hashes": 46,
+        "acquired_shards": 0,
+        "qualified_supply_tokens": null
+      },
+      "measured_preflight": {
+        "decision": "do_not_use_until_whole_objects_are acquired and independently qualified",
+        "training_admitted": false
+      },
+      "quality_and_coverage_evidence": [
+        {
+          "path": "experiments/corpus-audit/recipe-review.json",
+          "field": "reviews[repository=nvidia/Nemotron-CC-Math-v1]"
+        }
+      ],
+      "gate_status": {
+        "source_use": "not_started",
+        "family_partition": "not_started",
+        "correctness": "not_started",
+        "finite_supply": "no_acquired_shards",
+        "runtime": "not_started"
+      },
+      "admitted": false,
+      "blockers": [
+        "all 46 listed LFS objects have unusable hashes",
+        "no shards acquired or verified"
+      ]
+    }
+  ],
+  "out_of_matrix_review_candidates": [
+    {
+      "id": "openmathinstruct2",
+      "role": "generated_math_support",
+      "status": "review_only_not_source_readiness_candidate",
+      "evidence": [
+        {
+          "path": "experiments/corpus-audit/openmathinstruct2-sample.json",
+          "field": "bounded_sample"
+        },
+        {
+          "path": "experiments/corpus-audit/recipe-review.json",
+          "field": "reviews[repository=nvidia/OpenMathInstruct-2]"
+        }
+      ],
+      "boundary": "Bounded schema, source-label and GSM8K exact-match diagnostics; independent correctness, full contamination, source-use and eligible supply remain open."
+    },
+    {
+      "id": "ultradata_math_l3",
+      "role": "refined_math_candidate",
+      "status": "candidate_named_in_plan_manifest_not_bound",
+      "evidence": [
+        {
+          "path": "experiments/main-data/data-study-packet.json",
+          "field": "candidate_sources.math_and_supporting_banks"
+        }
+      ],
+      "boundary": "Keep refined/generated math separate until lineage, teacher/source provenance, independent correctness and finite supply are bound."
+    },
+    {
+      "id": "infiwebmath_3plus",
+      "role": "filtered_web_math_review_only",
+      "status": "viewer_diagnostic_not_retained_inventory",
+      "evidence": [
+        {
+          "path": "experiments/corpus-audit/finemath-config-sample.json",
+          "field": "configs.infiwebmath_3plus"
+        },
+        {
+          "path": "experiments/corpus-audit/recipe-review.json",
+          "field": "reviews[repository=HuggingFaceTB/finemath]"
+        }
+      ],
+      "boundary": "Keep the 3+ viewer sample separate from the pinned 4+ candidate and retained FineMath stock."
+    }
+  ],
+  "measured_diagnostics": {
+    "finemath_4plus_retained_tokens": 1124167472,
+    "finemath_4plus_candidate_directory_remaining_tokens": 1105391968,
+    "finemath_directory_removed_token_fraction": 0.01670169656002998,
+    "ultradata_math_l2_retained_tokens": 384788210,
+    "ultradata_math_l2_host_missing_documents": 169058,
+    "infiwebmath_4plus_source_rows": 196757,
+    "infiwebmath_4plus_sample_records": 3725,
+    "infiwebmath_4plus_arithmetic_candidate_lines": 312,
+    "infiwebmath_4plus_arithmetic_parsed_lines": 276,
+    "infiwebmath_4plus_arithmetic_consistent_lines": 260,
+    "infiwebmath_4plus_arithmetic_flagged_lines": 16,
+    "interpretation": "These are bounded inventory and triage measurements. They do not certify solution correctness or establish eligible population yield."
+  },
+  "comparison_contract": {
+    "contrast": "Select one qualified natural/refined math intervention against an eligible shared baseline; filtered web and generated/refined sources remain separate factors.",
+    "held_constant": [
+      "other banks",
+      "tokenizer",
+      "serialization",
+      "packing",
+      "objective",
+      "context",
+      "exposure",
+      "validation and evaluation families"
+    ],
+    "not_allowed": [
+      "copying published math percentages",
+      "combining source, teacher and schedule changes without a direct comparison",
+      "treating arithmetic agreement or boxed-answer agreement as independent correctness",
+      "using viewer samples as full-release supply",
+      "silent repetition or source substitution"
+    ],
+    "study_slot": "pretraining screening code/web candidates are fixed separately; math sources remain supporting-bank qualification unless a declared replacement is issued"
+  },
+  "required_before_use": [
+    "Named source-use and notice decision for every selected configuration and transformation.",
+    "Joint source-family, host, benchmark and evaluation partition.",
+    "Independent solution correctness and completeness checks across representative domains and lengths.",
+    "Extraction/notation fidelity decision, including likely transcription-error handling.",
+    "Eligible Mistral token counts and preparation cost by source/quality/coverage stratum.",
+    "Measured GH200 cost and common horizon before a math intervention enters screening."
+  ],
+  "next_actions": [
+    "Resolve FineMath retained-stock source identity and joint directory/family policy without treating the conservative directory view as final.",
+    "Resolve all UltraData-Math L2 host-lineage gaps before using it as a natural candidate.",
+    "Extend InfiWebMath review beyond arithmetic triage to independent solution checks, contamination and source-use decisions.",
+    "Keep Nemotron unavailable until whole objects are acquired and verified; keep OpenMath/L3/3+ review candidates outside the retained matrix.",
+    "Only then select a supported math bank or explicitly revise the working mixture; do not silently fill a shortfall."
+  ],
+  "admission_boundary": "This is a launch-blocked math candidate manifest. It does not admit any math source, authorize acquisition or change the pretraining study budget."
+}

@@ -149,10 +149,14 @@
     "natural_code_manifest": {
       "path": "experiments/main-data/natural-code-candidate-manifest.json",
       "sha256": "ebaf0bb386b4ba81e4c5400435c5652b00acacc5634570afaf8aaedd666fbae1"
+    },
+    "math_manifest": {
+      "path": "experiments/main-data/math-candidate-manifest.json",
+      "sha256": "cbf18ff1bc36cf2caa566b21536f3e6f9e3d8749c8bf57d513e7ced6ac3e2610"
     }
   },
   "launch_boundary": "This closeout is an evidence handoff. It does not authorize corpus acquisition, source substitution, training, repetition, GPU spending or publication claims.",
-  "next_action": "Resolve the natural-code manifest gates and supply shortfall, then apply the same source-specific process to math and downstream data before freezing any screening arm.",
+  "next_action": "Resolve the math manifest gates and source-specific supply limits, then qualify downstream assistant and reward data before freezing any screening arm.",
   "external_research": {
     "path": "experiments/main-data/frontier-data-research.json",
     "sha256": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",

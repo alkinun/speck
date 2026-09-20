@@ -92,6 +92,9 @@ keeping the web contrast blocked until its remaining gates close.
 The [natural-code candidate manifest](experiments/main-data/natural-code-candidate-manifest.json)
 does the same for Stack-Edu, Stack v3 and the separate checked-code route; it records zero eligible
 code tokens and keeps the code contrast blocked.
+The [math candidate manifest](experiments/main-data/math-candidate-manifest.json) separates natural,
+filtered-web, refined/generated and unavailable math candidates; it keeps all math routes blocked until
+correctness, contamination and finite-supply gates close.
 
 1. **Map the reviewed research to source evidence.** The
    [source-mapping receipt](experiments/main-data/frontier-data-source-mapping.json) now attaches each
