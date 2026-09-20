@@ -144,19 +144,19 @@
     },
     "natural_web_manifest": {
       "path": "experiments/main-data/natural-web-candidate-manifest.json",
-      "sha256": "9e8a6b2b0d08fa448175f2541141c4e518ccc3a3482c442c41880055be6f6cc6"
+      "sha256": "495683faee3b8b28d17497b986b31f471d8b54b9e117c4c2b997299867f4c108"
     },
     "natural_code_manifest": {
       "path": "experiments/main-data/natural-code-candidate-manifest.json",
-      "sha256": "1de2cac66c4d6e90b762bb9645e63916ef46bc25560069ae163f09f42a62f1d0"
+      "sha256": "23d983ad08d751547eab4e7b57270109e145cd14aeac96c4c96b415641bb7caf"
     },
     "math_manifest": {
       "path": "experiments/main-data/math-candidate-manifest.json",
-      "sha256": "afc4f8c9a150f32b7f59a96eccd5b4f6ec9fabfd9d5f2e933e3669966e2c9ce3"
+      "sha256": "5d0569bf64924f63402fe9ecb7e58e4a7418f0a61e91aafb1ea09f6e6fd9ab38"
     },
     "post_training_manifest": {
       "path": "experiments/main-data/post-training-candidate-manifest.json",
-      "sha256": "b4b8f05d8aee899b16b12dfa0aeb7921ac6a3edd27b92c854ad12330f96547ed"
+      "sha256": "e0ac5afd8032ce4fbd999c6767b56a301ba4db57b629ffb312e2be963e9a6a1b"
     },
     "post_training_audit_protocol": {
       "path": "experiments/main-data/post-training-audit-protocol.json",

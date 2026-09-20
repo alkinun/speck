@@ -12,11 +12,11 @@
     },
     "data_design_contract": {
       "path": "experiments/main-data/data-design-contract.json",
-      "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
+      "sha256": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58"
     },
     "post_training_packet": {
       "path": "experiments/main-data/post-training-study-packet.json",
-      "sha256": "5840ea5e2833a5fed911d70d61126d3f85095bc66aa6650cb39a7df3fd13f4e8"
+      "sha256": "cdce794797598545b85c0fa5d50fa43ed7215b6417abcdcb02e030084125fcd8"
     },
     "qualification_rules": {
       "path": "experiments/main-data/qualification-rules.json",

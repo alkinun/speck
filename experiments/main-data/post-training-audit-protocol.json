@@ -8,7 +8,7 @@
   "source_of_truth": {
     "candidate_manifest": {
       "path": "experiments/main-data/post-training-candidate-manifest.json",
-      "sha256": "38b1da8ff316c6a6a7ddc7580cb144367489eb73829032471daa28ee595cac9b"
+      "sha256": "e0ac5afd8032ce4fbd999c6767b56a301ba4db57b629ffb312e2be963e9a6a1b"
     },
     "study_packet": {
       "path": "experiments/main-data/post-training-study-packet.json",
