@@ -1,6 +1,6 @@
 # Main data mixture and scale — working plan
 
-2026-09-19. [plan.json](plan.json) records preparation targets and reproducible cost arithmetic.
+2026-09-20. [plan.json](plan.json) records preparation targets and reproducible cost arithmetic.
 This is not a launch configuration or a claim that the required corpus is already qualified.
 The frozen H100 pilot, development evaluation and backups are complete. This working plan does
 not change their configurations or historical result receipts.

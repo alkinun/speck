@@ -1,7 +1,7 @@
 {
   "format": "speck_main_data_working_plan",
   "format_version": 2,
-  "date": "2026-09-19",
+  "date": "2026-09-20",
   "status": "working_preparation_targets_not_launch_manifest",
   "research_scope": {
     "focus": "Data across pretraining, mid-training and post-training, supported by controlled architecture and measured training/inference efficiency.",

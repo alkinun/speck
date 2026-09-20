@@ -1,6 +1,6 @@
 # SpeckLabs first program: execution overview
 
-2026-09-19. SpeckLabs' first model and paper center on data and training across pretraining,
+2026-09-20. SpeckLabs' first model and paper center on data and training across pretraining,
 mid-training and post-training: our own pretrained base and an always-thinking assistant for
 agentic coding, normal coding, math and tools. This document explains the program; [PLAN.md](../PLAN.md) records
 current status and work order. The [numeric plan](../experiments/main-data/plan.json) owns working

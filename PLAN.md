@@ -1,6 +1,6 @@
 # SpeckLabs: current decisions and next work
 
-Updated 2026-09-19. This is the status and work order for the first flagship program.
+Updated 2026-09-20. This is the status and work order for the first flagship program.
 Read the [program overview](docs/program.md) for the connected design, data, compute and release
 outline. [Main-data plan.json](experiments/main-data/plan.json) owns working numeric targets;
 experiment configurations and verified receipts own actual run settings and measured results.
