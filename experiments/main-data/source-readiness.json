@@ -220,6 +220,18 @@
         {
           "path": "experiments/corpus-audit/retained-code-origins.json",
           "field": "summary.coverage.stack_edu"
+        },
+        {
+          "path": "experiments/corpus-audit/code-yield-result.json",
+          "field": "summary_and_next_decision"
+        },
+        {
+          "path": "experiments/corpus-audit/natural-code-cohort.json",
+          "field": "cohort_and_holds"
+        },
+        {
+          "path": "experiments/corpus-audit/retained-code-origins.json",
+          "field": "summary.coverage.stack_edu"
         }
       ],
       "gates": {
@@ -235,8 +247,40 @@
         "origin/notice resolution",
         "family and benchmark partition",
         "independent correctness checks",
-        "eligible supply and cost"
-      ]
+        "eligible supply and cost",
+        "75 quota-blocked origin outcomes and one earlier unresolved outcome",
+        "retained stock is not representative of the full upstream release"
+      ],
+      "qualification_evidence": {
+        "retained_stock": {
+          "documents": 714369,
+          "tokens_with_bos_eos": 476774847,
+          "eligible_tokens_established": 0
+        },
+        "known_holds": {
+          "documents": 123,
+          "tokens_with_bos_eos": 209751,
+          "basis": "benchmark names and content-family holds; not the complete exclusion graph"
+        },
+        "fixed_cohort": {
+          "original_files": 138,
+          "original_tokens": 459615,
+          "family_held_files": 34,
+          "family_held_tokens": 171947,
+          "host_verified_unheld_files": 28,
+          "host_verified_unheld_tokens": 52329,
+          "attempted_unresolved_files": 76,
+          "attempted_unresolved_tokens": 235339
+        },
+        "origin_recovery": {
+          "unheld_records": 104,
+          "host_verified": 28,
+          "quota_blocked": 75,
+          "earlier_unresolved": 1
+        },
+        "decision": "retain_as_natural_code_candidate_only; no yield estimate or study route selected",
+        "training_admitted": false
+      }
     },
     {
       "id": "stack_v3",
@@ -264,6 +308,18 @@
         {
           "path": "experiments/corpus-audit/stack-v3-origins.json",
           "field": "results"
+        },
+        {
+          "path": "experiments/corpus-audit/stack-v3-sampling.json",
+          "field": "selection_and_limits"
+        },
+        {
+          "path": "experiments/corpus-audit/code-yield-result.json",
+          "field": "next_decision"
+        },
+        {
+          "path": "experiments/corpus-audit/retained-code-origins.json",
+          "field": "summary.coverage.stack_v3"
         }
       ],
       "gates": {
@@ -279,8 +335,32 @@
         "origin/notice resolution",
         "family and benchmark partition",
         "independent correctness checks",
-        "full finite eligible supply"
-      ]
+        "full finite eligible supply",
+        "two pinned source 404s",
+        "ten unexplained transformed identities",
+        "bounded cohort cannot establish full-release eligible supply"
+      ],
+      "qualification_evidence": {
+        "dataset_revision": "8f3f25d86e44fd691428131efd17af75d4716499",
+        "fixed_cohort": {
+          "repositories": 44,
+          "files": 80,
+          "tokens_with_bos_eos": 133211,
+          "language_labels": 24,
+          "nonempty_strata": 11,
+          "files_over_4096_tokens": 3,
+          "upstream_content_id_mismatches": 10
+        },
+        "origin_recovery": {
+          "unheld_records": 70,
+          "host_verified": 68,
+          "family_held_files": 10,
+          "attempted_unresolved": 2,
+          "unresolved_404s": 2
+        },
+        "decision": "retain_as_natural_code_candidate_only; bounded review cohort is not full-release supply",
+        "training_admitted": false
+      }
     },
     {
       "id": "checked_code",
@@ -294,6 +374,18 @@
         {
           "path": "experiments/main-data/data-study-packet.json",
           "field": "candidate_sources.checked_code"
+        },
+        {
+          "path": "experiments/corpus-audit/code-provenance.json",
+          "field": "next_source_route"
+        },
+        {
+          "path": "experiments/corpus-audit/code-provenance.json",
+          "field": "join"
+        },
+        {
+          "path": "experiments/corpus-audit/code-provenance.json",
+          "field": "rejections"
         }
       ],
       "gates": {
@@ -307,7 +399,14 @@
       "admitted": false,
       "blockers": [
         "independently verified checked-code supply is not present"
-      ]
+      ],
+      "qualification_evidence": {
+        "verified_origin_join": false,
+        "rows_with_commit_id": 0,
+        "qualified_supply_tokens": null,
+        "decision": "keep_separate_from_natural_code; do not substitute without independent provenance and correctness evidence",
+        "training_admitted": false
+      }
     },
     {
       "id": "finemath_4plus",

@@ -55,6 +55,17 @@ def validate(matrix_path):
             "runtime",
         }:
             raise ValueError(f"incomplete gate set: {source['id']}")
+        if source["id"] in {"stack_edu", "stack_v3", "checked_code"}:
+            evidence = source.get("qualification_evidence", {})
+            if evidence.get("training_admitted") is not False:
+                raise ValueError(f"code evidence must remain non-admitted: {source['id']}")
+            if (
+                source["id"] == "stack_edu"
+                and evidence.get("retained_stock", {}).get("eligible_tokens_established") != 0
+            ):
+                raise ValueError("Stack-Edu retained stock must not claim eligible tokens")
+            if source["id"] == "checked_code" and evidence.get("verified_origin_join") is not False:
+                raise ValueError("checked-code route must keep its unresolved origin join")
         if source["id"] == "ultrafineweb_hq":
             comparison = source.get("comparison_evidence", {})
             if (
