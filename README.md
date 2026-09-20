@@ -34,6 +34,7 @@ The companion [technical report outline](docs/report.md) defines the evidence to
 The first GPU configuration is [experiments/qualification](experiments/qualification/README.md).
 It checks the existing 1.2B KDA/GQA model at 4K before any corpus-training commitment.
 GH200 fit, throughput, and cluster operation still need measurement.
+The ordered access procedure is the [GH200 qualification runbook](docs/compute-qualification.md).
 
 ## Working with the project
 

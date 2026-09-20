@@ -362,7 +362,8 @@ accelerated serving integration is assumed qualified merely because base trainin
    [qualification packet](../experiments/main-data/QUALIFICATION.md) to finish benchmark/family
    exclusions, then audit web/math and assistant quality/long-tail supply in bounded packets.
    Prepare the reference-model hardware packet and cost the single architecture/control study.
-2. **On GH200 access:** qualify one worker, then four; measure sustained effective throughput,
+2. **On GH200 access:** follow the [GH200 qualification runbook](compute-qualification.md):
+   qualify one worker, then four, then the scheduler canary; measure sustained effective throughput,
    recovery and inference. Reconcile prior external rentals and unused reservation headroom.
 3. **Before main training:** complete the 200-hour architecture/efficiency study and freeze the
    backbone. Freeze data-study manifests, paired fresh initializations, controls, endpoints and

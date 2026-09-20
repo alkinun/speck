@@ -1,5 +1,10 @@
 # First hardware qualification
 
+The complete access sequence is in the [GH200 access qualification runbook](../../docs/compute-qualification.md).
+This file owns the bounded synthetic R0 diagnostic and its 70-GPU-hour internal ceiling; the
+program reserves 100 GPU-hours for all hardware/runtime qualification, including real-data,
+distributed and scheduler checks.
+
 This checks the existing 1.2B KDA/GQA model at 4K. [model.json](model.json) holds its exact geometry;
 [plan.json](plan.json) holds finite execution settings. There is no catalog or predecessor-plan chain.
 The model has 32,003 embedding rows; synthetic inputs use the original 32,000-token vocabulary.
@@ -12,14 +17,14 @@ Bind the configuration and current source hashes without allocating weights or l
 
 ```bash
 uv run --no-sync python -m scripts.r0_execute experiments/qualification/plan.json \
-  --workers 1 --allocated-gpus 4
+  --workers 1 --allocated-gpus 1
 ```
 
 On the actual allocated node, after checking environment, storage, and prior costs:
 
 ```bash
 uv run --no-sync python -m scripts.r0_execute experiments/qualification/plan.json \
-  --workers 1 --allocated-gpus 4 --run \
+  --workers 1 --allocated-gpus 1 --run \
   --ledger /shared/speck/qualification-ledger --prior-r0-gpu-hours ACCOUNTED_HOURS
 ```
 
