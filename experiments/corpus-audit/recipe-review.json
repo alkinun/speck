@@ -103,7 +103,17 @@
       "metadata_url": "https://huggingface.co/api/datasets/nvidia/OpenMathInstruct-2",
       "status": "public_metadata_and_card_review_only",
       "training_admitted": false,
-      "review_boundary": "14M synthetic math problem-solution pairs; contamination explorer and source/test lineage require review before any use."
+      "review_boundary": "14M synthetic math problem-solution pairs; contamination explorer and source/test lineage require review before any use.",
+      "review_findings": [
+        "Solutions are generated with Llama3.1-405B-Instruct from GSM8K/MATH originals and augmented problems.",
+        "The card exposes 1M, 2M and 5M downsampled splits and a contamination explorer for GSM8K, MATH, AMC 2023, AIME 2024 and Omni-MATH.",
+        "The card recommends removing extremely long questions; answer agreement is not independent correctness certification."
+      ],
+      "required_checks": [
+        "Pin a declared split and count problem-source strata.",
+        "Join every evaluation family and freeze contamination exclusions before selection.",
+        "Verify expected answers with an independent arithmetic/symbolic oracle and retain unresolved cases."
+      ]
     },
     {
       "repository": "HuggingFaceTB/finemath",
@@ -116,7 +126,17 @@
       "metadata_url": "https://huggingface.co/api/datasets/HuggingFaceTB/finemath",
       "status": "public_metadata_and_card_review_only",
       "training_admitted": false,
-      "review_boundary": "FineMath and InfiMM-WebMath configurations are metadata candidates; retained FineMath 4+ evidence remains a separate stock identity."
+      "review_boundary": "FineMath and InfiMM-WebMath configurations are metadata candidates; retained FineMath 4+ evidence remains a separate stock identity.",
+      "review_findings": [
+        "The card describes FineMath-3+ and FineMath-4+ plus separate InfiMM-WebMath-3+ and -4+ configurations.",
+        "The published pipeline uses classifier filtering, deduplication and 13-gram benchmark decontamination; the card reports that deduplicating pages repeated between FineMath and InfiWebMath changes measured performance.",
+        "The retained FineMath 4+ inventory was acquired and audited separately; these card configurations do not rewrite that identity."
+      ],
+      "required_checks": [
+        "Keep each configuration and release revision as a separate source family.",
+        "Reconcile benchmark decontamination with Speck's held-out graph and measure cross-configuration overlap.",
+        "Check mathematical extraction, completeness and correctness independently before assigning a refined share."
+      ]
     },
     {
       "repository": "HuggingFaceTB/smoltalk",
@@ -129,7 +149,17 @@
       "metadata_url": "https://huggingface.co/api/datasets/HuggingFaceTB/smoltalk",
       "status": "public_metadata_and_card_review_only",
       "training_admitted": false,
-      "review_boundary": "Synthetic SFT mixture with multiple configurations; use requires component-level lineage, overlap and correctness review."
+      "review_boundary": "Synthetic SFT mixture with multiple configurations; use requires component-level lineage, overlap and correctness review.",
+      "review_findings": [
+        "The card describes roughly 1M synthetic SFT samples assembled from multiple configurations and public components.",
+        "New SmolTalk components are Apache-2.0 while included public datasets retain their own licenses; the aggregate card is not one uniform source-use decision.",
+        "The card reports 1.7B-scale ablations and a smaller-model subset, but those results do not establish transfer to Speck's model or protocol."
+      ],
+      "required_checks": [
+        "Split component identities, licenses, generators and revisions before any selection.",
+        "Deduplicate against retained SFT stock and final evaluation families.",
+        "Measure complete conversations, assistant masks, supervised tokens, correctness and tool/schema validity by component."
+      ]
     }
   ],
   "boundary": "Public metadata/cards only; no new dataset payloads, access acceptance, training admission, or GPU jobs. Pins describe this review, not the identity of older retained stock.",
