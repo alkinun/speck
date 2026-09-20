@@ -55,6 +55,30 @@ def validate(matrix_path):
             "runtime",
         }:
             raise ValueError(f"incomplete gate set: {source['id']}")
+        if source["id"] in {
+            "finemath_4plus",
+            "ultradata_math_l2_preview",
+            "nemotron_cc_math_4plus",
+        }:
+            evidence = source.get("qualification_evidence", {})
+            if evidence.get("training_admitted") is not False:
+                raise ValueError(f"math evidence must remain non-admitted: {source['id']}")
+            if (
+                source["id"] == "finemath_4plus"
+                and evidence.get("retained_stock", {}).get("eligible_tokens_established") != 0
+            ):
+                raise ValueError("FineMath retained stock must not claim eligible tokens")
+            if (
+                source["id"] == "ultradata_math_l2_preview"
+                and evidence.get("retained_stock", {}).get("host_missing_documents") != 169058
+            ):
+                raise ValueError("UltraData-Math L2 host-lineage count changed")
+            if (
+                source["id"] == "nemotron_cc_math_4plus"
+                and evidence.get("decision")
+                != "do_not_use_until_whole_objects_are acquired and independently qualified"
+            ):
+                raise ValueError("Nemotron availability boundary changed")
         if source["id"] in {"stack_edu", "stack_v3", "checked_code"}:
             evidence = source.get("qualification_evidence", {})
             if evidence.get("training_admitted") is not False:

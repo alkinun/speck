@@ -497,7 +497,7 @@
     "experiments/corpus-audit/code-yield-result.json": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94",
     "experiments/corpus-audit/data-readiness.json": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549",
     "experiments/main-data/data-study-packet.json": "f20ab236d8bf8dd9554d04e7f4ac9713dd54b1a58c74a42ca915d543f16f2a89",
-    "experiments/main-data/source-readiness.json": "ad9bdffa2368c2535837d1ed08309fa731ca709edacd67fbfc6e82ecf506898f"
+    "experiments/main-data/source-readiness.json": "a1863aae08a1ce1993765a57763f8aad2b92dc9b0de62f156979bb8f93829fee"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

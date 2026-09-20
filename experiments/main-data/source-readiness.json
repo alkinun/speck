@@ -427,6 +427,14 @@
         {
           "path": "/mnt/speck-data/speck/document-token-stock-v2/finemath_4plus/manifest.json",
           "kind": "retained_token_stock_manifest"
+        },
+        {
+          "path": "experiments/corpus-audit/followup.json",
+          "field": "math_census_and_directory_candidate"
+        },
+        {
+          "path": "experiments/corpus-audit/result.json",
+          "field": "sources[id=finemath_4plus]"
         }
       ],
       "gates": {
@@ -442,8 +450,35 @@
         "source-use decision",
         "family partition",
         "independent correctness",
-        "eligible-token accounting"
-      ]
+        "eligible-token accounting",
+        "independent solution correctness and completeness checks",
+        "joint source-family and evaluation partition",
+        "candidate directory policy not yet frozen"
+      ],
+      "qualification_evidence": {
+        "retained_stock": {
+          "documents": 753071,
+          "tokens": 1124167472,
+          "host_count": 55122,
+          "eligible_tokens_established": 0
+        },
+        "candidate_directory_view": {
+          "remaining_documents": 744508,
+          "remaining_tokens": 1105391968,
+          "removed_documents": 8563,
+          "removed_tokens": 18775504,
+          "removed_token_fraction": 0.01670169656002998,
+          "recall": "incomplete_conservative_v1"
+        },
+        "numeric_template_census": {
+          "repeated_families": 2,
+          "documents_in_repeated_families": 4,
+          "tokens_in_repeated_families": 1967,
+          "blanket_numeric_deduplication": false
+        },
+        "decision": "retain_source_and_directory_view_as_reversible_candidate; correctness and joint family gates remain open",
+        "training_admitted": false
+      }
     },
     {
       "id": "ultradata_math_l2_preview",
@@ -464,6 +499,14 @@
         {
           "path": "/mnt/speck-data/speck/document-token-stock-v1/ultradata_math_l2_preview/manifest.json",
           "kind": "retained_token_stock_manifest"
+        },
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "pretraining.math"
+        },
+        {
+          "path": "experiments/corpus-audit/result.json",
+          "field": "sources[id=ultradata_math_l2_preview]"
         }
       ],
       "gates": {
@@ -480,8 +523,32 @@
         "source-use decision",
         "family partition",
         "independent correctness",
-        "eligible-token accounting"
-      ]
+        "eligible-token accounting",
+        "all rows lack host metadata",
+        "independent solution correctness and completeness checks",
+        "joint source-family and evaluation partition"
+      ],
+      "qualification_evidence": {
+        "retained_stock": {
+          "documents": 169058,
+          "tokens": 384788210,
+          "host_missing_documents": 169058,
+          "eligible_tokens_established": 0
+        },
+        "within_normalized_duplicates": {
+          "copies": 0,
+          "tokens": 0
+        },
+        "cross_source_normalized_link": {
+          "unique_contents": 1,
+          "finemath_tokens_using_max_per_group": 1216,
+          "l2_tokens_using_max_per_group": 1309,
+          "byte_identical": false,
+          "automatic_removal": false
+        },
+        "decision": "retain_as_natural_math_candidate_only; resolve host lineage and independently check solutions before admission",
+        "training_admitted": false
+      }
     },
     {
       "id": "cosmopedia_v2",
@@ -589,6 +656,45 @@
         "family partition",
         "quality checks",
         "eligible-token accounting"
+      ]
+    },
+    {
+      "id": "nemotron_cc_math_4plus",
+      "roles": [
+        "math_candidate_support_bank"
+      ],
+      "identity": {
+        "repository": "nvidia/Nemotron-CC-Math-v1",
+        "revision": "397a2502f2028c659ba411a6c4935b464a7f03aa"
+      },
+      "inventory": {
+        "listed_files": 46,
+        "unusable_lfs_hashes": 46,
+        "acquired_shards": 0,
+        "qualified_supply_tokens": null
+      },
+      "evidence": [
+        {
+          "path": "experiments/corpus-audit/data-readiness.json",
+          "field": "new_source_inventories.nvidia--Nemotron-CC-Math-v1"
+        }
+      ],
+      "gates": {
+        "source_use": "not_started",
+        "family_partition": "not_started",
+        "correctness": "not_started",
+        "finite_supply": "no_acquired_shards",
+        "runtime": "not_started"
+      },
+      "status": "unavailable_candidate",
+      "admitted": false,
+      "qualification_evidence": {
+        "decision": "do_not_use_until_whole_objects_are acquired and independently qualified",
+        "training_admitted": false
+      },
+      "blockers": [
+        "all 46 listed LFS objects have unusable hashes",
+        "no shards acquired or verified"
       ]
     }
   ],
