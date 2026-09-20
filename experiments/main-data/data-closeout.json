@@ -112,7 +112,7 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "4d5ffe1efcb2979bd7ece20b2b5c7df2ac694bfb9b227000cdccfdc10757b6b5"
+      "sha256": "fb04c0d3f3b3ee72048858629ea8b0faed69d7d4f8a942c1a5a116ecaadd51d8"
     },
     "pretraining_study": {
       "path": "experiments/main-data/data-study-packet.json",
@@ -120,11 +120,11 @@
     },
     "mid_training_study": {
       "path": "experiments/main-data/mid-training-study-packet.json",
-      "sha256": "154ce98eaa5a5d5b7c20b2b68f056ac34837837ecaf36ce7b5cfa5af4746b9ca"
+      "sha256": "66943bd323c666a563be3aeb9bd08215dceac987b762419e7a89f380edadaf05"
     },
     "post_training_study": {
       "path": "experiments/main-data/post-training-study-packet.json",
-      "sha256": "274da2954ade60ee11b0545a1771a04200f19873f344df16ae18960852d0bd9f"
+      "sha256": "1ecb95b3fc9e318cba2693ff1e192c70e7dde0146f4b8aa646d61d93420d33cb"
     },
     "qualification_rules": {
       "path": "experiments/main-data/qualification-rules.json",
@@ -133,14 +133,23 @@
     "design_contract": {
       "path": "experiments/main-data/data-design-contract.json",
       "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
+    },
+    "research_mapping": {
+      "path": "experiments/main-data/frontier-data-source-mapping.json",
+      "sha256": "1e8621483defe5ecfb9785c71a77f317b62b00ac522b5ad91c56bbb942faf473"
     }
   },
   "launch_boundary": "This closeout is an evidence handoff. It does not authorize corpus acquisition, source substitution, training, repetition, GPU spending or publication claims.",
-  "next_action": "Map the reviewed hypotheses to pinned candidate manifests and primary evidence, then revise only the source-readiness gates and study contracts supported by that evidence.",
+  "next_action": "Use the source mapping to bind candidate manifests and close only source-use, family, correctness, supply and runtime gates supported by pinned evidence.",
   "external_research": {
     "path": "experiments/main-data/frontier-data-research.json",
     "sha256": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",
     "status": "reviewed_primary_reports_hypotheses_only",
-    "changes_made": "Added structured synthesis and design requirements; no source admission, mixture percentage or GPU allocation changed."
+    "changes_made": "Added structured synthesis and design requirements; no source admission, mixture percentage or GPU allocation changed.",
+    "mapping": {
+      "path": "experiments/main-data/frontier-data-source-mapping.json",
+      "sha256": "1e8621483defe5ecfb9785c71a77f317b62b00ac522b5ad91c56bbb942faf473",
+      "status": "review_only_gate_implications_recorded"
+    }
   }
 }

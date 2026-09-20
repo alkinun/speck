@@ -23,6 +23,10 @@
     "data_design_contract": {
       "path": "experiments/main-data/data-design-contract.json",
       "status": "shared_design_requirements_only_no_source_admission"
+    },
+    "source_mapping": {
+      "path": "experiments/main-data/frontier-data-source-mapping.json",
+      "status": "review_only_no_gate_closure"
     }
   },
   "model": {
@@ -518,12 +522,13 @@
     "experiments/corpus-audit/code-yield-result.json": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94",
     "experiments/corpus-audit/data-readiness.json": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549",
     "experiments/main-data/data-study-packet.json": "62a38d4c5278e151e229681208c8e877f6ead5ceef032d7b0b0dbffdf91b3213",
-    "experiments/main-data/source-readiness.json": "4d5ffe1efcb2979bd7ece20b2b5c7df2ac694bfb9b227000cdccfdc10757b6b5",
-    "experiments/main-data/mid-training-study-packet.json": "154ce98eaa5a5d5b7c20b2b68f056ac34837837ecaf36ce7b5cfa5af4746b9ca",
-    "experiments/main-data/post-training-study-packet.json": "274da2954ade60ee11b0545a1771a04200f19873f344df16ae18960852d0bd9f",
-    "experiments/main-data/data-closeout.json": "0cfaca1c40edfd1e8bb5b289e7775118862527209c81c97b2b70b9449680a4a3",
+    "experiments/main-data/source-readiness.json": "fb04c0d3f3b3ee72048858629ea8b0faed69d7d4f8a942c1a5a116ecaadd51d8",
+    "experiments/main-data/mid-training-study-packet.json": "66943bd323c666a563be3aeb9bd08215dceac987b762419e7a89f380edadaf05",
+    "experiments/main-data/post-training-study-packet.json": "1ecb95b3fc9e318cba2693ff1e192c70e7dde0146f4b8aa646d61d93420d33cb",
+    "experiments/main-data/data-closeout.json": "8429d7627a56a05c5f9f226984a8488d0abcd87b4bed5483c5c41ec416ae18a3",
     "experiments/main-data/frontier-data-research.json": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",
-    "experiments/main-data/data-design-contract.json": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
+    "experiments/main-data/data-design-contract.json": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f",
+    "experiments/main-data/frontier-data-source-mapping.json": "1e8621483defe5ecfb9785c71a77f317b62b00ac522b5ad91c56bbb942faf473"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

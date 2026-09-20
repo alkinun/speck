@@ -94,6 +94,9 @@ It makes the research synthesis operational without changing the study counts: m
 stage, source family, transformation, quality, coverage, dependency, contamination and lineage fields;
 sampling uses quality weighting with coverage constraints; and each stage has its own utility and
 correctness measurements. The contract is design metadata only and does not admit sources or authorize runs.
+The [frontier-data source mapping](frontier-data-source-mapping.json) is its companion review receipt:
+it ties each finding to pinned local evidence, names the gate implications and records remaining
+measurement gaps. It is an evidence index, not a source-admission decision.
 Its horizon accounting records the 100B/125B working target separately from the current one-pass bounds: retained code evidence bounds a 30% share at 1.589B total tokens before exclusions, and HQ tokens distinct from retained FineWeb-Edu bound a 25% share at 1.405B. These are constraints, not qualified supply.
 The HQ comparison retains FineWeb-Edu as the control, keeps the pinned L1/HQ route as a candidate, and adopts no score cutoff or automatic repair rule; its sampled panels establish review evidence, not eligible yield.
 The natural-code route is similarly bounded: the retained Stack-Edu census has 0 eligible tokens established, the fixed Stack-Edu/Stack v3 cohorts retain all 44 family holds, and unresolved origins/404s remain outside any arm. Checked-code substitution stays separate until provenance and correctness gates close.

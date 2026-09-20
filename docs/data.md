@@ -268,6 +268,10 @@ keeping natural, grounded, synthetic, repository-event and agent-trajectory bank
 design requirement for the next source-mapping pass; it does not change the working mixture, admit a
 source or authorize a run.
 
+The [source-mapping receipt](../experiments/main-data/frontier-data-source-mapping.json) now records
+which existing audits support each reviewed hypothesis and which readiness gates remain open. It is
+an evidence index, not a source-admission decision.
+
 The intended pretraining composition is selected broad natural text, meaningful code exposure,
 math/science, reference/documents and a controlled refined/synthetic component. Preserve everyday,
 nontechnical topics and varied prose as well as difficult educational material. Retain source-family

@@ -84,8 +84,11 @@ The [shared data-design contract](experiments/main-data/data-design-contract.jso
 stage, lineage, quality, coverage, dependency and contamination fields required by every data-stage
 manifest. It changes design metadata only; it does not admit sources or alter the allocation.
 
-1. **Map the reviewed research to source evidence.** Attach each finding to a pinned
-   source/configuration, sampling frame, processing method, baseline, measured result and limitation.
+1. **Map the reviewed research to source evidence.** The
+   [source-mapping receipt](experiments/main-data/frontier-data-source-mapping.json) now attaches each
+   finding to pinned local audits and records the remaining gate implications. Extend it with a source
+   configuration, sampling frame, processing method, baseline, measured result and limitation whenever
+   new primary evidence is added.
    Update the candidate review and source-readiness matrix only when primary evidence supports the
    corresponding gate. Do not reopen completed deterministic audits or infer eligibility from a
    paper's headline result.

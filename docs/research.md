@@ -60,6 +60,9 @@ primary evidence.
 Those requirements are centralized in the [stage-conditioned data-design contract](../experiments/main-data/data-design-contract.json),
 which the pretraining, mid-training and post-training packets now reference. This keeps the research
 direction consistent across manifests without turning hypotheses into launch settings.
+The [source-mapping receipt](../experiments/main-data/frontier-data-source-mapping.json) connects each
+finding to the current pinned audits and records unresolved gate implications. No mapping entry closes
+a source-readiness gate by itself.
 
 ## MidTool review — 2026-09-20
 

@@ -40,6 +40,10 @@
     "design_contract": {
       "path": "experiments/main-data/data-design-contract.json",
       "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
+    },
+    "research_mapping": {
+      "path": "experiments/main-data/frontier-data-source-mapping.json",
+      "sha256": "1e8621483defe5ecfb9785c71a77f317b62b00ac522b5ad91c56bbb942faf473"
     }
   },
   "gate_vocabulary": {
