@@ -83,6 +83,8 @@ historical; do not repeat the completed pilot because a preparation document sti
    finish the full source-family graph and intended scoring coverage before exercise derivation.
    The 16-row UltraData-Code L3 preview remains held for lineage.
 2. **Turn the completed data inventory into finite eligible arms.** The
+   [source-readiness matrix](experiments/main-data/source-readiness.json) binds the retained inventories,
+   gate status and one-pass horizon bounds to the design-only data packet. The
    [data-readiness closeout](experiments/corpus-audit/data-readiness.json) measures full retained HQ
    tokens, retained-bank exact overlap, math normalization links, assistant format/context coverage
    and a bounded RL prompt/reference inventory. The

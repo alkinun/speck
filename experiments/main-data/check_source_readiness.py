@@ -60,6 +60,19 @@ def validate(matrix_path):
             if isinstance(value, int) and value < 0:
                 raise ValueError(f"negative inventory count: {source['id']}.{key}")
 
+    horizon = matrix["horizon_accounting"]
+    target = horizon["working_target"]
+    if target["minimum_unique_preparation_tokens"] != int(
+        target["total_exposure_tokens"] * target["preparation_factor"]
+    ):
+        raise ValueError("working-horizon preparation arithmetic is inconsistent")
+    for bound in horizon["one_pass_constraints"]:
+        expected = (bound["numerator_tokens"] * 100) // bound["declared_share_percent"]
+        if bound["maximum_total_exposure_tokens_before_exclusions"] != int(expected):
+            raise ValueError(f"one-pass bound arithmetic is inconsistent: {bound['source']}")
+    if horizon["observed_union"]["eligible_tokens_established"] != 0:
+        raise ValueError("retained inventory must not claim eligible tokens")
+
     arms = matrix["arm_readiness"]
     expected_arms = {"baseline", "code_bank_candidate", "web_bank_candidate"}
     if set(arms) != expected_arms or any(
