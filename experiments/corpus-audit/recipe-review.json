@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-09-19T06:59:19.606204+00:00",
+  "checked_utc": "2026-09-20T00:00:00Z",
   "sources": [
     {
       "repository": "openbmb/UltraData-SFT-2605",
@@ -91,6 +91,45 @@
       "evidence_directory": "/mnt/speck-data/speck/data-recipe-review-20260919/nvidia--Nemotron-CC-Math-v1",
       "status": "public_metadata_and_card_review_only",
       "training_admitted": false
+    },
+    {
+      "repository": "nvidia/OpenMathInstruct-2",
+      "revision": "469216e3f46f4dacf476b382e192485ea51a143e",
+      "last_modified": "2024-11-25T20:07:28.000Z",
+      "gated": false,
+      "card_url": "https://huggingface.co/datasets/nvidia/OpenMathInstruct-2/resolve/469216e3f46f4dacf476b382e192485ea51a143e/README.md",
+      "card_sha256": "8d0513c2f85e6ee1258f109017c2565f638cc10a72f1ffbee34ab8601c0dc199",
+      "metadata_sha256": "a98a62bdcdfcec238fd0bbdf6cef438801759d06f00405fd1d0dd8470b56198e",
+      "metadata_url": "https://huggingface.co/api/datasets/nvidia/OpenMathInstruct-2",
+      "status": "public_metadata_and_card_review_only",
+      "training_admitted": false,
+      "review_boundary": "14M synthetic math problem-solution pairs; contamination explorer and source/test lineage require review before any use."
+    },
+    {
+      "repository": "HuggingFaceTB/finemath",
+      "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+      "last_modified": "2025-02-06T10:31:11.000Z",
+      "gated": false,
+      "card_url": "https://huggingface.co/datasets/HuggingFaceTB/finemath/resolve/e92b25a616738fe95dc186b64dfb19f9c8525594/README.md",
+      "card_sha256": "77b9162c99fc6b5944da8793f18fb99c3b520ab7cdce0cc67ec8a1e47871da61",
+      "metadata_sha256": "4f687cec8c84c19b28bbbba61c70fb0c6aadc5f1e26129a958492ffd2570019e",
+      "metadata_url": "https://huggingface.co/api/datasets/HuggingFaceTB/finemath",
+      "status": "public_metadata_and_card_review_only",
+      "training_admitted": false,
+      "review_boundary": "FineMath and InfiMM-WebMath configurations are metadata candidates; retained FineMath 4+ evidence remains a separate stock identity."
+    },
+    {
+      "repository": "HuggingFaceTB/smoltalk",
+      "revision": "5feaf2fd3ffca7c237fc38d1861bc30365d48ffa",
+      "last_modified": "2025-02-10T16:36:16.000Z",
+      "gated": false,
+      "card_url": "https://huggingface.co/datasets/HuggingFaceTB/smoltalk/resolve/5feaf2fd3ffca7c237fc38d1861bc30365d48ffa/README.md",
+      "card_sha256": "b6ff197df18e272fe15361db889638f9679b8443f299034137b5234acd8d3487",
+      "metadata_sha256": "2488e770797dba251be5b89d58c18dcd31455ca40547da069fd07e2f1a11c3f3",
+      "metadata_url": "https://huggingface.co/api/datasets/HuggingFaceTB/smoltalk",
+      "status": "public_metadata_and_card_review_only",
+      "training_admitted": false,
+      "review_boundary": "Synthetic SFT mixture with multiple configurations; use requires component-level lineage, overlap and correctness review."
     }
   ],
   "boundary": "Public metadata/cards only; no new dataset payloads, access acceptance, training admission, or GPU jobs. Pins describe this review, not the identity of older retained stock.",

@@ -218,7 +218,7 @@ and the existing stock's length-selection bias.
 
 ### Focused candidate queue
 
-[recipe-review.json](../experiments/corpus-audit/recipe-review.json) pins the seven newly reviewed
+[recipe-review.json](../experiments/corpus-audit/recipe-review.json) pins the ten newly reviewed
 public cards and snapshots existing local SFT receipts. New cards were inspected; new corpus
 payloads were not acquired. These revision pins are separate from older stock identities.
 
