@@ -37,6 +37,40 @@ The paper does not establish a universal mixture or a direct intelligence-per-FL
 
 This adds a sharper question inside the existing 150-hour mid-training research reservation. It does not create a new production allowance, architecture arm or training admission.
 
+## Cagliostro v3 review — 2026-09-20
+
+The [Cagliostro v3 model card](https://huggingface.co/bench-labs/cagliostro-v3/tree/176bf92e5d6ff5be887309d675aafa47c61747e6)
+reports a 146M-parameter English base model at 72.745B of a planned 75B pretraining tokens. The
+checkpoint is still in its pretraining run: it has no instruction tuning, safety tuning or RL, and
+its 2,048-token zero-shot results are not evidence for a post-training recipe. It uses one RTX 5090
+for about nine days, with a warmup-stable-decay schedule and a mixture change when cooldown begins
+at 85% of the run.
+
+The card makes the phase change explicit. The stable mixture is 43.7% FineWeb-Edu, 28.3% DCLM,
+16% Cosmopedia v2, 5% FineMath 3+, 3% OpenMathInstruct-2, 2% InfiWebMath 3+ and 2% SmolTalk.
+During cooldown those shares become 37%, 5%, 25%, 15%, 13%, 0% and 5%, respectively. Math therefore
+rises from 10% to 28% while broad web and DCLM fall; no source is intended to exceed 0.4 epochs.
+The report also separates held-out validation loss from the temporary accuracy plateau, which is a
+useful reporting practice for our own schedule and mixture studies.
+
+This is a strong hypothesis for Speck, not a result to copy. The mixture, learning-rate cooldown
+and checkpoint position change together, so the card cannot isolate the effect of the late math
+reweighting. We should test a phase-conditioned mixture only as a predeclared replacement or later
+ablation inside the existing 600-hour pretraining study, with the schedule, source exposures,
+validation mixture and total tokens fixed. It must not become a fourth screening arm. The source
+names also expose three candidates that are not yet in Speck's source-readiness matrix: NVIDIA's
+[OpenMathInstruct-2](https://huggingface.co/datasets/nvidia/OpenMathInstruct-2), the
+[InfiWebMath 3+](https://huggingface.co/datasets/HuggingFaceTB/finemath/tree/main/infiwebmath-3plus)
+subset of FineMath, and [SmolTalk](https://huggingface.co/datasets/HuggingFaceTB/smoltalk). They
+need the same source-use, family/contamination, correctness, finite-supply and runtime gates as the
+current candidates; their public presence does not admit them.
+
+The card's `smollm-corpus` tag should not be counted as one undifferentiated corpus. Its named
+components and their transformations need separate identities, overlap checks and exposure
+accounting. SmolTalk used during base pretraining is also not post-training supervision. This keeps
+the stage boundary clear while preserving the useful idea of small, high-value synthetic and
+conversation-derived slices in a controlled mixture comparison.
+
 ## Practical conclusions
 
 1. Quality and coverage of data, optimization, post-training, and evaluation all matter. Keep one

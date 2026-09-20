@@ -78,6 +78,7 @@
     "accounting": "All fresh-arm training, screening/confirmation evaluations, preparation, retries and allocated idle time charge to the 600-hour pretraining study cap. Main production starts fresh after selection; research tokens are not production exposure.",
     "scope": "Pretraining study is 600 of the 900 data-research hours. Mid-training comparisons have 150 hours on useful base checkpoints; post-training comparisons have 150 hours on appropriate base/SFT parents. Freeze each stage recipe before its production work; these arms do not draw silently from production budgets.",
     "design": "Proposed maximum baseline plus two single-factor candidates in screening, followed by baseline versus one selected candidate on two new paired seeds. Reserve confirmation and overhead first. No full-factorial sweep or combined winner without a direct comparison; design details in experiments/main-data/README.md.",
+    "schedule_hypothesis": "Cagliostro v3 motivates a late-phase math/synthetic reweighting under a warmup-stable-decay schedule. Treat it as a predeclared replacement or later ablation with total exposure, schedule, validation and source identities fixed; it is not a fourth screening arm or a data-only attribution.",
     "proposed_screening": {
       "max_arms": 3,
       "paired_seed_count": 1,
@@ -167,7 +168,9 @@
         "candidate_sources": [
           "openbmb/UltraData-Math:L2",
           "HuggingFaceTB/finemath:finemath-4plus",
-          "nvidia/Nemotron-CC-Math-v1:4plus"
+          "nvidia/Nemotron-CC-Math-v1:4plus",
+          "nvidia/OpenMathInstruct-2",
+          "HuggingFaceTB/finemath:infiwebmath-3plus"
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
