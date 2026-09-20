@@ -113,7 +113,17 @@
         "Pin a declared split and count problem-source strata.",
         "Join every evaluation family and freeze contamination exclusions before selection.",
         "Verify expected answers with an independent arithmetic/symbolic oracle and retain unresolved cases."
-      ]
+      ],
+      "bounded_sample": {
+        "receipt_path": "experiments/corpus-audit/openmathinstruct2-sample.json",
+        "receipt_sha256": "023ce25401427c90189f466ddda905dc37609f1c5d00ac50253e53c00eebaa93",
+        "audit_script": "experiments/corpus-audit/audit_openmath_sample.py",
+        "audit_script_sha256": "5320d0d51839dc5975fcb45456a6e9b01906bd443a75e3a46bb3c22b04825386",
+        "rows": 80,
+        "source_strata": 4,
+        "boxed_expected_matches": 58,
+        "independent_correctness": false
+      }
     },
     {
       "repository": "HuggingFaceTB/finemath",

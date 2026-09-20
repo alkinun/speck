@@ -1,0 +1,88 @@
+{
+  "answer_consistency": {
+    "boxed_solution_equals_expected": 58,
+    "independent_correctness_established": false,
+    "rows_with_boxed_solution": 60,
+    "rows_with_empty_expected_answer": 0
+  },
+  "boundary": "Schema, source labels, character lengths and boxed-answer self-consistency only. No independent oracle, contamination clearance, source-use decision, finite-supply estimate or training admission.",
+  "checked_utc": "2026-09-20T06:53:40.526514+00:00",
+  "config": "default",
+  "corpus_code_executed": false,
+  "dataset": "nvidia/OpenMathInstruct-2",
+  "format": "speck_openmathinstruct2_bounded_sample",
+  "format_version": 1,
+  "lengths": {
+    "generated_solution": {
+      "max_chars": 2720,
+      "median_chars": 779.0,
+      "min_chars": 252
+    },
+    "problem": {
+      "max_chars": 1889,
+      "median_chars": 194.0,
+      "min_chars": 44
+    }
+  },
+  "responses": [
+    {
+      "length": 16,
+      "offset": 0,
+      "response_sha256": "c813bf4334f29c2c3b92f5539538b3f45b2e2c14a7c6f34b9a8dd8fda5fe8833",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nvidia%2FOpenMathInstruct-2&config=default&split=train&offset=0&length=16"
+    },
+    {
+      "length": 16,
+      "offset": 1000000,
+      "response_sha256": "1563effd473035739de9117ca1278ee988135af4a84a8f2b116f860ed02ed29a",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nvidia%2FOpenMathInstruct-2&config=default&split=train&offset=1000000&length=16"
+    },
+    {
+      "length": 16,
+      "offset": 5000000,
+      "response_sha256": "273a4be763fb882159bd52123bac71a8437faaabc0812197021f1bb4ba52961c",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nvidia%2FOpenMathInstruct-2&config=default&split=train&offset=5000000&length=16"
+    },
+    {
+      "length": 16,
+      "offset": 10000000,
+      "response_sha256": "6deb86c77ac392e2747315ee2e5707d04bc3fe48527c7533946759e65c1a857c",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nvidia%2FOpenMathInstruct-2&config=default&split=train&offset=10000000&length=16"
+    },
+    {
+      "length": 16,
+      "offset": 13000000,
+      "response_sha256": "2064e25496c554d4f4662e4f700562474a57606062cc93ec83b7d449957c1099",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nvidia%2FOpenMathInstruct-2&config=default&split=train&offset=13000000&length=16"
+    }
+  ],
+  "sample_design": {
+    "offsets": [
+      0,
+      1000000,
+      5000000,
+      10000000,
+      13000000
+    ],
+    "rows": 80,
+    "rows_per_offset": 16,
+    "selection": "Fixed offsets across the documented train range; diagnostic sample, not a population estimate."
+  },
+  "schema": {
+    "features": [
+      "problem",
+      "generated_solution",
+      "expected_answer",
+      "problem_source"
+    ],
+    "schema_validated": true
+  },
+  "source_counts": {
+    "augmented_gsm8k": 6,
+    "augmented_math": 56,
+    "gsm8k": 4,
+    "math": 14
+  },
+  "split": "train",
+  "training_admitted": false
+}

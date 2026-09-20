@@ -234,6 +234,11 @@ payloads were not acquired. These revision pins are separate from older stock id
 | Secondary task/reference pool | [Dolci-Instruct-SFT](https://huggingface.co/datasets/allenai/Dolci-Instruct-SFT), UltraData-SFT `no_think` | Candidate tasks/reference answers only; any derived thinking examples need verified reasoning. Do not directly import a non-thinking response mode. |
 | Later reward training | [UltraData-RL-2609](https://huggingface.co/datasets/openbmb/UltraData-RL-2609) | Task/reference pool for math, STEM, code and document QA; not ready-made successful SFT trajectories. Use only after a useful SFT baseline and checked rewards. |
 
+The bounded [OpenMathInstruct-2 sample receipt](../experiments/corpus-audit/openmathinstruct2-sample.json)
+checks 80 fixed-offset rows for schema, source strata, lengths and boxed-answer self-consistency.
+It is diagnostic evidence only: independent correctness, contamination clearance and source-use
+decisions remain open.
+
 The intended pretraining composition is selected broad natural text, meaningful code exposure,
 math/science, reference/documents and a controlled refined/synthetic component. Preserve everyday,
 nontechnical topics and varied prose as well as difficult educational material. Retain source-family
