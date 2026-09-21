@@ -67,10 +67,16 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
 | Retained-data closeout | Full HQ token/overlap census, full math text/index reconciliation, 500K SFT format census and sampled tool-aware lengths, bounded RL inventory | [Receipt](experiments/corpus-audit/data-readiness.json); finite stock bounds measured, source use/correctness/family eligibility and missing banks remain open |
 | Other data preparation | 6.799B retained source tokens before joint eligibility; 500K assistant rows inventoried; finite tool-aware SFT rehearsal | [Supply](experiments/pilot/supply.json), [assistant contract](docs/assistant.md); not main-run qualified supply |
+| Training throughput pass | 2.084x over the frozen pilot recipe on a parameter-matched 318M proxy; model FLOPs utilization 25.0% to 52.2%; selected configuration is checkpointing off, compiled with max-autotune, determinism retained, Liger loss | [Sweep](experiments/qualification/throughput-3090/sweep.json), [GH200 confirmation](experiments/qualification/throughput-gh200.json); RTX 3090 sm_86 only, absolute rates and the microbatch and checkpointing decisions need GH200 measurement |
 
 The [timing measurements](experiments/qualification/timing-result.json) additionally cover saves,
 validation, restart, SFT and prefill/decode. Microbatch four showed about 20% higher steady throughput
 in a short probe; sustained operation and recovery need qualification before adoption.
+Those pilot rates describe an inefficient configuration. The pilot ran eager, with activation
+checkpointing, at microbatch one, and reached about 10.3% model FLOPs utilization. The
+[throughput pass](experiments/qualification/throughput-3090/sweep.json) measured 2.084x against
+that recipe locally. Treat 12,859 tokens/s as a property of the frozen pilot, not as the machine's
+capability, and re-anchor the numeric plan only from measured GH200 rates.
 SFT padded positions/s are not supervised tokens/s. Earlier estimates and failed attempts remain
 historical; do not repeat the completed pilot because a preparation document still contains commands.
 

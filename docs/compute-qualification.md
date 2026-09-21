@@ -53,6 +53,7 @@ hashes, wall time, allocated GPU count and allocated GPU-hours.
 | Real-data single-worker check | 1 declared GPU | Bind the bundle, then run `scripts.gh200_check run` for the bounded 90-minute sequence. | Pilot loader scan/replay, kernels, 4K base restart, CUDA generation, base export parity, SFT restart and SFT export parity all pass. | Any phase failure. Do not proceed to distributed tests until the failed artifact is diagnosed. |
 | R0 four-worker diagnostic | 4 declared GPUs | Repeat the R0 request with `--workers 4 --allocated-gpus 4`, using a new request identity and the same R0 ledger. | All four ranks pass the synthetic collective, checkpoint and restart checks with the declared tolerance. | Collective timeout, rank mismatch, communication failure, or budget reservation failure. |
 | Four-worker production replay | 4 declared GPUs | Run the finite production-trainer replay with `scripts.training_replay`, `--workers 4 --allocated-gpus 4`, a four-step horizon and restart at step two. | Real pilot data, optimizer/model parity, exact loader/RNG recovery and aggregate throughput are recorded. | Any rank failure, changed update geometry, or distributed parity failure. |
+| Throughput confirmation | 1 declared GPU | Run the ten bounded configurations in [`experiments/qualification/throughput-gh200.json`](../experiments/qualification/throughput-gh200.json) with `scripts.benchmark`, reusing one persistent Inductor cache. | Microbatch, activation checkpointing and determinism are selected from measurement, and tokens per second per allocated GPU is recorded. | Clock drift beyond 5%, unstable step times, or a graph-break count that differs from the Ampere result without explanation. |
 | Scheduler canary | Site allocation | Bind one finite Slurm wave with current code and real input hashes. Exercise timeout-boundary checkpoint/requeue once. | The scheduler returns the job identity, the trainer checkpoints at the requested signal, resumes the last complete checkpoint, and accounting reports all allocated GPUs. | Missing account/partition, unsupported signal/requeue behavior, duplicate submission, or accounting mismatch. |
 | Qualification closeout | 0 training hours | Download receipts, logs, manifests, failed artifacts and scheduler accounting. Reconcile the allocation ledger. | A signed local closeout identifies the usable worker count, measured throughput, recovery status, costs and remaining limits. | Missing receipt, unaccounted GPU-hours, or any unresolved phase result. |
 
@@ -114,6 +115,13 @@ commit, device identity, allocated GPU count, wall time and allocated GPU-hours.
 attempts. A training process stopping does not stop provider billing or delete an instance.
 
 ## Qualification boundary
+
+The throughput phase exists because the frozen pilot recipe is inefficient. A bounded RTX 3090 pass
+measured 2.084x against it on a parameter-matched proxy and selected a configuration; see
+[training](training.md#throughput-settings). Microbatch, activation checkpointing and determinism
+are immutable on resume, so they must be frozen here, before any production stage starts. The
+measured rate replaces `h100_full_trainer_tokens_per_second` as the anchor for every horizon in the
+numeric plan, which is why this phase precedes costing.
 
 A successful closeout permits us to cost the 200-hour architecture study, the 600-hour staged
 mid-training production reservation and the 1,800-hour 4K base reservation using measured runtime
