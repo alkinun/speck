@@ -11,6 +11,33 @@ variation without it. The setting is immutable on resume. Older recipes default 
 compatibility; deterministic execution and its throughput cost still require checks on the target
 hardware, distributed geometry, and compiled path.
 
+## Throughput settings
+
+The frozen pilot recipe is not an efficient configuration. A bounded RTX 3090 pass measured
+**2.084x** against it on a parameter-matched proxy, taking model FLOPs utilization from 25.0% to
+52.2%. The receipts are in [`experiments/qualification/throughput-3090/`](../experiments/qualification/throughput-3090/sweep.json).
+Three settings account for nearly all of it, and all three are immutable on resume, so they must be
+frozen before production starts.
+
+| Setting | Selected | Why |
+| --- | --- | --- |
+| `activation_checkpointing` | `false` | Recomputation costs about a quarter of executed FLOPs and buys memory that a 96 GiB card does not need. It is also what blocks compilation. |
+| compile | on, `max-autotune-no-cudagraphs` | With checkpointing on, `torch.compile` returns 1.008x, because FLA's `chunk_kda` carries `torch.compiler.disable` and Dynamo cannot tolerate a graph break inside a checkpointed region. With it off the same compile returns 1.612x. |
+| `deterministic` | `true`, retained | Determinism costs 1.086x, but raising the microbatch from one to two returns 1.104x. Reproducibility is affordable and the replay receipts depend on it. |
+| `loss_backend` | `liger` | The `torch` backend materializes the full vocabulary logits twice, once in float32. |
+| `device_batch_size` | choose on GH200 | Larger is better until memory binds. Changing it changes `global_stride` and therefore the data schedule, so it is not resume compatible. |
+
+CUDA graphs were measured and rejected: they cannot capture across the eager KDA islands and ran
+0.7% slower. The input pipeline was measured and cleared: end-to-end mode is 0.6% faster than
+synthetic compute, inside noise. Six graph breaks remain and are not cheaply removable, because
+bypassing the disable decorator still breaks on a lock context manager inside the library.
+
+Confirm all of this on the real hardware with
+[`experiments/qualification/throughput-gh200.json`](../experiments/qualification/throughput-gh200.json)
+before freezing a production recipe. Ampere rankings do not transfer directly: the library's
+autotune configurations are Hopper-tuned, and the same code reached 34.6% utilization on a 3090
+against 9.8% on an H100, which indicates a bandwidth-bound rather than compute-bound step.
+
 New base and SFT checkpoints include every rank's Python, NumPy, CPU, and local CUDA RNG state
 inside the atomic metadata publication. Resume restores those generators after runtime/loader
 initialization; CUDA resumes warm the eager forward/backward kernels before loading saved tensors.

@@ -1,0 +1,88 @@
+{
+  "benchmark": {
+    "activation_checkpointing": true,
+    "aggressive_fusion": false,
+    "compile_mode": null,
+    "compiled": false,
+    "deterministic": true,
+    "loss_backend": "liger",
+    "mode": "compute",
+    "optimizer": "muon",
+    "optimizer_step_compiled": false,
+    "seed": 42,
+    "steps": 5,
+    "training_output": false,
+    "warmup_seconds": 82.80341169598978,
+    "warmup_steps": 2
+  },
+  "boundary": null,
+  "compile": null,
+  "environment": {
+    "cublas_workspace_config": ":4096:8",
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_capability": [
+      8,
+      6
+    ],
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "git_dirty": true,
+    "git_revision": "1aa1fa8b",
+    "packages": {
+      "fla": "0.5.0",
+      "liger_kernel": "unknown",
+      "triton": "3.5.1"
+    },
+    "recorded_at": "2026-09-21T15:53:17.647652+00:00",
+    "telemetry_finished": {
+      "power_w": 370.2,
+      "sm_clock_mhz": 1695.0,
+      "temperature_c": 69.0
+    },
+    "telemetry_started": {
+      "power_w": 46.62,
+      "sm_clock_mhz": 1740.0,
+      "temperature_c": 45.0
+    },
+    "torch": "2.9.1+cu128"
+  },
+  "experiment": {
+    "fingerprint": "30691c3a2964639de72f6a5bb15a7562c553e0c2b90a17a21ab9c8a982e0dcd4",
+    "manifest": null,
+    "path": "/home/alkin/Desktop/speck/experiments/throughput-proxy"
+  },
+  "format": "speck_throughput_probe",
+  "format_version": 1,
+  "geometry": {
+    "accumulation": 8,
+    "batch_size": 1,
+    "sequence_length": 4096,
+    "tokens_per_step": 32768
+  },
+  "label": "proxy-ac-eager",
+  "memory": {
+    "peak_after_backward_bytes": 4810978304,
+    "peak_after_step_bytes": 5538803200,
+    "peak_allocated_bytes": 5538803200,
+    "peak_reserved_bytes": 6501171200
+  },
+  "model": {
+    "flops_per_token": 2075842560.0,
+    "parameters": 317826960
+  },
+  "performance": {
+    "loss_first": 5.523569107055664,
+    "loss_last": 1.3074501752853394,
+    "model_flops_utilization": 0.2504915671976221,
+    "step_seconds_mean": 3.813917050231248,
+    "step_seconds_median": 3.796886035008356,
+    "step_seconds_p90": 3.842088727047667,
+    "tflops": 17.834999584470694,
+    "tokens_per_second": 8591.691840286141
+  },
+  "profile": null,
+  "quality": {
+    "p90_over_median": 1.0119052011628817,
+    "stable": true
+  }
+}

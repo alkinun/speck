@@ -1,0 +1,277 @@
+{
+  "benchmark": {
+    "activation_checkpointing": false,
+    "aggressive_fusion": true,
+    "compile_mode": "max-autotune-no-cudagraphs",
+    "compiled": true,
+    "deterministic": true,
+    "loss_backend": "liger",
+    "mode": "compute",
+    "optimizer": "muon",
+    "optimizer_step_compiled": true,
+    "seed": 42,
+    "steps": 4,
+    "training_output": false,
+    "warmup_seconds": 17.39106981398072,
+    "warmup_steps": 2
+  },
+  "boundary": null,
+  "compile": null,
+  "environment": {
+    "cublas_workspace_config": ":4096:8",
+    "cuda": "12.8",
+    "device": "cuda",
+    "device_capability": [
+      8,
+      6
+    ],
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "git_dirty": true,
+    "git_revision": "dcbeabb5",
+    "packages": {
+      "fla": "0.5.0",
+      "liger_kernel": "unknown",
+      "triton": "3.5.1"
+    },
+    "recorded_at": "2026-09-21T16:31:25.471897+00:00",
+    "telemetry_finished": {
+      "power_w": 369.1,
+      "sm_clock_mhz": 1755.0,
+      "temperature_c": 64.0
+    },
+    "telemetry_started": {
+      "power_w": 45.96,
+      "sm_clock_mhz": 1740.0,
+      "temperature_c": 44.0
+    },
+    "torch": "2.9.1+cu128"
+  },
+  "experiment": {
+    "fingerprint": "30691c3a2964639de72f6a5bb15a7562c553e0c2b90a17a21ab9c8a982e0dcd4",
+    "manifest": null,
+    "path": "/home/alkin/Desktop/speck/experiments/throughput-proxy"
+  },
+  "format": "speck_throughput_probe",
+  "format_version": 1,
+  "geometry": {
+    "accumulation": 3,
+    "batch_size": 3,
+    "sequence_length": 4096,
+    "tokens_per_step": 36864
+  },
+  "label": "proxy-best-mb3-profile",
+  "memory": {
+    "peak_after_backward_bytes": 20532209664,
+    "peak_after_step_bytes": 20532209664,
+    "peak_allocated_bytes": 20532209664,
+    "peak_reserved_bytes": 21116223488
+  },
+  "model": {
+    "flops_per_token": 2075842560.0,
+    "parameters": 317826960
+  },
+  "performance": {
+    "loss_first": 6.412569999694824,
+    "loss_last": 3.1296193599700928,
+    "model_flops_utilization": 0.5150619659929073,
+    "step_seconds_mean": 2.0866874034982175,
+    "step_seconds_median": 2.0870081839966588,
+    "step_seconds_p90": 2.089393761008978,
+    "tflops": 36.672411978695,
+    "tokens_per_second": 17666.278110559117
+  },
+  "profile": {
+    "category_percent": {
+      "copy": 7.710181095404308,
+      "gemm": 55.521368074824586,
+      "mixer": 21.324186637030802,
+      "other": 7.506742772276474,
+      "pointwise": 7.937521420463676
+    },
+    "launch_stall_us": 731665.7040000227,
+    "self_device_time_total_us": 6626817.304,
+    "top_kernels": [
+      {
+        "count": 576,
+        "kind": "gemm",
+        "name": "triton_tem_fused__to_copy__unsafe_view_mm_mul_silu_t_view_3",
+        "percent": 7.749097771113161,
+        "self_device_time_us": 513518.55200000526
+      },
+      {
+        "count": 576,
+        "kind": "gemm",
+        "name": "triton_tem_fused__unsafe_view_mm_mul_silu_view_4",
+        "percent": 7.503876222750981,
+        "self_device_time_us": 497268.16800000356
+      },
+      {
+        "count": 108,
+        "kind": "mixer",
+        "name": "ChunkKDAFunctionBackward",
+        "percent": 7.124445557221277,
+        "self_device_time_us": 472123.99099999876
+      },
+      {
+        "count": 36,
+        "kind": "mixer",
+        "name": "void pytorch_flash::flash_bwd_dq_dk_dv_loop_seqk_parallel_kernel<Flash_bwd_kernel_traits<128, 64, 64, 8, 4, 2, 2, true, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 64, 8, cutlass::bfloat16_t> >, false, true, false, false, true, true, false>(pytorch_flash::Flash_bwd_params)",
+        "percent": 4.413995159085506,
+        "self_device_time_us": 292507.39500000066
+      },
+      {
+        "count": 288,
+        "kind": "gemm",
+        "name": "triton_tem_fused__to_copy__unsafe_view_mm_mul_silu_view_2",
+        "percent": 4.034588909499797,
+        "self_device_time_us": 267364.8359999974
+      },
+      {
+        "count": 288,
+        "kind": "gemm",
+        "name": "triton_tem_fused__unsafe_view_mm_mul_silu_view_3",
+        "percent": 3.8376900453629865,
+        "self_device_time_us": 254316.7079999998
+      },
+      {
+        "count": 288,
+        "kind": "gemm",
+        "name": "triton_tem_fused_mm_view_0",
+        "percent": 3.7354888273528664,
+        "self_device_time_us": 247544.02000000642
+      },
+      {
+        "count": 216,
+        "kind": "gemm",
+        "name": "triton_tem_fused__to_copy_mm_t_view_11",
+        "percent": 3.6639037544228534,
+        "self_device_time_us": 242800.2079999993
+      },
+      {
+        "count": 216,
+        "kind": "gemm",
+        "name": "triton_tem_fused_mm_view_1",
+        "percent": 3.498357135333526,
+        "self_device_time_us": 231829.7360000008
+      },
+      {
+        "count": 216,
+        "kind": "gemm",
+        "name": "triton_tem_fused_add_mm_view_12",
+        "percent": 3.396843819190911,
+        "self_device_time_us": 225102.63399999775
+      },
+      {
+        "count": 324,
+        "kind": "gemm",
+        "name": "ampere_bf16_s1688gemm_bf16_128x128_ldg8_f2f_tn",
+        "percent": 2.9571513142774526,
+        "self_device_time_us": 195965.01500000164
+      },
+      {
+        "count": 108,
+        "kind": "mixer",
+        "name": "chunk_kda_bwd_kernel_wy_dqkg_fused",
+        "percent": 2.5361645461170728,
+        "self_device_time_us": 168066.99099999922
+      },
+      {
+        "count": 108,
+        "kind": "mixer",
+        "name": "chunk_kda_bwd_kernel_intra",
+        "percent": 2.06205565554853,
+        "self_device_time_us": 136648.6610000006
+      },
+      {
+        "count": 216,
+        "kind": "copy",
+        "name": "triton_poi_fused__to_copy_add_cat_fill_mul_select_sigmoid_slice_sub_transpose_unsqueeze_view_0",
+        "percent": 1.961091366160849,
+        "self_device_time_us": 129957.94199999713
+      },
+      {
+        "count": 108,
+        "kind": "mixer",
+        "name": "ChunkKDAFunction",
+        "percent": 1.91223894045666,
+        "self_device_time_us": 126720.58100000818
+      },
+      {
+        "count": 144,
+        "kind": "gemm",
+        "name": "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x5_nt_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x5_nt_align8::Params)",
+        "percent": 1.8969246356636966,
+        "self_device_time_us": 125705.7300000008
+      },
+      {
+        "count": 144,
+        "kind": "gemm",
+        "name": "void cutlass::Kernel2<cutlass_75_tensorop_bf16_s1688gemm_bf16_128x256_tn_align1>(cutlass_75_tensorop_bf16_s1688gemm_bf16_128x256_tn_align1::Params)",
+        "percent": 1.7050587305582565,
+        "self_device_time_us": 112991.12699999727
+      },
+      {
+        "count": 3508,
+        "kind": "pointwise",
+        "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<float>, std::array<char*, 1ul> >(int, at::native::FillFunctor<float>, std::array<char*, 1ul>)",
+        "percent": 1.7025382596845533,
+        "self_device_time_us": 112824.09999999643
+      },
+      {
+        "count": 20,
+        "kind": "gemm",
+        "name": "triton_tem_fused_baddbmm_37",
+        "percent": 1.626726904556893,
+        "self_device_time_us": 107800.21999999974
+      },
+      {
+        "count": 288,
+        "kind": "pointwise",
+        "name": "triton_poi_fused__unsafe_view_add_fill_mul_sigmoid_silu_sub_view_2",
+        "percent": 1.6201926365947912,
+        "self_device_time_us": 107367.20599999744
+      },
+      {
+        "count": 144,
+        "kind": "gemm",
+        "name": "void cutlass::Kernel2<cutlass_75_tensorop_bf16_s1688gemm_bf16_256x128_nn_align1>(cutlass_75_tensorop_bf16_s1688gemm_bf16_256x128_nn_align1::Params)",
+        "percent": 1.428252019908147,
+        "self_device_time_us": 94647.65200000259
+      },
+      {
+        "count": 144,
+        "kind": "gemm",
+        "name": "void cutlass::Kernel2<cutlass_75_tensorop_bf16_s1688gemm_bf16_128x256_nt_align1>(cutlass_75_tensorop_bf16_s1688gemm_bf16_128x256_nt_align1::Params)",
+        "percent": 1.4204461913139232,
+        "self_device_time_us": 94130.37400000001
+      },
+      {
+        "count": 3090,
+        "kind": "pointwise",
+        "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>)",
+        "percent": 1.283185699848381,
+        "self_device_time_us": 85034.37200000601
+      },
+      {
+        "count": 216,
+        "kind": "copy",
+        "name": "triton_poi_fused__to_copy_add_mul_select_silu_slice_transpose_unsqueeze_8",
+        "percent": 1.2216009026103285,
+        "self_device_time_us": 80953.26000000142
+      },
+      {
+        "count": 216,
+        "kind": "pointwise",
+        "name": "triton_red_fused_add_cat_fill_mul_sigmoid_slice_sub_sum_transpose_view_1",
+        "percent": 1.2181031450992326,
+        "self_device_time_us": 80721.47000000416
+      }
+    ],
+    "trace": "/mnt/speck-data/speck/opt-work/best3.json",
+    "useful_percent": 76.84555471185539
+  },
+  "quality": {
+    "p90_over_median": 1.0011430606887946,
+    "stable": true
+  }
+}

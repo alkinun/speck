@@ -1,0 +1,128 @@
+{
+  "boundary": "Single-worker throughput confirmation only. It does not qualify distributed execution, scheduler requeue, long-context cost or data eligibility, and it does not authorize production training. The four-worker and scheduler phases of the runbook remain separate.",
+  "command": "PYTHONPATH=. python -m scripts.benchmark {experiment} --device cuda --mode {mode} --loss-backend liger --sequence-length 4096 --no-activation-checkpointing --deterministic --compile-mode {compile_mode} --batch-size {batch_size} --accumulation {accumulation} --steps 10 --warmup-steps 3 --peak-tflops 989.5 --label {label} --profile {profile} --explain --output {output}",
+  "common": {
+    "activation_checkpointing": false,
+    "compile_mode": "max-autotune-no-cudagraphs",
+    "deterministic": true,
+    "experiment": "experiments/pilot",
+    "loss_backend": "liger",
+    "mode": "compute",
+    "peak_tflops": 989.5,
+    "sequence_length": 4096,
+    "steps": 10,
+    "warmup_steps": 3
+  },
+  "date": "2026-09-21",
+  "decisions_to_record": [
+    "device_batch_size and accumulation, frozen; both are immutable on resume.",
+    "activation_checkpointing, frozen; immutable on resume.",
+    "deterministic, frozen; immutable on resume.",
+    "Measured tokens per second per allocated GPU, which re-anchors every horizon in experiments/main-data/plan.json.",
+    "Whether the KDA custom-op work is worth funding, judged from the Hopper profile."
+  ],
+  "estimated_gpu_hours": 4,
+  "format": "speck_gh200_throughput_confirmation",
+  "format_version": 1,
+  "input_receipts": {
+    "experiments/qualification/throughput-3090/sweep.json": "56b1fce0fd067792585a950014d64d8f5610a83c2e6fe05ffaf957f622d8dddf"
+  },
+  "prerequisites": [
+    "Complete the site preflight and the single-worker phases of the GH200 runbook first.",
+    "Export a persistent TORCHINDUCTOR_CACHE_DIR so max-autotune compiles once, not per run.",
+    "Record SM clock, temperature and power; reject any result whose clock moved beyond 5%.",
+    "Establish a noise band from five repeats of the first configuration before reading deltas."
+  ],
+  "purpose": "Confirm on GH200 the configuration selected from the RTX 3090 pass and choose the two settings that are immutable once production starts: device_batch_size and activation_checkpointing. This is a confirmation sweep, not a search.",
+  "reservation": "compute.reservations_gpu_hours.runtime_qualification",
+  "runs": [
+    {
+      "label": "gh200-pilot-baseline",
+      "overrides": {
+        "accumulation": 32,
+        "activation_checkpointing": true,
+        "batch_size": 1,
+        "compile_mode": null,
+        "no_compile": true
+      },
+      "purpose": "Reproduce the frozen pilot recipe so the 3090 conclusions are anchored to the existing 13,615 tok/s H100 number on the same hardware as production."
+    },
+    {
+      "label": "gh200-noac-eager",
+      "overrides": {
+        "accumulation": 32,
+        "batch_size": 1,
+        "no_compile": true
+      },
+      "purpose": "Isolate the checkpointing-off gain on Hopper, expected near 1.25x."
+    },
+    {
+      "label": "gh200-noac-compile-mb1",
+      "overrides": {
+        "accumulation": 32,
+        "batch_size": 1
+      },
+      "purpose": "Isolate the compile gain at the pilot microbatch. Record graph_break_count; it should match the six seen on Ampere."
+    },
+    {
+      "label": "gh200-mb2",
+      "overrides": {
+        "accumulation": 16,
+        "batch_size": 2
+      },
+      "purpose": "Microbatch scaling."
+    },
+    {
+      "label": "gh200-mb4",
+      "overrides": {
+        "accumulation": 8,
+        "batch_size": 4
+      },
+      "purpose": "Microbatch scaling."
+    },
+    {
+      "label": "gh200-mb8",
+      "overrides": {
+        "accumulation": 4,
+        "batch_size": 8
+      },
+      "purpose": "Microbatch scaling; 96 GiB should permit this where 24 GiB could not."
+    },
+    {
+      "label": "gh200-mb16",
+      "overrides": {
+        "accumulation": 2,
+        "batch_size": 16
+      },
+      "purpose": "Upper bound on microbatch; expected to be memory limited."
+    },
+    {
+      "label": "gh200-best-nondet",
+      "overrides": {
+        "accumulation": "selected",
+        "batch_size": "selected",
+        "deterministic": false
+      },
+      "purpose": "Price determinism at the selected microbatch. On Ampere it cost 1.086x and a larger microbatch more than repaid it. Keep determinism unless Hopper disagrees sharply."
+    },
+    {
+      "label": "gh200-best-endtoend",
+      "overrides": {
+        "accumulation": "selected",
+        "batch_size": "selected",
+        "mode": "end-to-end"
+      },
+      "purpose": "Loader cost at the production accumulation. The Ampere check ran at accumulation three and found none; accumulation is far higher here, so recheck."
+    },
+    {
+      "label": "gh200-best-profile",
+      "overrides": {
+        "accumulation": "selected",
+        "batch_size": "selected",
+        "profile": true
+      },
+      "purpose": "Evaluate the stopping rule on Hopper: useful percent, largest non-useful kernel, launch stalls and graph breaks."
+    }
+  ],
+  "status": "prepared_not_executed"
+}

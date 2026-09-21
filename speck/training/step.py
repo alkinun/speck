@@ -197,6 +197,7 @@ def optimization_step(
     return_training_output=False,
     load_balance_coefficient=0.01,
     router_z_loss_coefficient=0.001,
+    step_probe=None,
 ):
     optimizer.zero_grad(set_to_none=True)
     loss_sum = torch.zeros((), device=batch[0].device)
@@ -261,6 +262,8 @@ def optimization_step(
     set_optimizer_lr(optimizer, lr)
     grad_norm = torch.nn.utils.clip_grad_norm_(parameters, grad_clip)
     assert_finite(grad_norm, "non-finite training gradients")
+    if step_probe is not None:
+        step_probe()
     optimizer.step()
     if not return_training_output:
         return loss_sum / accumulation, grad_norm, batch

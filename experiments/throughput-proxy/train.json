@@ -1,0 +1,11 @@
+{
+  "activation_checkpointing": false,
+  "batch_tokens": 32768,
+  "deterministic": true,
+  "device_batch_size": 1,
+  "extends": "../pilot/train.json",
+  "loss_backend": "liger",
+  "run": "dummy",
+  "sequence_length": 4096,
+  "wandb_project": null
+}
