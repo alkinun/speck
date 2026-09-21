@@ -311,6 +311,16 @@ application window is not 90 days of continuous four-GPU funding. No GH200 jobs 
 | **Pipeline coverage** | **The primary deliverable. For each of the six stages: a data manifest with closed gates, an exposure ledger, a budget line and a receipt. A stage missing any of the four is reported as not covered.** |
 | **Pipeline reusability** | **Whether the recipe can be rerun at larger scale by someone else: pinned source identities, deterministic processing, family exclusions shared across stages, and costs recorded per stage and per token** |
 
+Coverage is claimed per stage, never in aggregate. Stages 1, 2 and 4 have trainers today. Stage 3
+still needs selective loss masks and best-fit packing; **stages 5 and 6 have no trainer at all** —
+only the fixed-policy feasibility harnesses, which perform no policy updates. Whether to build the
+RL trainer, rollout engine and verifiers, or to report stages 5 and 6 as **not covered with the
+reason recorded**, is deferred to the GH200 qualification closeout on 2026-09-21: the decision needs
+the measured throughput and the then-current supply position, and taking it earlier would either
+commit hours to unwritten software or abandon a stage before it is necessary. Record it in the
+closeout alongside the other qualification outcomes. Until then, stage 5 and 6 coverage is
+**unclaimed**, and no release text may assume it.
+
 The [competitive strategy](docs/competitive.md) and [report outline](docs/report.md) define the
 comparison and release evidence. No architecture superiority claim follows from an engineering
 pilot without a matching control, and no such claim is available at all this time: the comparison

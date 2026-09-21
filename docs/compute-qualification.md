@@ -163,4 +163,8 @@ The closeout must state separately:
 - memory and storage observations;
 - inference/export parity status;
 - all-in allocated GPU-hours and non-GPU costs;
+- **the stage 5/6 decision**: build the RL trainer, rollout engine and verifiers, or report stages 5
+  and 6 as not covered with the reason recorded. Nothing in this repository performs a policy
+  update today, so this closeout is the last point where the 200 conditional RL hours can be
+  committed or released against measured throughput and the then-current supply position;
 - unresolved limitations and the exact next qualification action.

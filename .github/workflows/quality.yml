@@ -33,6 +33,8 @@ jobs:
         run: uv run --no-sync pytest -q
       - name: Verify recoverable history
         run: uv run --no-sync python -m scripts.archive check
+      - name: Check plan arithmetic and receipt chain
+        run: make plan-check
       - name: Check frozen research evidence
         run: uv run --no-sync pytest -q --evidence -m evidence
       - name: Exercise the CPU workflow
