@@ -15,13 +15,21 @@ broad architecture/size searches for later programs.
 ```bash
 make setup
 make quality
+make plan-check
 make smoke
 ```
 
 `make quality` checks formatting, lint, portable behavior tests, and historical snapshot integrity.
-`make evidence-test` additionally verifies frozen historical inputs. Accelerator-specific tests skip
-when their dependencies are unavailable. CPU success does not qualify CUDA kernels, GH200
-throughput, NCCL, or the scheduler.
+`make plan-check` is offline design arithmetic: it reconciles the reservation table, the study
+packets, the receipt chain, and the GPU-hour figures written in prose against
+[`plan.json`](experiments/main-data/plan.json). Both run in CI. If a budget moves, change the plan
+and the documents in one commit; `check_documents.py` fails the build when a prose figure is left
+behind. `make evidence-test` additionally verifies frozen historical inputs. Accelerator-specific
+tests skip when their dependencies are unavailable. CPU success does not qualify CUDA kernels,
+GH200 throughput, NCCL, or the scheduler.
+
+Set `TMPDIR` to a path with real disk space; the distributed tests exhaust a small `/tmp` tmpfs and
+report the exhaustion as a test failure.
 
 The `speck` package owns behavior; `scripts` provides command entry points. Package code must not
 import command scripts. Keep data order, checkpoint tensor names, optimizer state, and resume

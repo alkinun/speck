@@ -83,7 +83,7 @@ PYTHONPATH=. python experiments/main-data/check_mid_training_study.py \
   experiments/main-data/mid-training-study-packet.json
 ```
 
-The packet reserves 300 GPU-hours for mid-training research. Capability data interventions must use
+The packet reserves 360 GPU-hours for mid-training research. Capability data interventions must use
 `--branch-kind data` with `training_phase: data_continuation`; context interventions must use the
 separate context branch. Linked SFT/RL convergence and adaptation measurements belong to the separate
 post-training research reservation and must use the same downstream recipe across retained arms.
@@ -97,7 +97,7 @@ PYTHONPATH=. python experiments/main-data/check_post_training_study.py \
   experiments/main-data/post-training-study-packet.json
 ```
 
-The packet reserves 80 GPU-hours for SFT comparison, 20 for RL feasibility, 30 for the final self-SFT pilot and 20 for support. Existing 500K-row stock remains format and context evidence until source, family, correctness and held-out gates close.
+The packet reserves 80 GPU-hours for SFT comparison, 40 for RL feasibility, 30 for the final self-SFT pilot and 20 for support. Existing 500K-row stock remains format and context evidence until source, family, correctness and held-out gates close.
 
 Run `make plan-check` from the repository root to validate the cross-stage compute ledger, all
 packet budgets and every recorded input receipt together. A passing check is necessary bookkeeping,

@@ -83,7 +83,8 @@ horizon if measured cost or qualified supply requires it; do not promise quality
    fresh-initialization data comparison before main pretraining and document the recipe decision;
    its early learning curves cannot promise the final ranking. Charge
    runtime qualification and the bounded data comparison to their existing reservations. Keep the
-   chosen architecture fixed after the bounded hybrid/attention comparison; no MoE search is planned.
+   backbone fixed by declaration; the bounded hybrid/attention comparison is deferred to a later
+   allocation and no MoE search is planned.
 
 ## Release evidence and later scaling
 

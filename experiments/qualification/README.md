@@ -2,7 +2,7 @@
 
 The complete access sequence is in the [GH200 access qualification runbook](../../docs/compute-qualification.md).
 This file owns the bounded synthetic R0 diagnostic and its 70-GPU-hour internal ceiling; the
-program reserves 100 GPU-hours for all hardware/runtime qualification, including real-data,
+program reserves 120 GPU-hours for all hardware/runtime qualification, including real-data,
 distributed and scheduler checks.
 
 This checks the existing 1.2B KDA/GQA model at 4K. [model.json](model.json) holds its exact geometry;
@@ -124,6 +124,6 @@ under ideal per-GPU scaling and zero additional overhead/post-training cost. Its
 mixture stock was capped near 2.76B before exclusions. These historical figures do not describe
 the revised allocation or supply; use the [current plan](../../PLAN.md#compute) for both.
 
-The current program reserves 100 hours for all hardware/runtime qualification. This frozen
+The current program reserves 120 hours for all hardware/runtime qualification. This frozen
 rehearsal retains its original 70-hour ceiling; it is a bounded subset, not the entire new phase.
 New probes need their own identified settings and must fit the remaining program reservation.

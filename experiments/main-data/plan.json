@@ -629,7 +629,7 @@
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",
-    "completed architecture/efficiency comparison and frozen backbone before pretraining-data experiments",
+    "backbone frozen by declaration before pretraining-data experiments; the architecture/efficiency comparison is deferred to a later allocation and is not a prerequisite here",
     "shared stage-conditioned data-design contract bound to every data manifest",
     "qualified per-source supply and revised manifest",
     "completed pretraining-data comparison and documented starting-recipe decision before main pretraining",

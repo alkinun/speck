@@ -183,7 +183,8 @@ prompts separate from successful assistant trajectories and does not authorize S
 ## Stage and budget ownership
 
 The [program overview](program.md#thinking-sft) connects this data/format contract to length-bucketed
-SFT and conditional reward training. Proposed subdivisions are 500 GPU-hours SFT, 200 RL and 100
-on-allocation teacher/verification work within the existing 800-hour post-training envelope. These
-are planning bounds, not measured costs. RL and long-context runtime remain unqualified; retain
-the SFT thinking assistant if reward training does not justify its cost or causes regressions.
+SFT and conditional reward training. Proposed subdivisions are 450 GPU-hours SFT, 200 conditional
+RL, 100 final self-SFT and 50 on-allocation teacher/verification work within the existing 800-hour
+post-training envelope. These are planning bounds, not measured costs. RL and long-context runtime
+remain unqualified; retain the SFT thinking assistant if reward training does not justify its cost
+or causes regressions.

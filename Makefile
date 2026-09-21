@@ -34,5 +34,6 @@ plan-check:
 	uv run --no-sync python experiments/main-data/check_mid_training_study.py experiments/main-data/mid-training-study-packet.json
 	uv run --no-sync python experiments/main-data/check_post_training_study.py experiments/main-data/post-training-study-packet.json
 	uv run --no-sync python experiments/main-data/check_supply_gap.py
+	uv run --no-sync python experiments/main-data/check_documents.py
 
 quality: format-check lint test archive-check

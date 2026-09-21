@@ -88,7 +88,7 @@ stage. Report repository families, dependency links, issues/PRs/commits, verifie
 schemas, grounded workflows, executable trajectories, replay and derived-data lineage. Freeze each
 transition's objective, loss mask, packing, mixture, length, optimizer/schedule policy and cost.
 Separate data continuation from context continuation; the combined production reservation is 600
-GPU-hours and the comparison reservation is 300 GPU-hours.
+GPU-hours and the comparison reservation is 360 GPU-hours.
 
 For trajectories, report environment images, tool schemas, turn structure, valid/invalid calls,
 test outcomes, failure/recovery labels, supervised positions and masked observations. Use related-prefix
