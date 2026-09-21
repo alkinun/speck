@@ -2,7 +2,8 @@
 
 Decision updated 2026-09-19. Agentic coding, general coding and math reasoning are primary
 first-release targets for the always-thinking assistant. The paper studies their data and training
-across pretraining, mid-training and post-training after a bounded architecture study and backbone freeze. General usefulness supports these targets.
+across all six training stages on a backbone that is fixed by declaration, not selected over a
+control; the architecture study is deferred. General usefulness supports these targets.
 Code-data selection is a candidate contrast for the pretraining recipe study, which must precede
 main pretraining. Freeze its question after source/supply audits; the frozen engineering pilot and
 its evaluation protocol remain intact.

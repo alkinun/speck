@@ -4,7 +4,7 @@
   "status": "design_only_not_training_authority",
   "date": "2026-09-20",
   "purpose": "Bind the first pretraining data comparison before main pretraining. This packet defines a finite scientific design; it does not select sources, authorize acquisition, admit training data or promise a token horizon.",
-  "program_direction": "The first report centers on data quality, data mixtures and staged training, supported by one bounded architecture/efficiency comparison. The backbone is frozen before this study; broad architecture searches are deferred.",
+  "program_direction": "The first report centers on data quality, data mixtures and staged training on a backbone that is fixed by declaration rather than selected over a control. The bounded architecture/efficiency comparison was deferred to a later allocation on 2026-09-21; all architecture searches are deferred, and no architecture claim follows from this study.",
   "source_of_truth": {
     "numeric_plan": {
       "path": "experiments/main-data/plan.json",
@@ -24,7 +24,7 @@
     }
   },
   "common_contract": {
-    "backbone": "Chosen after the bounded architecture/efficiency study; near-1.2B reference family only.",
+    "backbone": "Fixed by declaration before this study, not chosen over a control; the 1.2B reference backbone only.",
     "tokenizer": "Frozen Mistral 32K tokenizer bound by the model experiment.",
     "context_tokens": 4096,
     "objective": "Next-token prediction with identical serialization and optimizer policy across arms.",
@@ -146,7 +146,7 @@
     "Independent correctness/oracle checks for claimed worked solutions, checked exercises and generated material.",
     "Tokenizer, serialization, packing, context length, initialization and evaluation manifests hash-bound.",
     "Measured GH200 single-worker and four-worker cost sufficient to freeze a common comparison horizon.",
-    "Backbone frozen after the bounded architecture/efficiency comparison."
+    "Backbone fixed by declaration; the architecture/efficiency comparison is deferred to a later allocation."
   ],
   "required_outputs_for_report": [
     "Manifest fields, quality-weighted coverage distributions, lineage and contamination status under the shared data-design contract.",

@@ -16,7 +16,7 @@
     },
     "post_training_packet": {
       "path": "experiments/main-data/post-training-study-packet.json",
-      "sha256": "82987d430d06a9d163c000ee5acc09ebdc26e8ebe2b4a254f6f1c73f8a9a4971"
+      "sha256": "47cffb97f04f5ec09d7dd9d501640420125a6c0c40110eca855294874160f1a2"
     },
     "qualification_rules": {
       "path": "experiments/main-data/qualification-rules.json",
@@ -294,7 +294,7 @@
     "Independent code/math/tool outcome checks and explicit unresolved/invalid handling.",
     "Tool schemas, turn order, observations, outcomes, failure/recovery cases and environment identity for agent rows.",
     "Pinned RL references/tests/verifiers with deliberately wrong controls and fixed-policy cost measurement.",
-    "Useful parent checkpoint and measured downstream runtime within the 150-hour research reservation."
+    "Useful parent checkpoint and measured downstream runtime within the 170-hour research reservation."
   ],
   "next_actions": [
     "Split the 500K structural census into source-family manifests and remove prompt/task families crossing held-out boundaries.",

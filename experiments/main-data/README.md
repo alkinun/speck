@@ -4,14 +4,16 @@
 This is not a launch configuration or a claim that the required corpus is already qualified.
 The frozen H100 pilot, development evaluation and backups are complete. This working plan does
 not change their configurations or historical result receipts.
-The first 5,000-GPU-hour program studies data and training across pretraining, mid-training and
-post-training after a bounded architecture/efficiency study and backbone freeze near 1.2B. The [program](../../docs/program.md#training-lifecycle)
-defines stage boundaries; [model notes](../../docs/model.md) cover supporting attention/size analysis.
-Broader architecture research belongs to later releases. Our base starts from scratch; the future
+The first 5,000-GPU-hour program studies the data pipeline across all six training stages on a
+1.2B backbone that is **fixed by declaration, not selected over a control**. The bounded
+architecture/efficiency study was deferred to a later allocation on 2026-09-21.
+The [program](../../docs/program.md#training-lifecycle)
+defines stage boundaries; [model notes](../../docs/model.md) cover reference-only attention/size
+analysis. Architecture research belongs to later releases. Our base starts from scratch; the future
 50,000-hour allocation is not assumed funded.
 
-The [architecture study packet](architecture-study-packet.json) is the executable design contract
-for that gate. Validate it before preparing a run:
+The [architecture study packet](architecture-study-packet.json) preserves that deferred design
+unmodified and draws zero hours from this allocation. Validate that it stays deferred:
 
 ```bash
 PYTHONPATH=. python experiments/main-data/check_architecture_study.py \
@@ -43,7 +45,7 @@ first release studies data and staged training within the confirmed 5,000-hour e
 
 Capability mid-training uses a combined **600-hour production reservation** across a 4K capability
 bridge, 16K repository reasoning and 32K agentic continuation; its tokens are separately accounted
-from the 4K base. Research uses **300 hours** for the four-arm proxy/objective/context/confirmation
+from the 4K base. Research uses **360 hours** for the four-arm proxy/objective/context/confirmation
 funnel, and **1.5M unique
 post-training conversations**, within a 1–2M planning range. These require their own cost and
 quality qualification. All tokens use the frozen Mistral tokenizer; holdouts are outside training
@@ -160,9 +162,9 @@ The external Cagliostro v3 review identifies OpenMathInstruct-2, FineMath's Infi
 
 This is the proposed experiment design, with numeric caps in [plan.json](plan.json). Exact datasets,
 seed values, horizons, learning rates and decision thresholds must be bound before execution.
-Complete runtime qualification and the [architecture study](../../docs/model.md#proposed-control-and-decision)
-before pretraining data runs. Audit sources for every stage now; downstream runs require useful
-parent checkpoints. The full production corpus need not be materialized to design a finite study.
+Complete runtime qualification before pretraining data runs; the
+[architecture study](../../docs/model.md#proposed-control-and-decision) is deferred and is not a
+gate here. Audit sources for every stage now; downstream runs require useful parent checkpoints. The full production corpus need not be materialized to design a finite study.
 
 | Study | Proposed comparison and controls | Decision evidence |
 | --- | --- | --- |
@@ -380,7 +382,7 @@ inventory without counting them as first-release training exposure.
 
 Short replay at 25% remains a hypothesis. For the long portion, compare unchanged domain weights
 repacked into coherent longer records against the proposed 50% repository / 30% math/science /
-20% grounded cross-document mix. Charge these comparisons to the 300-hour mid-training research
+20% grounded cross-document mix. Charge these comparisons to the 360-hour mid-training research
 cap, distinct from the selected context production run. Preserve repository/import/document
 relationships and record source-family reuse. Evaluate fixed-suffix loss with related prefixes,
 retrieval across positions, multi-file tasks and short-task retention before advancing length.

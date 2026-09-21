@@ -8,11 +8,11 @@
   "source_of_truth": {
     "candidate_manifest": {
       "path": "experiments/main-data/post-training-candidate-manifest.json",
-      "sha256": "cddee2a936b93d3e4b20908bf88de2603c0ad07509ac72a27944524bd27aac54"
+      "sha256": "c0f2efc2d00ab02f92c4086be647499a95ee5e3f3aeb97d9b2b23cc817f616a8"
     },
     "study_packet": {
       "path": "experiments/main-data/post-training-study-packet.json",
-      "sha256": "82987d430d06a9d163c000ee5acc09ebdc26e8ebe2b4a254f6f1c73f8a9a4971"
+      "sha256": "47cffb97f04f5ec09d7dd9d501640420125a6c0c40110eca855294874160f1a2"
     },
     "data_readiness": {
       "path": "experiments/corpus-audit/data-readiness.json",

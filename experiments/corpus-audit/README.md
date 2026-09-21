@@ -192,7 +192,7 @@ joint deduplication, benchmark exclusion, and tokenizer pipeline rather than a p
    count all training, preparation and evaluation costs within the study reservation.
 
 The [current study design](../../docs/coding.md#first-comparison-to-prepare) and
-[numeric plan](../main-data/plan.json) own the 600-hour pretraining study cap within 900 data-research hours and the H100 cost scenarios.
+[numeric plan](../main-data/plan.json) own the 700-hour pretraining study cap within 1,230 data-research hours and the H100 cost scenarios.
 They do not freeze a run length or guarantee that short-run learning will resolve the question.
 Record the result, uncertainty and recipe decision before main pretraining; later continuation
 comparisons answer a separate question.

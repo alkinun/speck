@@ -19,7 +19,7 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "f6b43603c49a5e74ca5236605c10aecf3a45dedab4f2d444af5dd2cfe81eb8a1"
+      "sha256": "c14b2650ec145573d0af9e75ded0ed15b73d0e655be3df37040de9491a1452b0"
     },
     "design_contract": {
       "path": "experiments/main-data/data-design-contract.json",
@@ -131,7 +131,7 @@
     "Outcome-verification selection uses independent checks and records rejected, unresolved and invalid cases.",
     "RL prompts, references/tests, environments and verifiers are pinned and pass non-vacuous controls.",
     "Self-distillation prompts, teacher checkpoint, generation settings, verifier outputs and anchor mixture are hash-bound before generation.",
-    "SFT and fixed-policy evaluation cost fits the 150-hour research reservation; production exposure remains separate."
+    "SFT and fixed-policy evaluation cost fits the 170-hour research reservation; production exposure remains separate."
   ],
   "required_outputs_for_report": [
     "Manifest fields, quality-weighted coverage distributions, lineage and contamination status under the shared data-design contract.",

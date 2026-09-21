@@ -1,7 +1,7 @@
 # SpeckLabs first program: execution overview
 
-2026-09-20. SpeckLabs' first model and paper center on data and training across pretraining,
-mid-training and post-training: our own pretrained base and an always-thinking assistant for
+2026-09-21. SpeckLabs' first model and paper center on the data pipeline across all six training
+stages: our own pretrained base and an always-thinking assistant for
 agentic coding, normal coding, math and tools. This document explains the program; [PLAN.md](../PLAN.md) records
 current status and work order. The [numeric plan](../experiments/main-data/plan.json) owns working
 quantities, while experiment configs and verified receipts own actual execution and measurements.
@@ -11,7 +11,7 @@ No GPU run starts from this document.
 
 | Status | Decision or question |
 | --- | --- |
-| Reference, to test | 1.2B total/all-active KDA/GQA model; one bounded attention-baseline comparison before backbone freeze; no MoE or size sweep |
+| Fixed substrate, not tested | 1.2B total/all-active KDA/GQA model, frozen by declaration rather than selected over a control; the bounded attention-baseline comparison was deferred on 2026-09-21 to a later allocation with its design preserved; no MoE or size sweep |
 | Selected | Pretrain from scratch; preserve base and thinking-assistant releases; one thinking protocol with variable effort |
 | Confirmed envelope | 5,000 total GPU-hours across four GH200s, with a nominal 90-day access window; start date/site details remain unconfirmed |
 | Working recipe | 35% code, 25% math, 40% supporting data; 80B 4K-base working horizon, subject to supply and measured GH200 cost |
@@ -110,7 +110,8 @@ conditions; unused budget is not a requirement to spend.
 ## Model and runtime
 
 - Reference 1,195,884,576 total/active parameters; 24 layers, width 2048, dense SwiGLU
-  intermediate width 5120 throughout. No routed experts; one bounded matched attention-control study precedes backbone freeze.
+  intermediate width 5120 throughout. No routed experts. The backbone is fixed by declaration; the
+  bounded matched attention-control study is deferred to a later allocation and is not run here.
 - Repeating three KDA layers plus one NoPE GQA layer: 18 recurrent and six global-attention layers.
 - Tied embeddings; frozen Mistral tokenizer with 32,003 embedding rows including three role IDs.
 - Starting optimizer: Muon/AdamW; BF16 activations with existing FP32 parameters/optimizer state.
@@ -216,7 +217,7 @@ the implementation boundary.
 Base 4K → qualify up to 16K → up to 32K, within the combined 600-hour mid-training production
 reservation. Token counts remain unset until useful-context learning and runtime are measured.
 64K/128K is future work requiring an explicit affordable revision. Context-mixture comparisons use
-the separate 300-hour mid-training research cap.
+the separate 360-hour mid-training research cap.
 
 Keep 25% short replay as a working proposal. Coherent long records include repository files/tests/
 documentation, intact technical/math documents and grounded multi-document tasks. The proposed long
@@ -275,7 +276,7 @@ Train brief and deep reasoning with one protocol and no supported non-thinking t
 outcomes and consistency of reasoning/tool observations. One pass over 1.5M conversations averaging
 8K/16K total tokens is 12B/24B processed context tokens, before padding/replay. Count supervised
 positions separately. The measured 4K SFT rate is not a long-context throughput prediction, so the
-500-hour subdivision needs validation against the actual length mixture and workflow overhead.
+450-hour SFT subdivision needs validation against the actual length mixture and workflow overhead.
 
 ### Final self-SFT
 
@@ -289,9 +290,10 @@ Teacher checkpoint, prompts, decoding, environment images, tool schemas, verifie
 rejections are part of the derived-data manifest. Self-generated text is never counted as natural
 pretraining data.
 
-Final self-SFT shares the 500-hour supervised-production subdivision with initial SFT; its exact
-split is frozen after measured cost and the pilot decision. Generation and verification share the
-100-hour production support subdivision. Neither is an extra budget beyond post-training's 800 hours.
+Final self-SFT holds its own **100-hour** production line, separate from initial SFT's 450; both
+are frozen after measured cost and the pilot decision. Generation and verification draw on the
+**50-hour** teacher/verification subdivision. Neither is an extra budget beyond post-training's
+800 hours.
 
 ### Conditional RL
 

@@ -95,7 +95,7 @@ The paper does not establish a universal mixture or a direct intelligence-per-FL
 - Report downstream capability versus mid-training tokens and GPU-hours, SFT convergence area/steps to a fixed target, early RL adaptation and final held-out transfer. Count source preparation, teacher generation, validation, retries and discarded trajectories.
 - Keep context extension separate from capability mid-training. A longer sequence is a systems and representation change; it cannot be used to attribute a data-mixture gain.
 
-This adds a sharper question inside the existing 300-hour mid-training research reservation. It does not create a new production allowance, architecture arm or training admission.
+This adds a sharper question inside the existing 360-hour mid-training research reservation. It does not create a new production allowance, architecture arm or training admission.
 
 ## Cagliostro v3 review — 2026-09-20
 
@@ -116,7 +116,7 @@ useful reporting practice for our own schedule and mixture studies.
 This is a strong hypothesis for Speck, not a result to copy. The mixture, learning-rate cooldown
 and checkpoint position change together, so the card cannot isolate the effect of the late math
 reweighting. We should test a phase-conditioned mixture only as a predeclared replacement or later
-ablation inside the existing 600-hour pretraining study, with the schedule, source exposures,
+ablation inside the existing 700-hour pretraining study, with the schedule, source exposures,
 validation mixture and total tokens fixed. It must not become a fourth screening arm. The source
 names also expose three candidates: NVIDIA's
 [OpenMathInstruct-2](https://huggingface.co/datasets/nvidia/OpenMathInstruct-2), the
@@ -377,7 +377,7 @@ come from a substantially larger model/program and different attention architect
   Count full processed context separately from loss-bearing targets. This requires an explicit
   adapter/objective contract before admission; pasting raw patches into a pack is not equivalent.
 - Add unchanged-domain repacking as the context-extension control, plus fixed-suffix loss and
-  position-stratified task checks. Under the revised 300-hour mid-training research cap, leave stage tokens unset
+  position-stratified task checks. Under the revised 360-hour mid-training research cap, leave stage tokens unset
   until measured qualification; 64K/128K is deferred. No context behavior is inherited from this paper.
 - Preserve our supervised thinking baseline and bounded natural/refined comparisons. The report
   does not establish that abandoning synthetic data or starting our small model with RL is better.

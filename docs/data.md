@@ -161,10 +161,11 @@ then run the same source-rights, joint-exclusion, partition, pack, and full-load
 
 ## Recipe direction — 2026-09-19
 
-The first model and paper center on data quality, coverage and learnability through pretraining,
-mid-training and post-training. Keep the selected model fixed; attention/size rationale and measured
-trade-offs have a bounded 200-hour study before backbone freeze. Broader architecture research
-belongs to later releases; data experiments have a separate 1,230-hour allocation.
+The first model and paper center on data quality, coverage and learnability through all six
+training stages. The selected model is fixed by declaration; the bounded 200-hour attention/size
+study was deferred on 2026-09-21 to a later allocation, which released 180 of its hours to data
+research and 20 to reference-only efficiency profiling. Architecture research belongs to later
+releases; data experiments have a 1,230-hour allocation.
 The [program lifecycle](program.md#training-lifecycle) defines capability continuation, 16K/32K
 context qualification, thinking SFT and conditional RL with separate data objectives. 64K/128K is
 deferred until a later measured revision.

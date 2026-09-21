@@ -51,9 +51,12 @@ For inference, separate prefill and decode, count reasoning and final-answer tok
 context length, tool access, output caps and stopping policy. Agent cost per success includes failed
 attempts and environment costs alongside success rate. SFT supervised tokens, processed context,
 padding and RL rollout tokens are distinct quantities. Report teacher/verification costs separately.
-The bounded architecture study supports only the measured reference/control design trade-off.
-Its differing positional policy and feed-forward allocation prevent an isolated attention-mechanism
-claim. A single size cannot establish parameter scaling or general architectural superiority.
+The architecture study is deferred to a later allocation, so this release has **no measured
+reference/control design trade-off at all**: the backbone was fixed by declaration. Efficiency
+numbers here are reference-only profiling of that fixed substrate. When the study does run, its
+differing positional policy and feed-forward allocation will still prevent an isolated
+attention-mechanism claim, and a single size cannot establish parameter scaling or general
+architectural superiority.
 
 The [research design](../experiments/main-data/README.md#measurements-and-selection) fixes primary
 endpoints, common validation packs, development selection, seed/family uncertainty and promotion

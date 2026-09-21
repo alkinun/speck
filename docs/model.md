@@ -1,10 +1,15 @@
-# Reference model and bounded architecture study
+# Reference model and deferred architecture study
 
-The first release studies data and training, supported by a bounded architecture/efficiency study.
-Freeze the chosen backbone before data experiments. These notes support the
+The first release studies data and training across all six stages. The backbone below is the
+**fixed substrate for that work, frozen by declaration rather than selected over a control**: the
+bounded architecture/efficiency comparison was deferred to a later allocation on 2026-09-21 and its
+200 hours were released. The design in [proposed control and decision](#proposed-control-and-decision)
+is preserved intact for that allocation and is **not run here**, so this release supports no
+architecture superiority or parity claim. These notes support the
 [program overview](program.md) and [paper](report.md): explain the attention and size choices,
-their implementation, measured costs and limitations. Architectural novelty is not the paper's
-central contribution. Broader design searches belong to later, separately budgeted releases.
+their implementation, reference-only measured costs and limitations. Architectural novelty is not
+the paper's contribution at all in this release. Broader design searches belong to later,
+separately budgeted releases.
 
 ## Reference architecture
 
@@ -66,9 +71,10 @@ precision, update size and schedule; disclose shape-dependent initialization/opt
 The common seed does not make differently shaped model tensors identical.
 
 The [architecture study packet](../experiments/main-data/architecture-study-packet.json) and its
-[offline validator](../experiments/main-data/check_architecture_study.py) bind the proposed 200h
-envelope. It assigns 120h to one seed pair (60h per arm), 40h to training/inference
-profiling and 40h to qualification, evaluation and recovery. Select a common token horizon from
+[offline validator](../experiments/main-data/check_architecture_study.py) preserve the proposed 200h
+envelope **for a later allocation**; it draws zero hours from this one. It assigns 120h to one seed
+pair (60h per arm), 40h to training/inference profiling and 40h to qualification, evaluation and
+recovery. When that allocation funds it, select a common token horizon from
 measured cost before running either arm. Measure fixed-pack loss and development regressions, then
 training throughput/memory and prefill/decode at batch sizes one/eight, prefix lengths
 512/2048/3840 and a 256-token output cap within 4K. Freeze timing repetitions, warmup and environment;

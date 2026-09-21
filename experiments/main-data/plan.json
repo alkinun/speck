@@ -1,7 +1,7 @@
 {
   "format": "speck_main_data_working_plan",
   "format_version": 2,
-  "date": "2026-09-20",
+  "date": "2026-09-21",
   "status": "working_preparation_targets_not_launch_manifest",
   "research_scope": {
     "focus": "An open data pipeline and recipe spanning all six training stages: pretraining, endpoint decay, mid-training, post-training SFT, post-training RL and final self-distillation. The 1.2B model is the evidence that the pipeline works end to end, not the deliverable.",
@@ -123,8 +123,8 @@
     "initialization": "Paired fresh initialization seeds; identical initial model tensors within each baseline/candidate pair, checked by hash. Fresh optimizer and data state per run; no trained common checkpoint.",
     "controls": "Fixed architecture/tokenizer/context/objective, matched total training tokens and schedule; predeclare the data contrast, domain weights, source families, validation mixture, endpoints and cost. Report actual GPU-hours separately.",
     "selection": "Use fixed held-out source/domain loss and development capability/retention curves at matched exposures. Keep final tests untouched. If endpoints are uninformative or gains inconsistent, report inconclusive; retain a justified baseline or revise the design within the remaining budget before recording the main recipe decision. Short-run rankings do not establish a global optimum or guarantee 80B rankings.",
-    "accounting": "All fresh-arm training, screening/confirmation evaluations, preparation, retries and allocated idle time charge to the 600-hour pretraining study cap. Main production starts fresh after selection; research tokens are not production exposure.",
-    "scope": "Pretraining study is 600 of the 1,050 data-research hours. Mid-training comparisons have 300 hours on useful base checkpoints; post-training comparisons have 150 hours on appropriate base/SFT parents. Freeze each stage recipe before its production work; these arms do not draw silently from production budgets.",
+    "accounting": "All fresh-arm training, screening/confirmation evaluations, preparation, retries and allocated idle time charge to the 700-hour pretraining study cap. Main production starts fresh after selection; research tokens are not production exposure.",
+    "scope": "Pretraining study is 700 of the 1,230 data-research hours. Mid-training comparisons have 360 hours on useful base checkpoints; post-training comparisons have 170 hours on appropriate base/SFT parents. Freeze each stage recipe before its production work; these arms do not draw silently from production budgets.",
     "design": "Proposed maximum baseline plus three single-factor candidates in screening, followed by baseline versus one selected candidate on two new paired seeds. Reserve confirmation and overhead first. No full-factorial sweep or combined winner without a direct comparison; design details in experiments/main-data/README.md.",
     "schedule_hypothesis": "Cagliostro v3 motivates a late-phase math/synthetic reweighting under a warmup-stable-decay schedule. Treat it as a predeclared replacement or later ablation with total exposure, schedule, validation and source identities fixed; it is not a fourth screening arm or a data-only attribution.",
     "proposed_screening": {
@@ -316,7 +316,7 @@
         ],
         "branch_controls": "Replay is the control. Source-only, grounded and executable branches are proxy candidates; only one candidate is confirmed at 1.2B. Context length and loss masking remain separate factors.",
         "packet": "experiments/main-data/mid-training-study-packet.json",
-        "downstream_accounting": "Linked SFT/RL efficiency evaluation is charged to the separate 150-hour post-training research reservation; it is not hidden in the 300-hour mid-training research cap."
+        "downstream_accounting": "Linked SFT/RL efficiency evaluation is charged to the separate 170-hour post-training research reservation; it is not hidden in the 360-hour mid-training research cap."
       }
     },
     "context_extension": "Context changes are the 16K/32K portion of the 600-hour mid-training production reservation; keep length effects distinct from data-family effects.",
@@ -342,7 +342,7 @@
       "math_science_technical_documents": 30,
       "cross_document_grounded_material": 20
     },
-    "boundary": "600-hour combined capability/context/agentic production reservation, starting from 4K and qualifying 16K then 32K. Stage tokens remain unset until measured cost/quality. 64K/128K requires an explicit later revision. The separate 300-hour mid-training research cap covers comparisons, not additional production tokens.",
+    "boundary": "600-hour combined capability/context/agentic production reservation, starting from 4K and qualifying 16K then 32K. Stage tokens remain unset until measured cost/quality. 64K/128K requires an explicit later revision. The separate 360-hour mid-training research cap covers comparisons, not additional production tokens.",
     "mixture_control": "Compare unchanged preceding-stage domain weights repacked into coherent longer records against the proposed long-material/replay weights; neither has been validated for Speck.",
     "evaluation_additions": [
       "Held-out fixed-suffix NLL with increasing related prefix length",
@@ -431,7 +431,7 @@
         "gpu_hours_at_4k_padded_position_rate_only": 658.7861013974396
       }
     ],
-    "boundary": "4K-rate scenarios omit variable padding, long attention cost, evaluation, teacher generation, verification and retries. The 800-hour reservation covers SFT, optional verified-reward RL, teacher/verification work and final self-SFT; additions must fit or displace work. No multi-epoch commitment. The separate 150-hour post-training data-research cap covers comparison arms and their overhead, not production exposure; charge every job once.",
+    "boundary": "4K-rate scenarios omit variable padding, long attention cost, evaluation, teacher generation, verification and retries. The 800-hour reservation covers SFT, optional verified-reward RL, teacher/verification work and final self-SFT; additions must fit or displace work. No multi-epoch commitment. The separate 170-hour post-training data-research cap covers comparison arms and their overhead, not production exposure; charge every job once.",
     "stage_design": {
       "sft": "Length-bucketed assistant-masked thinking and tool supervision; shorter qualified buckets first, then mixed short and long examples through the validated context ceiling. One unique-task inventory, explicit exposure and replay accounting.",
       "rl": "Proposed bounded GRPO-style verifiable-reward training after a useful SFT baseline; qualify implementation, rollout engine, task verifiers and recovery first. No qualified RL trainer currently exists in the repo.",
@@ -446,7 +446,7 @@
       "sft_per_arm_per_seed_training_gpu_hour_cap": 20,
       "sft_exposure": "Same useful parent, fresh optimizer and paired data-order seeds. Match planned processed positions/bucket cycles and predeclare a supervised-token mismatch tolerance. Current SFT runs complete finite epochs; arbitrary supervised-token stopping is not implemented.",
       "sft_primary_endpoint": "Predeclared held-out code/math or tool-task success metric matching the selected intervention; protocol compliance and other capabilities are guardrails.",
-      "rl_scope": "Conditional fixed-SFT-policy prompt/rollout and verifier feasibility only in the 20-hour research slot. Policy optimization belongs to the separate 200-hour production cap after runtime, reward and recovery qualification.",
+      "rl_scope": "Conditional fixed-SFT-policy prompt/rollout and verifier feasibility only in the 40-hour research slot. Policy optimization belongs to the separate 200-hour production cap after runtime, reward and recovery qualification.",
       "final_self_sft_scope": "A 30-hour pilot compares verified-anchor continuation with verified self-distillation plus anchor replay. Full final self-SFT remains within the 800-hour post-training production reservation and starts from the promoted RL checkpoint or selected SFT fallback.",
       "limits": "Selection changes task distribution and possibly supervision density; disclose remaining differences rather than attributing everything to verification. Final tests remain untouched.",
       "packet": "experiments/main-data/post-training-study-packet.json",
@@ -548,7 +548,7 @@
         "preparation_evaluation_recovery": 20
       }
     },
-    "research_subdivision_status": "Proposed spending ceilings inside the 200/600/300/150 reservations, not runnable jobs or additional GPU-hours. Training caps include trainer startup, saves and inline validation; shared support covers other on-allocation preparation, scoring, qualification and recovery. Account each operation once. Reduce scope or record an explicit revision if measured costs do not fit; no silent transfers from confirmation or production.",
+    "research_subdivision_status": "Proposed spending ceilings inside the 120/700/360/170 reservations (runtime qualification, pretraining, mid-training and post-training research), not runnable jobs or additional GPU-hours. Training caps include trainer startup, saves and inline validation; shared support covers other on-allocation preparation, scoring, qualification and recovery. Account each operation once. Reduce scope or record an explicit revision if measured costs do not fit; no silent transfers from confirmation or production.",
     "proposed_pretraining_breakdown_gpu_hours": {
       "stable_phase": 1550,
       "endpoint_decay": 250
@@ -601,23 +601,23 @@
     "experiments/corpus-audit/web-inventory-dclm.json": "438f5f61aee6087959e461ceb20760dbc0de5d8bb775199a3711a09e617f8906",
     "experiments/corpus-audit/web-variants.json": "13917e1d1e209ea7b913579f12de5093f84e9332f7c413bfc0ffdc0a1fbb1fcf",
     "experiments/main-data/architecture-study-packet.json": "4297a531833c0135e3ceedaef094a570883c1f5c2fe38e4b2cf35565c259c390",
-    "experiments/main-data/candidate-manifest-preflight.json": "7c9e328e1664fe2afa6fb06f439d724546ecc31f8ecf25845c250fce0c1553d2",
-    "experiments/main-data/data-closeout.json": "f5ad68c2dc965c4bddc4a4c48a6add779a0c8c80af26227dfe887418831beb6e",
+    "experiments/main-data/candidate-manifest-preflight.json": "cef9a22ac16a571580288766ae8effb36c4dbf2e7bb2c8ab52d38c4ad7717bca",
+    "experiments/main-data/data-closeout.json": "7a39f7fb9dfe63c738cdaef57683a21b69edc12cbb22f0909ff47b00ae61fb80",
     "experiments/main-data/data-design-contract.json": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58",
-    "experiments/main-data/data-study-packet.json": "0a5c1e0fefa746cfbe8b86e91d284e7bdb2170998fbe2dd607df8f322d4cf6e5",
+    "experiments/main-data/data-study-packet.json": "f9c4c2473e1ac2f4db482b65480526bf6306dae7db8de8c86ec1cecade00b40b",
     "experiments/main-data/frontier-data-research.json": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",
-    "experiments/main-data/frontier-data-source-mapping.json": "35c4992d202018f5cdab6e28854b06459e76f068265e3bcec1c0b207b88440d0",
+    "experiments/main-data/frontier-data-source-mapping.json": "a42a58f5c33b9ec65f7a34428b981e67460c805ff2e917058c3018cef20e4e0c",
     "experiments/main-data/livecodebench-exclusion.json": "4c10bfc69ddf2f7379d2eae26bc3873ee8c5317a9d036cad495fe2728bbb536f",
-    "experiments/main-data/math-candidate-manifest.json": "f930e6c60860e6d04d41d97d3319f78719d5ed66cfcbb432127b3ee3143d3ace",
-    "experiments/main-data/mid-training-study-packet.json": "78e05e57795baa80a74f6747770129c78d5a2af75c1cf4f4acb34b918257b82c",
-    "experiments/main-data/natural-code-candidate-manifest.json": "e99314295e75fb88b6c74dfe75becc82845d5a9e2a62c0d2ebe876cd9feb5df0",
-    "experiments/main-data/natural-web-candidate-manifest.json": "168ae5939d2a798803c229d28d44b95514cd3a779bf88015ab9292b4d8a192ba",
-    "experiments/main-data/post-training-audit-protocol.json": "38981bedeec73058f699fe064be19fb193b3488da2b2ba03d651f8727c2ce10c",
-    "experiments/main-data/post-training-candidate-manifest.json": "cddee2a936b93d3e4b20908bf88de2603c0ad07509ac72a27944524bd27aac54",
+    "experiments/main-data/math-candidate-manifest.json": "ab010ba98922facd934098eaa65829ba57634d612f63cd007840f74ad7bcf12f",
+    "experiments/main-data/mid-training-study-packet.json": "bce7f48e7809d20387f4ed0ee329c6b1b16e77f1c04865e4ac7267c5107bbae1",
+    "experiments/main-data/natural-code-candidate-manifest.json": "9cdc13c30ec024f2381f87b7a7ade7124a8b5b798dcaaf72e7ff1baa61e2c29b",
+    "experiments/main-data/natural-web-candidate-manifest.json": "aac760389d374eebb5944027082a30cf31b1ce864941068d3cba6d379a2e2381",
+    "experiments/main-data/post-training-audit-protocol.json": "5da29c20cde61d38ceba5dcf0ce299990a65380be0b4bffc307ce131aaae242e",
+    "experiments/main-data/post-training-candidate-manifest.json": "c0f2efc2d00ab02f92c4086be647499a95ee5e3f3aeb97d9b2b23cc817f616a8",
     "experiments/main-data/post-training-research.json": "5036027c1aa274c3f7b0f1aa6b07ad3f4a80016c90a866eee7cf27b096604c99",
-    "experiments/main-data/post-training-study-packet.json": "82987d430d06a9d163c000ee5acc09ebdc26e8ebe2b4a254f6f1c73f8a9a4971",
+    "experiments/main-data/post-training-study-packet.json": "47cffb97f04f5ec09d7dd9d501640420125a6c0c40110eca855294874160f1a2",
     "experiments/main-data/qualification-result.json": "05e3c3c928abfc6db69c448c2353c5a19069b922c130b3de29f3979e5eeb610d",
-    "experiments/main-data/source-readiness.json": "f6b43603c49a5e74ca5236605c10aecf3a45dedab4f2d444af5dd2cfe81eb8a1",
+    "experiments/main-data/source-readiness.json": "c14b2650ec145573d0af9e75ded0ed15b73d0e655be3df37040de9491a1452b0",
     "experiments/pilot/backup-result.json": "9f3248b7a50daae67a2cc3850b5afe68a5d19a2512f3fa5167a3084122bdf37a",
     "experiments/pilot/development-result.json": "c4f8b7e8226d9063398c33eec92d864488f3d1527a572816b29cb12b07d1ba69",
     "experiments/pilot/h100-run.json": "7e289c7189080bd6d3a1436cebb73a3925e73e06351972a48efe716bbb460de4",
