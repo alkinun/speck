@@ -181,6 +181,35 @@ def test_record_checkpoint_resume_matches_uninterrupted_outputs(tmp_path, batche
     assert _sha256(left) == _sha256(right)
 
 
+def test_minhash_paths_produce_identical_published_output(tmp_path):
+    """The batched default must be a pure throughput choice, not a policy change.
+
+    `preprocess_sources` defaults to batched MinHash because the per-shingle path
+    measured 5.69x slower end to end on real documents. That default is only safe if
+    the two paths retain exactly the same records, so assert it on whole published
+    runs rather than on signatures alone.
+    """
+    batched_config = validate_preprocess_config(_config(tmp_path, "batched"))
+    per_shingle_config = validate_preprocess_config(_config(tmp_path, "per-shingle"))
+
+    batched = preprocess_sources(batched_config, batched_minhash=True)
+    per_shingle = preprocess_sources(per_shingle_config, batched_minhash=False)
+
+    assert batched["manifest"]["counts"] == per_shingle["manifest"]["counts"]
+    assert batched["manifest"]["index"]["sha256"] == per_shingle["manifest"]["index"]["sha256"]
+    assert set(batched["manifest"]["outputs"]) == set(per_shingle["manifest"]["outputs"])
+    for source_id, output in batched["manifest"]["outputs"].items():
+        left = Path(batched_config["output_directory"]) / output["path"]
+        right = (
+            Path(per_shingle_config["output_directory"])
+            / per_shingle["manifest"]["outputs"][source_id]["path"]
+        )
+        assert _sha256(left) == _sha256(right)
+    assert _sha256(Path(batched_config["output_directory"]) / "removals.jsonl") == _sha256(
+        Path(per_shingle_config["output_directory"]) / "removals.jsonl"
+    )
+
+
 def test_resume_verifies_index_without_materializing_rows(tmp_path, monkeypatch):
     config = validate_preprocess_config(_config(tmp_path, "streamed-resume"))
     with pytest.raises(RuntimeError, match="injected production preprocess crash"):

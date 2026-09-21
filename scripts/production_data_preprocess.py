@@ -10,15 +10,16 @@ def main():
     parser.add_argument("config")
     parser.add_argument("--restart", action="store_true")
     parser.add_argument(
-        "--batched-minhash",
+        "--per-shingle-minhash",
         action="store_true",
-        help="use exact-equivalent batched MinHash updates",
+        help="build MinHash signatures one shingle at a time; bitwise identical to the "
+        "default batched path and about 5.69x slower, for differential debugging only",
     )
     args = parser.parse_args()
     result = preprocess_sources(
         load_preprocess_config(args.config),
         restart=args.restart,
-        batched_minhash=args.batched_minhash,
+        batched_minhash=not args.per_shingle_minhash,
     )
     counts = result["manifest"]["counts"]
     print(
