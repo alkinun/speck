@@ -1,6 +1,6 @@
 # SpeckLabs: current decisions and next work
 
-Updated 2026-09-20. This is the status and work order for the first flagship program.
+Updated 2026-09-21. This is the status and work order for the first flagship program.
 Read the [program overview](docs/program.md) for the connected design, data, compute and release
 outline. [Main-data plan.json](experiments/main-data/plan.json) owns working numeric targets;
 experiment configurations and verified receipts own actual run settings and measured results.
@@ -8,15 +8,26 @@ Update these in place. Historical proposals and failures remain in Git and their
 
 ## Goal and selected decisions
 
-Develop a useful model from scratch through a measured data recipe spanning pretraining,
-mid-training and post-training, then release the base and a coding-centered generalist assistant with an
-open technical report. Primary uses are agentic coding, normal coding, math reasoning and tools;
-general usefulness remains a regression check. The first paper centers on data, training and
-capability development. External models are comparators or qualified teachers, not our base initialization.
+**The deliverable is an open data pipeline and recipe covering all six training stages, and a
+1.2B model that proves the pipeline works end to end.** The stages are pretraining, endpoint decay,
+mid-training, post-training SFT, post-training RL and final self-distillation from rejection-sampled
+RL output. Each needs its own data manifest, exposure ledger, budget line and receipt; a stage
+without all four is not covered, however good the resulting model is.
+
+The goal is explicitly *not* a state-of-the-art 1.2B. It is a pipeline we can scale, since the
+next allocation is expected to be several times larger and will fund architecture search and bigger
+runs. Where a choice trades model quality against pipeline strength or openness, take the pipeline.
+
+Release the base and a coding-centered generalist assistant with an open technical report. Primary
+uses are agentic coding, normal coding, math reasoning and tools; general usefulness remains a
+regression check. External models are comparators or qualified teachers, not our base
+initialization.
 
 - **Reference model:** 1,195,884,576 total/active parameters; 24 layers, width 2048; three KDA
   recurrent blocks then one global NoPE GQA block, repeated six times. Dense SwiGLU throughout,
-  intermediate width 5120, tied embeddings, sigmoid KDA gates. One bounded architecture/efficiency comparison before backbone freeze; no MoE or size sweep.
+  intermediate width 5120, tied embeddings, sigmoid KDA gates. **Fixed substrate for this release,
+  frozen by declaration rather than selected over a control.** The bounded architecture/efficiency
+  comparison is deferred to a later allocation with its design preserved; no MoE or size sweep.
 - **Tokenizer fixed:** Mistral 32K; 32,003 embedding rows include three assistant role IDs.
 - **Compute envelope:** 5,000 total GPU-hours across four GH200s, equivalent to 1,250 hours with
   all four allocated, within a nominal 90-day access window. The allocation is confirmed; access
@@ -26,9 +37,12 @@ capability development. External models are comparators or qualified teachers, n
 - **Mid-training target:** move from a 4K capability bridge to 16K repository reasoning and 32K long-horizon agentic coding; the combined capability/context/agentic production reservation is 600 GPU-hours. 64K/128K is deferred.
 - **Future ambition:** 50,000 GH200-hours and larger models; no future allocation is assumed funded.
 
-The [model notes](docs/model.md) define the reference backbone and 200-hour architecture/efficiency
-study. Freeze the chosen backbone before the data experiments. MoE, attention residuals and broad
-searches remain later work. The first report centers on datasets and training, with controlled
+The [model notes](docs/model.md) define the reference backbone. The architecture comparison was
+deferred on 2026-09-21 and its 200 hours moved to data research and reference-only efficiency
+profiling; the [packet](experiments/main-data/architecture-study-packet.json) is preserved intact
+for the next allocation. **No architecture superiority or parity claim may appear in this report:**
+the backbone was fixed, not compared. MoE, attention residuals and broad searches remain later work
+alongside it. The first report centers on datasets and training, with reference-only
 training/inference efficiency evidence. High efficiency and competitive quality are hypotheses to
 measure. The [program overview](docs/program.md#training-lifecycle) defines stage boundaries.
 
@@ -40,12 +54,51 @@ measure. The [program overview](docs/program.md#training-lifecycle) defines stag
 | Capability/mid-training | 4K repository/tool bridge, 16K multi-file repository reasoning and 32K long-horizon agentic coding with replay, grounded workflows and executable traces | Trajectory environments, selective loss masks, packing, changed-data continuation, context cost and useful transfer remain to be qualified |
 | Thinking SFT | 1.5M unique qualified conversations, within a 1–2M range | Correctness, source-family deduplication, complete long examples and supervised/context token totals |
 | Reward training | Conditional verifiable math/code rewards after useful SFT | Trainer, rollout integration, verifiers, recovery and affordable measured benefit |
-| Architecture/efficiency study | 200-hour bounded reference-versus-control comparison; proposed 1.186B all-GQA/RoPE control shape-checked | GPU qualification, FLOP accounting, numeric quality/cost thresholds and final configuration |
-| Data research | 1,050 hours: 600 pretraining, 300 mid-training, 150 post-training | Screening and confirmation before each production stage; useful parents for downstream comparisons |
+| Endpoint decay | Three-way natural/curated/derived decay study on two paired seeds, 180 research hours; 250 production hours inside the 1,800-hour base reservation | A matched stable parent, a decay manifest per arm and separately identified derived lineage |
+| Final self-distillation | Rejection-sampled from the promoted RL parent, verified and mixed with anchor data; 100 production hours plus a 30-hour pilot | A promoted RL or SFT parent, a frozen prompt pool, pinned environments and held-out transfer evidence |
+| Data research | 1,230 hours: 700 pretraining, 360 mid-training, 170 post-training | Screening and confirmation before each production stage; useful parents for downstream comparisons |
 
 The [main data plan](experiments/main-data/README.md) specifies candidate sources and counting rules.
 Retained stock, admitted data and training exposure are different quantities. No small preview or
 publisher quality label establishes flagship-scale supply. No automatic repetition fills a gap.
+
+## The binding constraint is supply, not compute
+
+[`supply-gap.json`](experiments/main-data/supply-gap.json) is derived from the pinned receipts by
+`build_supply_gap.py` and checked by `make plan-check`, so it moves as acquisition proceeds and
+cannot go stale. Today:
+
+| Bank | Preparation target | Retained candidate stock | Coverage | One-pass exposure cap |
+| --- | ---: | ---: | ---: | ---: |
+| selected_web | 25.0B | 0.351B | 1.41% | 1.40B |
+| independent_web | 5.0B | 2.307B | 46.13% | 46.13B |
+| natural_code | 30.0B | 0.477B | 1.59% | 1.59B |
+| checked_code | 5.0B | 0 | 0% | 0 |
+| natural_math | 20.0B | 1.124B | 5.62% | 5.62B |
+| refined_math | 5.0B | 0 | 0% | 0 |
+| reference_science | 5.0B | 1.402B | 28.04% | 28.04B |
+| refined_web | 5.0B | 1.489B | 29.79% | 29.79B |
+| **Total** | **100.0B** | **7.150B** | **7.15%** | — |
+
+Three facts follow, and they govern the order of work:
+
+1. **Zero eligible tokens are established.** The 7.15B is retained stock with every gate still open.
+   It is an upper bound on what the gates could admit, not usable data.
+2. **Two banks have no stock at all.** `checked_code` and `refined_math` cap a one-pass run at zero
+   tokens at their declared weights. Either supply them or re-freeze the mixture without them; that
+   is a mixture decision, not an acquisition detail.
+3. **Among banks that have stock, `selected_web` binds at 1.40B — 1.76% of the 80B horizon.**
+   Every other bank could be complete and the horizon would still bind there.
+
+Closing the whole gap means roughly a **14x** increase in retained stock. That is acquisition,
+filtering and tokenization work: CPU, bandwidth and storage, consuming **no grant GPU-hours**. It
+can and should run before and during access, and it is why a throughput surplus buys nothing here.
+
+The gate matrix says where to start. `source_use` is open on all twelve candidates and eight of
+those are `open_named_decision` variants: they need a **recorded human decision**, not a
+computation. Nothing downstream moves until they close, so GH200 time spent waiting on them is
+wasted grant money. The joint family graph (`open_joint_graph` on eight candidates) is the second
+blocker and is deterministic offline work that can proceed in parallel.
 
 ## Completed evidence
 
@@ -67,16 +120,30 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
 | Retained-data closeout | Full HQ token/overlap census, full math text/index reconciliation, 500K SFT format census and sampled tool-aware lengths, bounded RL inventory | [Receipt](experiments/corpus-audit/data-readiness.json); finite stock bounds measured, source use/correctness/family eligibility and missing banks remain open |
 | Other data preparation | 6.799B retained source tokens before joint eligibility; 500K assistant rows inventoried; finite tool-aware SFT rehearsal | [Supply](experiments/pilot/supply.json), [assistant contract](docs/assistant.md); not main-run qualified supply |
-| Training throughput pass | 2.084x over the frozen pilot recipe on a parameter-matched 318M proxy; model FLOPs utilization 25.0% to 52.2%; selected configuration is checkpointing off, compiled with max-autotune, determinism retained, Liger loss | [Sweep](experiments/qualification/throughput-3090/sweep.json), [GH200 confirmation](experiments/qualification/throughput-gh200.json); RTX 3090 sm_86 only, absolute rates and the microbatch and checkpointing decisions need GH200 measurement |
+| Training throughput pass | 2.084x over the frozen pilot recipe **on a 318M proxy**; proxy utilization 25.0% to 52.2%; selected configuration is checkpointing off, compiled with max-autotune, determinism retained, Liger loss | [Sweep](experiments/qualification/throughput-3090/sweep.json), [GH200 confirmation](experiments/qualification/throughput-gh200.json); RTX 3090 sm_86 only. **This is not a flagship speedup.** The only 1.2B point measured is the eager checkpointed baseline at 34.6% utilization, so its headroom to the proxy's 52.2% ceiling is 1.51x, and no checkpointing-off flagship configuration fit the 24 GiB card. Absolute rates, microbatch and checkpointing need GH200 measurement |
 
 The [timing measurements](experiments/qualification/timing-result.json) additionally cover saves,
 validation, restart, SFT and prefill/decode. Microbatch four showed about 20% higher steady throughput
 in a short probe; sustained operation and recovery need qualification before adoption.
 Those pilot rates describe an inefficient configuration. The pilot ran eager, with activation
-checkpointing, at microbatch one, and reached about 10.3% model FLOPs utilization. The
+checkpointing, at microbatch one, and reached about 9.8% model FLOPs utilization on the H100. The
 [throughput pass](experiments/qualification/throughput-3090/sweep.json) measured 2.084x against
-that recipe locally. Treat 12,859 tokens/s as a property of the frozen pilot, not as the machine's
-capability, and re-anchor the numeric plan only from measured GH200 rates.
+that recipe locally **on a 318M proxy, not on the flagship**. Treat 12,859 tokens/s as a property
+of the frozen pilot, not as the machine's capability, and re-anchor the numeric plan only from
+measured GH200 rates.
+
+Three rules govern that re-anchoring, all predeclared in
+`compute.throughput_reanchoring_rule` before the number is known:
+
+- **Apply the overhead derate.** The confirmation sweep runs `--mode compute` for ten steps and
+  excludes startup, inline validation and saves. The plan's anchor includes them. The measured
+  pilot ratio is 0.9459; multiply by it before converting any benchmark rate into horizon hours,
+  and remeasure the ratio on GH200 at production save cadence.
+- **A surplus does not buy a longer base run.** If the measured rate beats the anchor, the 80B
+  horizon does not move and the freed hours return to data research and to whichever stage is
+  supply- or tooling-bound. Eligible-token supply, not compute, is what bounds this release.
+- **A shortfall reduces the horizon**, never the protected mid-training, post-training or
+  evaluation reservations.
 SFT padded positions/s are not supervised tokens/s. Earlier estimates and failed attempts remain
 historical; do not repeat the completed pilot because a preparation document still contains commands.
 
@@ -141,18 +208,19 @@ bounded order and stop rules for closing those gates.
    do not treat its old source commit as the current release. No paid run starts from this outline.
 5. **On access, qualify one worker then four.** Measure actual topology/ARM64 dependencies, kernels,
    batching, optimizer, communication, sustained throughput, restart/export and scheduler behavior.
-   Declare every allocated GPU, including idle devices. Use results to cost the architecture/data
-   studies and inform the main schedule, batch and horizon before the subsequent research gates.
-   Reduce the 80B working horizon if measured
-   cost or supply requires it.
-6. **Complete the bounded architecture study, then research the starting recipe.** Use the
-   200-hour architecture/efficiency cap to answer one consequential question and freeze the backbone.
-   Run data screening and confirmation from
+   Declare every allocated GPU, including idle devices. Use results to cost the data studies and
+   inform the main schedule, batch and horizon before the subsequent research gates.
+   Freeze the throughput recipe here: microbatch, activation checkpointing and determinism are all
+   immutable on resume. Qualify the compiled path under four-worker DDP with
+   `scripts.training_replay --compile` before trusting any compiled production rate. Then apply the
+   predeclared re-anchoring rule in either direction.
+6. **Research the starting recipe.** The backbone is declared, not compared; the architecture study
+   is deferred. Run data screening, the decay study and confirmation from
    matched fresh initializations after source/runtime qualification. Use fixed held-out source losses
    and development capability curves; keep final tests untouched. Record the result and limitations,
-   then freeze the main mixture and schedule. Pretraining data research has 600 hours; reserve
-   confirmation/evaluation cost before screening. The other 300 data-research hours belong to
-   mid-training and post-training comparisons, 300 and 150 hours respectively, on useful parent checkpoints. The mid-training
+   then freeze the main mixture and schedule. Pretraining data research has 700 hours; reserve
+   confirmation/evaluation cost before screening. The other 530 data-research hours belong to
+   mid-training and post-training comparisons, 360 and 170 hours respectively, on useful parent checkpoints. The mid-training
    comparison will separate replay/source-only data from validated grounded or executable supervision and
    report downstream capability and SFT/RL optimization efficiency per token and GPU-hour.
 7. **Pretrain, mid-train, post-train, evaluate and release through gates.** Freeze capability
@@ -175,16 +243,16 @@ Exact launch settings still depend on the evidence below; preparation receipts a
 
 | Area | Established | Required before the relevant experiment launches |
 | --- | --- | --- |
-| Direction and budget | Data-centered report; bounded architecture study; stage ownership totals 5,000 hours | Costed arms, confirmation allowance and stop rules within each cap |
+| Direction and budget | Six-stage data-pipeline report; architecture study deferred; stage ownership totals 5,000 hours | Costed arms, confirmation allowance and stop rules within each cap |
 | Data | Pinned candidates, deterministic samples, exclusion methods and retained-stock counts | Qualified finite arm manifests, source-use decisions, family splits, eligible tokens and packing checks |
-| Backbone and runtime | 1.2B reference, proposed parameter-matched GQA control and completed H100 engineering baseline | GH200/four-worker qualification, FLOP accounting, recovery and measured cost; freeze backbone before data comparisons |
+| Backbone and runtime | 1.2B reference declared as the fixed substrate; completed H100 engineering baseline; throughput recipe selected on a 318M proxy | GH200/four-worker qualification, compiled-DDP qualification, flagship throughput measurement, FLOP accounting, recovery and measured cost |
 | Evaluation | Pilot development evidence and pinned exclusion inputs | Primary endpoints, development/final partitions, regression tolerances and comparator protocol |
 | Downstream stages | Stage objectives and separate research/production reservations | Useful parent checkpoints; qualified changed-data continuation, context and conditional RL paths |
 
 The [proposed research design](experiments/main-data/README.md#research-before-the-main-run) now
 specifies contrasts, controls, endpoints, maximum run counts and protected confirmation costs.
-The [architecture control](docs/model.md#proposed-control-and-decision) has a checked parameter count;
-its runtime and production selection remain open. Numeric subcaps live in the existing plan.
+The [architecture control](docs/model.md#proposed-control-and-decision) keeps its checked parameter
+count for the next allocation; it is not run here. Numeric subcaps live in the existing plan.
 
 The fixed code reading pass and retained-data closeout are complete. Next produce eligible finite arms,
 then bind evaluation packs and numeric decision thresholds. Measure GH200 costs before freezing
@@ -194,14 +262,26 @@ comparisons from useful parents only after the recorded runtime gaps are closed.
 
 ## Compute
 
-The [numeric plan](experiments/main-data/plan.json) reserves **100 hours for runtime qualification,
-200 for architecture/efficiency, 1,050 for data experiments, 1,800 for 4K base production,
-600 for capability/context/agentic mid-training production, 800 for post-training production and
-450 for evaluation/recovery: 5,000 total**. Data research divides into 600/300/150 hours across
+The [numeric plan](experiments/main-data/plan.json) reserves **120 hours for runtime and
+efficiency qualification, 1,230 for data experiments, 1,800 for 4K base production, 600 for
+capability/context/agentic mid-training production, 800 for post-training production and 450 for
+evaluation/recovery: 5,000 total**. Data research divides into 700/360/170 hours across
 pretraining/mid-training/post-training.
+
+The architecture/efficiency reservation is gone. Its 200 hours were released on 2026-09-21: 180 to
+data research (100/60/20) and 20 to reference-only training and inference profiling inside runtime
+qualification, which the deferred study used to own.
+
+Two production stages now carry their own lines so the six-stage claim is backed by accounting
+rather than prose. Inside the 1,800-hour base reservation: **1,550 stable phase, 250 endpoint
+decay**. Inside the 800-hour post-training reservation: **450 SFT, 200 conditional RL, 100 final
+self-SFT, 50 teacher and verification work**.
+
 Each experiment includes its preparation, evaluations, retries and allocated idle time; production
 exposures are separate. Capability production is separately budgeted in the 600-hour mid-training
 reservation; the 80B 4K-base horizon uses the 1,800-hour base reservation.
+`speck/operations/slurm.py` enforces the scheduled/protected split of 4,550 + 450, and
+`make plan-check` fails if those constants drift from this table.
 The [overview](docs/program.md#compute-and-allocation) records subdivisions and gates. Context tokens
 remain unset until measured qualification; 64K/128K is deferred. The protected reserve is smaller and
 must remain explicit. Completed external rental costs stay separate from this allocation.
@@ -209,7 +289,10 @@ must remain explicit. Completed external rental costs stay separate from this al
 At the measured H100 full-trainer rate, the revised 1,800-hour 4K reservation supports about 83.3B
 tokens before long-context and agentic overhead. The 80B working horizon therefore leaves little
 margin, and an illustrative 80% rate supports about 66.7B. The final horizon must be frozen only
-after GH200 throughput and the 16K/32K costs are measured; 100B is deferred.
+after GH200 throughput and the 16K/32K costs are measured; 100B is deferred. If the measured rate
+instead beats the anchor, the horizon still does not move: the predeclared surplus rule sends those
+hours to data research and to the supply-bound stages, because this release is bounded by eligible
+tokens rather than by compute.
 The old 320B/400B scales are deferred comparisons, not first-allocation targets.
 Four GPUs increase aggregate speed while consuming four GPU-hours per elapsed hour; they do not
 close the per-GPU efficiency gap. No GH200 or distributed speedup is assumed. The rough 90-calendar-day
@@ -225,7 +308,11 @@ application window is not 90 days of continuous four-GPU funding. No GH200 jobs 
 | Context | Positional retrieval, related-prefix benefit, multi-file/document reasoning and short-task retention |
 | Efficiency | All-in GPU-hours, tokens/FLOPs to useful quality, prefill/decode latency, memory and cost including failed attempts |
 | Openness | Identified checkpoints, source/config manifests, processing recipes, curves, costs, failure analysis and executable evaluation |
+| **Pipeline coverage** | **The primary deliverable. For each of the six stages: a data manifest with closed gates, an exposure ledger, a budget line and a receipt. A stage missing any of the four is reported as not covered.** |
+| **Pipeline reusability** | **Whether the recipe can be rerun at larger scale by someone else: pinned source identities, deterministic processing, family exclusions shared across stages, and costs recorded per stage and per token** |
 
 The [competitive strategy](docs/competitive.md) and [report outline](docs/report.md) define the
 comparison and release evidence. No architecture superiority claim follows from an engineering
-pilot without a matching control. Release claims must describe measured capability and limitations.
+pilot without a matching control, and no such claim is available at all this time: the comparison
+is deferred and the backbone was fixed by declaration. Release claims must describe measured
+capability and limitations.

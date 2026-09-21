@@ -3,7 +3,12 @@ from types import SimpleNamespace
 import pytest
 import torch
 
-from speck.operations.training_replay import compare_metadata, compare_state, replay
+from speck.operations.training_replay import (
+    _train_command,
+    compare_metadata,
+    compare_state,
+    replay,
+)
 
 
 @pytest.mark.parametrize(
@@ -55,3 +60,13 @@ def test_complete_optimizer_comparison_rejects_scalar_or_tensor_drift():
 def test_replay_requires_a_finite_deadline(seconds):
     with pytest.raises(ValueError, match="positive"):
         replay(SimpleNamespace(workers=1, seconds=seconds, checkpoint_step=1))
+
+
+@pytest.mark.parametrize("compiled", [False, True])
+def test_replay_command_controls_compilation(compiled):
+    # The selected production recipe is compiled, so the replay must be able to
+    # qualify the compiled distributed path; eager stays the default.
+    command = _train_command(
+        SimpleNamespace(phase="base", device="cuda", compile=compiled), "/tmp/experiment"
+    )
+    assert ("--no-compile" in command) is not compiled

@@ -64,10 +64,11 @@ def validate(packet_path):
         + self_sft["training_gpu_hours"]
         + support["gpu_hours"]
     )
-    if total != 150 or support["budget_check"] != (
-        "80 SFT comparison + 20 RL feasibility + 30 self-SFT pilot + 20 support = 150 post-training-research GPU-hours."
+    if total != 170 or support["budget_check"] != (
+        "80 SFT comparison + 40 RL feasibility + 30 self-SFT pilot + 20 support = 170 "
+        "post-training-research GPU-hours."
     ):
-        raise ValueError("post-training research reservation must total 150 GPU-hours")
+        raise ValueError("post-training research reservation must total 170 GPU-hours")
     # Prompt/verifier feasibility cannot establish RL learning or adaptation:
     # this slot samples a fixed policy and explicitly excludes gradient updates.
     if rl["status"] != "conditional_fixed_policy_only":

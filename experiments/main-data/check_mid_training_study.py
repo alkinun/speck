@@ -82,10 +82,11 @@ def validate(packet_path):
         + confirmation["training_gpu_hours"]
         + support["gpu_hours"]
     )
-    if total != 300 or support["budget_check"] != (
-        "120 proxy screening + 40 objective/packing + 40 context + 80 confirmation + 20 support = 300 mid-training-research GPU-hours."
+    if total != 360 or support["budget_check"] != (
+        "120 proxy screening + 40 objective/packing + 80 context + 80 confirmation + 40 support = "
+        "360 mid-training-research GPU-hours."
     ):
-        raise ValueError("mid-training research reservation must total 300 GPU-hours")
+        raise ValueError("mid-training research reservation must total 360 GPU-hours")
     if (
         packet["linked_downstream_evaluation"]["budget_owner"]
         != "post_training_research_150_gpu_hours"

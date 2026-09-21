@@ -11,6 +11,9 @@ import torch
 from speck.model import CausalLMTrainingOutput
 from speck.operations import trainer as slurm_base_train
 from speck.operations.slurm import (
+    MANDATORY_GPU_HOURS,
+    RESERVE_GPU_HOURS,
+    TOTAL_GPU_HOURS,
     classify_state,
     daily_summary,
     ingest_sacct,
@@ -44,15 +47,15 @@ def wave(tmp_path):
             {
                 "format": "speck_flagship_execution_plan",
                 "budget": {
-                    "gpu_hours": 5000,
-                    "mandatory_gpu_hours": 4600,
-                    "reserve_gpu_hours": 400,
-                    "full_node_days": 5000 / 96,
+                    "gpu_hours": TOTAL_GPU_HOURS,
+                    "mandatory_gpu_hours": MANDATORY_GPU_HOURS,
+                    "reserve_gpu_hours": RESERVE_GPU_HOURS,
+                    "full_node_days": TOTAL_GPU_HOURS / 96,
                 },
                 "phases": [
                     {"id": "P1", "gpu_hours": 100, "conditional": False},
-                    {"id": "P5", "gpu_hours": 4500, "conditional": False},
-                    {"id": "P7", "gpu_hours": 400, "conditional": True},
+                    {"id": "P5", "gpu_hours": MANDATORY_GPU_HOURS - 100, "conditional": False},
+                    {"id": "P7", "gpu_hours": RESERVE_GPU_HOURS, "conditional": True},
                 ],
             }
         )
@@ -86,9 +89,9 @@ def wave(tmp_path):
         "wave_id": "p1-fixture",
         "created_at_utc": "2026-09-08T00:00:00Z",
         "budget": {
-            "total_gpu_hours": 5_000,
-            "mandatory_gpu_hours": 4_600,
-            "reserve_gpu_hours": 400,
+            "total_gpu_hours": TOTAL_GPU_HOURS,
+            "mandatory_gpu_hours": MANDATORY_GPU_HOURS,
+            "reserve_gpu_hours": RESERVE_GPU_HOURS,
         },
         "plan": {"path": str(plan), "sha256": _sha256(plan)},
         "repository": {"path": str(repository), "commit": commit, "require_clean": True},
@@ -219,6 +222,9 @@ def test_render_has_clean_paths_array_and_four_gpu_contract_without_site_guesses
     assert "SPECK_RUN_ID" in flagship_script
     assert "SPECK_MAX_RETRIES=1" in flagship_script
     assert "SPECK_EXPECTED_LOCAL_WORLD_SIZE=4" in flagship_script
+    # max-autotune must compile once per wave, not once per preemption.
+    assert "export" in flagship_script and "TORCHINDUCTOR_CACHE_DIR" in flagship_script
+    assert str(Path(tmp_path / "runtime" / "inductor").resolve()) in flagship_script
     assert Path(rendered["frozen_manifest"]).stat().st_mode & 0o222 == 0
     assert Path(rendered["scripts"]["screen"]).stat().st_mode & 0o222 == 0
     for script in rendered["scripts"].values():
@@ -350,7 +356,7 @@ def test_retry_is_same_manifest_mechanical_and_bounded(wave, tmp_path):
         retry_job(path, "flagship", submission, observation, runtime, runner=runner)
 
 
-@pytest.mark.parametrize("prior_reserve", [0, 387, 388])
+@pytest.mark.parametrize("prior_reserve", [0, RESERVE_GPU_HOURS - 13, RESERVE_GPU_HOURS - 12])
 def test_manual_reserve_registration_enforces_protected_pool(wave, tmp_path, prior_reserve):
     _, value, _, _ = wave
     authorization = tmp_path / "reserve-approval.json"
@@ -374,7 +380,7 @@ def test_manual_reserve_registration_enforces_protected_pool(wave, tmp_path, pri
     (commitments / "prior.json").write_text(
         json.dumps({"gpu_hours": {"mandatory": 0, "reserve": prior_reserve}})
     )
-    if prior_reserve + 13 > 400:
+    if prior_reserve + 13 > RESERVE_GPU_HOURS:
         with pytest.raises(ValueError, match="exceed a protected GPU-hour commitment pool"):
             register_manual_reserve(
                 path, scheduler_jobs, authorization, _sha256(authorization), runtime
@@ -430,8 +436,8 @@ def test_daily_summary_keeps_mandatory_and_reserve_usage_separate(tmp_path):
     )
     summary = daily_summary(tmp_path, day="2026-09-08")
     assert summary["observed_gpu_hours"] == {"mandatory": 10.0, "reserve": 2.0}
-    assert summary["mandatory_remaining_gpu_hours"] == 4_590
-    assert summary["reserve_remaining_gpu_hours"] == 398
+    assert summary["mandatory_remaining_gpu_hours"] == MANDATORY_GPU_HOURS - 10
+    assert summary["reserve_remaining_gpu_hours"] == RESERVE_GPU_HOURS - 2
     assert summary["ended_today"] == 1
 
 

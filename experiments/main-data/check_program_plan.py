@@ -45,6 +45,66 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
     protected = compute["proposed_protected_breakdown_gpu_hours"]
     if sum(protected.values()) != reservations["protected_recovery_and_evaluation"]:
         raise ValueError("protected breakdown does not match its reservation")
+    # The Slurm wave validator carries its own scheduled/protected constants and
+    # rejects any execution plan that disagrees with them. Bind them here so a
+    # revised reservation table cannot pass this check and then fail at wave
+    # submission on the cluster, which is the worst place to discover the drift.
+    from speck.operations import slurm
+
+    protected_hours = reservations["protected_recovery_and_evaluation"]
+    scheduled = compute["requested_total_gpu_hours"] - protected_hours
+    if (
+        slurm.TOTAL_GPU_HOURS != compute["requested_total_gpu_hours"]
+        or slurm.MANDATORY_GPU_HOURS != scheduled
+        or slurm.RESERVE_GPU_HOURS != protected_hours
+    ):
+        raise ValueError("speck.operations.slurm budget constants drift from the reservation table")
+
+    # The re-anchoring rule is predeclared so the direction of any throughput
+    # surplus is fixed before the number is known. Keep the derate tied to the
+    # two measured pilot rates rather than to a hand-edited constant.
+    rule = compute["throughput_reanchoring_rule"]
+    measured_derate = (
+        compute["h100_full_trainer_tokens_per_second"]
+        / compute["h100_steady_optimizer_tokens_per_second"]
+    )
+    if abs(rule["overhead_derate"] - measured_derate) > 5e-7:
+        raise ValueError("throughput overhead derate drifts from the measured pilot rates")
+    if not rule["surplus_rule"].startswith("If the measured rate exceeds the anchor, the 80B"):
+        raise ValueError("surplus rule must hold the base horizon fixed")
+
+    # The headline 2.084x is a 318M proxy result. Keep the flagship's own
+    # baseline beside it so the proxy number is never read as a flagship rate.
+    evidence = compute["flagship_throughput_evidence"]
+    if evidence["status"] != "proxy_only_flagship_speedup_unmeasured":
+        raise ValueError("flagship throughput evidence must stay marked proxy-only")
+    implied = (
+        evidence["proxy_best_model_flops_utilization"]
+        / evidence["flagship_baseline_model_flops_utilization"]
+    )
+    if abs(evidence["implied_flagship_headroom"] - implied) > 1e-3:
+        raise ValueError("implied flagship headroom drifts from the recorded utilizations")
+
+    # Read the three utilizations back out of the sweep itself. Copying them into
+    # the plan is what let the proxy number be quoted as a flagship number in the
+    # first place, so the copies stay bound to their source.
+    sweep = _load(evidence["receipt"])
+    variants = {item["label"]: item for item in sweep["variants"]}
+    sweep_values = {
+        "flagship_baseline_model_flops_utilization": (
+            "baseline-eager-ac-deterministic",
+            "flagship_1p2b",
+        ),
+        "proxy_baseline_model_flops_utilization": ("proxy-ac-eager", "proxy_318m"),
+        "proxy_best_model_flops_utilization": ("proxy-k5-conv-mb3", "proxy_318m"),
+    }
+    for field, (label, model) in sweep_values.items():
+        variant = variants[label]
+        if variant["model"] != model:
+            raise ValueError(f"sweep variant {label} is no longer the {model} run")
+        if evidence[field] != variant["model_flops_utilization"]:
+            raise ValueError(f"{field} drifts from the throughput sweep receipt")
+
     first_scenario = compute["main_scenarios"][0]
     if first_scenario["tokens"] != plan["main_pretraining"]["target_tokens"]:
         raise ValueError("first compute scenario does not match the working token horizon")
@@ -153,6 +213,20 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
         != reservations["post_training"]
     ):
         raise ValueError("post-training production breakdown does not match its reservation")
+
+    # Endpoint decay and final self-SFT are named stages of the released pipeline.
+    # They each hold a production line so the six-stage claim rests on accounting
+    # rather than on prose, and so neither can be quietly absorbed by its
+    # neighbour when a stage runs long.
+    pretraining_production = compute["proposed_pretraining_breakdown_gpu_hours"]
+    if sum(pretraining_production.values()) != reservations["main_4k_pretraining"]:
+        raise ValueError("pretraining production breakdown does not match its reservation")
+    for stage, breakdown_key, line in (
+        ("endpoint decay", "proposed_pretraining_breakdown_gpu_hours", "endpoint_decay"),
+        ("final self-SFT", "proposed_post_training_breakdown_gpu_hours", "final_self_sft"),
+    ):
+        if compute[breakdown_key].get(line, 0) <= 0:
+            raise ValueError(f"{stage} must hold its own production line")
 
     receipts = plan["input_receipts"]
     checked = 0

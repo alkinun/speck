@@ -1,10 +1,12 @@
 # Speck technical report — working outline
 
-**Focus: data and training across pretraining, mid-training and post-training near 1.2B parameters.**
+**Focus: an open data pipeline across all six training stages near 1.2B parameters** — pretraining,
+endpoint decay, mid-training, post-training SFT, post-training RL and final self-distillation.
 Release the report alongside identified base and always-thinking assistant checkpoints. The model's
-attention, size and implementation choices provide supporting context. Broader architectural research
-remains later work. The first release includes a bounded 200-hour architecture/efficiency comparison
-before backbone freeze and 1,050 hours of data research across training stages.
+attention, size and implementation choices provide supporting context only. Architectural research,
+including the bounded matched-attention comparison, is deferred to a later allocation; the backbone
+here is declared, not compared, so the report carries no architecture claim. The release includes
+1,230 hours of data research across training stages.
 
 **Status: engineering results available; flagship training and final evaluation ahead.** The
 [preparation receipt](../experiments/pilot/preparation.json),
@@ -120,10 +122,11 @@ pre-self-SFT parent. Report held-out transfer and regressions before promoting t
 Give a concise account of the selected size, attention pattern and their rationale under the budget.
 The reference has 1,195,884,576 all-active parameters; 24 layers, width 2048, 18 KDA and six NoPE GQA
 layers, dense SwiGLU, tied embeddings and frozen Mistral tokenization with 32,003 rows. The production
-backbone remains to be selected. Bind each producing config/revision and report the 200-hour study:
-one attention control, identical qualified corpus/exposure, actual parameter/FLOP counts, quality,
-training cost/memory and prefill/decode/cache measurements at declared lengths and batch sizes.
-Disclose positional-policy and backend differences; separate implementation effects from architecture.
+backbone is this reference, fixed by declaration. Bind each producing config/revision and report
+reference-only measurements: actual parameter/FLOP counts, training cost/memory and
+prefill/decode/cache measurements at declared lengths and batch sizes. State plainly that no
+matched control was run, so no architecture comparison is claimed; the deferred design is
+published so readers can see what was not done. Separate implementation effects from architecture.
 The [model notes](model.md) distinguish inherited methods, design rationale and measured trade-offs.
 
 Report training memory/throughput, cache behavior and supported context; explain limitations as well
@@ -142,10 +145,11 @@ If several data components change together, attribute results to the combined re
 Checked-code substitution does not isolate synthesis, selection and verification separately.
 Publish the selection decision, unfavorable/inconclusive results and limits on extrapolating short
 runs to the 80B working horizon. A later useful-checkpoint continuation study answers a separate question and cannot
-retroactively justify the original mixture. The 600-hour pretraining study includes screening and
-confirmation, evaluations and overhead. The [mid-training packet](../experiments/main-data/mid-training-study-packet.json)
-reserves 300 hours for proxy, objective/packing, context and 1.2B confirmation studies. The
-[post-training packet](../experiments/main-data/post-training-study-packet.json) reserves 150 hours
+retroactively justify the original mixture. The 700-hour pretraining study includes screening,
+the three-arm endpoint-decay comparison, confirmation, evaluations and overhead. The
+[mid-training packet](../experiments/main-data/mid-training-study-packet.json)
+reserves 360 hours for proxy, objective/packing, context and 1.2B confirmation studies. The
+[post-training packet](../experiments/main-data/post-training-study-packet.json) reserves 170 hours
 for SFT selection, fixed-policy RL feasibility, a final self-SFT pilot and support. Start comparison
 arms from the same useful parent, hold objective and exposure fixed where testing data effects, and
 declare every combined intervention. Report capability per mid-training token and GPU-hour, SFT

@@ -18,8 +18,10 @@ PYTHONPATH=. python experiments/main-data/check_architecture_study.py \
   experiments/main-data/architecture-study-packet.json
 ```
 
-It contains one reference, one matched all-GQA/RoPE control, one seed and the existing 200-hour
-cap. It does not authorize training or broaden the architecture search.
+It contains one reference, one matched all-GQA/RoPE control and one seed. The study is **deferred
+to a later allocation**: it now draws zero GPU-hours and records the 200 it released. The design is
+preserved so the next allocation can run it unchanged. It does not authorize training or broaden
+the architecture search.
 
 The [data preparation closeout](data-closeout.json) freezes the current evidence-only corpus pass.
 The supplied frontier-data research is recorded in
@@ -364,9 +366,10 @@ receipts, loss masks and overlap/reuse from pretraining. The [training guide](..
 records the data/context branch and objective limitations. Data acquisition does not make this a
 runnable continuation recipe.
 
-The pretraining recipe study precedes the main run and uses 600 of the 1,050 data-research hours.
+The pretraining recipe study precedes the main run and uses 700 of the 1,230 data-research hours,
+of which 180 belong to the three-arm, two-seed endpoint-decay study.
 Its fresh-run tokens do not count as main-model exposure; production starts fresh after selection.
-Mid-training comparisons use their separate 300-hour research cap and cannot replace the initial study.
+Mid-training comparisons use their separate 360-hour research cap and cannot replace the initial study.
 
 ## Context extension
 
@@ -417,14 +420,17 @@ as actual provider billing:
 
 | Work | GPU-hours reserved |
 | --- | ---: |
-| Runtime qualification | 100 |
-| Architecture and efficiency study | 200 |
-| 4K base production | 1,800 |
+| Runtime and reference efficiency qualification | 120 |
+| 4K base production: 1,550 stable phase / 250 endpoint decay | 1,800 |
 | Capability/context/agentic mid-training production | 600 |
-| Post-training, including any on-allocation teacher/reward work | 800 |
-| Data experiments: 600 pretraining / 300 mid-training / 150 post-training | 1,050 |
+| Post-training: 450 SFT / 200 conditional RL / 100 final self-SFT / 50 teacher and verification | 800 |
+| Data experiments: 700 pretraining / 360 mid-training / 170 post-training | 1,230 |
 | Protected evaluation and recovery | 450 |
 | **Total** | **5,000** |
+
+The architecture and efficiency study no longer holds a reservation. Its 200 hours were released on
+2026-09-21: 180 to data research and 20 to reference-only efficiency profiling inside runtime
+qualification.
 
 The completed pilot measured **12,859 tokens/s** over the full trainer process, including cold
 startup, validation and checkpoint saves. At that single-H100 rate, 80B takes **1,728 GPU-hours**.
@@ -459,10 +465,10 @@ engineering pilot is an optimized throughput ceiling or promise a particular spe
 The 80B 4K-base horizon is now the working preparation baseline, conditional on cost and supply;
 the 100B and larger comparisons do not authorize expansion. Preserve continuation checkpoints and
 choose a compatible learning-rate schedule before training; a fully decayed run does not extend at
-no cost. The research allocation reserves 200 hours for architecture/efficiency and 1,050 for data
-experiments, while preserving 1,800 base, 600 mid-training and 800 post-training production hours.
-Historical H100 rental costs are
-separate. Remeasure throughput if the architecture decision changes the reference model.
+no cost. The research allocation reserves 1,230 hours for data experiments, while preserving 1,800
+base, 600 mid-training and 800 post-training production hours. Historical H100 rental costs are
+separate. The backbone no longer changes under a study decision, but the throughput recipe was
+selected on a 318M proxy, so remeasure the flagship rate on GH200 before re-anchoring any horizon.
 
 Charge experimental training, evaluation, retries and on-allocation preparation to the appropriate
 research cap; charge selected production runs to their production phase. CPU/storage and external

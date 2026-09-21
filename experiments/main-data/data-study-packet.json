@@ -101,8 +101,8 @@
     "claim_boundary": "Two paired seeds support a bounded data comparison, not a global optimum or guaranteed 80B ranking."
   },
   "decay_study": {
-    "purpose": "Test whether late-stage capability enrichment improves capability density over ordinary pretraining decay.",
-    "status": "candidate_only_pending_stable_parent_and_decay_manifest",
+    "purpose": "Endpoint decay is a named stage of the released pipeline, not a tail of pretraining. Test whether late-stage capability enrichment improves capability density over ordinary decay, on two paired seeds so the result can carry a stage recipe rather than a single-seed hint.",
+    "status": "first_class_stage_study_pending_stable_parent_and_decay_manifest",
     "parent": "One matched stable-stage checkpoint from the selected broad recipe; all arms share model, optimizer state, decay schedule and total exposure.",
     "arms": [
       {
@@ -121,14 +121,14 @@
         "contract": "Add a small separately identified share of source-grounded or independently checked derived records. No unverified generated text is admitted."
       }
     ],
-    "paired_seed_count": 1,
-    "training_gpu_hours": 90,
+    "paired_seed_count": 2,
+    "training_gpu_hours": 180,
     "per_arm_training_cap_gpu_hours": 30,
     "primary_evidence": "Capability density per token and GPU-hour, general-retention guardrails, downstream SFT convergence, lineage and preparation cost.",
     "failure_rule": "If derived or curated decay fails to improve the predeclared endpoints without prohibited regressions, retain natural decay and report the negative result."
   },
   "support_and_reserve": {
-    "gpu_hours": 150,
+    "gpu_hours": 160,
     "includes": [
       "source preparation and manifest checks",
       "held-out evaluation",
@@ -137,7 +137,7 @@
       "recovery and result packaging"
     ],
     "protected_confirmation_first": true,
-    "budget_check": "120 base screening + 90 decay screening + 240 confirmation + 150 support = 600 pretraining-data-research GPU-hours."
+    "budget_check": "120 base screening + 180 decay screening + 240 confirmation + 160 support = 700 pretraining-data-research GPU-hours."
   },
   "required_gates_before_first_arm": [
     "Named human source-use decisions and applicable notices for every selected source.",

@@ -15,8 +15,8 @@ FORMAT = "speck_slurm_wave"
 FORMAT_VERSION = 1
 PLAN_FORMAT = "speck_flagship_execution_plan"
 TOTAL_GPU_HOURS = 5_000
-MANDATORY_GPU_HOURS = 4_600
-RESERVE_GPU_HOURS = 400
+MANDATORY_GPU_HOURS = 4_550
+RESERVE_GPU_HOURS = 450
 REQUEUE_EXIT_CODE = 99
 
 _SHA256 = re.compile(r"[0-9a-f]{64}")
@@ -89,7 +89,7 @@ def _check_plan(plan):
         "reserve_gpu_hours": RESERVE_GPU_HOURS,
         "full_node_days": plan.get("budget", {}).get("full_node_days"),
     }:
-        raise ValueError("execution plan does not preserve the 4,600 + 400 GPU-hour budget")
+        raise ValueError("execution plan does not preserve the 4,550 + 450 GPU-hour budget")
     phases = plan.get("phases")
     if not isinstance(phases, list):
         raise ValueError("execution plan phases are missing")
@@ -247,7 +247,7 @@ def load_wave(path):
         "mandatory_gpu_hours": MANDATORY_GPU_HOURS,
         "reserve_gpu_hours": RESERVE_GPU_HOURS,
     }:
-        raise ValueError("wave budget must preserve protected 4,600 + 400 accounting")
+        raise ValueError("wave budget must preserve protected 4,550 + 450 accounting")
     plan_identity = _identity(raw["plan"], source.parent, "execution plan")
     plan_path = Path(plan_identity["path"])
     if not plan_path.is_file() or sha256_file(plan_path) != plan_identity["sha256"]:
@@ -368,6 +368,10 @@ def render_job_script(job, digest, runtime_root, *, account=None, partition=None
     log_dir = runtime_root / "logs" / digest / job["id"]
     signal_dir = runtime_root / "signals" / digest / job["id"]
     attempt_dir = runtime_root / "attempts" / digest / job["id"]
+    # The selected production recipe compiles with max-autotune. Without a
+    # persistent cache every requeued attempt pays full autotune again, so the
+    # cache is scoped to the wave digest and shared across that wave's attempts.
+    inductor_dir = runtime_root / "inductor" / digest
     log_token = "%A_%a" if job["array"] else "%j"
     directives = [
         f"#SBATCH --job-name={job['id']}-{digest[:8]}",
@@ -406,8 +410,10 @@ def render_job_script(job, digest, runtime_root, *, account=None, partition=None
         + f'readonly SPECK_RUN_ID="{job["id"]}-{digest[:12]}-${{task_id}}-a${{attempt}}"\n'
         + f"readonly SPECK_MAX_RETRIES={retries}\n"
         + f"readonly SPECK_EXPECTED_LOCAL_WORLD_SIZE={resources['gpus']}\n"
+        + f"readonly TORCHINDUCTOR_CACHE_DIR={shlex.quote(str(inductor_dir))}\n"
+        + 'mkdir -p "${TORCHINDUCTOR_CACHE_DIR}"\n'
         + "export SPECK_MANIFEST_SHA256 SPECK_RUN_ID SPECK_REQUEUE_SIGNAL_FILE "
-        + "SPECK_MAX_RETRIES SPECK_EXPECTED_LOCAL_WORLD_SIZE\n"
+        + "SPECK_MAX_RETRIES SPECK_EXPECTED_LOCAL_WORLD_SIZE TORCHINDUCTOR_CACHE_DIR\n"
         + 'export SPECK_RETRY_OFFSET="${attempt}"\n'
         + 'rm -f "${SPECK_REQUEUE_SIGNAL_FILE}"\n'
         + f"cd {shlex.quote(job['working_directory'])}\n"
@@ -474,6 +480,8 @@ def render_wave(path, runtime_root, *, account=None, partition=None):
         signal_dir.mkdir(parents=True, exist_ok=True)
         attempt_dir = Path(runtime_root).expanduser().resolve() / "attempts" / digest / job["id"]
         attempt_dir.mkdir(parents=True, exist_ok=True)
+        inductor_dir = Path(runtime_root).expanduser().resolve() / "inductor" / digest
+        inductor_dir.mkdir(parents=True, exist_ok=True)
         script = script_dir / f"{job['id']}.sbatch"
         content = render_job_script(job, digest, runtime_root, account=account, partition=partition)
         if script.exists():

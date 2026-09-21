@@ -4,19 +4,19 @@
   "date": "2026-09-20",
   "status": "working_preparation_targets_not_launch_manifest",
   "research_scope": {
-    "focus": "Data across pretraining, mid-training and post-training, supported by controlled architecture and measured training/inference efficiency.",
-    "architecture_role": "200-hour bounded comparison before the backbone is frozen for data studies; one consequential question, initially hybrid versus matched attention baseline near 1.2B. No broad search.",
+    "focus": "An open data pipeline and recipe spanning all six training stages: pretraining, endpoint decay, mid-training, post-training SFT, post-training RL and final self-distillation. The 1.2B model is the evidence that the pipeline works end to end, not the deliverable.",
+    "architecture_role": "None on this allocation. The reference backbone is declared as the fixed substrate so data comparisons are interpretable; the bounded hybrid-versus-matched-attention comparison is deferred to a later allocation with its design preserved.",
     "deferred_research": [
       "MoE",
       "attention residuals",
       "broad attention-layout searches",
       "model-size sweeps"
     ],
-    "primary_controlled_study": "Before main pretraining, screen qualified source/filter/mixture contrasts and confirm the selected candidate against a baseline from matched fresh initializations on the frozen backbone near 1.2B. Predeclare each contrast after source/supply audits; fit screening and confirmation within 600 hours.",
+    "primary_controlled_study": "Before main pretraining, screen qualified source/filter/mixture contrasts and confirm the selected candidate against a baseline from matched fresh initializations on the declared backbone near 1.2B. Predeclare each contrast after source/supply audits; fit screening, decay and confirmation within 700 hours.",
     "research_order": [
       "Audit pretraining, mid-training and post-training sources and freeze exclusion/evaluation protocols before data selection.",
-      "Qualify hardware/runtime, complete the bounded architecture/efficiency comparison and freeze the backbone; then run pretraining-data screening and confirmation before main pretraining.",
-      "Record the comparison result and limitations, select a supported starting recipe, then freeze and launch main pretraining.",
+      "Qualify hardware/runtime and freeze the throughput recipe; the backbone is declared, not compared. Then run pretraining-data screening, the decay study and confirmation before main pretraining.",
+      "Record the data comparison result and limitations, select a supported starting recipe, then freeze and launch main pretraining.",
       "Use useful stage checkpoints for capability/context and SFT/RL data comparisons before committing each downstream stage; charge each to its declared reservation."
     ],
     "candidate_contrast": "Screen at most one code-bank contrast, one natural-web source contrast and one calibrated AI-generation/provenance-filter contrast against a shared eligible baseline. Checked-code substitution remains an alternative only with qualified supply. Confirm one selected intervention; no untested combination or broad weight sweep.",
@@ -65,11 +65,11 @@
     "final_behavior": "always thinking",
     "configuration": "experiments/qualification/model.json",
     "active_parameters": 1195884576,
-    "selection_status": "Reference for the bounded architecture study; freeze the production backbone before data comparisons. The historical qualification configuration remains immutable."
+    "selection_status": "Fixed substrate for this release, frozen by declaration rather than selected over a measured control; the bounded architecture comparison is deferred to a later allocation. The historical qualification configuration remains immutable."
   },
   "architecture_study": {
-    "budget_reservation": "compute.reservations_gpu_hours.architecture_and_efficiency",
-    "status": "proposed_control_and_cost_envelope_runtime_and_launch_settings_pending",
+    "budget_reservation": "none_on_this_allocation",
+    "status": "deferred_to_a_later_allocation_design_preserved",
     "question": "Compare the reference KDA/NoPE-GQA hybrid with one parameter-matched all-GQA/RoPE design near 1.2B. This tests the complete design package, including position policy and feed-forward allocation, not KDA in isolation.",
     "controls": "Use the same qualified corpus, tokenizer, declared token horizon and evaluation protocol. Report actual total/active/non-embedding parameters, estimated FLOPs, precision, implementation, hardware and measured allocated GPU-hours; matching parameters does not imply matching FLOPs.",
     "measurements": [
@@ -78,7 +78,7 @@
       "Prefill latency, time to first token, decode latency/throughput and cache memory across declared lengths and batch sizes",
       "Numerical/restart behavior and backend qualifications"
     ],
-    "decision": "Use predeclared quality-regression tolerances and training/inference cost endpoints. Select a qualified, affordable backbone; retain the reference if evidence is inconclusive and it passes the gates. One seed is supporting design evidence only. Preserve historical configs and remeasure the chosen model before data comparisons.",
+    "decision": "Deferred. The reference backbone is frozen by declaration as the fixed substrate for the data studies. Retain the control geometry and measurement list for the next allocation; report the deferral and its consequence rather than any comparison result.",
     "packet": {
       "path": "experiments/main-data/architecture-study-packet.json",
       "status": "design_only_not_training_authority"
@@ -106,6 +106,14 @@
       "per_arm_training_gpu_hour_cap": 60,
       "token_horizon": null,
       "initialization": "Fresh runs with the same declared seed and initialization policy; unlike data-study pairs, different geometries cannot have identical model tensors."
+    },
+    "deferral": {
+      "decided": "2026-09-21",
+      "reason": "This release delivers an open data pipeline across the six training stages, not an architecture result. A comparison that cannot change the backbone we ship is architecture search, which is explicitly next-allocation work.",
+      "released_gpu_hours": 200,
+      "released_to": "180 hours to data research (100 pretraining, 60 mid-training, 20 post-training) and 20 hours to reference-only training/inference efficiency profiling inside runtime qualification.",
+      "claim_consequence": "No architecture superiority or parity claim may appear in the report. The reference backbone is declared as the fixed substrate for the data work, not selected over a measured control.",
+      "preserved_design": "The packet, control geometry and run design remain valid and unmodified as the starting point for the next allocation."
     }
   },
   "pretraining_data_study": {
@@ -423,7 +431,7 @@
         "gpu_hours_at_4k_padded_position_rate_only": 658.7861013974396
       }
     ],
-      "boundary": "4K-rate scenarios omit variable padding, long attention cost, evaluation, teacher generation, verification and retries. The 800-hour reservation covers SFT, optional verified-reward RL, teacher/verification work and final self-SFT; additions must fit or displace work. No multi-epoch commitment. The separate 150-hour post-training data-research cap covers comparison arms and their overhead, not production exposure; charge every job once.",
+    "boundary": "4K-rate scenarios omit variable padding, long attention cost, evaluation, teacher generation, verification and retries. The 800-hour reservation covers SFT, optional verified-reward RL, teacher/verification work and final self-SFT; additions must fit or displace work. No multi-epoch commitment. The separate 150-hour post-training data-research cap covers comparison arms and their overhead, not production exposure; charge every job once.",
     "stage_design": {
       "sft": "Length-bucketed assistant-masked thinking and tool supervision; shorter qualified buckets first, then mixed short and long examples through the validated context ceiling. One unique-task inventory, explicit exposure and replay accounting.",
       "rl": "Proposed bounded GRPO-style verifiable-reward training after a useful SFT baseline; qualify implementation, rollout engine, task verifiers and recovery first. No qualified RL trainer currently exists in the repo.",
@@ -453,9 +461,8 @@
     "requested_total_gpu_hours": 5000,
     "nominal_access_window_days": 90,
     "reservations_gpu_hours": {
-      "runtime_qualification": 100,
-      "architecture_and_efficiency": 200,
-      "data_experiments": 1050,
+      "runtime_qualification": 120,
+      "data_experiments": 1230,
       "main_4k_pretraining": 1800,
       "capability_and_agentic_mid_training": 600,
       "post_training": 800,
@@ -463,13 +470,13 @@
     },
     "h100_full_trainer_tokens_per_second": 12859.198189903878,
     "h100_steady_optimizer_tokens_per_second": 13594.900661275025,
-    "main_pretraining_reference_gpu_hours": 1728.1188050082777,
+    "main_pretraining_reference_gpu_hours": 1728.1188050082776,
     "main_reference_four_gpu_days_at_perfect_scaling": 18.00123755216956,
     "main_scenarios": [
       {
         "tokens": 80000000000,
         "role": "revised first-allocation 4K-base working horizon, conditional on measured cost and supply",
-        "reference_gpu_hours": 1728.1188050082777,
+        "reference_gpu_hours": 1728.1188050082776,
         "reference_four_gpu_days_perfect_scaling": 18.00123755216956,
         "reference_four_gpu_days_at_80_percent_scaling": 22.50154694021195,
         "minimum_effective_tokens_per_second_per_allocated_gpu_in_1800_hours": 12345.67901234568,
@@ -498,16 +505,17 @@
     "allocation_interpretation": "The grant allocation is 5,000 total GPU-hours across four GH200s, equivalent to 1,250 four-GPU elapsed hours, within a nominal 90-day access window. Hardware and envelope are confirmed; access start, site details and throughput remain pending qualification.",
     "scaling_boundary": "Illustrative 80% efficiency is not measured. Four GPUs at H100 per-device speed yield 51,437 aggregate tokens/s at perfect scaling or 41,149 at 80%; GPU-hour cost is invariant at perfect scaling and rises with inefficiency. GH200 per-device gains require measurement.",
     "proposed_post_training_breakdown_gpu_hours": {
-      "sft": 500,
+      "sft": 450,
       "conditional_verified_reward_rl": 200,
-      "on_allocation_teacher_and_verification_work": 100
+      "final_self_sft": 100,
+      "on_allocation_teacher_and_verification_work": 50
     },
     "proposed_protected_breakdown_gpu_hours": {
       "comparative_and_final_evaluation": 250,
       "recovery_and_unresolved_cost_reserve": 200
     },
     "breakdown_status": "The 5000-hour research-and-release envelope is a planning cap, not a measured requirement or job authorization. Research includes each experiment's evaluation/preparation/retries; production phases have separate exposure ledgers.",
-    "reservation_revision": "Research-first allocation: runtime 100, architecture/efficiency 200, data research 1,050 (600/300/150), 4K base production 1,800, combined capability/context/agentic mid-training production 600, post-training production 800 and protected evaluation/recovery 450. External H100 rentals remain separate; no repeat engineering pilot.",
+    "reservation_revision": "Research-first allocation: runtime and efficiency qualification 120, data research 1,230 (700/360/170), 4K base production 1,800 (1,550 stable plus 250 endpoint decay), combined capability/context/agentic mid-training production 600, post-training production 800 (450 SFT, 200 conditional RL, 100 final self-SFT, 50 teacher/verification) and protected evaluation/recovery 450. The bounded architecture/efficiency comparison is deferred to a later allocation and its 200 hours moved to data research and reference-only efficiency profiling. External H100 rentals remain separate; no repeat engineering pilot.",
     "main_budget_feasibility": {
       "h100_rate_tokens_in_reserved_hours": 83333333333.33333,
       "reference_margin_gpu_hours": 71.88119499172231,
@@ -515,37 +523,60 @@
       "boundary": "Linear H100 full-trainer extrapolation; not a guaranteed GH200 ceiling. The revised 80B 4K-base horizon leaves little margin at the measured rate and roughly 66.7B at an illustrative 80% rate; long-context and agentic phases require separate measured costing. Do not borrow protected stage budgets."
     },
     "data_experiments_breakdown_gpu_hours": {
-      "pretraining": 600,
-      "mid_training": 300,
-      "post_training": 150
+      "pretraining": 700,
+      "mid_training": 360,
+      "post_training": 170
     },
     "proposed_research_breakdown_gpu_hours": {
-      "architecture_and_efficiency": {
-        "paired_training": 120,
-        "training_and_inference_profiling": 40,
-        "qualification_evaluation_recovery": 40
-      },
       "pretraining": {
         "screening_training": 120,
-        "decay_training": 90,
+        "decay_training": 180,
         "confirmation_training": 240,
-        "preparation_evaluation_recovery": 150
+        "preparation_evaluation_recovery": 160
       },
       "mid_training": {
         "proxy_screening_training": 120,
         "objective_and_packing_training": 40,
-        "context_training": 40,
+        "context_training": 80,
         "confirmation_training": 80,
-        "preparation_evaluation_recovery": 20
+        "preparation_evaluation_recovery": 40
       },
       "post_training": {
         "sft_paired_training": 80,
-        "conditional_rl_prompt_feasibility": 20,
+        "conditional_rl_prompt_feasibility": 40,
         "final_self_sft_pilot": 30,
         "preparation_evaluation_recovery": 20
       }
     },
-    "research_subdivision_status": "Proposed spending ceilings inside the 200/600/300/150 reservations, not runnable jobs or additional GPU-hours. Training caps include trainer startup, saves and inline validation; shared support covers other on-allocation preparation, scoring, qualification and recovery. Account each operation once. Reduce scope or record an explicit revision if measured costs do not fit; no silent transfers from confirmation or production."
+    "research_subdivision_status": "Proposed spending ceilings inside the 200/600/300/150 reservations, not runnable jobs or additional GPU-hours. Training caps include trainer startup, saves and inline validation; shared support covers other on-allocation preparation, scoring, qualification and recovery. Account each operation once. Reduce scope or record an explicit revision if measured costs do not fit; no silent transfers from confirmation or production.",
+    "proposed_pretraining_breakdown_gpu_hours": {
+      "stable_phase": 1550,
+      "endpoint_decay": 250
+    },
+    "throughput_reanchoring_rule": {
+      "status": "predeclared_before_measurement",
+      "decided": "2026-09-21",
+      "current_anchor_field": "h100_full_trainer_tokens_per_second",
+      "replacement_source": "experiments/qualification/throughput-gh200.json, the single-worker confirmation sweep, read from the gh200-pilot-baseline and the selected configuration.",
+      "overhead_derate": 0.945884,
+      "overhead_derate_basis": "The confirmation sweep runs --mode compute for ten steps and excludes startup, inline validation and checkpoint saves. The current anchor is a full-trainer rate that includes them. Multiply any benchmark tokens/s by this measured pilot ratio (12859.198/13594.901) before converting it into horizon hours. Remeasure the ratio on GH200 at production save and validation cadence; the pilot value is an interim floor.",
+      "compile_warmup_boundary": "max-autotune warmup is not in the ten-step benchmark. Amortize it per wave, not per step, and only with the persistent TORCHINDUCTOR_CACHE_DIR the Slurm renderer now exports.",
+      "surplus_rule": "If the measured rate exceeds the anchor, the 80B 4K-base horizon does not move. Surplus hours return to data research and to the stages whose supply or tooling is the binding constraint. The deliverable is the pipeline, and eligible-token supply, not compute, is what currently bounds it.",
+      "shortfall_rule": "If the measured rate falls below the anchor, reduce the 80B horizon rather than borrowing from protected mid-training, post-training or evaluation reservations.",
+      "rationale": "Predeclared so the direction is fixed before the number is known. The failure mode this prevents is spending a throughput win on a longer base run that the data pipeline cannot supply and the release does not need."
+    },
+    "flagship_throughput_evidence": {
+      "status": "proxy_only_flagship_speedup_unmeasured",
+      "measured_speedup_scope": "The 2.084x is a 318M proxy result on an RTX 3090, measured against a proxy baseline at 25.0% model FLOPs utilization. It is not a flagship speedup.",
+      "flagship_baseline_model_flops_utilization": 0.34552398916173754,
+      "proxy_baseline_model_flops_utilization": 0.2504915671976221,
+      "proxy_best_model_flops_utilization": 0.5220485278776832,
+      "implied_flagship_headroom": 1.511,
+      "implied_flagship_headroom_basis": "The only flagship measurement in the sweep is the eager, activation-checkpointed baseline at 34.55% utilization. If the flagship reaches the proxy's 52.2% ceiling its speedup is 1.51x, not 2.08x, because its baseline was already the more efficient of the two. The checkpointing-off component is arithmetic and should transfer; the compile component is overhead and fusion and should shrink as the GEMMs grow.",
+      "unmeasured": "No flagship configuration with activation checkpointing off was ever measured: two attempts reached 23.03 and 22.91 GiB before exhausting the 24 GiB card.",
+      "resolution": "experiments/qualification/throughput-gh200.json benchmarks experiments/pilot, the 1.2B reference, so the confirmation sweep measures the flagship speedup directly. Quote no flagship speedup until it returns.",
+      "receipt": "experiments/qualification/throughput-3090/sweep.json"
+    }
   },
   "storage": {
     "base_uint16_token_id_bytes": 160000000000,
@@ -555,44 +586,46 @@
     "prepared_100b_uint16_token_id_bytes": 200000000000
   },
   "input_receipts": {
-    "experiments/pilot/h100-run.json": "7e289c7189080bd6d3a1436cebb73a3925e73e06351972a48efe716bbb460de4",
-    "experiments/qualification/timing-result.json": "3d285f483468756ef22bcf22c3a93cc9f59ca2930ea374cb84b6645a920ad7a0",
-    "experiments/pilot/supply.json": "044cdfd3d48a78f66fe39831b4f46cf4dcb6325e6e254453ba1ff5b94161b070",
-    "experiments/corpus-audit/recipe-review.json": "42c0c6d6822b52ee3449f1917e997d039848e40a2ed5903b317d375705508948",
-    "experiments/pilot/development-result.json": "c4f8b7e8226d9063398c33eec92d864488f3d1527a572816b29cb12b07d1ba69",
-    "experiments/pilot/backup-result.json": "9f3248b7a50daae67a2cc3850b5afe68a5d19a2512f3fa5167a3084122bdf37a",
-    "experiments/corpus-audit/natural-code-cohort.json": "a21c229e369f1fdacdeb0f217656fc3c646c3e7071d3eab919bb92542e8d5e77",
-    "experiments/qualification/model.json": "84d7ee22eaec7cc2b5c9ccad3c18b80af5aa73cada394ad3fb800e792e67f8e6",
-    "experiments/corpus-audit/practical-code-checks.json": "4fb16e23039659f13cf575440cbeea098a8922895a507f43bec95ff1ffcb7e34",
-    "experiments/main-data/qualification-result.json": "05e3c3c928abfc6db69c448c2353c5a19069b922c130b3de29f3979e5eeb610d",
-    "experiments/main-data/livecodebench-exclusion.json": "4c10bfc69ddf2f7379d2eae26bc3873ee8c5317a9d036cad495fe2728bbb536f",
-    "experiments/corpus-audit/web-variants.json": "13917e1d1e209ea7b913579f12de5093f84e9332f7c413bfc0ffdc0a1fbb1fcf",
-    "experiments/corpus-audit/natural-web-inspection.json": "3f27886a4173c64a771beea134f1f383caf5944707cc259c2f4cdb85e1168681",
-    "experiments/corpus-audit/web-inventory-dclm.json": "438f5f61aee6087959e461ceb20760dbc0de5d8bb775199a3711a09e617f8906",
-    "experiments/corpus-audit/web-hq-stratified.json": "2c508679bfb7340799e99c77f8bbbf97d29957c5511829f0e07318647bd5d024",
-    "experiments/corpus-audit/web-filter-validation.json": "b390a64790f1b9ab83f0a54350805275810031e1afc13a5f7724b02127ab7879",
-    "experiments/corpus-audit/code-supply.json": "30a93d3afcfbf53c0b173eb7e56aaef728280625bcf5827e195309436db5e8fe",
+    "experiments/corpus-audit/code-application-origins.json": "49932682280ceb291dff7827520787e148c76783f5488c0f083d41323f1b0ac8",
     "experiments/corpus-audit/code-bundles.json": "13e5fdfd1ed66afe2efaa231b1baea59d92ebdf909c51916b552f6b39d934036",
     "experiments/corpus-audit/code-expansion.json": "27758b3858331843710bc4cb98a16a89c265bc3fa37457d3e9fbdc1209a5bbe1",
-    "experiments/corpus-audit/code-application-origins.json": "49932682280ceb291dff7827520787e148c76783f5488c0f083d41323f1b0ac8",
+    "experiments/corpus-audit/code-supply.json": "30a93d3afcfbf53c0b173eb7e56aaef728280625bcf5827e195309436db5e8fe",
     "experiments/corpus-audit/code-yield-result.json": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94",
     "experiments/corpus-audit/data-readiness.json": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549",
-    "experiments/main-data/data-study-packet.json": "b15c981f375eaa6c610a7249d3da9a169e431b29d9806583fb3238ca0c8e6e18",
-    "experiments/main-data/source-readiness.json": "025140dcf60cc3615d34ae6b0294c6f0c11cbeb350016ece31cf19eac47bdf3a",
-    "experiments/main-data/mid-training-study-packet.json": "41930a2cc00b909409f1ed6c9655b3ce9fe2279153a7dcf8f92b4507431107af",
-    "experiments/main-data/post-training-study-packet.json": "b269c8247f9378019a76deaf9320e577aa3bef7216f453b3cf7769dd2286f4dd",
-    "experiments/main-data/data-closeout.json": "50be04d5a575c6eafbe93c8de27b870803d6886a4605a05934eb05496a2705b7",
-    "experiments/main-data/frontier-data-research.json": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",
+    "experiments/corpus-audit/natural-code-cohort.json": "a21c229e369f1fdacdeb0f217656fc3c646c3e7071d3eab919bb92542e8d5e77",
+    "experiments/corpus-audit/natural-web-inspection.json": "3f27886a4173c64a771beea134f1f383caf5944707cc259c2f4cdb85e1168681",
+    "experiments/corpus-audit/practical-code-checks.json": "4fb16e23039659f13cf575440cbeea098a8922895a507f43bec95ff1ffcb7e34",
+    "experiments/corpus-audit/recipe-review.json": "42c0c6d6822b52ee3449f1917e997d039848e40a2ed5903b317d375705508948",
+    "experiments/corpus-audit/web-filter-validation.json": "b390a64790f1b9ab83f0a54350805275810031e1afc13a5f7724b02127ab7879",
+    "experiments/corpus-audit/web-hq-stratified.json": "2c508679bfb7340799e99c77f8bbbf97d29957c5511829f0e07318647bd5d024",
+    "experiments/corpus-audit/web-inventory-dclm.json": "438f5f61aee6087959e461ceb20760dbc0de5d8bb775199a3711a09e617f8906",
+    "experiments/corpus-audit/web-variants.json": "13917e1d1e209ea7b913579f12de5093f84e9332f7c413bfc0ffdc0a1fbb1fcf",
+    "experiments/main-data/architecture-study-packet.json": "4297a531833c0135e3ceedaef094a570883c1f5c2fe38e4b2cf35565c259c390",
+    "experiments/main-data/candidate-manifest-preflight.json": "7c9e328e1664fe2afa6fb06f439d724546ecc31f8ecf25845c250fce0c1553d2",
+    "experiments/main-data/data-closeout.json": "f5ad68c2dc965c4bddc4a4c48a6add779a0c8c80af26227dfe887418831beb6e",
     "experiments/main-data/data-design-contract.json": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58",
-    "experiments/main-data/frontier-data-source-mapping.json": "3fb69df90f1a3b10541414920faac75e2252e88f993cdc81dcf80cfeb9df03a9",
-    "experiments/main-data/candidate-manifest-preflight.json": "3988a20e31d8913076d727d0f2f36a9de29211db1ae0a6fb55ea46038953a23f",
-    "experiments/main-data/natural-web-candidate-manifest.json": "d087be768ef5802bea6d662ecd29419926205cac136956384668ef8a4f2d4140",
-    "experiments/main-data/natural-code-candidate-manifest.json": "25e98544a6238c6fe604b1211e922142bfef8a3250aed663d1e5af8e886a758c",
-    "experiments/main-data/math-candidate-manifest.json": "b816abba29a2a4fda308879d3c8f63d5843822d47e3d5ec9dea960623e5d33ae",
-    "experiments/main-data/post-training-candidate-manifest.json": "0a699dd4f0ed88b3b399b6eed011d8885b8484df025a3f6ed284a3277a907216",
-    "experiments/main-data/post-training-audit-protocol.json": "b38092791d8ec290ebd1763146f78c63bc222d39468ef733a7fe1f54eccd7faa",
+    "experiments/main-data/data-study-packet.json": "0a5c1e0fefa746cfbe8b86e91d284e7bdb2170998fbe2dd607df8f322d4cf6e5",
+    "experiments/main-data/frontier-data-research.json": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",
+    "experiments/main-data/frontier-data-source-mapping.json": "35c4992d202018f5cdab6e28854b06459e76f068265e3bcec1c0b207b88440d0",
+    "experiments/main-data/livecodebench-exclusion.json": "4c10bfc69ddf2f7379d2eae26bc3873ee8c5317a9d036cad495fe2728bbb536f",
+    "experiments/main-data/math-candidate-manifest.json": "f930e6c60860e6d04d41d97d3319f78719d5ed66cfcbb432127b3ee3143d3ace",
+    "experiments/main-data/mid-training-study-packet.json": "78e05e57795baa80a74f6747770129c78d5a2af75c1cf4f4acb34b918257b82c",
+    "experiments/main-data/natural-code-candidate-manifest.json": "e99314295e75fb88b6c74dfe75becc82845d5a9e2a62c0d2ebe876cd9feb5df0",
+    "experiments/main-data/natural-web-candidate-manifest.json": "168ae5939d2a798803c229d28d44b95514cd3a779bf88015ab9292b4d8a192ba",
+    "experiments/main-data/post-training-audit-protocol.json": "38981bedeec73058f699fe064be19fb193b3488da2b2ba03d651f8727c2ce10c",
+    "experiments/main-data/post-training-candidate-manifest.json": "cddee2a936b93d3e4b20908bf88de2603c0ad07509ac72a27944524bd27aac54",
     "experiments/main-data/post-training-research.json": "5036027c1aa274c3f7b0f1aa6b07ad3f4a80016c90a866eee7cf27b096604c99",
-    "experiments/main-data/architecture-study-packet.json": "d506aa41460d265f0a7209a7fa1073ca4f1cf4defcd6e0fa5a6afff136e87846"
+    "experiments/main-data/post-training-study-packet.json": "82987d430d06a9d163c000ee5acc09ebdc26e8ebe2b4a254f6f1c73f8a9a4971",
+    "experiments/main-data/qualification-result.json": "05e3c3c928abfc6db69c448c2353c5a19069b922c130b3de29f3979e5eeb610d",
+    "experiments/main-data/source-readiness.json": "f6b43603c49a5e74ca5236605c10aecf3a45dedab4f2d444af5dd2cfe81eb8a1",
+    "experiments/pilot/backup-result.json": "9f3248b7a50daae67a2cc3850b5afe68a5d19a2512f3fa5167a3084122bdf37a",
+    "experiments/pilot/development-result.json": "c4f8b7e8226d9063398c33eec92d864488f3d1527a572816b29cb12b07d1ba69",
+    "experiments/pilot/h100-run.json": "7e289c7189080bd6d3a1436cebb73a3925e73e06351972a48efe716bbb460de4",
+    "experiments/pilot/supply.json": "044cdfd3d48a78f66fe39831b4f46cf4dcb6325e6e254453ba1ff5b94161b070",
+    "experiments/qualification/model.json": "84d7ee22eaec7cc2b5c9ccad3c18b80af5aa73cada394ad3fb800e792e67f8e6",
+    "experiments/qualification/throughput-3090/sweep.json": "56b1fce0fd067792585a950014d64d8f5610a83c2e6fe05ffaf957f622d8dddf",
+    "experiments/qualification/throughput-gh200.json": "548414a6a870f095471fd3d1539f65dcc3d8db838eae850487ac2d18435293d3",
+    "experiments/qualification/timing-result.json": "3d285f483468756ef22bcf22c3a93cc9f59ca2930ea374cb84b6645a920ad7a0"
   },
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",

@@ -327,7 +327,7 @@ synthetic rewrites and task trajectories require separate lineage and evaluation
   the source set changes. Apply those principles through our existing pipeline.
 
 This review adds a qualification candidate, not another training arm or infrastructure framework.
-Keep the 200-hour architecture study and 600/300/150-hour data research split. No mixture weights,
+Keep the 700/360/170-hour data research split; the architecture study is deferred. No mixture weights,
 production reservations, frozen evidence or training admissions change.
 
 The subsequent [Stack v3 feasibility probe](coding.md#stack-v3-feasibility--2026-09-19) completes

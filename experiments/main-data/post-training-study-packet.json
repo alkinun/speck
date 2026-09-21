@@ -19,7 +19,7 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "025140dcf60cc3615d34ae6b0294c6f0c11cbeb350016ece31cf19eac47bdf3a"
+      "sha256": "f6b43603c49a5e74ca5236605c10aecf3a45dedab4f2d444af5dd2cfe81eb8a1"
     },
     "design_contract": {
       "path": "experiments/main-data/data-design-contract.json",
@@ -73,7 +73,7 @@
   },
   "rl_feasibility": {
     "status": "conditional_fixed_policy_only",
-    "gpu_hours": 20,
+    "gpu_hours": 40,
     "parent": "Selected SFT checkpoint after the SFT comparison, or a documented baseline-only outcome.",
     "scope": "Sample candidate math and sandboxed-code prompt strata; run fixed-policy rollouts and verifiers with no gradient updates.",
     "required_evidence": [
@@ -122,7 +122,7 @@
       "self-distillation prompt and lineage checks",
       "retries and allocated idle time"
     ],
-    "budget_check": "80 SFT comparison + 20 RL feasibility + 30 self-SFT pilot + 20 support = 150 post-training-research GPU-hours."
+    "budget_check": "80 SFT comparison + 40 RL feasibility + 30 self-SFT pilot + 20 support = 170 post-training-research GPU-hours."
   },
   "required_gates_before_first_arm": [
     "Useful parent, tokenizer/chat format and checkpoint identities are hash-bound.",

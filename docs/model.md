@@ -34,8 +34,12 @@ Report actual parameter counts, attention/cache behavior, supported context and 
 are design choices to document, not experimentally established optima.
 
 Use measured training throughput, memory, prefill/decode cost and length-dependent behavior to
-discuss trade-offs. The 200-hour study compares the hybrid with one matched attention baseline near
-1.2B; freeze exact geometry, positional policy, corpus, horizon and endpoints before execution.
+discuss trade-offs. The comparison against a matched attention baseline near 1.2B is **deferred to
+a later allocation**; its design is preserved unmodified in the
+[packet](../experiments/main-data/architecture-study-packet.json). On this allocation the hybrid is
+the declared substrate, profiled on its own, so no comparative claim is available. When the study
+is eventually funded, freeze exact geometry, positional policy, corpus, horizon and endpoints
+before execution.
 Report actual parameter counts and FLOPs rather than assuming equal parameters imply equal cost.
 Measure training cost/memory and prefill/decode latency, throughput and cache memory over declared
 lengths and batch sizes. Separate implementation tuning from architectural effects. A single size

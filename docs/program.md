@@ -21,27 +21,29 @@ No GPU run starts from this document.
 
 The future 50K-GPU-hour program is an ambition, not part of this allocation. Prior external rental
 receipts are separate from grant consumption. The completed pilot is evidence to reuse, not the
-next training job. The [model notes](model.md) define the reference backbone and bounded architecture/efficiency study;
-[competitive strategy](competitive.md) defines how its release claims must be measured.
+next training job. The [model notes](model.md) define the reference backbone, which is the fixed
+substrate for this release; [competitive strategy](competitive.md) defines how its release claims
+must be measured.
 
 ## Training lifecycle
 
-The paper's main subject is how selected data and actual training develop useful capabilities.
-Complete the 200-hour architecture/efficiency comparison, then freeze the backbone so data
-comparisons are interpretable. Measure the matched attention contrast and implementation efficiency;
-explain the size choice using parameter and compute accounting. MoE, attention residuals and broader
-attention-layout/model-size research belong to later releases with separately funded experiments.
+The paper's main subject is the data pipeline across all six stages, and how selected data and
+actual training develop useful capabilities. The backbone is declared as the fixed substrate so data
+comparisons are interpretable; it is not selected over a control. Explain the size choice using
+parameter and compute accounting, and report reference-only implementation efficiency. The matched
+attention contrast, MoE, attention residuals and broader attention-layout/model-size research all
+belong to later releases with separately funded experiments.
 
 | Stage | Purpose and objective | Budget ownership and readiness |
 | --- | --- | --- |
-| Architecture/efficiency research | Compare the hybrid reference with one matched attention baseline, then freeze the backbone | 200 hours including training/inference measurements and overhead |
-| Pretraining data research | Screen feasible source/filter/mixture contrasts and confirm the strongest candidate before main training | 600 of 1,050 data-research hours; matched initializations, fixed endpoints and costed arms |
-| Downstream data research | Compare repository, workflow, trajectory, context, SFT, RL and self-distillation data on appropriate parent checkpoints | 300 hours for mid-training and 150 for post-training; separate from production exposure |
-| Pretraining | Broad code/math/general foundations using next-token prediction | Uses the revised 80B 4K-base working horizon and 1,800-hour reservation; main data/runtime not yet qualified |
-| Capability/mid-training | Repository, repair, tool-use and long-horizon continuation with replay, grounded workflows and executable traces | 4K/16K/32K sequence; selective loss masks and changed-data/context branches remain to qualify; measure capability per token and GPU-hour |
-| Context and agentic mid-training | Learn coherent repositories, tool state, recovery and long-horizon workflows while retaining short tasks | 600 production hours; 32K is the first release target; longer contexts require a later measured revision |
-| Post-training: SFT | Verified reasoning and complete tool trajectories with assistant-only supervision | Working 1.5M unique conversations; small 4K rehearsal complete, production data unqualified |
-| Post-training: RL and final self-SFT | Improve outcomes with verified rewards, then distill selected model behavior back into an anchored assistant | Conditional within post-training's 800 hours; trainer, verifiers, rollout integration and self-distillation gates remain to qualify |
+| Pretraining data research | Screen feasible source/filter/mixture contrasts and confirm the strongest candidate before main training | 700 of 1,230 data-research hours; matched initializations, fixed endpoints and costed arms |
+| Downstream data research | Compare repository, workflow, trajectory, context, SFT, RL and self-distillation data on appropriate parent checkpoints | 360 hours for mid-training and 170 for post-training; separate from production exposure |
+| Stage 1 — Pretraining, stable phase | Broad code/math/general foundations using next-token prediction | 1,550 of the 1,800-hour base reservation; uses the revised 80B 4K-base working horizon; main data/runtime not yet qualified |
+| Stage 2 — Endpoint decay | Late-stage capability enrichment under a declared decay schedule, with natural, curated and derived arms separately identified by lineage | 250 production hours plus a 180-hour three-arm, two-seed research study; needs a matched stable parent and a per-arm decay manifest |
+| Stage 3 — Mid-training (capability, context, agentic) | Repository, repair, tool-use and long-horizon continuation with replay, grounded workflows and executable traces; learn coherent repositories, tool state and recovery while retaining short tasks | 600 production hours for the whole 4K/16K/32K sequence; 32K is the first release target; selective loss masks and changed-data/context branches remain to qualify |
+| Stage 4 — Post-training SFT | Verified reasoning and complete tool trajectories with assistant-only supervision | 450 production hours; working 1.5M unique conversations; small 4K rehearsal complete, production data unqualified |
+| Stage 5 — Post-training RL | Improve outcomes with verified rewards on checkable math and sandboxed code | 200 conditional production hours plus 40 research hours. **No RL trainer exists in this repository.** Trainer, rollout engine, verifiers and recovery are all unbuilt and gate both this stage and stage 6 |
+| Stage 6 — Final self-distillation | Rejection-sample the promoted RL parent, verify and deduplicate, mix with verified anchor data, then run assistant-masked self-SFT | 100 production hours plus a 30-hour pilot; preserve the pre-self-SFT parent and promote only on held-out transfer |
 
 Record each stage's parent, data families, unique supply, actual exposure/replay, objective, schedule
 and cost. Preserve checkpoints at transitions. Share family exclusions across all stages, including
@@ -64,33 +66,45 @@ The research-and-release allocation is:
 
 | Work | GPU-hours | Share | Four-GPU elapsed equivalent |
 | --- | ---: | ---: | ---: |
-| Hardware/runtime qualification | 100 | 2% | 25h |
-| Architecture and efficiency experiments | 200 | 4% | 50h |
-| Pretraining data research | 600 | 12% | 150h |
-| Mid-training data research | 300 | 6% | 75h |
-| Post-training data research | 150 | 3% | 37.5h |
-| 4K base production | 1,800 | 36% | 450h |
+| Hardware/runtime and reference efficiency qualification | 120 | 2.4% | 30h |
+| Pretraining data research | 700 | 14% | 175h |
+| Mid-training data research | 360 | 7.2% | 90h |
+| Post-training data research | 170 | 3.4% | 42.5h |
+| 4K base production, stable phase | 1,550 | 31% | 387.5h |
+| Endpoint decay production | 250 | 5% | 62.5h |
 | Capability/context/agentic mid-training production | 600 | 12% | 150h |
-| Thinking SFT and final self-SFT production | 500 | 10% | 125h |
+| Thinking SFT production | 450 | 9% | 112.5h |
 | Conditional verified-reward RL production | 200 | 4% | 50h |
-| Production teacher / verification work | 100 | 2% | 25h |
+| Final self-SFT production | 100 | 2% | 25h |
+| Production teacher / verification work | 50 | 1% | 12.5h |
 | Comparative/final evaluation | 250 | 5% | 62.5h |
 | Recovery and unresolved costs | 200 | 4% | 50h |
 | **Total** | **5,000** | **100%** | **1,250h** |
 
-Data research totals 1,050 hours; its 600/300/150 caps include experiment preparation, evaluation,
+The architecture and efficiency line is gone. Its 200 hours were released on 2026-09-21 when the
+comparison was deferred to a later allocation: 180 hours to data research and 20 to reference-only
+training and inference profiling, which that study used to own. The
+[packet](../experiments/main-data/architecture-study-packet.json) is preserved unmodified.
+
+Endpoint decay and final self-SFT now hold their own lines. Both were previously folded into a
+larger stage total, which made them invisible in the accounting even though the release claims to
+cover them as named stages.
+
+Data research totals 1,230 hours; its 700/360/170 caps include experiment preparation, evaluation,
 retries and allocated idle time. The [research design](../experiments/main-data/README.md#research-cost-envelopes)
 proposes subcaps and run counts, protecting pretraining confirmation before screening. The numeric
 plan owns these ceilings; exact launch costs remain to be measured.
-The 800-hour post-training and 450-hour protected subdivisions are planning caps, not measured
-requirements. Charge every job once; production-stage tokens do not include discarded research
+The 800-hour post-training total (450 SFT, 200 RL, 100 final self-SFT, 50 teacher/verification)
+and the 450-hour protected subdivision are planning caps, not measured requirements. Charge every job once; production-stage tokens do not include discarded research
 arms. A 200-hour RL cap includes rollouts and scoring, not just gradient updates.
 
 The completed H100 rental remains separate. Qualify 16K then 32K within the 600-hour combined
 mid-training production cap, leave stage tokens unset, and treat 64K/128K as future work requiring an affordable
 revision. No production stage borrows reserve automatically.
-Only short-context training has a measured cost reference. If the architecture decision changes the
-model, remeasure throughput before relying on the 80B projection. Freeze stage costs and stop
+Only short-context training has a measured cost reference, and it describes the inefficient frozen
+pilot recipe. The selected throughput recipe was chosen on a 318M proxy; the flagship rate is
+measured on GH200 before any horizon is re-anchored, under the derate and surplus rules predeclared
+in `compute.throughput_reanchoring_rule`. The backbone no longer changes under a study decision. Freeze stage costs and stop
 conditions; unused budget is not a requirement to spend.
 
 ## Model and runtime
@@ -361,13 +375,13 @@ accelerated serving integration is assumed qualified merely because base trainin
 1. **Now, on CPU:** use the completed practical-code checks and the
    [qualification packet](../experiments/main-data/QUALIFICATION.md) to finish benchmark/family
    exclusions, then audit web/math and assistant quality/long-tail supply in bounded packets.
-   Prepare the reference-model hardware packet and cost the single architecture/control study.
+   Prepare the reference-model hardware packet. The architecture/control study is deferred.
 2. **On GH200 access:** follow the [GH200 qualification runbook](compute-qualification.md):
    qualify one worker, then four, then the scheduler canary; measure sustained effective throughput,
    recovery and inference. Reconcile prior external rentals and unused reservation headroom.
-3. **Before main training:** complete the 200-hour architecture/efficiency study and freeze the
-   backbone. Freeze data-study manifests, paired fresh initializations, controls, endpoints and
-   screening/confirmation costs. Run within the 600-hour pretraining research cap,
+3. **Before main training:** the backbone is already fixed by declaration, so go straight to data.
+   Freeze data-study manifests, paired fresh initializations, controls, endpoints and
+   screening/confirmation costs. Run within the 700-hour pretraining research cap,
    record selection or an inconclusive result, then freeze the main admitted mixture, repetition,
    batch, schedule, cadence and affordable horizon. No main-run launch precedes this decision.
 4. **After a useful pretraining checkpoint:** execute qualified capability continuation within the

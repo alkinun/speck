@@ -1,0 +1,162 @@
+{
+  "format": "speck_supply_gap",
+  "format_version": 1,
+  "status": "derived_from_pinned_receipts_no_admission",
+  "purpose": "State the distance between the declared mixture and measured retained stock, so acquisition is planned against a number rather than an impression.",
+  "generated_by": "experiments/main-data/build_supply_gap.py",
+  "source_of_truth": {
+    "experiments/main-data/plan.json": "37b048b20b5639e7acf8edb7c7464f851961b3699a0707a4a4ed612ebdd83d60",
+    "experiments/pilot/supply.json": "044cdfd3d48a78f66fe39831b4f46cf4dcb6325e6e254453ba1ff5b94161b070",
+    "experiments/main-data/source-readiness.json": "f6b43603c49a5e74ca5236605c10aecf3a45dedab4f2d444af5dd2cfe81eb8a1"
+  },
+  "banks": [
+    {
+      "id": "selected_web",
+      "role": "Natural Ultra-FineWeb English",
+      "weight_percent": 25,
+      "exposure_tokens": 20000000000,
+      "eligible_unique_token_preparation_target": 25000000000,
+      "retained_candidate_stock_tokens": 351237925,
+      "retained_stock_sources": [
+        "ultrafineweb_hq_distinct"
+      ],
+      "eligible_unique_tokens": 0,
+      "shortfall_tokens": 24648762075,
+      "retained_coverage_percent": 1.405,
+      "maximum_one_pass_exposure_from_retained_stock": 1404951700
+    },
+    {
+      "id": "independent_web",
+      "role": "FineWeb-Edu / DCLM coverage component",
+      "weight_percent": 5,
+      "exposure_tokens": 4000000000,
+      "eligible_unique_token_preparation_target": 5000000000,
+      "retained_candidate_stock_tokens": 2306703052,
+      "retained_stock_sources": [
+        "fineweb_edu"
+      ],
+      "eligible_unique_tokens": 0,
+      "shortfall_tokens": 2693296948,
+      "retained_coverage_percent": 46.134,
+      "maximum_one_pass_exposure_from_retained_stock": 46134061039
+    },
+    {
+      "id": "natural_code",
+      "role": "Qualified natural code, tests and documentation",
+      "weight_percent": 30,
+      "exposure_tokens": 24000000000,
+      "eligible_unique_token_preparation_target": 30000000000,
+      "retained_candidate_stock_tokens": 476774847,
+      "retained_stock_sources": [
+        "retained_code"
+      ],
+      "eligible_unique_tokens": 0,
+      "shortfall_tokens": 29523225153,
+      "retained_coverage_percent": 1.589,
+      "maximum_one_pass_exposure_from_retained_stock": 1589249490
+    },
+    {
+      "id": "checked_code",
+      "role": "Checked code explanations, exercises and repair",
+      "weight_percent": 5,
+      "exposure_tokens": 4000000000,
+      "eligible_unique_token_preparation_target": 5000000000,
+      "retained_candidate_stock_tokens": 0,
+      "retained_stock_sources": [],
+      "eligible_unique_tokens": 0,
+      "shortfall_tokens": 5000000000,
+      "retained_coverage_percent": 0.0,
+      "maximum_one_pass_exposure_from_retained_stock": 0
+    },
+    {
+      "id": "natural_math",
+      "role": "Selected natural math and worked solutions",
+      "weight_percent": 20,
+      "exposure_tokens": 16000000000,
+      "eligible_unique_token_preparation_target": 20000000000,
+      "retained_candidate_stock_tokens": 1124167472,
+      "retained_stock_sources": [
+        "finemath_4plus"
+      ],
+      "eligible_unique_tokens": 0,
+      "shortfall_tokens": 18875832528,
+      "retained_coverage_percent": 5.621,
+      "maximum_one_pass_exposure_from_retained_stock": 5620837359
+    },
+    {
+      "id": "refined_math",
+      "role": "Checked refined math explanations and derivations",
+      "weight_percent": 5,
+      "exposure_tokens": 4000000000,
+      "eligible_unique_token_preparation_target": 5000000000,
+      "retained_candidate_stock_tokens": 0,
+      "retained_stock_sources": [],
+      "eligible_unique_tokens": 0,
+      "shortfall_tokens": 5000000000,
+      "retained_coverage_percent": 0.0,
+      "maximum_one_pass_exposure_from_retained_stock": 0
+    },
+    {
+      "id": "reference_science",
+      "role": "Reference, science and technical documents",
+      "weight_percent": 5,
+      "exposure_tokens": 4000000000,
+      "eligible_unique_token_preparation_target": 5000000000,
+      "retained_candidate_stock_tokens": 1402167871,
+      "retained_stock_sources": [
+        "pes2o_v3",
+        "finewiki_en"
+      ],
+      "eligible_unique_tokens": 0,
+      "shortfall_tokens": 3597832129,
+      "retained_coverage_percent": 28.043,
+      "maximum_one_pass_exposure_from_retained_stock": 28043357419
+    },
+    {
+      "id": "refined_web",
+      "role": "Selected synthetic educational text",
+      "weight_percent": 5,
+      "exposure_tokens": 4000000000,
+      "eligible_unique_token_preparation_target": 5000000000,
+      "retained_candidate_stock_tokens": 1489288743,
+      "retained_stock_sources": [
+        "cosmopedia_v2"
+      ],
+      "eligible_unique_tokens": 0,
+      "shortfall_tokens": 3510711257,
+      "retained_coverage_percent": 29.786,
+      "maximum_one_pass_exposure_from_retained_stock": 29785774859
+    }
+  ],
+  "totals": {
+    "eligible_unique_token_preparation_target": 100000000000,
+    "retained_candidate_stock_tokens": 7150339910,
+    "eligible_unique_tokens_established": 0,
+    "shortfall_tokens": 92849660090,
+    "retained_coverage_percent": 7.15,
+    "acquisition_multiple_required": 13.99
+  },
+  "zero_stock_banks": {
+    "ids": [
+      "checked_code",
+      "refined_math"
+    ],
+    "combined_preparation_target_tokens": 10000000000,
+    "meaning": "These banks have no retained candidate stock of any kind, so at the declared weights a one-pass run is capped at zero tokens until they are supplied or the mixture is re-frozen without them. Treat that as a mixture decision, not an acquisition detail."
+  },
+  "binding_constraint": {
+    "bank": "selected_web",
+    "scope": "binding among banks that have any retained stock",
+    "maximum_total_exposure_tokens": 1404951700,
+    "working_horizon_tokens": 80000000000,
+    "percent_of_working_horizon": 1.756,
+    "meaning": "At its declared share, this bank's retained stock alone caps a one-pass run at this exposure. Every other bank could be complete and the horizon would still bind here."
+  },
+  "gate_summary": {
+    "sources_tracked": 12,
+    "source_use_open": 12,
+    "family_partition_open": 12,
+    "finite_supply_open": 12
+  },
+  "boundary": "Retained stock is not eligible supply: zero eligible tokens are established, so every figure here is an upper bound on what the gates could admit, not a promise of usable data. Shortfalls assume the declared weights; re-freezing the mixture changes them. No source is admitted and no acquisition is authorized."
+}

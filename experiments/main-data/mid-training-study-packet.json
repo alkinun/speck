@@ -12,7 +12,7 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "025140dcf60cc3615d34ae6b0294c6f0c11cbeb350016ece31cf19eac47bdf3a"
+      "sha256": "f6b43603c49a5e74ca5236605c10aecf3a45dedab4f2d444af5dd2cfe81eb8a1"
     },
     "qualification_rules": {
       "path": "experiments/main-data/qualification-rules.json",
@@ -130,8 +130,8 @@
       }
     ],
     "context_schedule": "4K parent to 16K comparison; 32K is a gated production transition.",
-    "paired_seed_count": 1,
-    "training_gpu_hours": 40,
+    "paired_seed_count": 2,
+    "training_gpu_hours": 80,
     "per_arm_training_gpu_hour_cap": 20,
     "endpoints": [
       "fixed-suffix loss with related prefixes",
@@ -179,7 +179,7 @@
     "stretch": "64K or 128K requires a later explicit revision after 32K benefit, memory, throughput and retention are measured."
   },
   "support_and_reserve": {
-    "gpu_hours": 20,
+    "gpu_hours": 40,
     "includes": [
       "manifest and lineage checks",
       "trajectory schema and loss-mask checks",
@@ -187,7 +187,7 @@
       "source/domain/context evaluation packaging",
       "recovery and allocated idle time"
     ],
-    "budget_check": "120 proxy screening + 40 objective/packing + 40 context + 80 confirmation + 20 support = 300 mid-training-research GPU-hours."
+    "budget_check": "120 proxy screening + 40 objective/packing + 80 context + 80 confirmation + 40 support = 360 mid-training-research GPU-hours."
   },
   "linked_downstream_evaluation": {
     "budget_owner": "post_training_research_150_gpu_hours",

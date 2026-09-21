@@ -112,19 +112,19 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "025140dcf60cc3615d34ae6b0294c6f0c11cbeb350016ece31cf19eac47bdf3a"
+      "sha256": "f6b43603c49a5e74ca5236605c10aecf3a45dedab4f2d444af5dd2cfe81eb8a1"
     },
     "pretraining_study": {
       "path": "experiments/main-data/data-study-packet.json",
-      "sha256": "b15c981f375eaa6c610a7249d3da9a169e431b29d9806583fb3238ca0c8e6e18"
+      "sha256": "0a5c1e0fefa746cfbe8b86e91d284e7bdb2170998fbe2dd607df8f322d4cf6e5"
     },
     "mid_training_study": {
       "path": "experiments/main-data/mid-training-study-packet.json",
-      "sha256": "41930a2cc00b909409f1ed6c9655b3ce9fe2279153a7dcf8f92b4507431107af"
+      "sha256": "78e05e57795baa80a74f6747770129c78d5a2af75c1cf4f4acb34b918257b82c"
     },
     "post_training_study": {
       "path": "experiments/main-data/post-training-study-packet.json",
-      "sha256": "b269c8247f9378019a76deaf9320e577aa3bef7216f453b3cf7769dd2286f4dd"
+      "sha256": "82987d430d06a9d163c000ee5acc09ebdc26e8ebe2b4a254f6f1c73f8a9a4971"
     },
     "qualification_rules": {
       "path": "experiments/main-data/qualification-rules.json",
@@ -136,31 +136,31 @@
     },
     "research_mapping": {
       "path": "experiments/main-data/frontier-data-source-mapping.json",
-      "sha256": "3fb69df90f1a3b10541414920faac75e2252e88f993cdc81dcf80cfeb9df03a9"
+      "sha256": "35c4992d202018f5cdab6e28854b06459e76f068265e3bcec1c0b207b88440d0"
     },
     "candidate_manifest_preflight": {
       "path": "experiments/main-data/candidate-manifest-preflight.json",
-      "sha256": "3988a20e31d8913076d727d0f2f36a9de29211db1ae0a6fb55ea46038953a23f"
+      "sha256": "7c9e328e1664fe2afa6fb06f439d724546ecc31f8ecf25845c250fce0c1553d2"
     },
     "natural_web_manifest": {
       "path": "experiments/main-data/natural-web-candidate-manifest.json",
-      "sha256": "d087be768ef5802bea6d662ecd29419926205cac136956384668ef8a4f2d4140"
+      "sha256": "168ae5939d2a798803c229d28d44b95514cd3a779bf88015ab9292b4d8a192ba"
     },
     "natural_code_manifest": {
       "path": "experiments/main-data/natural-code-candidate-manifest.json",
-      "sha256": "25e98544a6238c6fe604b1211e922142bfef8a3250aed663d1e5af8e886a758c"
+      "sha256": "e99314295e75fb88b6c74dfe75becc82845d5a9e2a62c0d2ebe876cd9feb5df0"
     },
     "math_manifest": {
       "path": "experiments/main-data/math-candidate-manifest.json",
-      "sha256": "b816abba29a2a4fda308879d3c8f63d5843822d47e3d5ec9dea960623e5d33ae"
+      "sha256": "f930e6c60860e6d04d41d97d3319f78719d5ed66cfcbb432127b3ee3143d3ace"
     },
     "post_training_manifest": {
       "path": "experiments/main-data/post-training-candidate-manifest.json",
-      "sha256": "0a699dd4f0ed88b3b399b6eed011d8885b8484df025a3f6ed284a3277a907216"
+      "sha256": "cddee2a936b93d3e4b20908bf88de2603c0ad07509ac72a27944524bd27aac54"
     },
     "post_training_audit_protocol": {
       "path": "experiments/main-data/post-training-audit-protocol.json",
-      "sha256": "b38092791d8ec290ebd1763146f78c63bc222d39468ef733a7fe1f54eccd7faa"
+      "sha256": "38981bedeec73058f699fe064be19fb193b3488da2b2ba03d651f8727c2ce10c"
     },
     "post_training_research": {
       "path": "experiments/main-data/post-training-research.json",
@@ -176,7 +176,7 @@
     "changes_made": "Added structured synthesis and design requirements; no source admission, mixture percentage or GPU allocation changed.",
     "mapping": {
       "path": "experiments/main-data/frontier-data-source-mapping.json",
-      "sha256": "3fb69df90f1a3b10541414920faac75e2252e88f993cdc81dcf80cfeb9df03a9",
+      "sha256": "35c4992d202018f5cdab6e28854b06459e76f068265e3bcec1c0b207b88440d0",
       "status": "review_only_gate_implications_recorded"
     }
   }
