@@ -1,0 +1,205 @@
+{
+  "baseline_label": "proxy-ac-eager",
+  "baseline_tokens_per_second": 8591.691840286141,
+  "boundary": "RTX 3090 sm_86 measurements in synthetic compute mode with accumulation chosen for local tractability. Relative ordering is evidence for configuration selection; absolute throughput and the microbatch and checkpointing decisions must be remeasured on GH200. FLA autotune configurations are Hopper-tuned, so kernel rankings may differ there. No GPU-hours from the grant allocation were consumed and no data or model was admitted.",
+  "date": "2026-09-21",
+  "engineering_only": true,
+  "findings": {
+    "compile_requires_checkpointing_off": "With activation checkpointing enabled, torch.compile returns 1.008x because the @torch.compiler.disable on FLA chunk_kda breaks Dynamo's speculate_subgraph and each checkpointed block falls back to eager. With it disabled, compile returns 1.612x.",
+    "determinism_cost": "1.098x at default compile and 1.086x at max-autotune. Raising the microbatch to two recovers more than determinism costs, so determinism can be retained.",
+    "flagship_activation_checkpointing_off": "Does not fit a 24 GiB card. Two attempts reached 23.03 and 22.91 GiB allocated before out-of-memory, so the flagship checkpointing decision must be measured on GH200.",
+    "in_kernel_gate": "FLA use_gate_in_kernel is a memory optimization, not a speed one: no measurable throughput change, 1.14 GiB less backward peak at microbatch two. Outputs and gradients agree with the precomputed gate to 7.4e-4 relative, which is bfloat16 level.",
+    "remaining_bottleneck": "At the best configuration GEMM and mixer kernels are 69.3% of device time. The largest remaining single item is Command Buffer Full at 9.9%, which is launch pressure from the six graph breaks. CUDA graphs are unavailable until those breaks are removed."
+  },
+  "format": "speck_throughput_sweep",
+  "format_version": 1,
+  "git_revision": "1aa1fa8b58a331f334bacc3c1ba0946e00c438f8",
+  "gpu_hours": 0,
+  "hardware": {
+    "capability": [
+      8,
+      6
+    ],
+    "device": "NVIDIA GeForce RTX 3090",
+    "memory_gib": 24,
+    "peak_bf16_tflops_fp32_accumulate": 71.2
+  },
+  "proxy_model": {
+    "bias": "KDA FLOPs scale with value-head count while linear FLOPs scale with hidden squared, so this proxy is about twice as KDA-heavy relative to GEMMs as the 1.2B reference. KDA-side gains are an upper bound and GEMM-side gains a lower bound for the flagship.",
+    "geometry": "24 blocks, hidden 1024, SwiGLU 2560, 6x(3 KDA + 1 NoPE GQA), head_dim 128",
+    "parameters": 317826960,
+    "path": "experiments/throughput-proxy"
+  },
+  "status": "phase_0_to_2_complete_launch_pressure_open",
+  "training_admitted": false,
+  "variants": [
+    {
+      "label": "baseline-eager-ac-deterministic",
+      "model": "flagship_1p2b",
+      "model_flops_utilization": 0.34552398916173754,
+      "peak_after_backward_bytes": 16297452544,
+      "peak_after_step_bytes": 20721573376,
+      "receipt": "000-baseline.json",
+      "receipt_sha256": "7272bb1731e88bd2bcbf64efe2b16244fbb14ba6b05125391b9fc0c84ad761cb",
+      "speedup_vs_proxy_baseline": null,
+      "stable": true,
+      "tokens_per_second": 3274.458467162082
+    },
+    {
+      "label": "proxy-ac-compile",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.252391363885584,
+      "peak_after_backward_bytes": 4808885760,
+      "peak_after_step_bytes": 5072186880,
+      "receipt": "103-proxy-ac-compile.json",
+      "receipt_sha256": "97dccc680fcebb99837bb8c57f1b46e58bea1fb969b135e57559ba95a7a9d1e2",
+      "speedup_vs_proxy_baseline": 1.0075842740305228,
+      "stable": true,
+      "tokens_per_second": 8656.853585588677
+    },
+    {
+      "label": "proxy-ac-eager",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.2504915671976221,
+      "peak_after_backward_bytes": 4810978304,
+      "peak_after_step_bytes": 5538803200,
+      "receipt": "100-proxy-ac-eager.json",
+      "receipt_sha256": "f79bf0132604ef7dc803b325d9afc65f414d248f680b12a4ac3f4c826c6cbb2e",
+      "speedup_vs_proxy_baseline": 1.0,
+      "stable": true,
+      "tokens_per_second": 8591.691840286141
+    },
+    {
+      "label": "proxy-best-mb3-profile",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.5147908307178498,
+      "peak_after_backward_bytes": 20536928256,
+      "peak_after_step_bytes": 20536928256,
+      "receipt": "113-proxy-best-profile.json",
+      "receipt_sha256": "b7b22f21593317fda9b6bba509043392e3a05cd11bd08a379d86b4e364018fa2",
+      "speedup_vs_proxy_baseline": 2.0551223998359682,
+      "stable": true,
+      "tokens_per_second": 17656.97835345996
+    },
+    {
+      "label": "proxy-best-profile",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.48433289105555666,
+      "peak_after_backward_bytes": 16596308480,
+      "peak_after_step_bytes": 16596308480,
+      "receipt": "108-proxy-best-profile.json",
+      "receipt_sha256": "b68990ebe58eeaa32c0bd8299cfa07de0ffcffe03c8d8aae7d8b5e6662bd07ac",
+      "speedup_vs_proxy_baseline": 1.933529725068343,
+      "stable": true,
+      "tokens_per_second": 16612.291561820388
+    },
+    {
+      "label": "proxy-k1-compile-mb1",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.40403039489080983,
+      "peak_after_backward_bytes": 10166894592,
+      "peak_after_step_bytes": 10166894592,
+      "receipt": "111-proxy-k1-mb1.json",
+      "receipt_sha256": "9a568417a1a87d5891822e8888aa5733f07015635b3fd1831609be87162a0732",
+      "speedup_vs_proxy_baseline": 1.6129500861482304,
+      "stable": true,
+      "tokens_per_second": 13857.97009394858
+    },
+    {
+      "label": "proxy-k1-maxautotune-mb2",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.4853323262810166,
+      "peak_after_backward_bytes": 15386251776,
+      "peak_after_step_bytes": 15386251776,
+      "receipt": "110-proxy-k1-mb2.json",
+      "receipt_sha256": "2797708d70d919df26cd28e486cbaf201f29a56f6ace475a2282cdd2b8b17761",
+      "speedup_vs_proxy_baseline": 1.9375196207628014,
+      "stable": true,
+      "tokens_per_second": 16646.57151610206
+    },
+    {
+      "label": "proxy-k1-mb3",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.5135596912052021,
+      "peak_after_backward_bytes": 20542445568,
+      "peak_after_step_bytes": 20542445568,
+      "receipt": "112-proxy-k1-mb3.json",
+      "receipt_sha256": "7c22b725a6abe6076c6737d7650d1df2f30ddcfdb76c1b5fa441782185211d63",
+      "speedup_vs_proxy_baseline": 2.050207505788152,
+      "stable": true,
+      "tokens_per_second": 17614.75109837347
+    },
+    {
+      "label": "proxy-maxautotune-mb2",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.48412744480701564,
+      "peak_after_backward_bytes": 16605757952,
+      "peak_after_step_bytes": 16605757952,
+      "receipt": "107-proxy-maxautotune-mb2.json",
+      "receipt_sha256": "9a830348bd3e6f735efb348bd5139e37569f1cf5b2a416a7993be099f48ae93b",
+      "speedup_vs_proxy_baseline": 1.9327095527534048,
+      "stable": true,
+      "tokens_per_second": 16605.244894034506
+    },
+    {
+      "label": "proxy-maxautotune-nondet",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.47628046125603407,
+      "peak_after_backward_bytes": 10717396992,
+      "peak_after_step_bytes": 10717396992,
+      "receipt": "106-proxy-maxautotune-nondet.json",
+      "receipt_sha256": "c1bbf3d9c92fce8e48b80df3f36f7caf0f4bbbadd1f2dd9d43544962ff9ced0e",
+      "speedup_vs_proxy_baseline": 1.9013832145506069,
+      "stable": true,
+      "tokens_per_second": 16336.098649711483
+    },
+    {
+      "label": "proxy-noac-compile",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.4038555786911135,
+      "peak_after_backward_bytes": 10802880512,
+      "peak_after_step_bytes": 10802880512,
+      "receipt": "102-proxy-noac-compile.json",
+      "receipt_sha256": "e57c63500e31d316b853e3f3e17c3596c3078c8ec353ba6b933406e8e52acca7",
+      "speedup_vs_proxy_baseline": 1.6122521935937941,
+      "stable": true,
+      "tokens_per_second": 13851.974016183232
+    },
+    {
+      "label": "proxy-noac-compile-nondet",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.44279351879728907,
+      "peak_after_backward_bytes": 10713071616,
+      "peak_after_step_bytes": 10713071616,
+      "receipt": "104-proxy-noac-compile-nondet.json",
+      "receipt_sha256": "7703b354a4e81d9e87a319e5f69b022ae0ae296da8cfef9b31d72fe8e3fa953e",
+      "speedup_vs_proxy_baseline": 1.76769830518068,
+      "stable": true,
+      "tokens_per_second": 15187.51910470849
+    },
+    {
+      "label": "proxy-noac-eager",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.3125506259143984,
+      "peak_after_backward_bytes": 13445626368,
+      "peak_after_step_bytes": 13445626368,
+      "receipt": "101-proxy-noac-eager.json",
+      "receipt_sha256": "e4ac4371104955f4c89a6e2527274aab11dfc16283591a012d3a66e9f24dca39",
+      "speedup_vs_proxy_baseline": 1.2477490935565732,
+      "stable": true,
+      "tokens_per_second": 10720.275705834438
+    },
+    {
+      "label": "proxy-noac-maxautotune",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.4385203562569399,
+      "peak_after_backward_bytes": 10774806528,
+      "peak_after_step_bytes": 10774806528,
+      "receipt": "105-proxy-noac-maxautotune.json",
+      "receipt_sha256": "8cba3a8c3b670cbef38aa8250602243a133aece6eee258041458543ec01bb79b",
+      "speedup_vs_proxy_baseline": 1.750639197809701,
+      "stable": true,
+      "tokens_per_second": 15040.952511106683
+    }
+  ]
+}
