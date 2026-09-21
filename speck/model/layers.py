@@ -502,8 +502,23 @@ def torch_kimi_delta_rule(query, key, value, log_decay, beta, initial_state=None
     return torch.stack(outputs, dim=1).to(output_dtype), state
 
 
-def kimi_delta_rule(query, key, value, log_decay, beta, initial_state=None):
-    """Use FLA KDA on CUDA and the auditable Torch recurrence elsewhere."""
+def kda_log_decay(decay_logits, log_rates, decay_bias):
+    """Return the KDA channel decay that the fused kernel computes internally."""
+
+    heads, head_dim = decay_logits.shape[-2:]
+    bias = decay_bias.view(heads, head_dim)
+    return -log_rates.float().exp()[None, None, :, None] * F.softplus(decay_logits.float() + bias)
+
+
+def kimi_delta_rule(
+    query, key, value, decay_logits, beta, log_rates, decay_bias, initial_state=None
+):
+    """Use FLA KDA on CUDA and the auditable Torch recurrence elsewhere.
+
+    The decay activation is fused into the CUDA kernel, which avoids materializing
+    a full float32 gate tensor per layer. The Torch reference computes the same
+    expression explicitly.
+    """
 
     if query.is_cuda:
         try:
@@ -518,12 +533,16 @@ def kimi_delta_rule(query, key, value, log_decay, beta, initial_state=None):
             query,
             key,
             value,
-            g=log_decay,
+            g=decay_logits,
             beta=beta,
+            A_log=log_rates,
+            dt_bias=decay_bias,
             initial_state=initial_state,
             output_final_state=True,
             use_qk_l2norm_in_kernel=True,
+            use_gate_in_kernel=True,
         )
+    log_decay = kda_log_decay(decay_logits, log_rates, decay_bias)
     return torch_kimi_delta_rule(query, key, value, log_decay, beta, initial_state)
 
 
@@ -703,20 +722,15 @@ class KimiDeltaAttention(nn.Module):
             self.spec.num_value_heads,
             self.spec.key_head_dim,
         )
-        decay_bias = self.decay_bias.view(
-            self.spec.num_value_heads,
-            self.spec.key_head_dim,
-        )
-        log_decay = -self.log_rates.float().exp()[None, None, :, None] * F.softplus(
-            decay_logits.float() + decay_bias
-        )
         recurrent = state.recurrent if state is not None else None
         output, final_state = kimi_delta_rule(
             query,
             key,
             value,
-            log_decay,
+            decay_logits,
             beta,
+            self.log_rates,
+            self.decay_bias,
             initial_state=recurrent,
         )
         if state is not None:
