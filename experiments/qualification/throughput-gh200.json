@@ -18,7 +18,8 @@
     "device_batch_size and accumulation, frozen; both are immutable on resume.",
     "activation_checkpointing, frozen; immutable on resume.",
     "deterministic, frozen; immutable on resume.",
-    "Measured tokens per second per allocated GPU, which re-anchors every horizon in experiments/main-data/plan.json.",
+    "The flagship speedup over the frozen pilot recipe. This is the number the 3090 pass could not produce: its 2.084x is a 318M proxy result against a 25.0% baseline, while the flagship's own baseline is already 34.6%, implying 1.51x headroom to the same ceiling. Record the flagship figure and stop quoting the proxy one.",
+    "Measured tokens per second per allocated GPU, which re-anchors every horizon in experiments/main-data/plan.json after applying compute.throughput_reanchoring_rule.overhead_derate. This sweep runs --mode compute and excludes startup, validation and saves; the anchor it replaces includes them.",
     "Whether the KDA custom-op work is worth funding, judged from the Hopper profile."
   ],
   "estimated_gpu_hours": 4,
@@ -45,7 +46,7 @@
         "compile_mode": null,
         "no_compile": true
       },
-      "purpose": "Reproduce the frozen pilot recipe so the 3090 conclusions are anchored to the existing 13,615 tok/s H100 number on the same hardware as production."
+      "purpose": "Reproduce the frozen pilot recipe so every later delta is a flagship delta measured on production hardware. The pilot's own H100 rates are 12,859 tokens/s over the full trainer and 13,595 steady optimizer tokens/s; this run is the compute-mode counterpart and is not directly comparable to the full-trainer figure."
     },
     {
       "label": "gh200-noac-eager",
@@ -124,5 +125,10 @@
       "purpose": "Evaluate the stopping rule on Hopper: useful percent, largest non-useful kernel, launch stalls and graph breaks."
     }
   ],
-  "status": "prepared_not_executed"
+  "status": "prepared_not_executed",
+  "out_of_scope": [
+    "Compiled execution under DistributedDataParallel. This sweep is single-GPU, and base.py compiles the DDP-wrapped module with six graph breaks still present. Qualify it separately with `scripts.training_replay --compile --workers 4` before any compiled production wave.",
+    "max-autotune warmup cost, which the ten-step measurement excludes. Amortize it per wave using the persistent TORCHINDUCTOR_CACHE_DIR the Slurm renderer exports."
+  ],
+  "flagship_speedup_status": "unmeasured_before_this_sweep: no flagship configuration with activation checkpointing off was ever measured, because two attempts reached 23.03 and 22.91 GiB before exhausting the 24 GiB card."
 }

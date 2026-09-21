@@ -14,10 +14,25 @@ hardware, distributed geometry, and compiled path.
 ## Throughput settings
 
 The frozen pilot recipe is not an efficient configuration. A bounded RTX 3090 pass measured
-**2.084x** against it on a parameter-matched proxy, taking model FLOPs utilization from 25.0% to
-52.2%. The receipts are in [`experiments/qualification/throughput-3090/`](../experiments/qualification/throughput-3090/sweep.json).
+**2.084x** against it, taking model FLOPs utilization from 25.0% to 52.2%. The receipts are in
+[`experiments/qualification/throughput-3090/`](../experiments/qualification/throughput-3090/sweep.json).
 Three settings account for nearly all of it, and all three are immutable on resume, so they must be
 frozen before production starts.
+
+**That 2.084x is a 318M proxy number and is not the flagship's speedup.** The proxy is a separate
+24-block, width-1024 model in [`experiments/throughput-proxy`](../experiments/throughput-proxy); it
+is geometry-matched to the reference layout, not parameter-matched to the 1.2B. Its baseline sits at
+25.0% utilization. The only flagship measurement in the whole sweep is the eager, checkpointed
+baseline, and that one is already at **34.6%**. If the flagship reaches the proxy's 52.2% ceiling
+its speedup is **1.51x**, because it started from the more efficient of the two baselines. No
+flagship configuration with checkpointing off was ever measured at all: two attempts reached 23.03
+and 22.91 GiB before exhausting the 24 GiB card.
+
+Expect the checkpointing-off component (1.248x) to transfer, since it removes recompute FLOPs
+arithmetically, and expect the compile component to shrink, since it is overhead and fusion and the
+flagship's GEMMs are larger. Quote no flagship speedup until
+[`throughput-gh200.json`](../experiments/qualification/throughput-gh200.json) returns; it
+benchmarks `experiments/pilot`, the 1.2B reference, so it measures this directly.
 
 | Setting | Selected | Why |
 | --- | --- | --- |
@@ -31,6 +46,22 @@ CUDA graphs were measured and rejected: they cannot capture across the eager KDA
 0.7% slower. The input pipeline was measured and cleared: end-to-end mode is 0.6% faster than
 synthetic compute, inside noise. Six graph breaks remain and are not cheaply removable, because
 bypassing the disable decorator still breaks on a lock context manager inside the library.
+
+Two consequences of selecting a compiled recipe are not yet qualified, and both are distributed:
+
+- **Compile under DistributedDataParallel has never been exercised.** `base.py` compiles the
+  DDP-wrapped module, and DDPOptimizer splits the graph at bucket boundaries, which is exactly
+  where the six remaining breaks could interact badly. The throughput sweep is single-GPU and the
+  four-worker replay used to hardcode eager. `scripts.training_replay --compile` now exists for
+  this; run it at four workers before any production wave.
+- **max-autotune warmup is not free on requeue.** The Slurm renderer exports a per-wave
+  `TORCHINDUCTOR_CACHE_DIR` so a preempted job reuses its compilation. Benchmark tokens/s also
+  excludes that warmup, so amortize it per wave when costing, not per step.
+
+Benchmark rates are not trainer rates. `scripts.benchmark --mode compute` excludes startup, inline
+validation and checkpoint saves; the plan's anchor includes them. The pilot measured that gap at
+0.9459, recorded as `compute.throughput_reanchoring_rule.overhead_derate`. Apply it before turning
+any measured rate into horizon hours, and remeasure it on GH200 at production save cadence.
 
 Confirm all of this on the real hardware with
 [`experiments/qualification/throughput-gh200.json`](../experiments/qualification/throughput-gh200.json)
