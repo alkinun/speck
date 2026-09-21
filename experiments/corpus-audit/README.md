@@ -13,6 +13,11 @@ inventory. It preserves the earlier receipts below. The current
 supply bounds and remaining decisions; [assistant data](../../docs/assistant.md) owns downstream
 format/length details. No source is admitted by these CPU measurements, and no GPU work ran.
 
+The [cohort similarity receipt](cohort-similarity.json) records an exhaustive full-text lexical
+near-copy comparison across the fixed 218-record code review cohort: 23,653 pairs, zero matches
+under the review thresholds, and no partition changes. This is additional review evidence only;
+it does not close provenance, licensing, semantic deduplication or eligible-supply gates.
+
 ## Evidence and scope
 
 [result.json](result.json) binds the full local report and review artifacts under

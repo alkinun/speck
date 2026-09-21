@@ -1,0 +1,39 @@
+{
+  "format": "speck_cohort_similarity_diagnostic_receipt",
+  "format_version": 1,
+  "date": "2026-09-21",
+  "status": "complete_review_leads_only_not_training_authority",
+  "purpose": "Record an exhaustive full-text lexical near-copy comparison over the fixed 218-record code review cohort without changing partitions or admitting records.",
+  "scope": {
+    "records": 218,
+    "pairs_compared": 23653,
+    "prior_family_or_benchmark_holds": 44,
+    "near_copy_matches": 0,
+    "records_removed": 0
+  },
+  "policy": {
+    "normalization": "none; case and numeric literals preserved",
+    "token_pattern": "\\w+|[^\\w\\s]",
+    "shingle_tokens": 5,
+    "minimum_shared_shingles": 50,
+    "jaccard_threshold": 0.8,
+    "containment_threshold": 0.8,
+    "candidate_generation": "all unordered pairs; no truncation or LSH",
+    "interpretation": "review leads only; no calibrated production rejection rule"
+  },
+  "evidence": {
+    "input_manifest": "/mnt/speck-data/speck/data-qualification-20260921/cohort-similarity/inputs.json",
+    "input_manifest_sha256": "7d84637450bb99cdabc35ffc63b66156d8a395aecab84ad80e91835a59dde480",
+    "result": "/mnt/speck-data/speck/data-qualification-20260921/cohort-similarity/result.json",
+    "result_sha256": "5e33a7c571c3ef800534b7f16638d0db51988df6a8d5061d0cfb9f9470c79af0",
+    "implementation": "experiments/corpus-audit/audit_cohort_similarity.py"
+  },
+  "boundaries": [
+    "The fixed review cohorts are not the full source populations.",
+    "Lexical similarity does not establish provenance, licensing, semantic equivalence or correctness.",
+    "All existing family and benchmark holds remain unchanged.",
+    "This receipt does not establish eligible supply or training authority."
+  ],
+  "training_admitted": false,
+  "eligible_tokens_established": 0
+}

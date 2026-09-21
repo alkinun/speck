@@ -79,17 +79,29 @@ def _validate_manifest(path: Path) -> tuple[int, int]:
     contract = manifest.get("common_contract")
     if not isinstance(contract, dict) or set(contract) != REQUIRED_FIELDS:
         raise ValueError(f"{path}: common contract fields drifted")
-    if contract["coverage_strata"] == []:
-        raise ValueError(f"{path}: coverage strata cannot be empty")
+    strata = contract["coverage_strata"]
+    if (
+        not isinstance(strata, list)
+        or not strata
+        or any(not isinstance(value, str) or not value.strip() for value in strata)
+    ):
+        raise ValueError(f"{path}: coverage strata must be nonempty strings")
+    for field in REQUIRED_FIELDS - {"coverage_strata"}:
+        if not isinstance(contract[field], str) or not contract[field].strip():
+            raise ValueError(f"{path}: empty contract field {field}")
 
     candidate_count = 0
     candidates = manifest.get("candidates", [])
     if not isinstance(candidates, list):
         raise ValueError(f"{path}: candidates must be a list")
+    seen = set()
     for candidate in candidates:
         candidate_count += 1
         if not candidate.get("id") or candidate.get("admitted") is not False:
             raise ValueError(f"{path}: candidate must have an id and admitted=false")
+        if candidate["id"] in seen:
+            raise ValueError(f"{path}: duplicate candidate id")
+        seen.add(candidate["id"])
         gates = candidate.get("gate_status")
         if not isinstance(gates, dict) or set(gates) != {
             "source_use",
@@ -114,9 +126,23 @@ def validate(paths: tuple[str, ...] = MANIFESTS) -> dict:
         checked_candidates += candidates
         checked_receipts += receipts
     preflight = _path("experiments/main-data/candidate-manifest-preflight.json")
-    summary = json.loads(preflight.read_text())["summary"]
+    preflight_value = json.loads(preflight.read_text())
+    summary = preflight_value["summary"]
     if summary["admitted_count"] != 0 or summary["complete_required_manifest_count"] != 0:
         raise ValueError("candidate preflight must remain non-admitting and incomplete")
+    if (
+        type(summary["eligible_unique_tokens_established"]) is not int
+        or summary["eligible_unique_tokens_established"] != 0
+    ):
+        raise ValueError("candidate preflight cannot claim eligible tokens")
+    contract = json.loads(_path("experiments/main-data/data-design-contract.json").read_text())
+    fields = set(contract["manifest_schema"]["required_fields"])
+    # The prose candidate contracts enumerate strata; the record schema names
+    # the individual stratum. Keep that spelling mapping explicit.
+    fields.remove("coverage_stratum")
+    fields.add("coverage_strata")
+    if fields != REQUIRED_FIELDS:
+        raise ValueError("shared manifest schema drifted from candidate checker")
     return {
         "manifests": len(paths),
         "candidates": checked_candidates,
