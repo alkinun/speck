@@ -62,6 +62,44 @@ The [main data plan](experiments/main-data/README.md) specifies candidate source
 Retained stock, admitted data and training exposure are different quantities. No small preview or
 publisher quality label establishes flagship-scale supply. No automatic repetition fills a gap.
 
+## The binding constraint is supply, not compute
+
+[`supply-gap.json`](experiments/main-data/supply-gap.json) is derived from the pinned receipts by
+`build_supply_gap.py` and checked by `make plan-check`, so it moves as acquisition proceeds and
+cannot go stale. Today:
+
+| Bank | Preparation target | Retained candidate stock | Coverage | One-pass exposure cap |
+| --- | ---: | ---: | ---: | ---: |
+| selected_web | 25.0B | 0.351B | 1.41% | 1.40B |
+| independent_web | 5.0B | 2.307B | 46.13% | 46.13B |
+| natural_code | 30.0B | 0.477B | 1.59% | 1.59B |
+| checked_code | 5.0B | 0 | 0% | 0 |
+| natural_math | 20.0B | 1.124B | 5.62% | 5.62B |
+| refined_math | 5.0B | 0 | 0% | 0 |
+| reference_science | 5.0B | 1.402B | 28.04% | 28.04B |
+| refined_web | 5.0B | 1.489B | 29.79% | 29.79B |
+| **Total** | **100.0B** | **7.150B** | **7.15%** | — |
+
+Three facts follow, and they govern the order of work:
+
+1. **Zero eligible tokens are established.** The 7.15B is retained stock with every gate still open.
+   It is an upper bound on what the gates could admit, not usable data.
+2. **Two banks have no stock at all.** `checked_code` and `refined_math` cap a one-pass run at zero
+   tokens at their declared weights. Either supply them or re-freeze the mixture without them; that
+   is a mixture decision, not an acquisition detail.
+3. **Among banks that have stock, `selected_web` binds at 1.40B — 1.76% of the 80B horizon.**
+   Every other bank could be complete and the horizon would still bind there.
+
+Closing the whole gap means roughly a **14x** increase in retained stock. That is acquisition,
+filtering and tokenization work: CPU, bandwidth and storage, consuming **no grant GPU-hours**. It
+can and should run before and during access, and it is why a throughput surplus buys nothing here.
+
+The gate matrix says where to start. `source_use` is open on all twelve candidates and eight of
+those are `open_named_decision` variants: they need a **recorded human decision**, not a
+computation. Nothing downstream moves until they close, so GH200 time spent waiting on them is
+wasted grant money. The joint family graph (`open_joint_graph` on eight candidates) is the second
+blocker and is deterministic offline work that can proceed in parallel.
+
 ## Completed evidence
 
 | Work | What is established | Limits / evidence |
