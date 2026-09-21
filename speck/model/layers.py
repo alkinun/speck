@@ -68,13 +68,22 @@ def rotate(x, cos, sin, rotary_dim):
 
 
 def causal_depthwise_conv1d(x, weight):
-    """Apply a tiny causal depthwise stencil without a generic convolution launch."""
+    """Apply a tiny causal depthwise stencil without a generic convolution launch.
+
+    One zero-padded buffer is built and every delayed tap is a view into it, so a
+    kernel of width k costs a single allocation rather than one per tap.
+    """
 
     kernel = weight[:, 0].to(x.dtype)
+    taps = kernel.size(1)
     output = x * kernel[:, -1, None]
-    for delay in range(1, kernel.size(1)):
-        shifted = F.pad(x, (delay, 0))[:, :, :-delay]
-        output = output + shifted * kernel[:, -1 - delay, None]
+    if taps > 1:
+        length = x.size(-1)
+        padded = F.pad(x, (taps - 1, 0))
+        for delay in range(1, taps):
+            start = taps - 1 - delay
+            shifted = padded.narrow(-1, start, length)
+            output = output + shifted * kernel[:, -1 - delay, None]
     return output
 
 

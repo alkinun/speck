@@ -253,40 +253,54 @@ def classify_kernel(name):
 def kernel_summary(profiler, limit=25):
     """Fold the profiler's hottest device kernels into the receipt.
 
-    Operator and annotation rows are excluded from the totals because their device
-    time already counts the kernels they launch, which would double count.
+    Operator and annotation rows are excluded because their device time already
+    counts the kernels they launch. Rows sharing a name are summed, since
+    recording shapes splits one kernel across several entries. Launch-stall
+    markers are reported separately rather than counted as kernel work.
     """
 
-    entries = []
+    merged = {}
     for event in profiler.key_averages():
         micros = getattr(event, "self_device_time_total", None)
         if micros is None:
             micros = getattr(event, "self_cuda_time_total", 0.0)
-        if micros:
-            entries.append((float(micros), event.key, int(event.count)))
-    entries.sort(reverse=True)
+        if not micros:
+            continue
+        kind = classify_kernel(event.key)
+        if kind in {"operator", "annotation"}:
+            continue
+        recorded = merged.setdefault(event.key, {"micros": 0.0, "count": 0, "kind": kind})
+        recorded["micros"] += float(micros)
+        recorded["count"] += int(event.count)
     kernels = [
-        item for item in entries if classify_kernel(item[1]) not in {"operator", "annotation"}
+        (value["micros"], key, value["count"], value["kind"])
+        for key, value in merged.items()
+        if value["kind"] != "launch"
     ]
-    total = sum(micros for micros, _, _ in kernels)
+    stalls = sum(value["micros"] for value in merged.values() if value["kind"] == "launch")
+    kernels.sort(reverse=True)
+    total = sum(micros for micros, _, _, _ in kernels)
     shares = {}
-    for micros, key, _ in kernels:
-        kind = classify_kernel(key)
+    for micros, _, _, kind in kernels:
         shares[kind] = shares.get(kind, 0.0) + micros
     return {
         "self_device_time_total_us": total,
+        "launch_stall_us": stalls,
+        "useful_percent": 100.0 * (shares.get("gemm", 0.0) + shares.get("mixer", 0.0)) / total
+        if total
+        else None,
         "category_percent": {
             kind: 100.0 * value / total if total else None for kind, value in sorted(shares.items())
         },
         "top_kernels": [
             {
                 "name": key,
-                "kind": classify_kernel(key),
+                "kind": kind,
                 "self_device_time_us": micros,
                 "count": count,
                 "percent": 100.0 * micros / total if total else None,
             }
-            for micros, key, count in kernels[:limit]
+            for micros, key, count, kind in kernels[:limit]
         ],
     }
 

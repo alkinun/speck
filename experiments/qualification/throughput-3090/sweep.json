@@ -1,19 +1,25 @@
 {
   "baseline_label": "proxy-ac-eager",
   "baseline_tokens_per_second": 8591.691840286141,
-  "boundary": "RTX 3090 sm_86 measurements in synthetic compute mode with accumulation chosen for local tractability. Relative ordering is evidence for configuration selection; absolute throughput and the microbatch and checkpointing decisions must be remeasured on GH200. FLA autotune configurations are Hopper-tuned, so kernel rankings may differ there. No GPU-hours from the grant allocation were consumed and no data or model was admitted.",
+  "best_speedup": 2.084096218160589,
+  "best_tokens_per_second": 17905.912471941538,
+  "boundary": "RTX 3090 sm_86 measurements in synthetic compute mode with accumulation chosen for local tractability. Relative ordering is evidence for configuration selection; absolute throughput and the microbatch and checkpointing decisions must be remeasured on GH200. FLA autotune configurations are Hopper-tuned, so kernel rankings may differ there. No grant GPU-hours were consumed and no data or model was admitted.",
   "date": "2026-09-21",
   "engineering_only": true,
   "findings": {
-    "compile_requires_checkpointing_off": "With activation checkpointing enabled, torch.compile returns 1.008x because the @torch.compiler.disable on FLA chunk_kda breaks Dynamo's speculate_subgraph and each checkpointed block falls back to eager. With it disabled, compile returns 1.612x.",
-    "determinism_cost": "1.098x at default compile and 1.086x at max-autotune. Raising the microbatch to two recovers more than determinism costs, so determinism can be retained.",
-    "flagship_activation_checkpointing_off": "Does not fit a 24 GiB card. Two attempts reached 23.03 and 22.91 GiB allocated before out-of-memory, so the flagship checkpointing decision must be measured on GH200.",
-    "in_kernel_gate": "FLA use_gate_in_kernel is a memory optimization, not a speed one: no measurable throughput change, 1.14 GiB less backward peak at microbatch two. Outputs and gradients agree with the precomputed gate to 7.4e-4 relative, which is bfloat16 level.",
-    "remaining_bottleneck": "At the best configuration GEMM and mixer kernels are 69.3% of device time. The largest remaining single item is Command Buffer Full at 9.9%, which is launch pressure from the six graph breaks. CUDA graphs are unavailable until those breaks are removed."
+    "compile_requires_checkpointing_off": "With checkpointing on, compile returns 1.008x because FLA's chunk_kda carries torch.compiler.disable and Dynamo cannot tolerate a break inside a checkpointed region. With it off the same compile returns 1.612x.",
+    "conv_rewrite": "One padded buffer with narrowed views instead of one allocation per tap: 1.0165x and 1.72 GiB less backward peak, bitwise identical in forward and backward.",
+    "cudagraphs_do_not_help": "0.7% slower; cudagraph_trees cannot capture across the eager KDA islands.",
+    "determinism_cost": "1.086x at max-autotune; a larger microbatch more than repays it.",
+    "flagship_checkpointing_off_does_not_fit_24gib": "Two attempts reached 23.03 and 22.91 GiB before out-of-memory. The failure is in the backward phase, so reducing Muon's transient cannot unlock it. Decision moves to GH200.",
+    "in_kernel_gate_is_a_memory_win": "No measurable throughput change, 1.14 GiB less backward peak at microbatch two.",
+    "loader_is_not_a_bottleneck": "End-to-end is 0.6% faster than synthetic compute, inside noise. Loader work was dropped, which also avoids regenerating the loader_check scan pairs.",
+    "muon_memory_work_is_unnecessary": "Muon's transient binds peak memory only when checkpointing is on. Across every checkpointing-off configuration the backward phase binds instead, so the planned optimizer memory work would buy nothing and was skipped.",
+    "workload_is_bandwidth_bound": "The same code reaches 34.6% MFU on a 3090 against 9.8% on an H100, a card with about fourteen times the peak FLOPS. Throughput tracked memory bandwidth, not compute, so these relative gains are a floor for Hopper rather than a ceiling."
   },
   "format": "speck_throughput_sweep",
-  "format_version": 1,
-  "git_revision": "1aa1fa8b58a331f334bacc3c1ba0946e00c438f8",
+  "format_version": 2,
+  "git_revision": "dcbeabb51e720b2b8b867586cfbcc1b2ada64468",
   "gpu_hours": 0,
   "hardware": {
     "capability": [
@@ -25,12 +31,36 @@
     "peak_bf16_tflops_fp32_accumulate": 71.2
   },
   "proxy_model": {
-    "bias": "KDA FLOPs scale with value-head count while linear FLOPs scale with hidden squared, so this proxy is about twice as KDA-heavy relative to GEMMs as the 1.2B reference. KDA-side gains are an upper bound and GEMM-side gains a lower bound for the flagship.",
+    "bias": "About twice as KDA-heavy relative to GEMMs as the 1.2B reference, so KDA-side gains are an upper bound and GEMM-side gains a lower bound for the flagship.",
     "geometry": "24 blocks, hidden 1024, SwiGLU 2560, 6x(3 KDA + 1 NoPE GQA), head_dim 128",
     "parameters": 317826960,
     "path": "experiments/throughput-proxy"
   },
-  "status": "phase_0_to_2_complete_launch_pressure_open",
+  "selected_configuration": {
+    "activation_checkpointing": false,
+    "compile_mode": "max-autotune-no-cudagraphs",
+    "deterministic": true,
+    "device_batch_size": "3 on this card; the flagship value must be chosen on GH200",
+    "loss_backend": "liger",
+    "note": "Determinism is retained. It costs 1.086x, but raising the microbatch from one to two returns 1.104x, so reproducibility is affordable."
+  },
+  "status": "wall_reached_on_ampere_graph_breaks_remain",
+  "stopping_rule": {
+    "consecutive_sub_two_percent_results": 3,
+    "graph_break_count": 6,
+    "largest_non_useful_kernel_percent": 1.96,
+    "loader_delta_percent": -0.6,
+    "met": true,
+    "met_diminishing": true,
+    "met_graph_breaks": false,
+    "met_largest": true,
+    "met_loader": true,
+    "threshold": 70.0,
+    "threshold_largest": 3.0,
+    "threshold_loader": 2.0,
+    "useful_percent": 76.85,
+    "verdict": "Five of six criteria met. The graph-break criterion is unmet and was falsified as cheaply fixable: bypassing torch.compiler.disable on chunk_kda still yields 8 graphs and 7 breaks because FLA's internals enter a lock context manager Dynamo cannot trace. Removing the breaks requires a torch.library custom op with a hand-written backward, which is high effort and coupled to the pinned FLA version."
+  },
   "training_admitted": false,
   "variants": [
     {
@@ -72,14 +102,14 @@
     {
       "label": "proxy-best-mb3-profile",
       "model": "proxy_318m",
-      "model_flops_utilization": 0.5147908307178498,
-      "peak_after_backward_bytes": 20536928256,
-      "peak_after_step_bytes": 20536928256,
+      "model_flops_utilization": 0.5150619659929073,
+      "peak_after_backward_bytes": 20532209664,
+      "peak_after_step_bytes": 20532209664,
       "receipt": "113-proxy-best-profile.json",
-      "receipt_sha256": "b7b22f21593317fda9b6bba509043392e3a05cd11bd08a379d86b4e364018fa2",
-      "speedup_vs_proxy_baseline": 2.0551223998359682,
+      "receipt_sha256": "e98f0e2ac48497202628b17fb5578ed35df962a767263896733447dab94ce3ca",
+      "speedup_vs_proxy_baseline": 2.056204812621719,
       "stable": true,
-      "tokens_per_second": 17656.97835345996
+      "tokens_per_second": 17666.278110559117
     },
     {
       "label": "proxy-best-profile",
@@ -92,6 +122,30 @@
       "speedup_vs_proxy_baseline": 1.933529725068343,
       "stable": true,
       "tokens_per_second": 16612.291561820388
+    },
+    {
+      "label": "proxy-cudagraphs",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.5097836669530762,
+      "peak_after_backward_bytes": 4284061696,
+      "peak_after_step_bytes": 4284061696,
+      "receipt": "115-proxy-cudagraphs.json",
+      "receipt_sha256": "0acd795506c6f723b7e2f7883418ec040cf3e810192ee93f33a3b41895adfaa1",
+      "speedup_vs_proxy_baseline": 2.035133049213145,
+      "stable": true,
+      "tokens_per_second": 17485.236012821235
+    },
+    {
+      "label": "proxy-endtoend",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.5165448146503003,
+      "peak_after_backward_bytes": 20532111872,
+      "peak_after_step_bytes": 20532111872,
+      "receipt": "114-proxy-endtoend.json",
+      "receipt_sha256": "15a817bd8f2acd94198a30ac00f79212b47e8df681b5b6c68aa49cf71bb8bc2a",
+      "speedup_vs_proxy_baseline": 2.0621245674221798,
+      "stable": true,
+      "tokens_per_second": 17717.13881957473
     },
     {
       "label": "proxy-k1-compile-mb1",
@@ -128,6 +182,18 @@
       "speedup_vs_proxy_baseline": 2.050207505788152,
       "stable": true,
       "tokens_per_second": 17614.75109837347
+    },
+    {
+      "label": "proxy-k5-conv-mb3",
+      "model": "proxy_318m",
+      "model_flops_utilization": 0.5220485278776832,
+      "peak_after_backward_bytes": 18695104512,
+      "peak_after_step_bytes": 18695104512,
+      "receipt": "116-proxy-k5-mb3.json",
+      "receipt_sha256": "5e360a0f92798abef87801dc3f2740ded839adaa4404d4f0dc250421eabcff19",
+      "speedup_vs_proxy_baseline": 2.084096218160589,
+      "stable": true,
+      "tokens_per_second": 17905.912471941538
     },
     {
       "label": "proxy-maxautotune-mb2",
