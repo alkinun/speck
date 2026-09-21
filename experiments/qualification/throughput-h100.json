@@ -1,0 +1,118 @@
+{
+  "format": "speck_h100_throughput_rental",
+  "format_version": 1,
+  "date": "2026-09-21",
+  "status": "prepared_not_executed",
+  "purpose": "Measure the flagship 1.2B speedup over the frozen pilot recipe on rented H100 time, before grant access, so the GH200 confirmation sweep is not the first place that number is ever seen. The RTX 3090 pass selected a configuration but could only measure it on a 318M proxy; the single flagship point it produced is the eager checkpointed baseline, and no checkpointing-off flagship configuration fit the 24 GiB card at all.",
+  "funding": {
+    "source": "external_rental",
+    "grant_gpu_hours": 0,
+    "boundary": "This packet spends no part of the 5,000-GPU-hour allocation and does not draw on the 120-hour runtime-qualification reservation. Rental cost, storage, transfer and idle time are recorded in the external rental ledger, exactly as the completed H100 pilot was."
+  },
+  "why_h100": "The H100 SXM reaches about 989.5 bf16 TFLOPS, the same peak the GH200 sweep assumes, and the pilot's 12,859 tokens/s anchor was measured on one. Deltas measured here are therefore against the same baseline hardware the numeric plan is anchored to, which the 3090 pass could not offer.",
+  "command": "PYTHONPATH=. python -m scripts.benchmark {experiment} --device cuda --mode {mode} --loss-backend liger --sequence-length 4096 --no-activation-checkpointing --deterministic --compile-mode {compile_mode} --batch-size {batch_size} --accumulation {accumulation} --steps 10 --warmup-steps 3 --peak-tflops 989.5 --label {label} --profile {profile} --explain --output {output}",
+  "common": {
+    "activation_checkpointing": false,
+    "compile_mode": "max-autotune-no-cudagraphs",
+    "deterministic": true,
+    "experiment": "experiments/pilot",
+    "loss_backend": "liger",
+    "mode": "compute",
+    "peak_tflops": 989.5,
+    "sequence_length": 4096,
+    "steps": 10,
+    "warmup_steps": 3
+  },
+  "prerequisites": [
+    "Build a fresh private bundle from a clean commit; do not reuse the historical transfer archive or its stale source pin.",
+    "Confirm the offer is an 80 GiB H100 SXM with one allocated GPU, and record instance ID, hourly rate, storage/network charges and intended deletion time.",
+    "Export a persistent TORCHINDUCTOR_CACHE_DIR so max-autotune compiles once, not per run.",
+    "Record SM clock, temperature and power; reject any result whose clock moved beyond 5%.",
+    "Establish a noise band from five repeats of the first configuration before reading deltas."
+  ],
+  "runs": [
+    {
+      "label": "h100-pilot-baseline",
+      "overrides": {
+        "accumulation": 32,
+        "activation_checkpointing": true,
+        "batch_size": 1,
+        "compile_mode": null,
+        "no_compile": true
+      },
+      "purpose": "Reproduce the frozen pilot recipe so every later delta is a flagship delta. The pilot's own H100 rates are 12,859 tokens/s over the full trainer and 13,595 steady optimizer tokens/s; this run is the compute-mode counterpart and is not directly comparable to the full-trainer figure."
+    },
+    {
+      "label": "h100-noac-eager",
+      "overrides": { "accumulation": 32, "batch_size": 1, "no_compile": true },
+      "purpose": "Isolate the checkpointing-off gain, expected near 1.25x because it removes recompute FLOPs arithmetically."
+    },
+    {
+      "label": "h100-noac-compile-mb1",
+      "overrides": { "accumulation": 32, "batch_size": 1 },
+      "purpose": "Isolate the compile gain at the pilot microbatch. Record graph_break_count; it should match the six seen on Ampere."
+    },
+    {
+      "label": "h100-mb2",
+      "overrides": { "accumulation": 16, "batch_size": 2 },
+      "purpose": "Microbatch scaling at constant global batch."
+    },
+    {
+      "label": "h100-mb4",
+      "overrides": { "accumulation": 8, "batch_size": 4 },
+      "purpose": "Microbatch scaling; the pilot's 20% short-probe gain at microbatch four is checked here under a stable measurement."
+    },
+    {
+      "label": "h100-mb8",
+      "overrides": { "accumulation": 4, "batch_size": 8 },
+      "purpose": "Microbatch scaling; 80 GiB should permit this where 24 GiB could not."
+    },
+    {
+      "label": "h100-best-endtoend",
+      "overrides": {
+        "accumulation": "selected",
+        "batch_size": "selected",
+        "mode": "end-to-end"
+      },
+      "purpose": "Re-measure the overhead derate on Hopper at production save cadence. The plan's 0.9459 ratio came from the pilot; compute mode excludes the startup, validation and saves the anchor includes."
+    },
+    {
+      "label": "h100-best-profile",
+      "overrides": {
+        "accumulation": "selected",
+        "batch_size": "selected",
+        "profile": true
+      },
+      "purpose": "Kernel profile on Hopper, to judge whether the KDA custom-op work is worth funding and whether FLA's Hopper-tuned autotune configurations reorder the Ampere ranking."
+    }
+  ],
+  "estimated_gpu_hours": 6,
+  "decisions_to_record": [
+    "The flagship speedup over the frozen pilot recipe, stated as a flagship number. This is the number the 3090 pass could not produce: its 2.084x is a 318M proxy result against a 25.0% baseline, while the flagship's own baseline is already 34.6%, implying 1.51x headroom to the same ceiling.",
+    "Measured flagship model FLOPs utilization on Hopper. The 3090 reached 34.6% against the H100's 9.8% on identical code, which indicates a bandwidth-bound step; a Hopper figure near 10-12% is the expected result and is not a regression.",
+    "The remeasured overhead derate, replacing the pilot's 0.9459 in compute.throughput_reanchoring_rule.",
+    "Whether the compile gain shrinks as predicted once the GEMMs are flagship-sized.",
+    "Whether the KDA custom-op work is worth funding, judged from the Hopper profile."
+  ],
+  "does_not_transfer_to_gh200": [
+    "device_batch_size. This card has 80 GiB and the GH200 has 96 GiB, so the memory-bound microbatch ceiling differs. Microbatch is immutable on resume, so it must still be frozen from the GH200 sweep and not inherited from here.",
+    "ARM64 and Grace memory/interconnect behavior, which only the grant hardware can establish.",
+    "Absolute tokens/s per allocated GPU used to re-anchor horizons. Re-anchor from the GH200 measurement; this rental narrows the uncertainty rather than closing it."
+  ],
+  "out_of_scope": [
+    "Compiled execution under DistributedDataParallel. This is single-GPU, and base.py compiles the DDP-wrapped module with six graph breaks still present. Qualify it with `scripts.training_replay --compile --workers 4` on the grant hardware.",
+    "Distributed execution, scheduler requeue, long-context cost, data eligibility and model quality. None are touched here.",
+    "Any authorization to train. This is a measurement rental and admits no data."
+  ],
+  "effect_on_the_grant_sequence": "A completed rental does not remove the GH200 throughput phase, which still freezes microbatch, activation checkpointing and determinism on the production hardware. It changes that phase from discovery to confirmation: the expected ranking is known in advance, a result that contradicts it is a signal to stop and diagnose rather than to explore, and the 120-hour reservation carries less risk of being spent on a surprise.",
+  "stop_conditions": [
+    "Clock drift beyond 5%, unstable step times, or a graph-break count differing from the Ampere result without explanation.",
+    "Out-of-memory at a microbatch the 80 GiB card was expected to hold; record the failing configuration and stop the ladder there.",
+    "Rental spend reaching the declared ceiling; preserve every receipt and stop rather than extending."
+  ],
+  "input_receipts": {
+    "experiments/qualification/throughput-3090/sweep.json": "56b1fce0fd067792585a950014d64d8f5610a83c2e6fe05ffaf957f622d8dddf"
+  },
+  "boundary": "Single-worker, single-GPU throughput measurement on rented hardware. It establishes no model quality, no data eligibility, no distributed or scheduler behavior, and no GH200 result. It consumes zero grant GPU-hours and authorizes no production training.",
+  "training_admitted": false
+}

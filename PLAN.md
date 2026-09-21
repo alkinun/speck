@@ -206,6 +206,10 @@ bounded order and stop rules for closing those gates.
 4. **Prepare the reference-model GH200 packet before access.** Bind current source and exact inputs,
    checks, workload sizes, measurements and stop conditions. Rebuild the historical transfer bundle;
    do not treat its old source commit as the current release. No paid run starts from this outline.
+   In the same window, run the external
+   [H100 throughput rental](experiments/qualification/throughput-h100.json) to obtain the flagship
+   speedup before access. It costs no grant hours, and it is what keeps the 120-hour reservation
+   from being the first place a 1.2B configuration is ever measured with checkpointing off.
 5. **On access, qualify one worker then four.** Measure actual topology/ARM64 dependencies, kernels,
    batching, optimizer, communication, sustained throughput, restart/export and scheduler behavior.
    Declare every allocated GPU, including idle devices. Use results to cost the data studies and
@@ -313,13 +317,23 @@ application window is not 90 days of continuous four-GPU funding. No GH200 jobs 
 
 Coverage is claimed per stage, never in aggregate. Stages 1, 2 and 4 have trainers today. Stage 3
 still needs selective loss masks and best-fit packing; **stages 5 and 6 have no trainer at all** —
-only the fixed-policy feasibility harnesses, which perform no policy updates. Whether to build the
-RL trainer, rollout engine and verifiers, or to report stages 5 and 6 as **not covered with the
-reason recorded**, is deferred to the GH200 qualification closeout on 2026-09-21: the decision needs
-the measured throughput and the then-current supply position, and taking it earlier would either
-commit hours to unwritten software or abandon a stage before it is necessary. Record it in the
-closeout alongside the other qualification outcomes. Until then, stage 5 and 6 coverage is
-**unclaimed**, and no release text may assume it.
+only the fixed-policy feasibility harnesses, which perform no policy updates.
+
+That gap is two decisions, not one, and they have different costs and different deadlines:
+
+- **Build or decline to build** the RL trainer, rollout engine and verifiers. This spends **no grant
+  GPU-hours** — it is workstation software work measured in weeks of wall-clock — and it gates a
+  third of the headline six-stage deliverable, because stage 6 rejection-samples a stage 5 parent.
+  Deferring it to the closeout would mean writing an RL trainer *during* the access window. It is
+  therefore **due before access**, and needs an owner and a date rather than a measurement.
+- **Commit or release the 200 conditional RL hours.** This does need the measured throughput and the
+  then-current supply position, so it stays at the GH200 qualification closeout, where it can be
+  taken against real numbers. Building the trainer does not commit those hours; declining to build
+  releases them to the supply-bound stages.
+
+Until the build decision is recorded, stage 5 and 6 coverage is **unclaimed**, and no release text
+may assume it. If the answer is not to build, report both stages as **not covered with the reason
+recorded** — that is an acceptable outcome, stated plainly, and it is not the same as silence.
 
 The [competitive strategy](docs/competitive.md) and [report outline](docs/report.md) define the
 comparison and release evidence. No architecture superiority claim follows from an engineering

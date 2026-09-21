@@ -20,11 +20,16 @@ same allocation ledger.
 Before reserving a GPU, complete the following on the current clean commit:
 
 ```bash
+export TMPDIR=/path/to/a/large/disk   # the suite needs more scratch than a small tmpfs holds
 make quality
 make plan-check
 uv run --no-sync python -m scripts.r0_execute experiments/qualification/plan.json \
   --workers 1 --allocated-gpus 1
 ```
+
+The distributed and SQLite tests write large temporary files. On a host whose `/tmp` is a small
+tmpfs they fail with `OSError: [Errno 122] Disk quota exceeded`, which looks like a code failure
+and is not one; point `TMPDIR` at real disk first so the gate reports the truth.
 
 The last command only binds a request. It must report `request_bound_no_execution`; it does not
 allocate hardware. Build a fresh private bundle only after the working tree is clean:
@@ -134,6 +139,11 @@ in the sweep is the eager checkpointed baseline at 34.6% utilization, against th
 `experiments/pilot`, the 1.2B reference, so it measures the real figure. Quote no flagship speedup
 before it returns.
 
+If the external [H100 throughput rental](../experiments/qualification/throughput-h100.json) has run
+first, this phase is a confirmation rather than a discovery: the expected ranking is known, and a
+result that contradicts it is a reason to stop and diagnose rather than to explore inside a
+reservation that cannot be re-spent. That rental does not shorten this phase or substitute for it.
+
 Microbatch, activation checkpointing and determinism are immutable on resume, so they must be
 frozen here, before any production stage starts. The measured rate replaces
 `h100_full_trainer_tokens_per_second` as the anchor for every horizon in the numeric plan, which is
@@ -163,8 +173,10 @@ The closeout must state separately:
 - memory and storage observations;
 - inference/export parity status;
 - all-in allocated GPU-hours and non-GPU costs;
-- **the stage 5/6 decision**: build the RL trainer, rollout engine and verifiers, or report stages 5
-  and 6 as not covered with the reason recorded. Nothing in this repository performs a policy
-  update today, so this closeout is the last point where the 200 conditional RL hours can be
-  committed or released against measured throughput and the then-current supply position;
+- **the stage 5/6 spend decision**: commit or release the 200 conditional RL hours, against measured
+  throughput and the then-current supply position. This closeout is the last point at which that can
+  be done with real numbers. It is only the spend half: whether to *build* the RL trainer, rollout
+  engine and verifiers costs no grant hours and is due before access, so record here the build
+  decision already taken rather than taking it now. If no trainer exists and none is planned, say so
+  and report stages 5 and 6 as not covered with the reason recorded;
 - unresolved limitations and the exact next qualification action.

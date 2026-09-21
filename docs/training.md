@@ -30,9 +30,12 @@ and 22.91 GiB before exhausting the 24 GiB card.
 
 Expect the checkpointing-off component (1.248x) to transfer, since it removes recompute FLOPs
 arithmetically, and expect the compile component to shrink, since it is overhead and fusion and the
-flagship's GEMMs are larger. Quote no flagship speedup until
-[`throughput-gh200.json`](../experiments/qualification/throughput-gh200.json) returns; it
-benchmarks `experiments/pilot`, the 1.2B reference, so it measures this directly.
+flagship's GEMMs are larger. Quote no flagship speedup until it is measured on the 1.2B reference.
+Two packets do that, both benchmarking `experiments/pilot`:
+[`throughput-h100.json`](../experiments/qualification/throughput-h100.json) on rented time before
+grant access, at zero grant cost, and
+[`throughput-gh200.json`](../experiments/qualification/throughput-gh200.json) on the grant hardware,
+which is where `device_batch_size`, activation checkpointing and determinism are actually frozen.
 
 | Setting | Selected | Why |
 | --- | --- | --- |
