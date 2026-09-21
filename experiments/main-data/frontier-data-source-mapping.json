@@ -12,11 +12,11 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "4d5ffe1efcb2979bd7ece20b2b5c7df2ac694bfb9b227000cdccfdc10757b6b5"
+      "sha256": "025140dcf60cc3615d34ae6b0294c6f0c11cbeb350016ece31cf19eac47bdf3a"
     },
     "design_contract": {
       "path": "experiments/main-data/data-design-contract.json",
-      "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
+      "sha256": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58"
     }
   },
   "mappings": [

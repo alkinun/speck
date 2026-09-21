@@ -8,11 +8,11 @@
   "source_of_truth": {
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "a546f55dd16f3edaae7ba79aa9ef271ef1b276606726602cabe64abfa358a892"
+      "sha256": "025140dcf60cc3615d34ae6b0294c6f0c11cbeb350016ece31cf19eac47bdf3a"
     },
     "data_design_contract": {
       "path": "experiments/main-data/data-design-contract.json",
-      "sha256": "1fd0f7bd5633d404c612b8ecf9224411052a4fe40e28e8523d83f42040213e9f"
+      "sha256": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58"
     }
   },
   "required_fields": [
