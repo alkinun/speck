@@ -77,6 +77,26 @@ def compare_checkpoints(first, second, step, device):
     return result
 
 
+def _train_command(args, experiment):
+    """Build the child trainer command for one replay process.
+
+    Compilation is opt-in so existing eager recovery receipts stay comparable,
+    but it must be reachable: the selected production recipe is compiled and the
+    compiled distributed path is otherwise never exercised.
+    """
+    command = [
+        sys.executable,
+        "-m",
+        f"scripts.{args.phase}_train",
+        str(experiment),
+        "--device",
+        args.device,
+    ]
+    if not args.compile:
+        command.append("--no-compile")
+    return command
+
+
 def replay(args):
     if (
         args.workers < 1
@@ -150,7 +170,7 @@ def replay(args):
         "source_experiment": str(Path(args.experiment).resolve()),
         "checkpoint_step": args.checkpoint_step,
         "engineering_only": True,
-        "compile": False,
+        "compile": bool(args.compile),
         "commands": [],
         "executions": [],
         "git_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
@@ -180,15 +200,7 @@ def replay(args):
             settings["output_dir"] = str(output)
             for name, config in configs.items():
                 atomic_json(experiment / f"{name}.json", config)
-            command = [
-                sys.executable,
-                "-m",
-                f"scripts.{args.phase}_train",
-                str(experiment),
-                "--device",
-                args.device,
-                "--no-compile",
-            ]
+            command = _train_command(args, experiment)
             if index:
                 if not (first / f"complete_{args.checkpoint_step:06d}").exists():
                     raise AssertionError("intermediate checkpoint was not retained")
@@ -257,6 +269,16 @@ def main(argv=None):
     parser.add_argument("--steps", type=int, default=4, help="engineering base horizon")
     parser.add_argument("--checkpoint-step", type=int, default=2)
     parser.add_argument("--seconds", type=float, default=1800)
+    # The selected production recipe is compiled, but compilation had never been
+    # exercised under DistributedDataParallel: base.py compiles the DDP-wrapped
+    # module and the KDA path still carries graph breaks, which is where
+    # DDPOptimizer bucketing is known to interact badly. Eager remains the
+    # default so existing recovery receipts stay comparable.
+    parser.add_argument(
+        "--compile",
+        action="store_true",
+        help="replay with torch.compile enabled, qualifying the compiled distributed path",
+    )
     print(json.dumps(replay(parser.parse_args(argv)), indent=2))
 
 

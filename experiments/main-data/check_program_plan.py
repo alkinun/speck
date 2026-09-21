@@ -45,6 +45,21 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
     protected = compute["proposed_protected_breakdown_gpu_hours"]
     if sum(protected.values()) != reservations["protected_recovery_and_evaluation"]:
         raise ValueError("protected breakdown does not match its reservation")
+    # The Slurm wave validator carries its own scheduled/protected constants and
+    # rejects any execution plan that disagrees with them. Bind them here so a
+    # revised reservation table cannot pass this check and then fail at wave
+    # submission on the cluster, which is the worst place to discover the drift.
+    from speck.operations import slurm
+
+    protected_hours = reservations["protected_recovery_and_evaluation"]
+    scheduled = compute["requested_total_gpu_hours"] - protected_hours
+    if (
+        slurm.TOTAL_GPU_HOURS != compute["requested_total_gpu_hours"]
+        or slurm.MANDATORY_GPU_HOURS != scheduled
+        or slurm.RESERVE_GPU_HOURS != protected_hours
+    ):
+        raise ValueError("speck.operations.slurm budget constants drift from the reservation table")
+
     first_scenario = compute["main_scenarios"][0]
     if first_scenario["tokens"] != plan["main_pretraining"]["target_tokens"]:
         raise ValueError("first compute scenario does not match the working token horizon")
