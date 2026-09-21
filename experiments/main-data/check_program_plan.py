@@ -169,6 +169,20 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
     ):
         raise ValueError("post-training production breakdown does not match its reservation")
 
+    # Endpoint decay and final self-SFT are named stages of the released pipeline.
+    # They each hold a production line so the six-stage claim rests on accounting
+    # rather than on prose, and so neither can be quietly absorbed by its
+    # neighbour when a stage runs long.
+    pretraining_production = compute["proposed_pretraining_breakdown_gpu_hours"]
+    if sum(pretraining_production.values()) != reservations["main_4k_pretraining"]:
+        raise ValueError("pretraining production breakdown does not match its reservation")
+    for stage, breakdown_key, line in (
+        ("endpoint decay", "proposed_pretraining_breakdown_gpu_hours", "endpoint_decay"),
+        ("final self-SFT", "proposed_post_training_breakdown_gpu_hours", "final_self_sft"),
+    ):
+        if compute[breakdown_key].get(line, 0) <= 0:
+            raise ValueError(f"{stage} must hold its own production line")
+
     receipts = plan["input_receipts"]
     checked = 0
     for relative, expected in receipts.items():

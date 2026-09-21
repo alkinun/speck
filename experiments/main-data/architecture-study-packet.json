@@ -2,7 +2,7 @@
   "format": "speck_architecture_efficiency_study_packet",
   "format_version": 1,
   "date": "2026-09-20",
-  "status": "design_only_not_training_authority",
+  "status": "deferred_to_a_later_allocation_design_preserved",
   "purpose": "Bind the single bounded backbone comparison required before data-study runs.",
   "evidence_boundary": "This packet fixes the comparison and accounting contract. It does not select a production backbone, authorize GPU work or create a broad architecture search.",
   "source_of_truth": {
@@ -20,11 +20,13 @@
     }
   },
   "budget": {
-    "total_gpu_hours": 200,
-    "paired_training_gpu_hours": 120,
-    "profiling_gpu_hours": 40,
-    "qualification_evaluation_recovery_gpu_hours": 40,
-    "accounting": "Charge startup, validation, checkpoints, profiling, evaluation, retries and allocated idle time once. CPU acquisition and storage are logged separately."
+    "total_gpu_hours": 0,
+    "paired_training_gpu_hours": 0,
+    "profiling_gpu_hours": 0,
+    "qualification_evaluation_recovery_gpu_hours": 0,
+    "released_gpu_hours": 200,
+    "released_to": "180 hours to data research (100 pretraining, 60 mid-training, 20 post-training) and 20 hours to reference-only training/inference efficiency profiling inside runtime qualification.",
+    "accounting": "This packet draws no GPU-hours on this allocation. When it is funded, charge startup, validation, checkpoints, profiling, evaluation, retries and allocated idle time once; CPU acquisition and storage are logged separately."
   },
   "common_contract": {
     "arms": "Use exactly two complete backbone designs and one declared seed. No intermediate geometry search or extra architecture arm.",
@@ -76,8 +78,15 @@
     ]
   },
   "profiling": {
-    "lengths": [512, 2048, 3840],
-    "batch_sizes": [1, 8],
+    "lengths": [
+      512,
+      2048,
+      3840
+    ],
+    "batch_sizes": [
+      1,
+      8
+    ],
     "output_tokens": 256,
     "required_outputs": [
       "prefill latency and time to first token",
@@ -106,5 +115,12 @@
     "Negative, inconclusive and scope-revision outcomes",
     "Final backbone selection receipt and limitations"
   ],
-  "boundary": "No architecture result is launch-ready from this packet. The first release permits this one bounded comparison; MoE, attention residuals, broad attention searches and size sweeps remain deferred."
+  "boundary": "No architecture result is launch-ready from this packet, and none is funded on this allocation. The comparison is deferred with its design preserved; MoE, attention residuals, broad attention searches and size sweeps remain deferred alongside it.",
+  "deferral": {
+    "decided": "2026-09-21",
+    "reason": "This release delivers an open data pipeline across the six training stages. An architecture comparison that cannot change the backbone we ship is architecture search, which is explicitly next-allocation work.",
+    "substrate_decision": "The reference KDA/NoPE-GQA backbone is declared as the fixed substrate for every data study on this allocation. It is frozen by declaration, not selected over a control.",
+    "claim_consequence": "No architecture superiority or parity claim may appear in the report. State the deferral and that the backbone was fixed, not compared.",
+    "design_state": "Arms, control geometry, training caps and the profiling grid below are unmodified and remain the starting point for the next allocation."
+  }
 }

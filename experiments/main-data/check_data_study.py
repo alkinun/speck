@@ -68,10 +68,15 @@ def validate(packet_path):
         + confirmation["training_gpu_hours"]
         + support["gpu_hours"]
     )
-    if total != 600 or support["budget_check"] != (
-        "120 base screening + 90 decay screening + 240 confirmation + 150 support = 600 pretraining-data-research GPU-hours."
+    if total != 700 or support["budget_check"] != (
+        "120 base screening + 180 decay screening + 240 confirmation + 160 support = 700 "
+        "pretraining-data-research GPU-hours."
     ):
-        raise ValueError("pretraining data-study reservation must total 600 GPU-hours")
+        raise ValueError("pretraining data-study reservation must total 700 GPU-hours")
+    # Endpoint decay is a released stage of the pipeline, so its recipe must rest
+    # on paired seeds rather than a single run per arm.
+    if decay["paired_seed_count"] < 2:
+        raise ValueError("decay study must use at least two paired seeds")
     required = packet["required_gates_before_first_arm"]
     if not any("source-use" in gate and "human" in gate for gate in required):
         raise ValueError("source-use gate must require named human decisions")

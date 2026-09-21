@@ -32,12 +32,14 @@ so its non-embedding count is approximately 1.130B, unlike some nominally simila
 
 ## Recommendation
 
-The first release develops a data and training recipe across pretraining, mid-training and
-post-training, with the backbone frozen after a 200-hour architecture/efficiency study near 1.2B. The [model notes](model.md) explain attention/size
-choices and their measured limitations. MoE, attention residuals and broader architectural research
-belong to later releases with larger allocations. Qualify the current runtime, improve the data and
-measure useful thinking/code/tool behavior. Allocate 1,050 hours to data experiments: 600 before
-main pretraining, 300 before mid-training production and 150 before post-training production. Predeclare
+The first release develops an open data and training recipe across all six stages near 1.2B, with
+the backbone declared as the fixed substrate rather than selected over a control. The architecture
+comparison is deferred to a later allocation. The [model notes](model.md) explain attention/size
+choices and their measured limitations, with no comparative claim attached. MoE, attention
+residuals and broader architectural research belong to later releases with larger allocations.
+Qualify the current runtime, improve the data and measure useful thinking/code/tool behavior.
+Allocate 1,230 hours to data experiments: 700 before main pretraining, 360 before mid-training
+production and 170 before post-training production. Predeclare
 matched controls and screening/confirmation endpoints; do not assume efficiency gains.
 
 The current 5,000-total-GPU-hour allowance does not support a confident broad best-in-class release
@@ -57,7 +59,7 @@ runtime qualification tasks, not an assumed 3–4x gain or a new GPU launch.
 
 The 1,800-GPU-hour base reservation needs about 12,346 effective tokens/s per allocated GPU for the 80B
 working horizon. Four workers do not improve GPU-hour efficiency automatically. The completed
-pilot is separate from the new 200-hour architecture and 1,050-hour data research allocation. The
+pilot is separate from the 1,230-hour data research allocation. The
 600-hour mid-training production, 800-hour post-training production and 450-hour protected
 evaluation/recovery reservations remain explicit in the [scale plan](../experiments/main-data/README.md). Reduce the
 horizon if measured cost or qualified supply requires it; do not promise quality from token count.

@@ -23,27 +23,30 @@ def validate(packet_path: str | Path) -> dict[str, object]:
         raise ValueError("unsupported architecture study packet format")
     if packet.get("format_version") != 1:
         raise ValueError("unsupported architecture study packet version")
-    if packet.get("status") != "design_only_not_training_authority":
-        raise ValueError("architecture study packet must remain design-only")
+    if packet.get("status") != "deferred_to_a_later_allocation_design_preserved":
+        raise ValueError("architecture study packet must remain deferred")
 
     for entry in packet["source_of_truth"].values():
         _artifact(entry["path"], entry["sha256"])
 
+    # The comparison is deferred, so the packet must draw nothing on this
+    # allocation. The released hours stay recorded here so the deferral is
+    # auditable rather than a silent disappearance from the reservation table.
     budget = packet["budget"]
-    if budget["total_gpu_hours"] != 200:
-        raise ValueError("architecture study must remain inside the 200-hour reservation")
-    if (
-        sum(
-            budget[key]
-            for key in (
-                "paired_training_gpu_hours",
-                "profiling_gpu_hours",
-                "qualification_evaluation_recovery_gpu_hours",
-            )
+    if budget["total_gpu_hours"] != 0 or any(
+        budget[key] != 0
+        for key in (
+            "paired_training_gpu_hours",
+            "profiling_gpu_hours",
+            "qualification_evaluation_recovery_gpu_hours",
         )
-        != 200
     ):
-        raise ValueError("architecture study budget components must total 200 GPU-hours")
+        raise ValueError("deferred architecture study must draw zero GPU-hours")
+    if budget["released_gpu_hours"] != 200:
+        raise ValueError("architecture study must record the 200 released GPU-hours")
+    deferral = packet["deferral"]
+    if not deferral.get("claim_consequence", "").startswith("No architecture superiority"):
+        raise ValueError("deferral must forbid an architecture claim in the report")
 
     arms = packet["arms"]
     if len(arms) != 2 or {arm["role"] for arm in arms} != {"reference", "single_control"}:
