@@ -18,6 +18,7 @@ from speck.data.loader import manifest_fingerprint, packed_loader
 from speck.evaluation.diagnostics import nearest_percentile as percentile
 from speck.evaluation.diagnostics import synchronize
 from speck.model import build_model
+from speck.operations.runtime import configure_determinism
 from speck.tokenization.tokenizer import get_tokenizer
 from speck.training.step import optimization_step
 
@@ -124,11 +125,170 @@ def arguments(argv=None):
         help="override train.json activation checkpointing for this benchmark",
     )
     parser.add_argument(
+        "--deterministic",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="select reproducible kernels, matching production recipes (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--training-output",
+        action="store_true",
+        help="request the typed training output, matching the production trainer call",
+    )
+    parser.add_argument(
+        "--explain",
+        action="store_true",
+        help="record torch._dynamo.explain graph and graph-break counts",
+    )
+    parser.add_argument(
+        "--profile",
+        default=None,
+        help="optional path for a chrome trace; profiled steps run after the timed steps",
+    )
+    parser.add_argument(
+        "--profile-steps",
+        type=int,
+        default=3,
+        help="number of profiled steps taken after timing (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--memory-snapshot",
+        default=None,
+        help="optional path for a CUDA memory snapshot recorded after the timed steps",
+    )
+    parser.add_argument(
+        "--label",
+        default=None,
+        help="short label identifying this configuration in a sweep",
+    )
+    parser.add_argument(
+        "--boundary",
+        default=None,
+        help="prose statement constraining what this measurement may be used for",
+    )
+    parser.add_argument(
         "--output",
         default=None,
         help="optional path for the JSON benchmark report",
     )
     return parser.parse_args(argv)
+
+
+def package_versions():
+    """Return installed versions of the kernel packages that affect throughput."""
+
+    versions = {}
+    for name in ("triton", "fla", "liger_kernel"):
+        try:
+            module = __import__(name)
+        except Exception:
+            versions[name] = None
+        else:
+            versions[name] = getattr(module, "__version__", "unknown")
+    return versions
+
+
+def device_telemetry(device):
+    """Sample SM clock, temperature and power so throttled results can be rejected."""
+
+    if device.type != "cuda":
+        return None
+    query = "clocks.sm,temperature.gpu,power.draw"
+    result = subprocess.run(
+        ["nvidia-smi", f"--query-gpu={query}", "--format=csv,noheader,nounits"],
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    line = result.stdout.strip().splitlines()
+    if not line:
+        return None
+    fields = [field.strip() for field in line[0].split(",")]
+    if len(fields) != 3:
+        return None
+    return {
+        "sm_clock_mhz": _optional_float(fields[0]),
+        "temperature_c": _optional_float(fields[1]),
+        "power_w": _optional_float(fields[2]),
+    }
+
+
+def _optional_float(text):
+    try:
+        return float(text)
+    except ValueError:
+        return None
+
+
+_MIXER_MARKERS = ("chunkkda", "kda", "flash", "attention", "fused_recurrent")
+_GEMM_MARKERS = ("gemm", "cutlass", "s16816", "s1688", "wgmma", "_mm", "mm_", "bmm", "dot")
+_LAUNCH_MARKERS = ("command buffer", "cudalaunch", "cudastream", "cudaevent")
+
+
+def classify_kernel(name):
+    """Group a device kernel so the stopping rule can be evaluated mechanically.
+
+    Mixer kernels are matched before GEMM because fused attention and KDA kernels
+    carry matmul markers in their template arguments.
+    """
+
+    lowered = name.lower()
+    if lowered.startswith("aten::") or lowered.startswith("autograd::"):
+        return "operator"
+    if lowered.startswith("optimizer.step") or "#" in name:
+        return "annotation"
+    if any(marker in lowered for marker in _LAUNCH_MARKERS):
+        return "launch"
+    if any(marker in lowered for marker in _MIXER_MARKERS):
+        return "mixer"
+    if any(marker in lowered for marker in _GEMM_MARKERS):
+        return "gemm"
+    if "memcpy" in lowered or "copy" in lowered:
+        return "copy"
+    if "elementwise" in lowered or "fill" in lowered or "vectorized" in lowered:
+        return "pointwise"
+    return "other"
+
+
+def kernel_summary(profiler, limit=25):
+    """Fold the profiler's hottest device kernels into the receipt.
+
+    Operator and annotation rows are excluded from the totals because their device
+    time already counts the kernels they launch, which would double count.
+    """
+
+    entries = []
+    for event in profiler.key_averages():
+        micros = getattr(event, "self_device_time_total", None)
+        if micros is None:
+            micros = getattr(event, "self_cuda_time_total", 0.0)
+        if micros:
+            entries.append((float(micros), event.key, int(event.count)))
+    entries.sort(reverse=True)
+    kernels = [
+        item for item in entries if classify_kernel(item[1]) not in {"operator", "annotation"}
+    ]
+    total = sum(micros for micros, _, _ in kernels)
+    shares = {}
+    for micros, key, _ in kernels:
+        kind = classify_kernel(key)
+        shares[kind] = shares.get(kind, 0.0) + micros
+    return {
+        "self_device_time_total_us": total,
+        "category_percent": {
+            kind: 100.0 * value / total if total else None for kind, value in sorted(shares.items())
+        },
+        "top_kernels": [
+            {
+                "name": key,
+                "kind": classify_kernel(key),
+                "self_device_time_us": micros,
+                "count": count,
+                "percent": 100.0 * micros / total if total else None,
+            }
+            for micros, key, count in kernels[:limit]
+        ],
+    }
 
 
 def resolve_activation_checkpointing(train, override):
@@ -175,6 +335,9 @@ def synthetic_loader(batch_size, sequence_length, vocab_size, device):
 def run(args):
     if args.steps < 1 or args.warmup_steps < 0:
         raise ValueError("steps must be positive and warmup steps cannot be negative")
+    if args.profile_steps < 1:
+        raise ValueError("profile steps must be positive")
+    configure_determinism(args.deterministic)
     configs = load_experiment(args.experiment, "tokenizer", "model", "train")
     tokenizer = get_tokenizer(**configs["tokenizer"])
     train = configs["train"]
@@ -240,10 +403,27 @@ def run(args):
             data_dir=args.data_dir,
         )
     batch = next(loader)
+    telemetry_started = device_telemetry(device)
 
-    started = time.perf_counter()
-    for _ in range(args.warmup_steps):
-        _, _, batch = optimization_step(
+    explain = None
+    if args.explain and not args.no_compile:
+        explanation = torch._dynamo.explain(train_model)(
+            batch[0],
+            batch[1],
+            return_training_output=args.training_output,
+        )
+        explain = {
+            "graph_count": explanation.graph_count,
+            "graph_break_count": explanation.graph_break_count,
+            "op_count": explanation.op_count,
+            "break_reasons": [
+                str(getattr(reason, "reason", reason)) for reason in explanation.break_reasons
+            ][:25],
+        }
+        torch._dynamo.reset()
+
+    def step(probe=None):
+        return optimization_step(
             train_model,
             parameters,
             optimizer,
@@ -253,37 +433,85 @@ def run(args):
             train["grad_clip"],
             train["lr"],
             cudagraphs=cudagraphs,
+            return_training_output=args.training_output,
+            step_probe=probe,
         )
+
+    started = time.perf_counter()
+    for _ in range(args.warmup_steps):
+        _, _, batch = step()
     synchronize(device)
     warmup_seconds = time.perf_counter() - started
 
-    if device.type == "cuda":
-        torch.cuda.reset_peak_memory_stats(device)
+    # Peak memory is split so the optimizer transient cannot mask the activation
+    # footprint. They occupy the same allocator blocks at different times, so the
+    # peak counter is reset every step and each phase keeps its own running maximum.
+    cuda = device.type == "cuda"
+    peak_after_backward = 0
+    peak_after_step = 0
+    peak_reserved = 0
+
+    def record_backward_peak():
+        nonlocal peak_after_backward
+        if cuda:
+            peak_after_backward = max(peak_after_backward, torch.cuda.max_memory_allocated(device))
+
     durations = []
     losses = []
     for _ in range(args.steps):
         synchronize(device)
+        if cuda:
+            torch.cuda.reset_peak_memory_stats(device)
         started = time.perf_counter()
-        loss, _, batch = optimization_step(
-            train_model,
-            parameters,
-            optimizer,
-            loader,
-            batch,
-            accumulation,
-            train["grad_clip"],
-            train["lr"],
-            cudagraphs=cudagraphs,
-        )
+        loss, _, batch = step(probe=record_backward_peak)
         synchronize(device)
         durations.append(time.perf_counter() - started)
-        losses.append(loss.item())
+        losses.append(float(loss.total_loss if args.training_output else loss))
+        if cuda:
+            peak_after_step = max(peak_after_step, torch.cuda.max_memory_allocated(device))
+            peak_reserved = max(peak_reserved, torch.cuda.max_memory_reserved(device))
+
+    telemetry_finished = device_telemetry(device)
+
+    profile_summary = None
+    if args.profile:
+        # Profiling perturbs timing, so it runs after the measured steps.
+        with torch.profiler.profile(
+            activities=[
+                torch.profiler.ProfilerActivity.CPU,
+                torch.profiler.ProfilerActivity.CUDA,
+            ],
+            record_shapes=True,
+        ) as profiler:
+            for _ in range(args.profile_steps):
+                _, _, batch = step()
+            synchronize(device)
+        path = Path(args.profile)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        profiler.export_chrome_trace(str(path))
+        profile_summary = {"trace": str(path), **kernel_summary(profiler)}
+
+    if args.memory_snapshot and device.type == "cuda":
+        torch.cuda.memory._record_memory_history()
+        for _ in range(2):
+            _, _, batch = step()
+        synchronize(device)
+        snapshot = Path(args.memory_snapshot)
+        snapshot.parent.mkdir(parents=True, exist_ok=True)
+        torch.cuda.memory._dump_snapshot(str(snapshot))
+        torch.cuda.memory._record_memory_history(enabled=None)
 
     tokens_per_step = batch_size * sequence_length * accumulation
     total_seconds = sum(durations)
     tokens_per_second = tokens_per_step * args.steps / total_seconds
     tflops = model.flops_per_token(sequence_length) * tokens_per_second / 1e12
+    median = statistics.median(durations)
+    p90 = percentile(durations, 0.9)
     result = {
+        "format": "speck_throughput_probe",
+        "format_version": 1,
+        "label": args.label,
+        "boundary": args.boundary,
         "benchmark": {
             "mode": args.mode,
             "steps": args.steps,
@@ -294,9 +522,17 @@ def run(args):
             "aggressive_fusion": not args.no_compile,
             "loss_backend": args.loss_backend,
             "activation_checkpointing": activation_checkpointing,
+            "deterministic": args.deterministic,
+            "training_output": args.training_output,
             "optimizer": train["optimizer"],
             "optimizer_step_compiled": optimizer_step_compiled,
             "seed": args.seed,
+        },
+        "compile": explain,
+        "profile": profile_summary,
+        "quality": {
+            "stable": bool(p90 / median < 1.05) if median else None,
+            "p90_over_median": p90 / median if median else None,
         },
         "geometry": {
             "batch_size": batch_size,
@@ -309,24 +545,29 @@ def run(args):
             "tflops": tflops,
             "model_flops_utilization": tflops / args.peak_tflops if args.peak_tflops else None,
             "step_seconds_mean": statistics.mean(durations),
-            "step_seconds_median": statistics.median(durations),
-            "step_seconds_p90": percentile(durations, 0.9),
+            "step_seconds_median": median,
+            "step_seconds_p90": p90,
             "loss_first": losses[0],
             "loss_last": losses[-1],
         },
         "memory": {
-            "peak_allocated_bytes": torch.cuda.max_memory_allocated(device)
-            if device.type == "cuda"
-            else None,
-            "peak_reserved_bytes": torch.cuda.max_memory_reserved(device)
-            if device.type == "cuda"
-            else None,
+            "peak_allocated_bytes": peak_after_step if cuda else None,
+            "peak_reserved_bytes": peak_reserved if cuda else None,
+            "peak_after_backward_bytes": peak_after_backward if cuda else None,
+            "peak_after_step_bytes": peak_after_step if cuda else None,
         },
         "environment": {
             "device": str(device),
             "device_name": torch.cuda.get_device_name(device) if device.type == "cuda" else "cpu",
+            "device_capability": list(torch.cuda.get_device_capability(device))
+            if device.type == "cuda"
+            else None,
             "torch": torch.__version__,
             "cuda": torch.version.cuda,
+            "packages": package_versions(),
+            "cublas_workspace_config": os.environ.get("CUBLAS_WORKSPACE_CONFIG"),
+            "telemetry_started": telemetry_started,
+            "telemetry_finished": telemetry_finished,
             "git_revision": git_revision(),
             "git_dirty": git_dirty(),
             "recorded_at": datetime.now(timezone.utc).isoformat(),
