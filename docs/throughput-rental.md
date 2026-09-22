@@ -76,7 +76,7 @@ Confirm the card is an 80 GiB H100 before spending anything. Then establish the 
 first configuration **five times** and keep the spread. A delta smaller than that band is not a
 result. Repeat the first command with a unique label and output filename for each copy. The packet
 uses ten warmup steps and a thirty-step measured window; keep the full window after compilation has
-settled rather than shortening it to the old ten-step probe.
+settled rather than shortening it to the old short probe.
 
 After the five baseline runs, create the machine-checked noise summary before reading any ladder
 delta:
