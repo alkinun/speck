@@ -27,6 +27,7 @@ from speck.operations.random_state import (
     warmup_resume_backend,
 )
 from speck.operations.runtime import (
+    COMPILE_OPTIONS,
     NullRun,
     base_dir,
     cleanup,
@@ -779,19 +780,11 @@ class BaseTrainer:
         self.train_model: Any = (
             train_model
             if args.no_compile
-            else torch.compile(
-                train_model,
-                dynamic=False,
-                options={
-                    "max_autotune": True,
-                    "coordinate_descent_tuning": True,
-                    "aggressive_fusion": True,
-                },
-            )
+            else torch.compile(train_model, dynamic=False, options=COMPILE_OPTIONS)
         )
         compile_step = getattr(self.optimizer, "compile_step", None)
         if not args.no_compile and compile_step is not None:
-            compile_step()
+            compile_step(COMPILE_OPTIONS)
         self.flops = self.model.flops_per_token(args.sequence_length)
         if self.device.type == "cuda":
             torch.cuda.reset_peak_memory_stats(self.device)

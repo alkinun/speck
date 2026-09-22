@@ -5,6 +5,11 @@ import os
 import torch
 import torch.distributed as dist
 
+# Inductor options for every compiled training path. Coordinate-descent tuning is excluded:
+# it re-times reduction configurations in each process, so a resumed trainer selects different
+# reduction orders and its gradients diverge from an uninterrupted run with identical inputs.
+COMPILE_OPTIONS = {"max_autotune": True, "aggressive_fusion": True}
+
 
 def configure_kernel_cache():
     """Fix Triton's cache before either eager FLA or Inductor initializes kernels."""

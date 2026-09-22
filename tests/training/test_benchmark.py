@@ -65,3 +65,13 @@ def test_kernel_summary_without_cuda_events_has_no_utilization_claim():
     summary = kernel_summary(profiler)
     assert summary["useful_percent"] is None
     assert summary["top_kernels"] == []
+
+
+def test_selected_benchmark_mode_compiles_the_reproducible_production_options():
+    from speck.operations.runtime import COMPILE_OPTIONS
+    from speck.training.benchmark import _COMPILE_MODE_OPTIONS
+
+    # Coordinate descent re-times reductions per process and breaks restart parity.
+    assert "coordinate_descent_tuning" not in COMPILE_OPTIONS
+    selected = {**_COMPILE_MODE_OPTIONS["max-autotune-no-cudagraphs"], "aggressive_fusion": True}
+    assert selected == COMPILE_OPTIONS

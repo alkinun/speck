@@ -19,22 +19,16 @@ from speck.data.loader import manifest_fingerprint, packed_loader
 from speck.evaluation.diagnostics import nearest_percentile as percentile
 from speck.evaluation.diagnostics import synchronize
 from speck.model import build_model
-from speck.operations.runtime import configure_determinism
+from speck.operations.runtime import COMPILE_OPTIONS, configure_determinism
 from speck.tokenization.tokenizer import get_tokenizer
 from speck.training.step import optimization_step
 
 _COMPILE_MODE_OPTIONS = {
     "default": {},
     "reduce-overhead": {"triton.cudagraphs": True},
-    "max-autotune": {
-        "max_autotune": True,
-        "coordinate_descent_tuning": True,
-        "triton.cudagraphs": True,
-    },
-    "max-autotune-no-cudagraphs": {
-        "max_autotune": True,
-        "coordinate_descent_tuning": True,
-    },
+    # Unlike Torch's named modes, these omit coordinate-descent tuning; see COMPILE_OPTIONS.
+    "max-autotune": {"max_autotune": True, "triton.cudagraphs": True},
+    "max-autotune-no-cudagraphs": {"max_autotune": True},
 }
 
 
@@ -403,7 +397,7 @@ def run(args):
     )
     optimizer_step_compiled = not args.no_compile and hasattr(optimizer, "compile_step")
     if optimizer_step_compiled:
-        optimizer.compile_step()
+        optimizer.compile_step(COMPILE_OPTIONS)
     cudagraphs = not args.no_compile and args.compile_mode in {"reduce-overhead", "max-autotune"}
 
     manifest_hash = None

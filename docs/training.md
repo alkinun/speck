@@ -16,7 +16,10 @@ hardware, distributed geometry, and compiled path.
 The [performance plan](performance.md) defines timing boundaries, MFU accounting and optimization
 priorities. The RTX 3090 proxy selected checkpointing off, compiled execution with
 `max-autotune-no-cudagraphs`, deterministic kernels and Liger loss. These are candidates for the
-flagship; its optimized rate and memory headroom remain unmeasured.
+flagship; its optimized rate and memory headroom remain unmeasured. Training and the benchmark
+compile with `COMPILE_OPTIONS` from `speck/operations/runtime.py`. Unlike Torch's mode of the same
+name, the benchmark's `max-autotune-no-cudagraphs` omits coordinate-descent tuning, which broke
+compiled restart parity.
 
 Freeze microbatch, activation checkpointing and determinism on GH200 before production; these
 settings are immutable on resume. Microbatch affects loader scheduling even at constant global

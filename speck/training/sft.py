@@ -26,6 +26,7 @@ from speck.operations.random_state import (
     warmup_resume_backend,
 )
 from speck.operations.runtime import (
+    COMPILE_OPTIONS,
     NullRun,
     base_dir,
     cleanup,
@@ -416,11 +417,7 @@ class SFTTrainer:
         self.train_model: Any = (
             train_model
             if args.no_compile
-            else torch.compile(
-                train_model,
-                dynamic=False,
-                mode="max-autotune-no-cudagraphs",
-            )
+            else torch.compile(train_model, dynamic=False, options=COMPILE_OPTIONS)
         )
 
         if self.metadata:

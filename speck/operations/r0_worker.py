@@ -177,7 +177,7 @@ def execute_case(request, directory, device, rank=0, world_size=1, restart_from=
             )
         if settings["compile"]:
             train_model = torch.compile(train_model, dynamic=False)
-            optimizer.compile_step(options={"max_autotune": False})
+            optimizer.compile_step({"max_autotune": False})
         sync(device)
         report["construction_seconds"] = time.perf_counter() - started
         report["parameters"] = model.parameter_count()

@@ -38,7 +38,7 @@ class CombinedOptimizer:
         for name, optimizer in self.optimizers.items():
             optimizer.load_state_dict(state["optimizers"][name])
 
-    def compile_step(self, options=None, backend=None):
+    def compile_step(self, options):
         """Compile the matrix-heavy Muon update with checkpoint-compatible state."""
 
         muon = self.optimizers.get("muon")
@@ -47,17 +47,7 @@ class CombinedOptimizer:
                 if not isinstance(group["lr"], torch.Tensor):
                     parameter = group["params"][0]
                     group["lr"] = torch.tensor(group["lr"], device=parameter.device)
-            options = options or {
-                "max_autotune": True,
-                "coordinate_descent_tuning": True,
-                "aggressive_fusion": True,
-            }
-            compile_settings = {"dynamic": False}
-            if backend is None:
-                compile_settings["options"] = options
-            else:
-                compile_settings["backend"] = backend
-            muon.step = torch.compile(muon.step, **compile_settings)
+            muon.step = torch.compile(muon.step, dynamic=False, options=options)
 
 
 class BatchedMuon(torch.optim.Muon):
