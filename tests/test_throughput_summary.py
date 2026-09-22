@@ -91,6 +91,7 @@ def test_summary_requires_repeated_receipts(tmp_path):
         ("environment", "torch", "different torch"),
         ("environment", "git_revision", "different source"),
         ("environment", "git_dirty", True),
+        ("environment", "kernel_caches", {"triton": "/different-cache"}),
         ("benchmark", "steps", 5),
         ("benchmark", "seed", 123),
         ("experiment", "manifest", "different data"),

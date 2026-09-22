@@ -8,9 +8,11 @@ from speck.operations import runtime as common
 
 def test_deterministic_runtime_sets_workspace_and_rejects_conflicting_configuration(monkeypatch):
     monkeypatch.delenv("CUBLAS_WORKSPACE_CONFIG", raising=False)
+    monkeypatch.delenv("TRITON_CACHE_DIR", raising=False)
     previous = torch.are_deterministic_algorithms_enabled()
     try:
         common.configure_determinism(True)
+        assert os.environ["TRITON_CACHE_DIR"]
         assert torch.are_deterministic_algorithms_enabled()
         assert os.environ["CUBLAS_WORKSPACE_CONFIG"] == ":4096:8"
         monkeypatch.setenv("CUBLAS_WORKSPACE_CONFIG", "invalid")
@@ -21,6 +23,30 @@ def test_deterministic_runtime_sets_workspace_and_rejects_conflicting_configurat
     finally:
         monkeypatch.setenv("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
         common.configure_determinism(previous)
+
+
+@pytest.mark.parametrize("inductor", [False, True])
+def test_kernel_cache_is_resolved_before_warmup_and_stays_fixed(tmp_path, monkeypatch, inductor):
+    monkeypatch.delenv("TRITON_CACHE_DIR", raising=False)
+    monkeypatch.delenv("TORCHINDUCTOR_CACHE_DIR", raising=False)
+    monkeypatch.setenv("speck_base_dir", str(tmp_path / "speck"))
+    if inductor:
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setenv("TORCHINDUCTOR_CACHE_DIR", "inductor")
+    root = tmp_path / ("inductor" if inductor else "speck")
+    expected = str(root / "triton")
+    assert common.configure_kernel_cache() == expected
+    # Later compiler initialization or a working-directory change cannot move FLA's cache.
+    monkeypatch.setenv("TORCHINDUCTOR_CACHE_DIR", str(tmp_path / "another"))
+    monkeypatch.chdir(tmp_path.parent)
+    assert common.configure_kernel_cache() == expected
+
+
+def test_kernel_cache_preserves_an_explicit_operator_path(tmp_path, monkeypatch):
+    expected = str(tmp_path / "shared-triton")
+    monkeypatch.setenv("TRITON_CACHE_DIR", expected)
+    monkeypatch.setenv("TORCHINDUCTOR_CACHE_DIR", str(tmp_path / "inductor"))
+    assert common.configure_kernel_cache() == expected
 
 
 @pytest.mark.parametrize(

@@ -30,9 +30,12 @@ receipts remain unchanged.
 The [local compiled recovery screen](../experiments/qualification/compiled-recovery-3090.json)
 failed on the 318M proxy: both production-trainer processes completed, but 286 of 321 saved model
 tensors exceeded the existing restart tolerance. Loader/RNG state and counters matched exactly.
-The cause is unresolved. Compiled typed-output execution succeeds, but that does not qualify
-recovery. Keep compiled throughput runs exploratory; isolate model and optimizer compilation from
-the same checkpoint before promoting the recipe. This is an Ampere finding, not a Hopper result.
+One cause is a cache change between eager FLA warmup and lazy Inductor initialization: identical
+KDA inputs selected different cached kernels. Runtime setup now fixes the Triton cache before
+either path starts. A full replay with that cache held fixed still failed, so remaining divergence
+must be isolated before promoting the recipe. Compiled typed-output execution succeeds, but does
+not qualify recovery. Keep compiled throughput runs exploratory. This is an Ampere finding, not a
+Hopper result.
 
 ## Measurement definitions
 

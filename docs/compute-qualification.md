@@ -145,7 +145,8 @@ uv run --no-sync python -m scripts.training_replay /workspace/gh200-transfer/rel
 This is a runtime and recovery measurement. It is not a production continuation, a throughput
 guarantee, or permission to extend the base horizon. The second invocation is the only place the
 selected compiled recipe meets four-worker DDP before production; allow the longer deadline for
-max-autotune warmup and export a persistent `TORCHINDUCTOR_CACHE_DIR` first.
+max-autotune warmup and export a persistent `TORCHINDUCTOR_CACHE_DIR` first. Preserve its `triton/`
+subdirectory too (or an explicitly configured `TRITON_CACHE_DIR`); it holds FLA kernel choices.
 
 ## Accounting and receipts
 

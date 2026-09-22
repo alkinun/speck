@@ -6,11 +6,25 @@ import torch
 import torch.distributed as dist
 
 
+def configure_kernel_cache():
+    """Fix Triton's cache before either eager FLA or Inductor initializes kernels."""
+
+    if "TRITON_CACHE_DIR" not in os.environ:
+        root = os.environ.get("TORCHINDUCTOR_CACHE_DIR") or base_dir()
+        os.environ["TRITON_CACHE_DIR"] = os.path.abspath(
+            os.path.expanduser(os.path.join(root, "triton"))
+        )
+    return os.environ["TRITON_CACHE_DIR"]
+
+
 def configure_determinism(enabled):
     """Select reproducible PyTorch kernels before CUDA matrix multiplication starts."""
 
     if type(enabled) is not bool:
         raise ValueError("deterministic must be boolean")
+    # Inductor otherwise changes this lazily, after a resumed trainer's eager FLA warmup.
+    # Different autotune caches can select numerically different kernels on the same GPU.
+    configure_kernel_cache()
     if enabled:
         workspace = os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
         if workspace not in {":4096:8", ":16:8"}:

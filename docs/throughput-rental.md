@@ -75,6 +75,7 @@ cd code
 uv sync --locked --python 3.10 --extra gpu --extra linear --group dev --group transformers
 uv run --no-sync python -m scripts.gh200_check bind ..
 export TORCHINDUCTOR_CACHE_DIR=$PWD/../inductor-cache   # preserve across runs
+export TRITON_CACHE_DIR=$TORCHINDUCTOR_CACHE_DIR/triton # also preserve FLA kernel choices
 export CUBLAS_WORKSPACE_CONFIG=:4096:8               # required by the deterministic recipe
 mkdir -p ../results/throughput-h100
 nvidia-smi --query-gpu=name,memory.total,clocks.max.sm --format=csv

@@ -25,7 +25,11 @@ therefore measures their combined gain. The production call also requests typed 
 
 Use the [H100 rental](throughput-rental.md) to measure single-GPU implementation deltas. Then
 qualify compiled four-worker DDP with `scripts.training_replay --compile` on the grant hardware.
-Persist `TORCHINDUCTOR_CACHE_DIR` across requeues and include warmup in wave costs. Benchmark
+Persist `TORCHINDUCTOR_CACHE_DIR` and its Triton cache across requeues and include warmup in wave costs.
+Runtime setup fixes `TRITON_CACHE_DIR` before eager warmup or compilation: an explicit setting wins;
+otherwise it uses `triton/` under `TORCHINDUCTOR_CACHE_DIR`, or under the Speck cache directory when
+no Inductor directory is declared. Different cached FLA choices can change numerical results;
+preserving the cache is necessary for this comparison but does not by itself qualify recovery. Benchmark
 `end-to-end` mode includes packed loading, but excludes validation and saves; a sustained trainer
 run is needed to update the full-trainer overhead ratio.
 

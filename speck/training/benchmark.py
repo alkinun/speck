@@ -599,6 +599,10 @@ def run(args):
             "cuda": torch.version.cuda,
             "packages": package_versions(),
             "cublas_workspace_config": os.environ.get("CUBLAS_WORKSPACE_CONFIG"),
+            "kernel_caches": {
+                "inductor": os.environ.get("TORCHINDUCTOR_CACHE_DIR"),
+                "triton": os.environ.get("TRITON_CACHE_DIR"),
+            },
             "telemetry_started": telemetry_started,
             "telemetry_finished": telemetry_finished,
             "git_revision": git_revision(),

@@ -91,6 +91,7 @@ def summarize(paths: list[str | Path]) -> dict:
                     )
                 },
             }
+            identity["environment"]["kernel_caches"] = record["environment"].get("kernel_caches")
             if (
                 not identity["experiment"]["fingerprint"]
                 or not identity["environment"]["git_revision"]
