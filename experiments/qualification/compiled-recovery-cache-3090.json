@@ -1,0 +1,68 @@
+{
+  "format": "speck_compiled_recovery_diagnosis",
+  "format_version": 1,
+  "date": "2026-09-22",
+  "status": "cache_switch_fixed_recovery_still_fails",
+  "original_failure": "experiments/qualification/compiled-recovery-3090.json",
+  "scope": "Same 318M proxy and four-step, restart-at-two production replay as the original screen; single RTX 3090, Torch 2.9.1+cu128 and FLA 0.5.0. No Hopper or flagship claim.",
+  "cause_established": {
+    "mechanism": "Inductor lazily sets TRITON_CACHE_DIR when unset. A resumed trainer can first warm eager FLA from another cache, retaining different in-memory kernel choices.",
+    "first_kda_inputs": "Query, key, value, gate and beta matched bitwise; log-rate and bias matched the saved checkpoint.",
+    "different_cached_choices": [
+      "l2norm: BT=16/warps=1 versus BT=8/warps=2",
+      "gate cumsum: BS=32 versus BS=16"
+    ],
+    "first_kda_output_max_abs_difference": 7.62939453125e-06,
+    "intervention": "Select the warm-process cache before any kernel call: the isolated KDA output then matches the warm trace exactly across three repeated calls."
+  },
+  "matched_checkpoint_gradient_probe": {
+    "warm_loss": 10.556153297424316,
+    "cold_loss": 10.556153297424316,
+    "gradients_equal": 0,
+    "gradient_tensors": 320,
+    "gradients_outside_tolerance": 85
+  },
+  "runtime_fix": {
+    "commit": "61beb0ef619a2999fa43af3a241ad479acb49070",
+    "description": "Select TRITON_CACHE_DIR during runtime setup before either eager FLA warmup or Inductor. Preserve explicit paths; otherwise use triton/ under the declared Inductor directory or Speck cache. Record cache paths in benchmark receipts."
+  },
+  "clean_production_replay": {
+    "source_dirty": false,
+    "status": "failed",
+    "worker_exit_codes": [
+      0,
+      0
+    ],
+    "tolerance": {
+      "rtol": 1e-05,
+      "atol": 1e-06
+    },
+    "configuration": "Same resolved model/data/train inputs as the original screen; TORCHINDUCTOR_CACHE_DIR persisted and TRITON_CACHE_DIR unset at launch to exercise the new default.",
+    "metadata": "exact: RNG, loader, manifest and counters",
+    "model_tensors": 321,
+    "model_tensors_outside_tolerance": 255,
+    "largest_model_difference": {
+      "name": "embed_tokens.weight",
+      "max_abs": 0.00019620731472969055,
+      "outside": 992404
+    },
+    "optimizer_first_failure": "optimizer.optimizers.muon.state.0.momentum_buffer"
+  },
+  "decision": "Compiled production recovery remains unqualified. Do not relax tolerances or infer a speedup from these checks.",
+  "next_check": "Capture incoming and outgoing KDA gradients before global clipping with identical saved weights, batch and kernel cache, then isolate FLA backward from surrounding compiled backward graphs. A subsequent passing production replay must compare optimizer state too.",
+  "local_artifacts": [
+    {
+      "path": "/mnt/speck-data/speck/compiled-recovery-isolation-20260922/diagnosis-draft.json",
+      "sha256": "0b9a14e1b188302bed40e7fc9c3989d29dd19f1fa3abfb840d340685b0a7d7ea"
+    },
+    {
+      "path": "/mnt/speck-data/speck/compiled-recovery-isolation-20260922/replay-cache-fix/result.json",
+      "sha256": "07435fe82b8a254e5c0941ca87b4fbca529520a136299b06c7d304e748046e2d"
+    },
+    {
+      "path": "/mnt/speck-data/speck/compiled-recovery-isolation-20260922/replay-cache-fix/difference-summary.json",
+      "sha256": "a81809c51d60fc5dfa0561a686b5a316aa3a1692dbaa2661ab8270b08ba77c08"
+    }
+  ],
+  "training_admitted": false
+}
