@@ -1,12 +1,12 @@
 # Evaluation
 
-Use the capability table in [PLAN.md](../PLAN.md#what-success-means) as the reporting outline. Measure math, coding,
+Use the capability table in [the program overview](program.md#what-success-means) as the reporting outline. Measure math, coding,
 tools, reliability, and broad usefulness separately; keep cost alongside quality.
 Evaluate the [training lifecycle](program.md#training-lifecycle) with identified pretraining,
 mid-training, SFT and any RL checkpoints. Stage-to-stage changes describe progression; attributing
 a gain to data requires a controlled comparison with the model, training exposure and other recipe
 settings held fixed. The primary planned control is the
-[pretraining recipe study](coding.md#first-comparison-to-prepare), before main pretraining;
+[pretraining recipe study](data.md#code-priority-and-qualification), before main pretraining;
 code-data substitution is one candidate contrast after source qualification.
 
 The final assistant target always uses the thinking protocol for coding, math and agent tasks.
@@ -15,7 +15,7 @@ tool loops and end-to-end task completion. A concise final answer does not mean 
 This future assistant contract does not change the frozen base pilot or external reference-model
 protocols below. A thinking tag alone is not evidence of useful reasoning.
 
-Coding is a first-release priority. The [coding evaluation roadmap](coding.md#evidence-for-a-coding-claim)
+Coding is a first-release priority. The [coding evaluation roadmap](data.md#code-priority-and-qualification)
 adds Python breadth, multilingual checks, and practical repair to prepare after the engineering
 pilot. Those additions need their own frozen protocol and training exclusions; they are not yet
 implemented, and the pilot's 33 development code tasks do not establish broad coding strength.

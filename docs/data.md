@@ -1,16 +1,50 @@
 # Data
 
-The stage-specific policy for the 5,000 GPU-hour program is in [`data-strategy.md`](data-strategy.md). This document describes the shared data contract and implementation details; the strategy document defines where natural, derived and synthetic records may enter.
-
-The goal and next work are defined in [PLAN.md](../PLAN.md), with the complete outline in
-[the program overview](program.md). The engineering pilot is complete. Prepare the main corpus
-against the working mixture and actual eligible supply; frozen pilot shares are historical.
+This document owns the data contract for the 5,000 GPU-hour program: the shared pipeline, where
+natural, derived and synthetic records may enter, the retained inventory, and the code route. The
+goal and next work are defined in [PLAN.md](../PLAN.md), with the complete outline in
+[the program overview](program.md), which owns stage boundaries and budgets. The engineering pilot
+is complete. Prepare the main corpus against the working mixture and actual eligible supply; frozen
+pilot shares are historical. No document here authorizes a training run.
 
 ## Pipeline
 
 Pin source revisions and permitted use → acquire/filter → deduplicate and exclude evaluation
 material → partition → tokenize/pack → verify → train. Source-separated shards allow later mixture
 changes without retokenizing. Recheck tokenizer fingerprints and hashes whenever reusing stock.
+
+Every record follows the same auditable path, at every stage:
+
+1. identify the source, licence or use constraint, family, acquisition receipt and transformation history;
+2. extract with a source-specific parser, retaining the original text or artifact identity;
+3. remove exact duplicates, near duplicates, template copies and semantic repeats, while preserving
+   a family graph for held-out splits;
+4. apply quality, language, safety, benchmark-contamination and source-coverage filters;
+5. attach lineage, quality dimensions, derivation cost and accepted-token accounting;
+6. partition by source family before tokenization and packing;
+7. verify manifests, token counts, packing, sampling weights, checksums and resumability;
+8. train only from the hash-bound manifest, reporting exposure, replay, discarded data and
+   evaluation results separately.
+
+AI-assisted filtering may recommend keep/remove decisions, but pretraining retains the original
+source and records the model, prompt, version and decision. Generated text is a derived record and
+must never be indistinguishable from source text in a manifest.
+
+**Where derived text may enter.** The broad production pretraining mixture is natural and
+source-traceable. Late pretraining decay is the *only* initial pretraining experiment that can admit
+derived text, and it must stay separately identified by lineage, teacher/generator, verification
+result and cost. Synthetic material is most acceptable in post-training, where it is generated
+inside pinned, testable environments or used for self-distillation; it remains separately attributed
+and earns its place on held-out transfer, not training reward. Derived data never compensates for
+missing natural supply.
+
+**Admission gates.** Before compute is committed, each stage must have a pinned manifest, a
+family-disjoint evaluation split, a contamination report, accepted-token or example accounting,
+reproducible checksums, measured throughput, a retry/recovery policy and a declared stop rule. The
+order is: close source and manifest readiness including the natural-code gap; run the pretraining
+data screen and freeze one recipe; qualify changed-data continuation and run the bounded
+mid-training comparisons; qualify SFT outcome checks and RL infrastructure; launch production only
+from the selected, hash-bound recipes.
 
 | Responsibility | Code / command |
 | --- | --- |
@@ -92,19 +126,10 @@ boundaries alongside image dependency. A fresh 32-document comparison shows fals
 missed defects; all candidate flags remain review-only. Sample token retention is measured,
 but eligible full-corpus supply and a better score cutoff remain unestablished.
 
-The [coding plan](coding.md) treats checked exercises as one candidate for the pretraining recipe
-comparison before the main base allocation. Its [completed qualification summary](coding.md#completed-code-qualification)
-links the provenance, practical CPU and bundle checks. Natural-code eligibility and independent
-exercise verification remain separate; no inspected candidate is admitted by these checks.
-
-The [retained-code census](../experiments/corpus-audit/code-supply.json) verifies 714,369 files /
-476,774,847 tokens before joint eligibility: only 1.36% of the 35B natural-code preparation target.
-The [fixed Stack-Edu cohort](../experiments/corpus-audit/code-yield-result.json) has 138 files /
-459,615 tokens and 31 known-family holds. The [broader Stack v3 preflight](../experiments/corpus-audit/stack-v3-broader.json)
-acquired sixteen groups, reconciling 29,347 repository rows / 379,942 entries, then selected
-44 repositories / 80 files. Screening records four content flags and eight known-family holds; the rest
-remain unresolved. Earlier Stack v3 origin checks explain twelve selected transformations, not
-all supplied-text mismatches or source-use applicability.
+Code supply is the binding constraint on the whole horizon and has its own section below; see
+[code priority and qualification](#code-priority-and-qualification) for the census, the cohorts and
+the gates. In short: the retained stock covers 1.36% of the natural-code preparation target, and
+checked code stopped being a declared bank in the 2026-09-22 re-freeze.
 
 The [current cohort assessment](../experiments/corpus-audit/stylesheet-cohort-review.json) records
 **176 full texts / 412,974 tokens reviewed**, **44 family-held records**, and **no unheld records still
@@ -113,8 +138,8 @@ and file role are recorded separately. A family hold alone does not establish an
 match or justify replacing a sampled record. All 174 currently unheld records are read; the other
 two full reads are now held, so reading and hold counts overlap.
 
-The [coding guide](coding.md#common-cohort-review) summarizes the frozen readings, redaction
-checks and package/family evidence. The final stylesheet readings distinguish page, template and
+The [corpus-audit record](../experiments/corpus-audit/README.md) holds the per-batch readings,
+redaction checks and package/family evidence. The final stylesheet readings distinguish page, template and
 component roles. The [notice follow-up](../experiments/corpus-audit/code-notice-provenance.json)
 adds seven verified host origins and reconfirms one, recovering Objective-C repository and Eclipse
 notice context. Eclipse declares separate code/non-code licenses; template attribution and restrictive
@@ -362,6 +387,83 @@ including derived exercises, teacher traces and RL prompts. Exact continuation/e
 budgets and any later preference/RL phase remain to be frozen. Long-context qualification must
 measure retrieval across positions, cross-document reasoning, sustained generation and short-task
 retention, alongside memory/runtime. A configured maximum alone does not establish usable context.
+
+## Code priority and qualification
+
+Agentic coding, general coding and math reasoning are the primary first-release targets. Code
+quality is a pretraining requirement, not only a post-training concern: natural code, tests,
+documentation and correct worked explanations should establish useful foundations before
+reasoning-SFT. Preserve practical API use, debugging and repository relationships alongside
+algorithmic exercises. The pilot's code weight is an engineering setting, not the target.
+Long-context preparation retains coherent repository units and dependencies for 16K/32K
+qualification; an arbitrary concatenation of unrelated files is not repository-level supervision.
+Split original repositories and derived tasks together to protect held-out repair and agent
+evaluations.
+
+**Qualification rules.** Natural source code needs immutable identity, applicable source-use
+evidence, intact useful content, family/benchmark exclusions and joint deduplication. It does *not*
+need to pass invented tests to be natural-code material. Verified exercises additionally require
+clear specifications, same-revision implementation/test linkage, bound dependencies, independent
+oracles and deliberately wrong controls; tests generated alongside a solution establish
+self-consistency only. Keep natural-code and verified-exercise outcomes separate throughout
+preparation and experiments. Preserve original bytes and notices, upstream content IDs,
+repository/commit/file identities and consumed-text hashes. Encoding changes, redaction and notebook
+cleanup require explicit provenance; never disable exact-byte checks to accommodate an unexplained
+mismatch. Related originals, forks, rewrites, patches and exercises belong to the same
+exclusion/partition family. A clean bounded screen or a publisher licence label alone authorizes
+nothing.
+
+**Supply position.** The [retained-stock census](../experiments/corpus-audit/code-supply.json)
+verifies 714,369 files / 476,774,847 tokens before joint eligibility across 11 languages: 1.36% of
+the 35B natural-code preparation target, which makes natural code the bank where the whole horizon
+binds. That stock supports at most **1.36B total one-pass tokens at 35% natural code**, before
+exclusions, validation and other bank constraints. The
+[corpus-audit record](../experiments/corpus-audit/README.md) owns the per-batch narrative — the
+stratified 138-file yield preflight, the Stack v3 cohort, the completed 176-file reading pass, the
+44 family holds and the origin/notice recovery — and its receipts hold the evidence. Repetition is
+not an approved way to fill the gap.
+
+**First comparison to prepare.** The
+[research design](../experiments/main-data/README.md#research-before-the-main-run) owns the
+screening/confirmation matrix, controls, cost caps and decision rules. Screening permits one
+code-bank candidate, one natural-web candidate and one calibrated AI-generation/provenance-filter
+candidate, each against the same qualified baseline. The code candidate is the natural-source
+contrast (Stack-Edu versus Stack v3). Keep total code share, non-intervened language coverage,
+non-code banks and serialization fixed. Checked code is no longer a declared bank, so do not add it
+back as an extra arm or fill a code quota by repeating a tiny bank. A source swap does not test
+repository packing, and checked-code substitution would not isolate synthesis, selection and
+verification separately.
+
+**Evidence for a coding claim.** Keep the pilot's compiled HumanEval+ metric as a continuity check;
+33 development tasks cannot establish broad coding strength. Prepare a separate pinned protocol
+before admitting new data:
+
+| Dimension | Next evidence |
+| --- | --- |
+| Python generation | HumanEval+ continuity plus MBPP+ through a declared [EvalPlus](https://github.com/evalplus/evalplus) protocol |
+| Language coverage | Selected [MultiPL-E](https://github.com/nuprl/MultiPL-E) languages, reporting each separately |
+| Harder generation and repair | A fixed release/date window of [LiveCodeBench](https://github.com/LiveCodeBench/LiveCodeBench), with explicit test variant and output limits |
+| Practical use | Bounded held-out tasks for library use, debugging and repair, scored against independent hidden tests |
+| General usefulness | Existing math, instruction following, knowledge/reasoning checks, and per-source held-out loss |
+
+These are planned, not implemented or scored. Freeze task-family partitions and exclusion identities
+before data selection, fit prompts and output within the context budget, pin Python/library
+versions, and re-run reference models under the same protocol. Report denominators, uncertainty,
+execution failures, output tokens and runtime; do not tune against the final partition or equate our
+compiled metric with the official leaderboard.
+
+**Repository change data.** Qualify 8–16 repository repair cases before any bulk route. Retain
+origin, licence evidence, immutable parent/fix commits, issue specification, changed files, patch
+and environment/dependency identities. Exclude benchmark/task families before acquisition,
+deduplicate commits that also occur in pull requests, and group related files by repository for
+partitioning. Prevent post-fix state or hidden-test answers from leaking into task inputs. Run
+checks only in the existing sandbox: at least one relevant test must fail before the fix and pass
+after it, while declared regression tests keep passing. Verify empty-patch failure and
+reference-patch success repeatedly; reject flaky or underspecified cases, and record
+environment/setup failures separately from incorrect solutions. Before training on change examples,
+specify how pre-change context is loss-masked and patches are supervised, and audit
+processed-context and supervised-token totals independently — the current plain pretraining pack
+does not implement that objective.
 
 ## Artifact discipline
 

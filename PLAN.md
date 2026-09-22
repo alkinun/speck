@@ -297,58 +297,40 @@ comparisons from useful parents only after the recorded runtime gaps are closed.
 
 ## Compute
 
-The [numeric plan](experiments/main-data/plan.json) reserves **120 hours for runtime and
-efficiency qualification, 1,230 for data experiments, 1,800 for 4K base production, 600 for
-capability/context/agentic mid-training production, 800 for post-training production and 450 for
-evaluation/recovery: 5,000 total**. Data research divides into 700/360/170 hours across
-pretraining/mid-training/post-training.
+The [numeric plan](experiments/main-data/plan.json) owns the reservation table and
+[the overview](docs/program.md#compute-and-allocation) renders it with subdivisions, shares and
+four-GPU equivalents. It reserves **120 hours for runtime and efficiency qualification, 1,230 for
+data experiments, 1,800 for the 4K base reservation, 600 for capability/context/agentic
+mid-training production, 800 for post-training production and 450 protected for
+evaluation/recovery: 5,000 total GPU-hours**. Data research divides into 700/360/170 hours across
+pretraining/mid-training/post-training. Inside the base reservation: **1,550 stable phase, 250
+endpoint decay**. Inside post-training: **450 SFT, 200 conditional RL, 100 final self-SFT, 50
+teacher and verification work**. `speck/operations/slurm.py` enforces the scheduled/protected split
+of 4,550 + 450, and `make plan-check` fails if those constants, or any of these figures written in
+prose, drift from the plan.
 
-The architecture/efficiency reservation is gone. Its 200 hours were released on 2026-09-21: 180 to
-data research (100/60/20) and 20 to reference-only training and inference profiling inside runtime
-qualification, which the deferred study used to own.
+Two things about this allocation are easy to get wrong, so they are restated here rather than only
+in the overview:
 
-Two production stages now carry their own lines so the six-stage claim is backed by accounting
-rather than prose. Inside the 1,800-hour base reservation: **1,550 stable phase, 250 endpoint
-decay**. Inside the 800-hour post-training reservation: **450 SFT, 200 conditional RL, 100 final
-self-SFT, 50 teacher and verification work**.
+- **A throughput surplus does not buy a longer base run.** At the measured H100 full-trainer rate
+  the 1,800-hour reservation supports about 83.3B tokens before long-context and agentic overhead,
+  so the 80B working horizon has little margin; an illustrative 80% rate supports about 66.7B. If
+  the measured rate beats the anchor the horizon still does not move — the predeclared surplus rule
+  sends those hours to data research and the supply-bound stages, because this release is bounded by
+  eligible tokens, not compute. A shortfall reduces the horizon and never the protected
+  reservations. Freeze the final horizon only after GH200 throughput and the 16K/32K costs are
+  measured; 100B and the old 320B/400B scales are deferred.
+- **Four GPUs are not four times cheaper.** They increase aggregate speed while consuming four
+  GPU-hours per elapsed hour, and close no per-GPU efficiency gap. No GH200 or distributed speedup
+  is assumed, the rough 90-calendar-day window is not 90 days of continuous four-GPU funding, and
+  completed external rental costs stay outside this allocation. No GH200 jobs have launched.
 
-Each experiment includes its preparation, evaluations, retries and allocated idle time; production
-exposures are separate. Capability production is separately budgeted in the 600-hour mid-training
-reservation; the 80B 4K-base horizon uses the 1,800-hour base reservation.
-`speck/operations/slurm.py` enforces the scheduled/protected split of 4,550 + 450, and
-`make plan-check` fails if those constants drift from this table.
-The [overview](docs/program.md#compute-and-allocation) records subdivisions and gates. Context tokens
-remain unset until measured qualification; 64K/128K is deferred. The protected reserve is smaller and
-must remain explicit. Completed external rental costs stay separate from this allocation.
+## Stage 5 and 6 coverage is unclaimed
 
-At the measured H100 full-trainer rate, the revised 1,800-hour 4K reservation supports about 83.3B
-tokens before long-context and agentic overhead. The 80B working horizon therefore leaves little
-margin, and an illustrative 80% rate supports about 66.7B. The final horizon must be frozen only
-after GH200 throughput and the 16K/32K costs are measured; 100B is deferred. If the measured rate
-instead beats the anchor, the horizon still does not move: the predeclared surplus rule sends those
-hours to data research and to the supply-bound stages, because this release is bounded by eligible
-tokens rather than by compute.
-The old 320B/400B scales are deferred comparisons, not first-allocation targets.
-Four GPUs increase aggregate speed while consuming four GPU-hours per elapsed hour; they do not
-close the per-GPU efficiency gap. No GH200 or distributed speedup is assumed. The rough 90-calendar-day
-application window is not 90 days of continuous four-GPU funding. No GH200 jobs have launched.
-
-## What success means
-
-| Capability | Evidence to collect |
-| --- | --- |
-| Code and agentic coding | Standard executable code tasks plus held-out repository repair, regressions and actual task completion |
-| Math and general usefulness | Checked answers, source-wise loss, knowledge, instruction compliance and representative language tasks |
-| Thinking and tools | Correctness versus reasoning budget, valid calls, use of observations, error recovery and bounded loops |
-| Context | Positional retrieval, related-prefix benefit, multi-file/document reasoning and short-task retention |
-| Efficiency | All-in GPU-hours, tokens/FLOPs to useful quality, prefill/decode latency, memory and cost including failed attempts |
-| Openness | Identified checkpoints, source/config manifests, processing recipes, curves, costs, failure analysis and executable evaluation |
-| **Pipeline coverage** | **The primary deliverable. For each of the six stages: a data manifest with closed gates, an exposure ledger, a budget line and a receipt. A stage missing any of the four is reported as not covered.** |
-| **Pipeline reusability** | **Whether the recipe can be rerun at larger scale by someone else: pinned source identities, deterministic processing, family exclusions shared across stages, and costs recorded per stage and per token** |
-
-Coverage is claimed per stage, never in aggregate. Stages 1, 2 and 4 have trainers today. Stage 3
-still needs selective loss masks and best-fit packing; **stages 5 and 6 have no trainer at all** —
-only the fixed-policy feasibility harnesses, which perform no policy updates.
+Coverage is claimed per stage, never in aggregate, and
+[what that requires](docs/program.md#what-success-means) is fixed. Stages 1, 2 and 4 have trainers
+today. Stage 3 still needs selective loss masks and best-fit packing; **stages 5 and 6 have no
+trainer at all** — only the fixed-policy feasibility harnesses, which perform no policy updates.
 
 That gap is two decisions, not one, and they have different costs and different deadlines:
 
@@ -365,9 +347,3 @@ That gap is two decisions, not one, and they have different costs and different 
 Until the build decision is recorded, stage 5 and 6 coverage is **unclaimed**, and no release text
 may assume it. If the answer is not to build, report both stages as **not covered with the reason
 recorded** — that is an acceptable outcome, stated plainly, and it is not the same as silence.
-
-The [competitive strategy](docs/competitive.md) and [report outline](docs/report.md) define the
-comparison and release evidence. No architecture superiority claim follows from an engineering
-pilot without a matching control, and no such claim is available at all this time: the comparison
-is deferred and the backbone was fixed by declaration. Release claims must describe measured
-capability and limitations.

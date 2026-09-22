@@ -1,6 +1,6 @@
 # SpeckLabs first program: execution overview
 
-2026-09-21. SpeckLabs' first model and paper center on the data pipeline across all six training
+2026-09-22. SpeckLabs' first model and paper center on the data pipeline across all six training
 stages: our own pretrained base and an always-thinking assistant for
 agentic coding, normal coding, math and tools. This document explains the program; [PLAN.md](../PLAN.md) records
 current status and work order. The [numeric plan](../experiments/main-data/plan.json) owns working
@@ -22,8 +22,8 @@ No GPU run starts from this document.
 The future 50K-GPU-hour program is an ambition, not part of this allocation. Prior external rental
 receipts are separate from grant consumption. The completed pilot is evidence to reuse, not the
 next training job. The [model notes](model.md) define the reference backbone, which is the fixed
-substrate for this release; [competitive strategy](competitive.md) defines how its release claims
-must be measured.
+substrate for this release; the [report outline](report.md#matched-external-comparison) defines how
+its release claims must be measured against contemporary comparators.
 
 ## Training lifecycle
 
@@ -146,25 +146,21 @@ training has been qualified by the existing pilot.
 Start at **4,096 tokens**, using packed, qualified material and a frozen run manifest. Specify
 packing/document-boundary semantics and verify them consistently across KDA and global attention;
 do not silently claim repository coherence or document isolation from concatenated shards.
-Keep the starting mixture at 35% code, 25% math, 30% natural web, 5% reference/science and 5% refined
-educational web. The eight proposed banks are:
+Keep the starting mixture at 35% code, 25% math, 30% natural web, 5% reference/science and 5%
+refined educational web. The mixture was re-frozen over **six banks** on 2026-09-22: `checked_code`
+and `refined_math` held zero retained stock of any kind, so each capped a one-pass run at zero
+tokens at its declared weight. Each dropped share moved to the natural bank of its own domain, so
+total exposure stays 80B and the declared domain split is unchanged. Derived code and refined math
+are now unbanked candidates; qualifying either needs a revised freeze and its own exposure ledger,
+never a quiet pour into a natural bank.
 
-| Bank | Base-token share | Candidate source route |
-| --- | ---: | --- |
-| Natural code, tests and documentation | 30% | Stack-Edu, Stack v3 and source-resolved UltraData-Code L2; practical and multilingual coverage |
-| Checked code and repair examples | 5% | Qualified natural-code derivatives; UltraData-Code L3 held until lineage and independent checks pass |
-| Natural math/worked solutions | 20% | UltraData-Math L2, FineMath 4+, Nemotron-CC-Math `4plus` |
-| Refined math | 5% | Checked UltraData-Math L3/derivatives |
-| Selected natural web | 25% | Natural Ultra-FineWeb English, with pinned selection threshold |
-| Independent web coverage | 5% | FineWeb-Edu and/or DCLM baseline/DCLM-Edu |
-| Reference/science | 5% | FineWiki, peS2o and qualified English FinePDFs-Edu |
-| Refined educational web | 5% | Ultra-FineWeb-L3 candidate, with retained Cosmopedia as comparator |
-
-These are proposed exposure weights, not source quality scores or accepted token counts. Natural
-Ultra-FineWeb and synthetic Ultra-FineWeb-L3 are different sources. OpenBMB informs the research;
-source selection still needs local quality, coverage, lineage and overlap evidence. Keep broad
-language coverage alongside specialized material. [Data](data.md) and [coding](coding.md) retain
-audit findings and acquisition gates; [research notes](research.md) distinguish publisher evidence.
+The bank table, with candidate source routes and preparation targets, lives once in the
+[main data plan](../experiments/main-data/README.md#base-mixture); `plan.json` owns the numbers it
+renders. These are proposed exposure weights, not source quality scores or accepted token counts.
+Natural Ultra-FineWeb and synthetic Ultra-FineWeb-L3 are different sources. OpenBMB informs the
+research; source selection still needs local quality, coverage, lineage and overlap evidence. Keep
+broad language coverage alongside specialized material. [Data](data.md) retains audit findings and
+acquisition gates; [research notes](research.md) distinguish publisher evidence.
 
 Candidate releases are not automatically admitted supply. Freeze source eligibility, deduplication,
 benchmark exclusions, source-family partitions, language coverage and actual token counts first.
@@ -346,7 +342,8 @@ scheduled by milestones; no frequent manual progress polling or repeated full su
   precision, tool access and reasoning budgets where possible; disclose differences and uncertainty.
 
 Primary contemporary assistant comparators are MiniCPM5-1B, LFM2.5-1.2B-Thinking and Qwen3.5-0.8B.
-The [coding plan](coding.md) lists candidate benchmark protocols; expanded suites are not all
+The [code section of the data guide](data.md#code-priority-and-qualification) lists candidate
+benchmark protocols; expanded suites are not all
 implemented. Charge comparator inference and final scoring to the evaluation reservation.
 
 Release identified base and thinking checkpoints, tokenizer/configs, training/evaluation code,
@@ -358,6 +355,29 @@ Keep the pretraining recipe-selection study before main training as the primary 
 study. A code-data intervention is one candidate contrast after qualification. Other source audits
 guide selection but do not become training ablations automatically; each extra arm needs a cost.
 
+## What success means
+
+| Capability | Evidence to collect |
+| --- | --- |
+| Code and agentic coding | Standard executable code tasks plus held-out repository repair, regressions and actual task completion |
+| Math and general usefulness | Checked answers, source-wise loss, knowledge, instruction compliance and representative language tasks |
+| Thinking and tools | Correctness versus reasoning budget, valid calls, use of observations, error recovery and bounded loops |
+| Context | Positional retrieval, related-prefix benefit, multi-file/document reasoning and short-task retention |
+| Efficiency | All-in GPU-hours, tokens/FLOPs to useful quality, prefill/decode latency, memory and cost including failed attempts |
+| Openness | Identified checkpoints, source/config manifests, processing recipes, curves, costs, failure analysis and executable evaluation |
+| **Pipeline coverage** | **The primary deliverable. For each of the six stages: a data manifest with closed gates, an exposure ledger, a budget line and a receipt. A stage missing any of the four is reported as not covered.** |
+| **Pipeline reusability** | **Whether the recipe can be rerun at larger scale by someone else: pinned source identities, deterministic processing, family exclusions shared across stages, and costs recorded per stage and per token** |
+
+Coverage is claimed per stage, never in aggregate. A stage missing any of the four artifacts is
+reported as not covered, however good the resulting model is. [PLAN.md](../PLAN.md#stage-5-and-6-coverage-is-unclaimed)
+records which stages currently lack a trainer and the decisions that gate them.
+
+No architecture superiority claim follows from an engineering pilot without a matching control, and
+no such claim is available at all on this allocation: the comparison is deferred and the backbone
+was fixed by declaration. Release claims must describe measured capability and limitations. The
+[report outline](report.md) defines the comparison protocol, the matched external comparators and
+the release evidence.
+
 ## Storage, recovery and operational gates
 
 At uint16, 80B token IDs alone take 160GB decimal; the 100B eligible bank takes 200GB. Masks,
@@ -367,8 +387,8 @@ source simultaneously without a storage budget. Keep corpus/checkpoint payloads 
 
 Freeze clean source, environment, tokenizer and input identities for each launch. Preserve complete
 optimizer/loader/RNG state, verified copies and failure records before remote cleanup. Rebuild the
-[GH200 bundle](gh200.md) from current committed code; the historical H100 bundle is not a current
-release artifact. Qualify [Slurm](slurm.md) interruption/requeue and account for setup, failed work,
+[GH200 bundle](compute-qualification.md#entry-gate) from current committed code; the historical H100
+bundle is not a current release artifact. Qualify [Slurm](slurm.md) interruption/requeue and account for setup, failed work,
 validation, saves, allocated idle time and transfers separately. No SFT scheduler requeue or
 accelerated serving integration is assumed qualified merely because base training works.
 

@@ -4,8 +4,15 @@
   "status": "bounded_origin_and_static_test_review_complete_not_admission",
   "selection": "All four application modules from the frozen prior expansion review; no substitution. Purposeful Python-only feasibility cohort, not representative yield.",
   "input_receipts": {
-    "experiments/corpus-audit/code-expansion.json": "cd7baf97ebbf7d6898610b2ee85b37bb03a63d8fc7369e3a7ab4e4a529566b48",
+    "experiments/corpus-audit/code-expansion.json": "27758b3858331843710bc4cb98a16a89c265bc3fa37457d3e9fbdc1209a5bbe1",
     "experiments/corpus-audit/code-bundles.json": "13e5fdfd1ed66afe2efaa231b1baea59d92ebdf909c51916b552f6b39d934036"
+  },
+  "input_receipt_supersession": {
+    "experiments/corpus-audit/code-expansion.json": {
+      "hash_when_consumed": "cd7baf97ebbf7d6898610b2ee85b37bb03a63d8fc7369e3a7ab4e4a529566b48",
+      "reason": "The producer's working_demand block was recomputed after this review consumed it, when the base horizon moved from 100B to 80B on 2026-09-20. The four application modules, their revisions, recovered trees, notices and 29 verified response hashes - everything this review actually read - are unchanged. The pin is refreshed so the receipt chain verifies; the original hash is retained so the supersession stays visible.",
+      "observations_affected": false
+    }
   },
   "external_artifacts": {
     "/mnt/speck-data/speck/data-qualification-20260919/code-application-origins/selection.json": "d4c687a636c7a3dd5e47cf81c0dbf572ba7fd0e0ee527ea11a9c3e4332a56ca5",

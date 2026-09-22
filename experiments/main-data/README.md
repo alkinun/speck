@@ -1,6 +1,6 @@
 # Main data mixture and scale — working plan
 
-2026-09-20. [plan.json](plan.json) records preparation targets and reproducible cost arithmetic.
+2026-09-22. [plan.json](plan.json) records preparation targets and reproducible cost arithmetic.
 This is not a launch configuration or a claim that the required corpus is already qualified.
 The frozen H100 pilot, development evaluation and backups are complete. This working plan does
 not change their configurations or historical result receipts.
@@ -155,7 +155,7 @@ The [post-training audit protocol](post-training-audit-protocol.json) fixes the 
 deterministic SFT structure, stratified independent outcomes, tool-trajectory checks, reasoning-mode
 measurement, and fixed-policy verifier feasibility with explicit stop rules. It measures efficiency
 only after correctness, using task-conditioned length curves rather than a global shortness reward.
-Its horizon accounting records the 80B/100B working target separately from the current one-pass bounds: retained code evidence bounds a 30% share at 1.589B total tokens before exclusions, and HQ tokens distinct from retained FineWeb-Edu bound a 25% share at 1.405B. These are constraints, not qualified supply.
+Its horizon accounting records the 80B/100B working target separately from the current one-pass bounds: retained code evidence bounds the 35% natural-code share at 1.36B total tokens before exclusions, and HQ tokens distinct from retained FineWeb-Edu bound the 25% selected-web share at 1.405B. These are constraints, not qualified supply.
 The HQ comparison retains FineWeb-Edu as the control, keeps the pinned L1/HQ route as a candidate, and adopts no score cutoff or automatic repair rule; its sampled panels establish review evidence, not eligible yield.
 The natural-code route is similarly bounded: the retained Stack-Edu census has 0 eligible tokens established, the fixed Stack-Edu/Stack v3 cohorts retain all 44 family holds, and unresolved origins/404s remain outside any arm. Checked-code substitution stays separate until provenance and correctness gates close.
 The math route keeps FineMath 4+, UltraData-Math L2 and filtered InfiWebMath 4+ as separate candidates: the reversible FineMath directory view removes 1.67% of its stock as a conservative candidate, while all L2 rows still lack host metadata. The InfiWebMath sample has a conservative arithmetic triage and a hashed manual classification; it is not a correctness certificate. A single normalized cross-source link is recorded without automatic removal; Nemotron-CC-Math remains unavailable because its listed LFS hashes are unusable and no shards were acquired.
@@ -218,10 +218,14 @@ These are proposed ceilings within existing reservations, not measured durations
 
 | Reservation | Training / study slots | Shared support | Total GPU-hours |
 | --- | --- | ---: | ---: |
-| Architecture | Two arms × one seed × 60h = 120h; profiling 40h | 40h | 200 |
-| Pretraining data | Base screen: four arms × 30h = 120h; decay screen: three arms × 30h = 90h; confirmation: two arms × two new seeds × 60h = 240h | 150h | 600 |
-| Mid-training data | Proxy screen 120h; objective/packing 40h; context 40h; 1.2B confirmation 80h | 20h | 300 |
-| Post-training data | SFT: two arms × two seeds × 20h = 80h; conditional RL feasibility 20h; final self-SFT pilot 30h | 20h | 150 |
+| Pretraining data | Base screen: four arms × 30h = 120h; decay screen: three arms × two seeds × 30h = 180h; confirmation: two arms × two new seeds × 60h = 240h | 160h | 700 |
+| Mid-training data | Proxy screen 120h; objective/packing 40h; context 80h; 1.2B confirmation 80h | 40h | 360 |
+| Post-training data | SFT: two arms × two seeds × 20h = 80h; conditional RL feasibility 40h; final self-SFT pilot 30h | 20h | 170 |
+
+The architecture study no longer holds a row. Its 200 hours were released on 2026-09-21 when the
+comparison was deferred: 180 to data research (100 pretraining, 60 mid-training, 20 post-training)
+and 20 to reference-only profiling inside runtime qualification. Each row above matches its study
+packet's own `budget_check`, and `make plan-check` validates both against `plan.json`.
 
 Training slots include trainer startup, inline validation and saves. Shared support covers other
 on-allocation preparation, capability scoring, qualification and recovery. Each operation is charged
@@ -308,17 +312,29 @@ The source names below are production hypotheses; the experimental baseline deli
 its declared control source in the bank under study. Update the production source choices after
 confirmation rather than assuming every preferred candidate wins.
 
-| Component | Share | 80B exposure | Eligible unique preparation | Candidate sources / admission condition |
+This is the one prose copy of the mixture; [plan.json](plan.json) owns the numbers it renders, and
+`make plan-check` fails if the two disagree.
+
+| Bank | Share | 80B exposure | Eligible unique preparation | Candidate sources / admission condition |
 | --- | ---: | ---: | ---: | --- |
-| Selected broad natural web | 25% | 20B | 25B | Natural Ultra-FineWeb English; bind scored/HQ path and threshold after the bounded audit |
-| Independent web coverage | 5% | 4B | 5B | FineWeb-Edu and/or DCLM; select allocation after overlap and coverage measurements |
-| Natural code, tests and documentation | 30% | 24B | 30B | Stack-Edu, source-resolved UltraData-Code L2, and Stack v3 under qualification; preserve practical and multilingual coverage |
-| Checked code explanations, exercises and repair | 5% | 4B | 5B | Qualified natural-code derivatives; UltraData-Code L3 only if lineage and independent checks succeed |
-| Selected natural math / worked solutions | 20% | 16B | 20B | UltraData-Math L2, FineMath 4+, Nemotron-CC-Math `4plus`; source allocation follows comparative audit |
-| Refined math explanations / derivations | 5% | 4B | 5B | Qualified UltraData-Math L3 and verified derivatives |
-| Reference / science / technical documents | 5% | 4B | 5B | FineWiki, peS2o and qualified English FinePDFs-Edu |
-| Refined educational web | 5% | 4B | 5B | Qualified Ultra-FineWeb-L3; Cosmopedia remains a comparison source |
+| `selected_web` — selected broad natural web | 25% | 20B | 25B | Natural Ultra-FineWeb English; bind scored/HQ path and threshold after the bounded audit |
+| `independent_web` — independent web coverage | 5% | 4B | 5B | FineWeb-Edu and/or DCLM; select allocation after overlap and coverage measurements |
+| `natural_code` — natural code, tests and documentation | 35% | 28B | 35B | Stack-Edu, source-resolved UltraData-Code L2, and Stack v3 under qualification; preserve practical and multilingual coverage. Carries the whole declared code share |
+| `natural_math` — selected natural math / worked solutions | 25% | 20B | 25B | UltraData-Math L2, FineMath 4+, Nemotron-CC-Math `4plus`; source allocation follows comparative audit. Carries the whole declared math share |
+| `reference_science` — reference / science / technical documents | 5% | 4B | 5B | FineWiki, peS2o and qualified English FinePDFs-Edu |
+| `refined_web` — refined educational web | 5% | 4B | 5B | Qualified Ultra-FineWeb-L3; Cosmopedia remains a comparison source |
 | **Total** | **100%** | **80B** | **100B** | **35% code, 25% math, 40% supporting material** |
+
+The mixture was re-frozen over these six banks on 2026-09-22. `checked_code` (5%) and `refined_math`
+(5%) were removed: each held zero retained candidate stock of any kind, so each capped a one-pass run
+at zero tokens at its declared weight, however complete every other bank became. The merge was
+**within-domain, not a reassignment** — the dropped code share went to `natural_code` and the dropped
+math share to `natural_math` — so total exposure stays 80B, total eligible-unique preparation stays
+100B, and the declared 35/25/40 domain split is unchanged. The re-freeze created and destroyed no
+eligible token; it moved where the horizon binds, onto the bank whose supply is hardest to grow.
+Checked code and refined math are now **unbanked** derived candidates: qualifying either later needs
+a revised freeze and its own exposure ledger, and neither may be poured into a natural bank, because
+derived and natural lineage are separately identified.
 
 Every document has one primary bank, including cross-domain material such as mathematical code.
 Deduplicate across banks and original/derived families before counting supply. Candidate names
@@ -420,30 +436,13 @@ production reservation and is promoted only on held-out transfer.
 
 ## Compute allocation
 
-The grant allocation confirms four GH200s and 5,000 total GPU-hours within a nominal 90-day window;
-the access start, site details and hardware throughput remain unconfirmed. Use this reservation without treating previous rental reservations
-as actual provider billing:
-
-| Work | GPU-hours reserved |
-| --- | ---: |
-| Runtime and reference efficiency qualification | 120 |
-| 4K base production: 1,550 stable phase / 250 endpoint decay | 1,800 |
-| Capability/context/agentic mid-training production | 600 |
-| Post-training: 450 SFT / 200 conditional RL / 100 final self-SFT / 50 teacher and verification | 800 |
-| Data experiments: 700 pretraining / 360 mid-training / 170 post-training | 1,230 |
-| Protected evaluation and recovery | 450 |
-| **Total** | **5,000** |
-
-The architecture and efficiency study no longer holds a reservation. Its 200 hours were released on
-2026-09-21: 180 to data research and 20 to reference-only efficiency profiling inside runtime
-qualification.
+The grant confirms four GH200s and 5,000 total GPU-hours within a nominal 90-day window; the access
+start, site details and hardware throughput remain unconfirmed. [plan.json](plan.json) owns the
+reservation table and [the overview](../../docs/program.md#compute-and-allocation) renders it. This
+section owns only the horizon arithmetic that the reservations imply.
 
 The completed pilot measured **12,859 tokens/s** over the full trainer process, including cold
-startup, validation and checkpoint saves. At that single-H100 rate, 80B takes **1,728 GPU-hours**.
-The 1,800-hour reservation leaves about 72 hours before long-context overhead. Four workers
-at perfect scaling would take 22.5 days; this is arithmetic, not measured GH200 wall time. Charge
-all allocated GPUs, including idle workers. Hardware, communication, input loading and cadence
-can change the rate. GH200/multiworker qualification is still required.
+startup, validation and checkpoint saves. At that single-H100 rate:
 
 | Base scenario | H100-rate GPU-hours | Four-GPU elapsed days, ideal / illustrative 80% scaling | Effective tokens/s per GPU needed within 1,800h |
 | --- | ---: | ---: | ---: |
@@ -451,36 +450,25 @@ can change the rate. GH200/multiworker qualification is still required.
 | 320B deferred scale comparison | 6,912h | 72.0 / 90.0 | 49,383 |
 | 400B deferred scale comparison | 8,641h | 90.0 / 112.5 | 61,728 |
 
-These elapsed times assume each device matches the measured H100 before communication losses;
-80% scaling is an illustration, not a measurement. Four devices would deliver about 51.4K tokens/s
-in aggregate at perfect scaling, or 41.1K at 80%. They consume four GPU-hours per elapsed hour:
-5,000 aggregate GPU-hours permit 1,250 four-GPU hours (52.1 days), not 5,000 machine-hours.
-The recorded 90-day access window does not establish 90 days of continuous four-GPU funding.
-The allowance is **5,000 total GPU-hours**. The allocation is confirmed, but provider start timing
-and runtime qualification remain unconfirmed; the budget
-interpretation is explicit.
+So 80B fits the 1,800-hour reservation with about 72 hours to spare, before long-context and agentic
+overhead. Fitting a deferred 320B/400B scale into the same reservation would instead need about
+**3.0× / 3.8× more effective throughput per allocated GPU**, which adding workers does not deliver:
+four devices give about 51.4K aggregate tokens/s at perfect scaling or 41.1K at 80%, while consuming
+four GPU-hours per elapsed hour. These elapsed times assume each device matches the measured H100
+before communication losses, and 80% scaling is an illustration, not a measurement. GH200 per-device
+gains, larger batches and implementation improvements are all unmeasured; qualify single-worker
+efficiency and four-worker scaling separately.
 
-At the H100 reference rate, keeping the other 3,200 reserved GPU-hours brings the full program to
-approximately **9,612 GPU-hours for 320B** or **11,341 for 400B**, before any distributed penalty.
-Alternatively, fitting the base into its current 1,800-hour reservation requires about **3.0× / 3.8×
-more effective throughput per allocated GPU**. Merely adding four workers does not deliver that
-per-GPU improvement. GH200 hardware gains, larger batches and implementation improvements remain
-unmeasured; qualify single-worker efficiency and four-worker scaling separately. Do not assume the
-engineering pilot is an optimized throughput ceiling or promise a particular speedup.
-
-The 80B 4K-base horizon is now the working preparation baseline, conditional on cost and supply;
-the 100B and larger comparisons do not authorize expansion. Preserve continuation checkpoints and
-choose a compatible learning-rate schedule before training; a fully decayed run does not extend at
-no cost. The research allocation reserves 1,230 hours for data experiments, while preserving 1,800
-base, 600 mid-training and 800 post-training production hours. Historical H100 rental costs are
-separate. The backbone no longer changes under a study decision, but the throughput recipe was
-selected on a 318M proxy, so remeasure the flagship rate on GH200 before re-anchoring any horizon.
+The throughput recipe was selected on a 318M proxy, so remeasure the flagship rate on GH200 before
+re-anchoring any horizon, under the derate and surplus rules predeclared in
+`compute.throughput_reanchoring_rule`. Preserve continuation checkpoints and choose a compatible
+learning-rate schedule before training; a fully decayed run does not extend at no cost.
 
 Charge experimental training, evaluation, retries and on-allocation preparation to the appropriate
 research cap; charge selected production runs to their production phase. CPU/storage and external
-teacher API costs remain separate. Context token counts are deliberately unset; the 600-hour cap
-cannot inherit the former 8B curriculum without evidence. No extra experiment, 128K stage or RL
-campaign is implicitly funded beyond the declared caps.
+teacher API costs remain separate, as do historical H100 rental costs. Context token counts are
+deliberately unset; the 600-hour cap cannot inherit the former 8B curriculum without evidence. No
+extra experiment, 128K stage or RL campaign is implicitly funded beyond the declared caps.
 
 ## Preparation workstreams
 
