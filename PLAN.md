@@ -111,16 +111,19 @@ lacks host metadata, so no per-document attribution manifest can be produced for
 
 Every approval carries conditions, and the conditions are the substance. The two code routes are
 approved on a **per-file original-licence** basis with recovered notices, not on any dataset-level
-grant: an unlabelled or unresolved record is excluded rather than assumed permissive, the remaining 45
-quota-blocked origin lookups stay out until evidence resolves them, and all 54 content-family holds
-persist across every stage. The single record traced end to end carried a term its MIT label did not
+grant: an unlabelled or unresolved record is excluded rather than assumed permissive. The remaining
+44 unheld quota-blocked origin lookups stay out until evidence resolves them, and all recorded
+content-family holds persist across every stage. The single record traced end to end carried a term its MIT label did not
 express, which is why notice text governs and the scanner label does not.
 
-The joint family graph (`open_joint_graph`) is now the lead blocker and is deterministic offline work.
-Its [cross-source edges](experiments/main-data/joint-family-graph.json) now cover the five stocks with
-production pass databases: 675 two-document families holding 0.026% of their retained tokens, so
-cross-source duplication moves no supply bound. The partition rule, an UltraFineWeb-HQ pass and the
-join to the code family graph remain.
+The [joint candidate partitions](experiments/main-data/family-partition.json) now cover six text
+stocks, including preprocessed UltraFineWeb-HQ, and the 218-file code review cohort. The frozen
+rule assigns whole families to 90% train / 5% development / 5% final hash buckets; both legacy
+firewall reference pools remain excluded. All 675 earlier text edges survive unchanged. A new
+exact firewall match raises code cohort holds to 45. The full retained-code graph and intended
+benchmark coverage still keep `family_partition` open. Raw supply bounds above precede these
+holdout reservations and remaining eligibility gates.
+
 `source_use` is open on three of nine selected sources; `family_partition` and `finite_supply` are
 open on all nine. Source use being decided **admits nothing** — no source is admitted, no eligible
 token exists, and no acquisition or training is authorized by that record.
@@ -139,11 +142,12 @@ token exists, and no acquisition or training is authorized by that record.
 | Application origin/test review | All four source revisions, complete trees and MIT notices recovered; 29 response hashes verified | [Receipt](experiments/corpus-audit/code-application-origins.json); one direct but stale test link, no independent verification or admission |
 | Stratified code preflight | 138 files / 459,615 tokens across 11 languages and 72 strata; exact offline replay | [Receipt](experiments/corpus-audit/code-yield-result.json); 30 content flags, 31 sample family holds; full eligibility and usable yield remain unresolved |
 | Stack v3 preflight | All 16 frozen groups acquired; 29,347 repository rows / 379,942 entries; fixed 44-repository / 80-file cohort screened | [Receipt](experiments/corpus-audit/stack-v3-broader.json); four content flags, eight known-family holds; source use, quality and eligible yield unresolved; exact offline replay, no admission |
-| Common code review | 176 complete texts / 412,974 tokens reviewed; 44 of 218 records family-held; all 174 currently unheld records read (plus two now-held records) | [Reading closeout](experiments/corpus-audit/stylesheet-cohort-review.json); page/template/component roles and notice questions recorded; all holds preserved; no yield estimate or admission |
+| Common code review | 176 complete texts / 412,974 tokens reviewed; 45 of 218 records now held; all 173 unheld records read (plus three held records) | [Reading closeout](experiments/corpus-audit/stylesheet-cohort-review.json), [current holds](experiments/main-data/family-partition.json); page/template/component roles and notice questions recorded; all holds preserved; no yield estimate or admission |
 | Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
 | Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions; later full token census below |
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
 | Retained-data closeout | Full HQ token/overlap census, full math text/index reconciliation, 500K SFT format census and sampled tool-aware lengths, bounded RL inventory | [Receipt](experiments/corpus-audit/data-readiness.json); finite stock bounds measured, source use/correctness/family eligibility and missing banks remain open |
+| Joint family partitions | 5,492,692 candidate documents / 6,674,432,945 measured tokens; six text stocks and the code review cohort; 90/5/5 family buckets | [Receipt](experiments/main-data/family-partition.json); 45 code holds, full code inventory and benchmark coverage still open; no admission |
 | Other data preparation | 6.799B retained source tokens before joint eligibility; 500K assistant rows inventoried; finite tool-aware SFT rehearsal | [Supply](experiments/pilot/supply.json), [assistant contract](docs/assistant.md); not main-run qualified supply |
 | Training throughput pass | 2.084x over the frozen pilot recipe **on a 318M proxy**; proxy utilization 25.0% to 52.2%; selected configuration is checkpointing off, compiled with max-autotune, determinism retained, Liger loss | [Sweep](experiments/qualification/throughput-3090/sweep.json), [GH200 confirmation](experiments/qualification/throughput-gh200.json); RTX 3090 sm_86 only. **This is not a flagship speedup.** The only 1.2B point measured is the eager checkpointed baseline at 34.6% utilization, which establishes no optimized ceiling, and no checkpointing-off flagship configuration fit the 24 GiB card. Absolute rates, microbatch and checkpointing need GH200 measurement |
 | Compiled restart parity | Coordinate-descent tuning found to vary kernel choice per process and removed; compiled base replay on the 318M proxy and compiled SFT replay on the 1.2B reference pass at the unchanged tolerance with exact RNG/loader state and optimizer parity | [Base](experiments/qualification/compiled-recovery-descent-3090.json), [SFT](experiments/qualification/compiled-sft-recovery-3090.json); one RTX 3090 worker, SFT with checkpointing on. About 0.5% proxy throughput cost. Hopper and four-worker compiled DDP remain unqualified |
@@ -228,7 +232,8 @@ bounded order and stop rules for closing those gates.
    rather than admit whatever they do not cover. Do not repeat
    the completed code reading pass or infer quality from format, length, classifier scores or notices.
    The [origin retry](experiments/corpus-audit/code-origin-recovery-20260922.json) recovered 30 more
-   exact host origins; 45 remain quota-blocked. Preserve all 44 cohort holds and separate source 404s.
+   exact host origins; after the new firewall hold, 44 unheld records remain quota-blocked.
+   Carry all 45 cohort holds into the full stock graph and every stage; keep source 404s separate.
    The mixture was re-frozen to six banks on 2026-09-22, so no bank is unsupplied; retained
    HQ and natural-code totals still bound one-pass horizons below the maximum study-hour envelopes.
    Qualify additional supply or explicitly revise the finite research recipe/horizon; no silent replay

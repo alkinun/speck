@@ -362,3 +362,27 @@ def test_firewall_match_quarantines_the_whole_code_repository(tmp_path):
         and row["hold_reasons"] == ["firewall_reference_overlap"]
         for row in code_rows
     )
+
+
+def test_near_duplicates_within_code_join_different_repositories(tmp_path):
+    first = _stock(tmp_path, "first", [SHARED])
+    second = _stock(tmp_path, "second", [SHARED])
+    code = _code_cohort(tmp_path)
+    path = Path(code["documents"]["path"])
+    rows = [json.loads(line) for line in path.read_text().splitlines()]
+    rows[1]["text"] = BASE.replace("conclusion", "result")
+    rows[1]["released_content_sha256"] = hashlib.sha256(rows[1]["text"].encode()).hexdigest()
+    path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    code["documents"] = _entry(path)
+    path = Path(code["family_inputs"]["path"])
+    graph = json.loads(path.read_text())
+    graph["records"][1].update(
+        repository="other/repository", duplicate_group=rows[1]["released_content_sha256"]
+    )
+    path.write_text(json.dumps(graph))
+    code["family_inputs"] = _entry(path)
+    report = build(
+        {**_plan(first, second), "code_cohort": code, "partition": RULE}, tmp_path / "graph"
+    )
+    assert report["edges"]["near"] == 1
+    assert report["partition"]["documents"]["code_cohort"] == {"quarantine": 2}

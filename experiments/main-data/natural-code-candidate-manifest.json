@@ -8,7 +8,7 @@
   "source_of_truth": {
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "501a3c1079accb9a7fd1878179a6d5c896093a75955e4d4749abc8cf8b9b317c"
+      "sha256": "4e2cbc3fed17682412f285250d5b734ffe7b791af8f885f10adb87ac5ae2541b"
     },
     "data_design_contract": {
       "path": "experiments/main-data/data-design-contract.json",
@@ -105,7 +105,7 @@
       ],
       "gate_status": {
         "source_use": "open_origin_and_notice_recovery",
-        "family_partition": "open_partial_graph_44_files_held",
+        "family_partition": "open_full_stock_graph_45_cohort_files_held",
         "correctness": "open_no_execution_oracle",
         "finite_supply": "no_eligible_tokens_established",
         "runtime": "open"
@@ -116,7 +116,7 @@
         "family and benchmark partition",
         "independent correctness checks",
         "eligible supply and cost",
-        "45 quota-blocked origin outcomes and one earlier unresolved outcome",
+        "44 unheld quota-blocked origin outcomes and one earlier unresolved outcome",
         "retained stock is not representative of the full upstream release"
       ]
     },
@@ -164,7 +164,7 @@
       ],
       "gate_status": {
         "source_use": "open_origin_and_notice_recovery",
-        "family_partition": "open_partial_graph",
+        "family_partition": "open_full_stock_graph_45_cohort_files_held",
         "correctness": "open_no_execution_oracle",
         "finite_supply": "bounded_review_cohort_only",
         "runtime": "open"

@@ -16,7 +16,7 @@ def test_candidate_manifests_are_receipt_bound_and_non_admitting():
 
     assert result["manifests"] == 4
     assert result["candidates"] == 9
-    assert result["receipts_checked"] == 23
+    assert result["receipts_checked"] == 24
     assert result["admitted_candidates"] == 0
     assert result["eligible_unique_tokens_established"] == 0
 

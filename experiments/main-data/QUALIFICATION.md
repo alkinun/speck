@@ -9,9 +9,10 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
 
 - Common full-read coverage is **176 files / 412,974 tokens** across the fixed 218 records.
   The [stylesheet closeout](../corpus-audit/stylesheet-cohort-review.json) adds the final three readings,
-  distinguishing page, template and component roles. All 174 currently unheld records are now read;
-  two earlier reads are now held, so the 176 readings overlap the 44 family holds. Original labels,
-  weights and document boundaries remain intact; this batch adds no verified origins.
+  distinguishing page, template and component roles. All 173 currently unheld records are read;
+  three earlier reads are now held after the [joint firewall pass](family-partition.json), which
+  raises the hold count to 45. Original labels, weights and document boundaries remain intact.
+  The reading batch added no verified origins.
   The [corpus-audit record](../corpus-audit/README.md) links the frozen earlier readings.
   The [family/provenance assessment](../corpus-audit/code-family-provenance.json) remains partial;
   the GoLLIE examples encountered earlier are exposed material when freezing final scoring coverage.
@@ -167,13 +168,14 @@ The derived origin inventory reports disjoint evidence states, retaining each so
 
 | Cohort | Family-held files / observed tokens | Verified host files / observed tokens | Attempted unresolved files / observed tokens | Unattempted files / observed tokens |
 | --- | --- | --- | --- | --- |
-| Retained Stack-Edu | 34 / 171,947 | 58 / 136,124 | 46 / 151,544 | 0 / 0 |
+| Retained Stack-Edu | 35 / 172,401 | 58 / 136,124 | 45 / 151,090 | 0 / 0 |
 | Stack v3 | 10 / 10,652 | 68 / 121,397 | 2 / 1,162 | 0 / 0 |
 
 These are evidence categories, not eligible supply or pass rates. The
 [quota-recovery pass](../corpus-audit/code-origin-recovery-20260922.json) verifies 30 more origins
-and 24 ancestor notices, preserving all 44 holds. Of the 46 unresolved Stack-Edu records,
-45 remain quota-blocked and one preserves the earlier failed attempt. One new verified origin
+and 24 ancestor notices, preserving the original 44 holds. The [joint partitions](family-partition.json)
+add one exact firewall hold. Of the 45 currently unheld unresolved Stack-Edu records,
+44 remain quota-blocked and one preserves the earlier failed attempt. One new verified origin
 uses pinned contents metadata after an oversized tree response; its notice search is incomplete.
 Fresh API requests stopped at the next quota exhaustion. Resume only after quota recovery.
 Keep the two Stack v3 404s outside training absent new evidence; do not substitute revisions or

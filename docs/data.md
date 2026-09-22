@@ -131,12 +131,13 @@ Code supply is the binding constraint on the whole horizon and has its own secti
 the gates. In short: the retained stock covers 1.36% of the natural-code preparation target, and
 checked code stopped being a declared bank in the 2026-09-22 re-freeze.
 
-The [current cohort assessment](../experiments/corpus-audit/stylesheet-cohort-review.json) records
-**176 full texts / 412,974 tokens reviewed**, **44 family-held records**, and **no unheld records still
+The [reading closeout](../experiments/corpus-audit/stylesheet-cohort-review.json) and
+[current partitions](../experiments/main-data/family-partition.json) record
+**176 full texts / 412,974 tokens reviewed**, **45 currently held records**, and **no unheld records still
 unread**. Original sampling factors and source labels are preserved; observed language, dialect
 and file role are recorded separately. A family hold alone does not establish an exact benchmark
-match or justify replacing a sampled record. All 174 currently unheld records are read; the other
-two full reads are now held, so reading and hold counts overlap.
+match or justify replacing a sampled record. All 173 currently unheld records are read; the other
+three full reads are now held, so reading and hold counts overlap.
 
 The [corpus-audit record](../experiments/corpus-audit/README.md) holds the per-batch readings,
 redaction checks and package/family evidence. The final stylesheet readings distinguish page, template and
@@ -146,9 +147,9 @@ notice context. Eclipse declares separate code/non-code licenses; template attri
 Java wording remain unresolved. The [pinned-origin follow-up](../experiments/corpus-audit/pinned-code-origins.json)
 adds 42 verified origins. The subsequent [retained-origin recovery](../experiments/corpus-audit/retained-code-origins.json)
 adds ten exact-match Stack-Edu origins. The [quota-recovery pass](../experiments/corpus-audit/code-origin-recovery-20260922.json)
-adds 30 more, bringing coverage to 58/104 unheld Stack-Edu and 68/70 unheld Stack v3 records.
-GitHub quota exhaustion still blocks 45 records; one earlier Stack-Edu failure and two pinned
-Stack v3 404s remain separate. These bounded recoveries do not estimate whole-stock recoverability.
+adds 30 more. With the new firewall hold, coverage is 58/103 unheld Stack-Edu and 68/70 unheld
+Stack v3 records. Quota exhaustion still blocks 44 unheld records; one earlier Stack-Edu failure
+and two pinned Stack v3 404s remain separate. These bounded recoveries do not estimate whole-stock recoverability.
 Resume blocked requests only after quota recovery. Fixed-cohort reading is complete. The named source-use decision for both code routes is
 recorded, but it is conditional on origin and notice recovery, which is still open along with
 broader family qualification, including four path-verified Stack v3 ancestor-notice searches.
@@ -420,7 +421,7 @@ binds. That stock supports at most **1.36B total one-pass tokens at 35% natural 
 exclusions, validation and other bank constraints. The
 [corpus-audit record](../experiments/corpus-audit/README.md) owns the per-batch narrative — the
 stratified 138-file yield preflight, the Stack v3 cohort, the completed 176-file reading pass, the
-44 family holds and the origin/notice recovery — and its receipts hold the evidence. Repetition is
+45 cohort holds and the origin/notice recovery — and its receipts hold the evidence. Repetition is
 not an approved way to fill the gap.
 
 **First comparison to prepare.** The

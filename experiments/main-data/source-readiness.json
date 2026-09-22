@@ -44,6 +44,10 @@
     "code_origin_recovery": {
       "path": "experiments/corpus-audit/code-origin-recovery-20260922.json",
       "sha256": "e1d9653bf199600fea0a3f3f3057104a0b03fd0158f4beccac0cc9ceeff894ec"
+    },
+    "family_partition": {
+      "path": "experiments/main-data/family-partition.json",
+      "sha256": "4c697ba0702ba2b97d1b5fdbf10f108b8211f57673d96b1294a633e1ecc78197"
     }
   },
   "gate_vocabulary": {
@@ -81,11 +85,15 @@
         {
           "path": "experiments/corpus-audit/web-filter-validation.json",
           "field": "comparison"
+        },
+        {
+          "path": "experiments/main-data/family-partition.json",
+          "field": "result.text_tokens_by_partition"
         }
       ],
       "gates": {
         "source_use": "closed",
-        "family_partition": "open_joint_graph",
+        "family_partition": "open_full_code_graph_and_benchmark_coverage",
         "correctness": "not_applicable_for_natural_text_quality_review_open",
         "finite_supply": "retained_count_only_not_eligible_count",
         "runtime": "open"
@@ -145,11 +153,15 @@
         {
           "path": "experiments/corpus-audit/web-filter-validation.json",
           "field": "comparison_and_decision"
+        },
+        {
+          "path": "experiments/main-data/family-partition.json",
+          "field": "result.text_tokens_by_partition"
         }
       ],
       "gates": {
         "source_use": "closed",
-        "family_partition": "open_joint_graph",
+        "family_partition": "open_full_code_graph_and_benchmark_coverage",
         "correctness": "not_applicable_for_natural_text_quality_review_open",
         "finite_supply": "retained_count_only_not_eligible_count",
         "runtime": "open"
@@ -241,13 +253,13 @@
           "field": "cohort_and_holds"
         },
         {
-          "path": "experiments/corpus-audit/code-origin-recovery-20260922.json",
-          "field": "result.coverage.stack_edu"
+          "path": "experiments/main-data/family-partition.json",
+          "field": "result.current_code_origin_coverage.stack_edu"
         }
       ],
       "gates": {
         "source_use": "named_decision_recorded_origin_and_notice_recovery_open",
-        "family_partition": "open_partial_graph_44_files_held",
+        "family_partition": "open_full_stock_graph_45_cohort_files_held",
         "correctness": "open_no_execution_oracle",
         "finite_supply": "no_eligible_tokens_established",
         "runtime": "open"
@@ -260,7 +272,7 @@
         "family and benchmark partition",
         "independent correctness checks",
         "eligible supply and cost",
-        "45 quota-blocked origin outcomes and one earlier unresolved outcome",
+        "44 unheld quota-blocked origin outcomes and one earlier unresolved outcome",
         "retained stock is not representative of the full upstream release"
       ],
       "qualification_evidence": {
@@ -277,17 +289,17 @@
         "fixed_cohort": {
           "original_files": 138,
           "original_tokens": 459615,
-          "family_held_files": 34,
-          "family_held_tokens": 171947,
+          "family_held_files": 35,
+          "family_held_tokens": 172401,
           "host_verified_unheld_files": 58,
           "host_verified_unheld_tokens": 136124,
-          "attempted_unresolved_files": 46,
-          "attempted_unresolved_tokens": 151544
+          "attempted_unresolved_files": 45,
+          "attempted_unresolved_tokens": 151090
         },
         "origin_recovery": {
-          "unheld_records": 104,
+          "unheld_records": 103,
           "host_verified": 58,
-          "quota_blocked": 45,
+          "quota_blocked": 44,
           "earlier_unresolved": 1
         },
         "decision": "retain_as_natural_code_candidate_only; no yield estimate or study route selected",
@@ -336,7 +348,7 @@
       ],
       "gates": {
         "source_use": "named_decision_recorded_origin_and_notice_recovery_open",
-        "family_partition": "open_partial_graph",
+        "family_partition": "open_full_stock_graph_45_cohort_files_held",
         "correctness": "open_no_execution_oracle",
         "finite_supply": "bounded_review_cohort_only",
         "runtime": "open"
@@ -450,11 +462,15 @@
         {
           "path": "experiments/corpus-audit/result.json",
           "field": "sources[id=finemath_4plus]"
+        },
+        {
+          "path": "experiments/main-data/family-partition.json",
+          "field": "result.text_tokens_by_partition"
         }
       ],
       "gates": {
         "source_use": "closed",
-        "family_partition": "open_joint_graph",
+        "family_partition": "open_full_code_graph_and_benchmark_coverage",
         "correctness": "open_independent_solution_checks",
         "finite_supply": "retained_count_only_not_eligible_count",
         "runtime": "open"
@@ -585,11 +601,15 @@
         {
           "path": "/mnt/speck-data/speck/document-token-stock-v1/cosmopedia_v2/manifest.json",
           "kind": "retained_token_stock_manifest"
+        },
+        {
+          "path": "experiments/main-data/family-partition.json",
+          "field": "result.text_tokens_by_partition"
         }
       ],
       "gates": {
         "source_use": "closed",
-        "family_partition": "open_joint_graph",
+        "family_partition": "open_full_code_graph_and_benchmark_coverage",
         "correctness": "open_generated_content_quality_review",
         "finite_supply": "retained_count_only_not_eligible_count",
         "runtime": "open"
@@ -621,11 +641,15 @@
         {
           "path": "/mnt/speck-data/speck/document-token-stock-v2/pes2o_v3/manifest.json",
           "kind": "retained_token_stock_manifest"
+        },
+        {
+          "path": "experiments/main-data/family-partition.json",
+          "field": "result.text_tokens_by_partition"
         }
       ],
       "gates": {
         "source_use": "named_decision_recorded_v3_license_semantics_open",
-        "family_partition": "open_joint_graph",
+        "family_partition": "open_full_code_graph_and_benchmark_coverage",
         "correctness": "open_science_quality_review",
         "finite_supply": "retained_count_only_not_eligible_count",
         "runtime": "open"
@@ -658,11 +682,15 @@
         {
           "path": "/mnt/speck-data/speck/document-token-stock-v1/finewiki_en/manifest.json",
           "kind": "retained_token_stock_manifest"
+        },
+        {
+          "path": "experiments/main-data/family-partition.json",
+          "field": "result.text_tokens_by_partition"
         }
       ],
       "gates": {
         "source_use": "closed",
-        "family_partition": "open_joint_graph",
+        "family_partition": "open_full_code_graph_and_benchmark_coverage",
         "correctness": "open_reference_quality_review",
         "finite_supply": "retained_count_only_not_eligible_count",
         "runtime": "open"

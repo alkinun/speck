@@ -16,7 +16,7 @@
     },
     "post_training_packet": {
       "path": "experiments/main-data/post-training-study-packet.json",
-      "sha256": "f63f6a9791848a40e284ee5279d03ac4db1a339ea05e9a5aafb40c05c9aa08fc"
+      "sha256": "433a84a6e8ff3e01f91cfe5eaa34717a97a04b7ee366df48603da7e0b6cbde60"
     },
     "qualification_rules": {
       "path": "experiments/main-data/qualification-rules.json",

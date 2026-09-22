@@ -1,0 +1,208 @@
+{
+  "code_inventory": {
+    "path": "/mnt/speck-data/speck/joint-family-partition-20260922/code-inventory.json",
+    "sha256": "2e497d91573879f7fdbce147e181d0f6b25200d7def9cb0292b9c73d869fc42b"
+  },
+  "date": "2026-09-22",
+  "edges": {
+    "path": "/mnt/speck-data/speck/joint-family-partition-20260922/graph/edges.jsonl",
+    "sha256": "85d6904946b01ac1a46b341feafa48aa6ed63c95ed79a01f4ac3bb842ea03169"
+  },
+  "format": "speck_joint_family_partition_receipt",
+  "format_version": 1,
+  "hq_preprocess": {
+    "path": "experiments/main-data/ultrafineweb-hq-preprocess.json",
+    "sha256": "dbc75a942648e6d21410ba0bfe56396febcd143b2848650165ee96f7273f8878"
+  },
+  "implementation_and_validation_scripts": [
+    {
+      "path": "/mnt/speck-data/speck/joint-family-partition-20260922/prepare_code.py",
+      "sha256": "5d365e7e93459ac7ffe96bf23145f79a624583c5329406073287217e4145d37c"
+    },
+    {
+      "path": "/mnt/speck-data/speck/joint-family-partition-20260922/run_graph.py",
+      "sha256": "59450d87f609682bd881f7366358d5562a5f3a62b4ce552535f8ed631eb9af79"
+    },
+    {
+      "path": "/mnt/speck-data/speck/joint-family-partition-20260922/validate_partition.py",
+      "sha256": "42dfa40bfe36ccee656015cbe77c41b32835c4ff801f2ae386a797e531f6972c"
+    },
+    {
+      "path": "/mnt/speck-data/speck/joint-family-partition-20260922/summarize.py",
+      "sha256": "8d74cb5e606087941aa1e4c36d2fcb6b57be6076cbe78bb30b4158e6f8b77f29"
+    }
+  ],
+  "method": "Hash-verified immutable pass databases, sequential table scans, production-policy exact/MinHash/Jaccard links, then transitive repository/alias/parent/duplicate links and whole-family 90/5/5 hash assignment. Both legacy firewall pools stay excluded; held code files remain in the graph and propagate quarantine. All document identities, token totals, prior edges and code-family assignments were reconciled offline.",
+  "partitions": {
+    "path": "/mnt/speck-data/speck/joint-family-partition-20260922/graph/partitions.jsonl",
+    "sha256": "aec7eec36fe86b778f272d166c4f64648ba6efa4dc36d09cad929f82fdea3a18"
+  },
+  "plan": {
+    "path": "experiments/main-data/family-partition-plan.json",
+    "sha256": "852544a32f4045722bb09c85f20f118467f29a46306bf234d46fdc58d60dbac7"
+  },
+  "remaining": [
+    "Full retained-code origin/alias/parent graph and intended benchmark coverage remain incomplete; family_partition stays open. InfiWebMath has no production stock in this graph.",
+    "The extra firewall hold removes one quota-blocked record from the unheld recovery queue: 44 unheld records remain quota-blocked, plus one earlier unresolved Stack-Edu record and two Stack v3 404s.",
+    "These are candidate splits, not eligible training supply or a blind final evaluation. Prior reading exposure must be respected; no scoring or training ran. Raw retained-stock supply bounds remain historical upper bounds before gates and holdout reservations."
+  ],
+  "report": {
+    "path": "/mnt/speck-data/speck/joint-family-partition-20260922/graph/report.json",
+    "sha256": "51ae3746aff96e062190d67655a6b2b58f4d6e975742b5312265463cbd10594b"
+  },
+  "result": {
+    "by_source_pair": [
+      {
+        "edges": 6,
+        "kind": "near",
+        "source_a": "finemath_4plus",
+        "source_b": "finewiki_en"
+      },
+      {
+        "edges": 12,
+        "kind": "near",
+        "source_a": "finemath_4plus",
+        "source_b": "ultrafineweb_hq"
+      },
+      {
+        "edges": 10,
+        "kind": "exact",
+        "source_a": "fineweb_edu",
+        "source_b": "finemath_4plus"
+      },
+      {
+        "edges": 650,
+        "kind": "near",
+        "source_a": "fineweb_edu",
+        "source_b": "finemath_4plus"
+      },
+      {
+        "edges": 9,
+        "kind": "near",
+        "source_a": "fineweb_edu",
+        "source_b": "finewiki_en"
+      },
+      {
+        "edges": 322,
+        "kind": "exact",
+        "source_a": "fineweb_edu",
+        "source_b": "ultrafineweb_hq"
+      },
+      {
+        "edges": 290,
+        "kind": "near",
+        "source_a": "fineweb_edu",
+        "source_b": "ultrafineweb_hq"
+      }
+    ],
+    "code_documents_by_partition": {
+      "development": 4,
+      "final": 9,
+      "quarantine": 45,
+      "train": 160
+    },
+    "code_firewall_matches": [
+      {
+        "content_sha256": "77bb89f9ecd6b70a8b53db0dc3de126d8ff2a63b2406a167e2f17542b0ea89ee",
+        "reference": "firewall_reference__code_primary",
+        "reference_content_sha256": "813c93c25a0ca019f89a02bfe4f6db51c1000fe1670a5f6513dea6f31606c2ba",
+        "similarity": 0.84931157572667
+      },
+      {
+        "content_sha256": "aa7cc3eee801d9aca4d09d76f0ebca3500b90f018bd901c97b0c5ff929e804f5",
+        "reference": "firewall_reference__code_primary",
+        "reference_content_sha256": "aa7cc3eee801d9aca4d09d76f0ebca3500b90f018bd901c97b0c5ff929e804f5",
+        "similarity": 1.0
+      }
+    ],
+    "code_reading": {
+      "full_reads": 176,
+      "held_reads": 3,
+      "unheld_reads": 173
+    },
+    "code_tokens_by_partition": {
+      "development": 10900,
+      "final": 7778,
+      "quarantine": 183053,
+      "train": 391095
+    },
+    "current_code_origin_coverage": {
+      "stack_edu": {
+        "attempted_unresolved": {
+          "files": 45,
+          "observed_tokens": 151090
+        },
+        "family_held": {
+          "files": 35,
+          "observed_tokens": 172401
+        },
+        "host_verified": {
+          "files": 58,
+          "observed_tokens": 136124
+        }
+      },
+      "stack_v3": {
+        "attempted_unresolved": {
+          "files": 2,
+          "observed_tokens": 1162
+        },
+        "family_held": {
+          "files": 10,
+          "observed_tokens": 10652
+        },
+        "host_verified": {
+          "files": 68,
+          "observed_tokens": 121397
+        }
+      }
+    },
+    "documents": 5492692,
+    "duplicate_components": {
+      "count": 1299,
+      "largest": 2,
+      "size_histogram": {
+        "2": 1299
+      }
+    },
+    "exact_edges": 332,
+    "near_edges": 967,
+    "new_code_holds": [
+      {
+        "content_sha256": "aa7cc3eee801d9aca4d09d76f0ebca3500b90f018bd901c97b0c5ff929e804f5",
+        "path": "SPEC/Acl.md",
+        "previous_origin_state": "attempted_unresolved",
+        "reasons": [
+          "firewall_reference_overlap"
+        ],
+        "record_id": "stack_edu:stack_edu_metadata__Markdown__eligible_000001536:1978",
+        "repository": "strategist922/bigpipe",
+        "tokens": 454
+      }
+    ],
+    "prior_code_holds_preserved": 44,
+    "prior_text_edges_unchanged": 675,
+    "text_documents_by_partition": {
+      "development": 274382,
+      "final": 275425,
+      "train": 4942667
+    },
+    "text_tokens_by_partition": {
+      "development": 333432442,
+      "final": 334488587,
+      "train": 6005919090
+    },
+    "tokens": 6674432945,
+    "unheld_quota_blocked_records": 44
+  },
+  "runtime": {
+    "gpu_hours": 0,
+    "wall_seconds": 652.2915077029029
+  },
+  "source_commit": "09d88a431047ec0380db5615d4f21924a09a6c5b",
+  "status": "six_text_stocks_and_reviewed_code_cohort_partitioned_not_admitted",
+  "training_admitted": false,
+  "validation": {
+    "path": "/mnt/speck-data/speck/joint-family-partition-20260922/validation.json",
+    "sha256": "eb87b5aff13a67e4da9c771582bc43a6d2bb8ecaa5b76cb27b7edb668e1e59c2"
+  }
+}

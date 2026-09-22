@@ -157,7 +157,7 @@ measurement, and fixed-policy verifier feasibility with explicit stop rules. It 
 only after correctness, using task-conditioned length curves rather than a global shortness reward.
 Its horizon accounting records the 80B/100B working target separately from the current one-pass bounds: retained code evidence bounds the 35% natural-code share at 1.36B total tokens before exclusions, and HQ tokens distinct from retained FineWeb-Edu bound the 25% selected-web share at 1.405B. These are constraints, not qualified supply.
 The HQ comparison retains FineWeb-Edu as the control, keeps the pinned L1/HQ route as a candidate, and adopts no score cutoff or automatic repair rule; its sampled panels establish review evidence, not eligible yield.
-The natural-code route is similarly bounded: the retained Stack-Edu census has 0 eligible tokens established, the fixed Stack-Edu/Stack v3 cohorts retain all 44 family holds, and unresolved origins/404s remain outside any arm. Checked-code substitution stays separate until provenance and correctness gates close.
+The natural-code route is similarly bounded: the retained Stack-Edu census has 0 eligible tokens established, the fixed Stack-Edu/Stack v3 cohorts retain all 45 current family holds, and unresolved origins/404s remain outside any arm. Checked-code substitution stays separate until provenance and correctness gates close.
 The math route keeps FineMath 4+, UltraData-Math L2 and filtered InfiWebMath 4+ as separate candidates: the reversible FineMath directory view removes 1.67% of its stock as a conservative candidate, while all L2 rows still lack host metadata. The InfiWebMath sample has a conservative arithmetic triage and a hashed manual classification; it is not a correctness certificate. A single normalized cross-source link is recorded without automatic removal; Nemotron-CC-Math remains unavailable because its listed LFS hashes are unusable and no shards were acquired.
 The external Cagliostro v3 review identifies OpenMathInstruct-2, FineMath's InfiWebMath 3+ subset and SmolTalk as additional candidates. The [candidate review](../corpus-audit/recipe-review.json) links bounded viewer diagnostics for OpenMath and FineMath/InfiWebMath, and the source-readiness matrix now records the separately qualified InfiWebMath 4+ candidate. OpenMath and SmolTalk remain outside that matrix; every candidate remains outside retained inventory and study arms until source-use, family/contamination, correctness, finite-supply and runtime evidence closes. A late math reweighting is a schedule hypothesis, not an additional arm.
 
@@ -480,16 +480,17 @@ separates inputs available for detailed design from the requirements for launchi
    FineWeb-Edu using the existing sampler; report content coverage, overlap and eligible tokens.
 2. Use the [completed practical checks](../corpus-audit/practical-code-checks.json) and
    [qualification packet](QUALIFICATION.md) to finish broader exclusions and family separation.
-   The [reading closeout](../corpus-audit/stylesheet-cohort-review.json) completes all 174 currently
-   unheld records in the fixed 138-file Stack-Edu and 80-file Stack v3 cohorts. The cumulative 176
-   full reads include two now-held records; all 44 family holds remain intact. Page, template and
-   component stylesheets retain their original labels, weights and document boundaries. The
+   The [reading closeout](../corpus-audit/stylesheet-cohort-review.json) completed all 174 then-unheld
+   records in the fixed 138-file Stack-Edu and 80-file Stack v3 cohorts. The cumulative 176
+   full reads now include three held records; the [joint firewall pass](family-partition.json) raises
+   the hold count to 45. Page, template and component stylesheets retain their original labels, weights and document boundaries. The
    [notice follow-up](../corpus-audit/code-notice-provenance.json) adds seven verified host origins and
    reconfirms one. The [pinned-origin follow-up](../corpus-audit/pinned-code-origins.json) adds 42 more:
    the [retained-origin recovery](../corpus-audit/retained-code-origins.json) adds ten exact-match
    Stack-Edu origins. The [quota-recovery pass](../corpus-audit/code-origin-recovery-20260922.json) adds 30 more.
-   Coverage is now 58/104 unheld Stack-Edu and 68/70 unheld Stack v3. Quota exhaustion still
-   blocks 45 records; one earlier Stack-Edu failure and two Stack v3 404s remain separate.
+   Coverage is now 58/103 unheld Stack-Edu and 68/70 unheld Stack v3. Quota exhaustion still
+   blocks 44 unheld records after the new firewall hold; one earlier Stack-Edu failure and two
+   Stack v3 404s remain separate.
    Resume quota-blocked work only after access changes; continue independent web/math work meanwhile.
    Host-origin recovery and notice availability do not establish source-use approval or admission.
    Complete broader lineage and remaining notice/revision checks. The controlled syntax diagnostic
