@@ -116,7 +116,7 @@ def _stock(tmp_path, name, texts, policy=POLICY):
         json.dumps(
             {
                 "documents": {"path": "documents.jsonl"},
-                "plan": json.dumps({"input": _entry(output)}),
+                "plan": {"input": _entry(output)},
             }
         )
     )

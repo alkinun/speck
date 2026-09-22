@@ -68,7 +68,7 @@ def _resolve(plan, verify_inputs):
             raise ValueError(f"preprocess input changed: {source['id']}")
         output = manifest["outputs"][name]
         _, stock = _bound_json(source["stock_manifest"], "stock manifest")
-        stock_input = json.loads(stock["plan"])["input"]
+        stock_input = stock["plan"]["input"]
         if (
             Path(stock_input["path"]) != manifest_path.parent / output["path"]
             or stock_input["sha256"] != output["sha256"]
