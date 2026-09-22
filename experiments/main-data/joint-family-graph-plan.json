@@ -1,0 +1,66 @@
+{
+  "format": "speck_joint_family_graph_plan",
+  "format_version": 1,
+  "sources": [
+    {
+      "id": "fineweb_edu",
+      "preprocess_manifest": {
+        "path": "/mnt/speck-data/speck/fineweb-edu-e1s-stock-v2/work/excluded/manifest.json",
+        "sha256": "61c562eb5e56ad4d73cd55913a3f2b297e3d67586ed35c89f0d673cfca9248e2"
+      },
+      "preprocess_source": "acquired_train__web",
+      "stock_manifest": {
+        "path": "/mnt/speck-data/speck/document-token-stock-e1s-v1/fineweb_edu/manifest.json",
+        "sha256": "109241b301b182678a09f01edca91c1bb67ea1cee6aafe93d0a5ac9b6a5e0a2b"
+      }
+    },
+    {
+      "id": "cosmopedia_v2",
+      "preprocess_manifest": {
+        "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/excluded/manifest.json",
+        "sha256": "2c0edbbdadd1384cea453018135231a85ef1a65a65fb17de9ef1ffc77676c17c"
+      },
+      "preprocess_source": "acquired_train__synthetic",
+      "stock_manifest": {
+        "path": "/mnt/speck-data/speck/document-token-stock-v1/cosmopedia_v2/manifest.json",
+        "sha256": "2a09fc9ee92924815de5c833b94276af2e3bf5f50e059603ada844c372c371d6"
+      }
+    },
+    {
+      "id": "finemath_4plus",
+      "preprocess_manifest": {
+        "path": "/mnt/speck-data/speck/finemath-stock-preparation-v2/work/excluded/manifest.json",
+        "sha256": "724d4689b6d1b8100c6ffc7a517ce1f5597615a3d024cbabd14403f1f2cadfc3"
+      },
+      "preprocess_source": "acquired_train__math",
+      "stock_manifest": {
+        "path": "/mnt/speck-data/speck/document-token-stock-v2/finemath_4plus/manifest.json",
+        "sha256": "fd528ccdb15626eae55d110ca064852d4938a5f733b9e0255c220cd2369adf65"
+      }
+    },
+    {
+      "id": "finewiki_en",
+      "preprocess_manifest": {
+        "path": "/mnt/speck-data/speck/finewiki-stock-preparation-v1/work/excluded/manifest.json",
+        "sha256": "bc5084971f748e3876be74a3b0a58d02a42347e42f8c4ab7fb1cc4059d8b15a3"
+      },
+      "preprocess_source": "acquired_train__reference",
+      "stock_manifest": {
+        "path": "/mnt/speck-data/speck/document-token-stock-v1/finewiki_en/manifest.json",
+        "sha256": "483277cfc8f2ab043169539b19e341e4dfbeac8b8d2c6094dc6245dbeddafaf0"
+      }
+    },
+    {
+      "id": "pes2o_v3",
+      "preprocess_manifest": {
+        "path": "/mnt/speck-data/speck/pes2o-stock-preparation-v2/work/excluded/manifest.json",
+        "sha256": "911d0b325e22117bf8e4d15d8d51ee48d639ddc7a0f2ac2a2eec18974c32fd0e"
+      },
+      "preprocess_source": "acquired_train__science",
+      "stock_manifest": {
+        "path": "/mnt/speck-data/speck/document-token-stock-v2/pes2o_v3/manifest.json",
+        "sha256": "bd5fae28d15014a67624d583785ec92e09f88a0a13a84de306b069e4869e77df"
+      }
+    }
+  ]
+}

@@ -117,6 +117,10 @@ persist across every stage. The single record traced end to end carried a term i
 express, which is why notice text governs and the scanner label does not.
 
 The joint family graph (`open_joint_graph`) is now the lead blocker and is deterministic offline work.
+Its [cross-source edges](experiments/main-data/joint-family-graph.json) now cover the five stocks with
+production pass databases: 675 two-document families holding 0.026% of their retained tokens, so
+cross-source duplication moves no supply bound. The partition rule, an UltraFineWeb-HQ pass and the
+join to the code family graph remain.
 `source_use` is open on three of nine selected sources; `family_partition` and `finite_supply` are
 open on all nine. Source use being decided **admits nothing** — no source is admitted, no eligible
 token exists, and no acquisition or training is authorized by that record.
