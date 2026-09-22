@@ -27,6 +27,13 @@ denominator sums kernel durations, not wall time, and launch markers remain sepa
 trace for overlap, idle time and classification errors before attributing a bottleneck. Historical
 receipts remain unchanged.
 
+The [local compiled recovery screen](../experiments/qualification/compiled-recovery-3090.json)
+failed on the 318M proxy: both production-trainer processes completed, but 286 of 321 saved model
+tensors exceeded the existing restart tolerance. Loader/RNG state and counters matched exactly.
+The cause is unresolved. Compiled typed-output execution succeeds, but that does not qualify
+recovery. Keep compiled throughput runs exploratory; isolate model and optimizer compilation from
+the same checkpoint before promoting the recipe. This is an Ampere finding, not a Hopper result.
+
 ## Measurement definitions
 
 | Metric | Numerator and timing boundary | Use |
