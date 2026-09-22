@@ -41,8 +41,9 @@ bitwise across processes, even from independent cold Inductor caches. Coordinate
 did not. Every compiled training path now uses the shared `COMPILE_OPTIONS`, which exclude it. The
 production replay then passed at the unchanged tolerance, including optimizer state. Paired proxy
 repeats measured the change at about 0.5% slower. The sweep's 2.084x includes coordinate descent,
-so it slightly overstates the current recipe. This is one Ampere worker; Hopper and four-worker
-compiled DDP remain unqualified.
+so it slightly overstates the current recipe. A [compiled SFT replay](../experiments/qualification/compiled-sft-recovery-3090.json)
+on the 1.2B reference, with checkpointing on, also passed. Each result is one Ampere worker; Hopper
+and four-worker compiled DDP remain unqualified.
 
 ## Measurement definitions
 

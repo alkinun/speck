@@ -1,0 +1,45 @@
+{
+  "format": "speck_compiled_recovery_screen",
+  "format_version": 1,
+  "date": "2026-09-22",
+  "status": "passed_single_worker",
+  "source_commit": "101600c249e652afa9a3f2a4033b96524a9b9f29",
+  "source_dirty": false,
+  "scope": "Single-worker compiled SFT restart on RTX 3090 with the 1.2B reference geometry. Engineering rehearsal data and a four-step base parent; not a Hopper, distributed or throughput result.",
+  "configuration": {
+    "command": "scripts.training_replay <relocated SFT rehearsal experiment> --phase sft --compile --device cuda --seconds 2400",
+    "eager_counterpart": "The same experiment passed eagerly on 2026-09-18 from source 5d322c95.",
+    "parameters": 1195884576,
+    "sequence_length": 4096,
+    "batch_size": 1,
+    "batch_tokens": 65536,
+    "steps": 4,
+    "restart_after_step": 2,
+    "activation_checkpointing": true,
+    "deterministic": true,
+    "compile_options": "COMPILE_OPTIONS (max_autotune, aggressive_fusion)",
+    "loss_backend": "liger",
+    "optimizer": "muon",
+    "training_samples": 80,
+    "torch": "2.9.1+cu128",
+    "fla": "0.5.0",
+    "triton": "3.5.1"
+  },
+  "result": {
+    "uninterrupted_and_resumed_processes": "both exited successfully",
+    "metadata": "exact: RNG and loader",
+    "rtol": 1e-05,
+    "atol": 1e-06,
+    "model_tensors": 321,
+    "optimizer_tensors": 588,
+    "supervised_gpu_hours": 0.189
+  },
+  "decision": "Compiled SFT restart parity holds for one Ampere worker with checkpointing on. SFT does not compile the Muon step, and the selected checkpointing-off recipe did not fit this card; both remain for Hopper qualification.",
+  "local_artifacts": [
+    {
+      "path": "/mnt/speck-data/speck/compiled-sft-recovery-20260922/replay/result.json",
+      "sha256": "7a8190bbb598137424e8965faa47ca3971d4b54600de160d488cef7ea110da80"
+    }
+  ],
+  "training_admitted": false
+}
