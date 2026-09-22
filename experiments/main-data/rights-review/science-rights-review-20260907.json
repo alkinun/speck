@@ -1,0 +1,44 @@
+{
+  "format": "speck_science_source_rights_review_packet",
+  "format_version": 1,
+  "status": "evidence_collected_human_acceptance_required_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "scope": "operational dataset, paper/document, attribution, redistribution, and removal review for bounded science sources; not legal advice or a final ownership determination",
+  "evidence": [
+    {"id": "pes2o_card", "revision": "636a503e44a3ca1b58e01fb61eab0825cd574de0", "path": "/mnt/speck-data/speck/evaluation-sources/science-rights-v1/allenai--peS2o/README.md", "sha256": "8cbd5c10032bf8ca29054c627bd446557272b3661fad191d3c1c80501fe900bf", "official_url": "https://huggingface.co/datasets/allenai/peS2o"},
+    {"id": "finepdfs_edu_card", "revision": "9cfabe2127faca99b3d5c4dc6d1fcb397399ebde", "path": "/mnt/speck-data/speck/evaluation-sources/science-rights-v1/HuggingFaceFW--finepdfs-edu/README.md", "sha256": "83950c5b703d8917bffcffe159d318e42f4d2b6e3527099b14747d22a8874943", "official_url": "https://huggingface.co/datasets/HuggingFaceFW/finepdfs-edu"},
+    {"id": "common_pile_arxiv_card", "revision": "033cf7f53f9b348deec868c1a5a48484f3ee9e52", "path": "/mnt/speck-data/speck/evaluation-sources/science-rights-v1/common-pile--arxiv_papers_filtered/README.md", "sha256": "fb2febb8b48af2707f623d80b9bf9938835d6a4ca27c4883c5279ec7eca10f80", "official_url": "https://huggingface.co/datasets/common-pile/arxiv_papers_filtered"},
+    {"id": "common_pile_pubmed_card", "revision": "c156f0569a92d8f2edc33cebe1f72f7d3e1cae84", "path": "/mnt/speck-data/speck/evaluation-sources/science-rights-v1/common-pile--pubmed_filtered/README.md", "sha256": "3147fca34aad7ec41f44044044b3064a2551b5a01d7b4831439064e08be3ff3f", "official_url": "https://huggingface.co/datasets/common-pile/pubmed_filtered"},
+    {"id": "proof_pile_2_card", "revision": "901a9273a770e9d4138c5ddd91802f9c5c6cdc4b", "path": "/mnt/speck-data/speck/evaluation-sources/science-rights-v1/EleutherAI--proof-pile-2/README.md", "sha256": "2db677a91d955797ca3db9c95ec9a591a7887e9311cf24e4a23cdad6d74fbc4e", "official_url": "https://huggingface.co/datasets/EleutherAI/proof-pile-2"},
+    {"id": "odc_by_1_0", "retrieved_on": "2026-09-07", "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/odc-by-1.0.html", "sha256": "7d7e622bbb4b5f21b1c5cb2dd7ce8b1b747ee2c3ab9fc8309c19082e12d13b2d", "official_url": "https://opendatacommons.org/licenses/by/1-0/"},
+    {"id": "common_crawl_terms", "terms_last_updated": "2024-03-07", "retrieved_on": "2026-09-07", "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/commoncrawl-terms.html", "sha256": "1573585e36eb372855ddb8a80718a4b52b758a7132e6c92343a828ab37cc2c60", "official_url": "https://commoncrawl.org/terms-of-use"}
+  ],
+  "source_review": {
+    "pes2o_v3": {"dataset_release": "ODC-By-1.0", "paper_source": "S2ORC/Semantic Scholar open-access corpus", "material_gap": "the pinned repository contains v3 shards marked v3-fos-license, while the pinned card calls v2 latest and documents no v3 construction or license-selection semantics", "bounded_policy": "admit only records whose v3 metadata reports CC0, CCBY, CCBYSA, pd, or public-domain; metadata filtering is engineering evidence, not legal acceptance", "human_decision_required": "obtain authoritative v3 documentation or written confirmation, validate per-paper metadata semantics, and approve attribution/removal scope"},
+    "finepdfs_edu_en": {"dataset_release": "ODC-By-1.0 plus Common Crawl terms", "document_source": "PDFs discovered through Common Crawl", "material_gap": "the shard schema exposes URL and extraction metadata but no per-document content license", "human_decision_required": "accept Common Crawl and underlying-PDF rights risk, ODC attribution, and a non-redistribution or separately approved redistribution policy"},
+    "common_pile_arxiv": {"dataset_release": "CC BY, CC BY-SA, CC0, and public-domain paper selection", "paper_source": "arXiv source files with per-record license metadata", "material_gap": "the project explicitly warns that license laundering or inaccurate metadata can cause incorrect assignment", "human_decision_required": "approve the accepted license set, attribution/share-alike delivery, metadata-reliability risk, and correction/removal process"},
+    "common_pile_pubmed": {"dataset_release": "CC BY, CC BY-SA, and CC0 article selection", "paper_source": "PubMed Central nXML with per-record license metadata", "material_gap": "the project gives the same license-laundering/inaccurate-metadata warning", "human_decision_required": "approve article-license metadata, attribution/share-alike delivery, correction/removal, and intended model/release scope"},
+    "proof_pile_2_arxiv": {"dataset_release": "no aggregate license declared", "paper_source": "RedPajama arXiv subset", "material_gap": "the card says underlying licenses are unchanged, but the bounded shard exposes arXiv ID and URL without per-paper license", "human_decision_required": "obtain a reliable per-paper license mapping or reject this tokenizer supplement"}
+  },
+  "non_conclusions": [
+    "open access means public domain or permits every training, redistribution, or commercial scope",
+    "ODC-By database rights clear copyright in each paper or PDF",
+    "a URL, arXiv ID, PMC ID, or Semantic Scholar ID establishes permission",
+    "technical metadata filtering cures inaccurate or laundered license metadata",
+    "OCR, language, security, overlap, and contamination qualification grants training authority"
+  ],
+  "acceptance_record_required": {
+    "authority": "named human with authority for the operating organization and intended use",
+    "must_record": [
+      "accepted/rejected sources, document-license identifiers, and exact evidence hashes",
+      "authoritative peS2o v3 license-selection interpretation",
+      "FinePDFs/Common Crawl and underlying-PDF risk disposition",
+      "CC BY attribution and CC BY-SA handling for paper-derived data and outputs",
+      "Proof-Pile per-paper license mapping or rejection",
+      "research, publication, model-weight release, commercial, and corpus-redistribution scope",
+      "rights/removal contact, document/hash/URL deny-ledger owner, response and rebuild policy",
+      "date, name, and signature or equivalent auditable approval"
+    ]
+  },
+  "decision": "no science source is approved by this automated review; keep bounded successors blocked until the required human acceptance record exists"
+}

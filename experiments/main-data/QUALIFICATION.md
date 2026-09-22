@@ -261,9 +261,12 @@ replay scripts, metadata ledgers, failures and source identities. It adds no tra
 The external finite inventory accounts for FineWeb-Edu as one pool even when it supplies both web
 roles. After within-HQ and exact FineWeb overlap accounting, **351,237,925 HQ tokens** remain distinct
 from the retained control, bounding a 25% candidate bank at **1,404,951,700 total one-pass tokens**
-before further exclusions. Natural code separately bounds 30% exposure at **1,589,249,490** tokens.
-These are stock upper bounds, not an executable common horizon: qualified checked-code and
-refined-math inventories are still missing. Obtain qualified supply or explicitly revise the bounded
+before further exclusions. Natural code separately bounds its 35% share at **1,362,213,848** tokens,
+which is the binding constraint on the whole horizon.
+These are stock upper bounds, not an executable common horizon. The previously missing
+checked-code and refined-math inventories were resolved by decision rather than acquisition:
+both banks were re-frozen out of the mixture on 2026-09-22 and their shares merged into the
+natural bank of the same domain. Obtain qualified supply or explicitly revise the bounded
 research recipe/horizon. Never silently replace refined shares, repeat scarce sources or treat the
 40/90-hour arm caps as guaranteed token supply. Compute reservations and main working weights are unchanged.
 
@@ -282,7 +285,7 @@ annotation. Preserve hard but useful examples, rare domains, non-English coverag
 
 Record raw tokens, deduplicated unique tokens, eligible tokens, rejected counts/reasons, source-family
 coverage and CPU/storage/teacher cost separately. Use the frozen Mistral tokenizer and retain exact
-serialization. Overlapping parent/filtered releases count once. The working eight-bank weights in
+serialization. Overlapping parent/filtered releases count once. The working six-bank weights in
 [plan.json](plan.json) remain hypotheses; the chat suggestion of an 80/20 staged mixture has not
 become a launch recipe. No 100B qualified supply or GH200 compute-feasibility claim follows from this packet.
 

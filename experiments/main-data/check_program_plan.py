@@ -133,17 +133,34 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
     ):
         raise ValueError("source-readiness horizon drifts from the working plan")
 
+    # Each domain is now one bank, so the declared domain split has a single owner and can
+    # be bound to it. Before the 2026-09-22 re-freeze these percentages were spread across a
+    # natural and a derived bank and nothing checked that they still added up.
+    by_id = {item["id"]: item for item in mixture}
+    if {"checked_code", "refined_math"} & set(by_id):
+        raise ValueError(
+            "checked_code and refined_math were re-frozen out of the mixture on 2026-09-22; "
+            "restoring either one requires a revised freeze and its own exposure ledger"
+        )
+    natural_code = by_id["natural_code"]
+    if (
+        natural_code["weight_percent"] != plan["main_pretraining"]["code_percent"]
+        or by_id["natural_math"]["weight_percent"] != plan["main_pretraining"]["math_percent"]
+    ):
+        raise ValueError("declared code/math percentages drift from their owning banks")
+
+    # The re-freeze merged the checked-code share into natural_code within the code domain,
+    # so total code demand is conserved and this receipt stays valid unmodified. Checking the
+    # conserved sum is what makes the merge safe: a reassignment across domains would fail here.
     code_expansion = _load("experiments/corpus-audit/code-expansion.json")["working_demand"]
-    natural_code = next(item for item in mixture if item["id"] == "natural_code")
-    checked_code = next(item for item in mixture if item["id"] == "checked_code")
     if (
         code_expansion["base_horizon_tokens"] != target
-        or code_expansion["natural_code_exposure_tokens"] != natural_code["exposure_tokens"]
+        or code_expansion["natural_code_exposure_tokens"]
+        + code_expansion["checked_code_exposure_tokens"]
+        != natural_code["exposure_tokens"]
         or code_expansion["natural_code_unique_preparation_tokens"]
+        + code_expansion["checked_code_unique_preparation_tokens"]
         != natural_code["eligible_unique_token_preparation_target"]
-        or code_expansion["checked_code_exposure_tokens"] != checked_code["exposure_tokens"]
-        or code_expansion["checked_code_unique_preparation_tokens"]
-        != checked_code["eligible_unique_token_preparation_target"]
     ):
         raise ValueError("code-expansion demand drifts from the working mixture")
 

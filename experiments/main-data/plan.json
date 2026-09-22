@@ -1,7 +1,7 @@
 {
   "format": "speck_main_data_working_plan",
   "format_version": 2,
-  "date": "2026-09-21",
+  "date": "2026-09-22",
   "status": "working_preparation_targets_not_launch_manifest",
   "research_scope": {
     "focus": "An open data pipeline and recipe spanning all six training stages: pretraining, endpoint decay, mid-training, post-training SFT, post-training RL and final self-distillation. The 1.2B model is the evidence that the pipeline works end to end, not the deliverable.",
@@ -183,10 +183,10 @@
       },
       {
         "id": "natural_code",
-        "role": "Qualified natural code, tests and documentation",
-        "weight_percent": 30,
-        "exposure_tokens": 24000000000,
-        "eligible_unique_token_preparation_target": 30000000000,
+        "role": "Qualified natural code, tests and documentation, carrying the whole declared code share",
+        "weight_percent": 35,
+        "exposure_tokens": 28000000000,
+        "eligible_unique_token_preparation_target": 35000000000,
         "candidate_sources": [
           "HuggingFaceTB/stack-edu",
           "openbmb/UltraData-Code:L2",
@@ -194,27 +194,20 @@
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "qualification_priority": "Retained stock is 0.477B tokens before eligibility, bounding 30% one-pass exposure at 1.59B total tokens. Fixed-cohort reading is complete; preserve all 44 family holds and original frames. Origin coverage remains 28/104 unheld Stack-Edu and 68/70 unheld Stack v3; 75 Stack-Edu outcomes are quota-blocked, one earlier outcome unresolved, and two pinned Stack v3 sources return 404. Resume only after access changes. experiments/main-data/QUALIFICATION.md owns notice/lineage, family and finite-supply gates; experiments/corpus-audit/retained-code-origins.json binds the origin inventory. Natural code and verified exercises have separate gates; no eligible yield or admission."
-      },
-      {
-        "id": "checked_code",
-        "role": "Checked code explanations, exercises and repair",
-        "weight_percent": 5,
-        "exposure_tokens": 4000000000,
-        "eligible_unique_token_preparation_target": 5000000000,
-        "candidate_sources": [
-          "qualified natural-code derivatives",
-          "openbmb/UltraData-Code:L3 if lineage resolved"
-        ],
-        "source_allocations_frozen": false,
-        "admitted_by_this_plan": false
+        "qualification_priority": "Retained stock is 0.477B tokens before eligibility, bounding 30% one-pass exposure at 1.59B total tokens. Fixed-cohort reading is complete; preserve all 44 family holds and original frames. Origin coverage remains 28/104 unheld Stack-Edu and 68/70 unheld Stack v3; 75 Stack-Edu outcomes are quota-blocked, one earlier outcome unresolved, and two pinned Stack v3 sources return 404. Resume only after access changes. experiments/main-data/QUALIFICATION.md owns notice/lineage, family and finite-supply gates; experiments/corpus-audit/retained-code-origins.json binds the origin inventory. Natural code and verified exercises have separate gates; no eligible yield or admission.",
+        "absorbed_bank": {
+          "id": "checked_code",
+          "exposure_tokens": 4000000000,
+          "eligible_unique_token_preparation_target": 5000000000,
+          "reason": "Dropped on 2026-09-22 with zero retained candidate stock of any kind. Its share stays inside the code domain rather than being reassigned to another domain, so the declared 35% code split is unchanged and experiments/corpus-audit/code-expansion.json remains valid without modification: its natural plus checked demand equals this bank exactly."
+        }
       },
       {
         "id": "natural_math",
-        "role": "Selected natural math and worked solutions",
-        "weight_percent": 20,
-        "exposure_tokens": 16000000000,
-        "eligible_unique_token_preparation_target": 20000000000,
+        "role": "Selected natural math and worked solutions, carrying the whole declared math share",
+        "weight_percent": 25,
+        "exposure_tokens": 20000000000,
+        "eligible_unique_token_preparation_target": 25000000000,
         "candidate_sources": [
           "openbmb/UltraData-Math:L2",
           "HuggingFaceTB/finemath:finemath-4plus",
@@ -224,19 +217,13 @@
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "qualification_priority": "Full retained FineMath/L2 text-index and overlap checks are recorded in experiments/corpus-audit/data-readiness.json. One normalized link is not an automatic exclusion; L2 row-level host attribution and independent solution correctness remain open. Nemotron inventory has unusable masked object hashes; no shards acquired."
-      },
-      {
-        "id": "refined_math",
-        "role": "Checked refined math explanations and derivations",
-        "weight_percent": 5,
-        "exposure_tokens": 4000000000,
-        "eligible_unique_token_preparation_target": 5000000000,
-        "candidate_sources": [
-          "openbmb/UltraData-Math:L3"
-        ],
-        "source_allocations_frozen": false,
-        "admitted_by_this_plan": false
+        "qualification_priority": "Full retained FineMath/L2 text-index and overlap checks are recorded in experiments/corpus-audit/data-readiness.json. One normalized link is not an automatic exclusion; L2 row-level host attribution and independent solution correctness remain open. Nemotron inventory has unusable masked object hashes; no shards acquired.",
+        "absorbed_bank": {
+          "id": "refined_math",
+          "exposure_tokens": 4000000000,
+          "eligible_unique_token_preparation_target": 5000000000,
+          "reason": "Dropped on 2026-09-22 with zero retained candidate stock of any kind. Its share stays inside the math domain, so the declared 25% math split is unchanged."
+        }
       },
       {
         "id": "reference_science",
@@ -275,7 +262,19 @@
     "checkpoint_policy": "Retain continuation and endpoint checkpoints. Plan the first release around an 80B 4K-base working horizon plus separately accounted capability/context continuation; freeze schedule, staged mixture and endpoint decay after qualified supply and measured GH200 cost. Any return to 100B requires a revised budget and manifest.",
     "target_status": "80B 4K-base first-allocation working horizon based on the revised 1,800-hour base reservation; conditional on eligible supply, long-context cost and GH200/multiworker qualification, not a launch commitment",
     "horizon_scope": "4K base exposure is planned separately from 4K/16K/32K capability and context continuation. Initial bank totals assume the starting 80B mixture; revise aggregate exposures when staged mixtures are frozen.",
-    "recipe_selection_gate": "Complete the bounded pretraining-data study and document selection or inconclusive outcome before freezing the main starting mixture. No useful pretrained base is required for these fresh-initialization arms. Current weights are preparation hypotheses."
+    "recipe_selection_gate": "Complete the bounded pretraining-data study and document selection or inconclusive outcome before freezing the main starting mixture. No useful pretrained base is required for these fresh-initialization arms. Current weights are preparation hypotheses.",
+    "mixture_refreeze": {
+      "decided": "2026-09-22",
+      "decision": "Re-freeze the working mixture over the six banks that have retained candidate stock. checked_code and refined_math are removed as declared banks.",
+      "reason": "Both banks had zero retained candidate stock, which capped a one-pass run at zero tokens at their declared weights however complete every other bank became. PLAN.md recorded that as a mixture decision rather than an acquisition detail; this is that decision.",
+      "method": "Within-domain merge, not reassignment: each dropped share moves to the natural bank of the same domain. Total exposure stays 80B, total eligible-unique preparation stays 100B, and the declared 35% code / 25% math / 40% supporting split is unchanged.",
+      "consequence": "The binding one-pass constraint moves from selected_web to natural_code, because raising the code share to 35% divides the same 0.477B of retained code stock by a larger weight. No eligible token is created or destroyed by this re-freeze.",
+      "derived_routes_now_unbanked": [
+        "Checked code explanations, exercises and repair",
+        "Checked refined math explanations and derivations"
+      ],
+      "reversal_rule": "If independently verified checked-code or refined-math supply is later qualified, it requires a revised freeze and a fresh exposure ledger. It may not be poured into the natural banks, because derived and natural lineage are separately identified."
+    }
   },
   "mid_training": {
     "capability_continuation": {
@@ -601,30 +600,37 @@
     "experiments/corpus-audit/web-inventory-dclm.json": "438f5f61aee6087959e461ceb20760dbc0de5d8bb775199a3711a09e617f8906",
     "experiments/corpus-audit/web-variants.json": "13917e1d1e209ea7b913579f12de5093f84e9332f7c413bfc0ffdc0a1fbb1fcf",
     "experiments/main-data/architecture-study-packet.json": "4297a531833c0135e3ceedaef094a570883c1f5c2fe38e4b2cf35565c259c390",
-    "experiments/main-data/candidate-manifest-preflight.json": "cef9a22ac16a571580288766ae8effb36c4dbf2e7bb2c8ab52d38c4ad7717bca",
-    "experiments/main-data/data-closeout.json": "7a39f7fb9dfe63c738cdaef57683a21b69edc12cbb22f0909ff47b00ae61fb80",
+    "experiments/main-data/candidate-manifest-preflight.json": "d1385569b205d8c1b65ede9b908a5568d12e6dd82890374b2b64d2e21d2fd377",
+    "experiments/main-data/code-rights-review.json": "de92fed021f777648625157c563b3fb9b4f6797f1c9bab4b5016081144d6c04d",
+    "experiments/main-data/data-closeout.json": "67dc44337d506e54b7fea6ecba868812c816ed896edf360ae882a60471426f08",
     "experiments/main-data/data-design-contract.json": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58",
     "experiments/main-data/data-study-packet.json": "f9c4c2473e1ac2f4db482b65480526bf6306dae7db8de8c86ec1cecade00b40b",
     "experiments/main-data/frontier-data-research.json": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",
-    "experiments/main-data/frontier-data-source-mapping.json": "a42a58f5c33b9ec65f7a34428b981e67460c805ff2e917058c3018cef20e4e0c",
+    "experiments/main-data/frontier-data-source-mapping.json": "7a19b209310970a2e23c15925c41d08f3500996c677c5131885c2cb2866b3d4f",
     "experiments/main-data/livecodebench-exclusion.json": "4c10bfc69ddf2f7379d2eae26bc3873ee8c5317a9d036cad495fe2728bbb536f",
-    "experiments/main-data/math-candidate-manifest.json": "ab010ba98922facd934098eaa65829ba57634d612f63cd007840f74ad7bcf12f",
-    "experiments/main-data/mid-training-study-packet.json": "bce7f48e7809d20387f4ed0ee329c6b1b16e77f1c04865e4ac7267c5107bbae1",
-    "experiments/main-data/natural-code-candidate-manifest.json": "9cdc13c30ec024f2381f87b7a7ade7124a8b5b798dcaaf72e7ff1baa61e2c29b",
-    "experiments/main-data/natural-web-candidate-manifest.json": "aac760389d374eebb5944027082a30cf31b1ce864941068d3cba6d379a2e2381",
-    "experiments/main-data/post-training-audit-protocol.json": "5da29c20cde61d38ceba5dcf0ce299990a65380be0b4bffc307ce131aaae242e",
-    "experiments/main-data/post-training-candidate-manifest.json": "c0f2efc2d00ab02f92c4086be647499a95ee5e3f3aeb97d9b2b23cc817f616a8",
+    "experiments/main-data/math-candidate-manifest.json": "a9063c58ddeaec5fd0c9c496d74900cc5354c01ae8aa394be4da1e9f09470590",
+    "experiments/main-data/mid-training-study-packet.json": "5e0f4e8f5a9c9cbfb07f2b21a5f77b2a1f25311ff4b2d1bed68f62329891a1ba",
+    "experiments/main-data/natural-code-candidate-manifest.json": "ec58aa7fc6e15ab2e79ab067ee6f5caf8739d51fa3b8a859d8dcd53612a2ccdd",
+    "experiments/main-data/natural-web-candidate-manifest.json": "30a777f1b0acd4c0af57f5cec6e68466393f55e0fb75c08b15aa486086ff847d",
+    "experiments/main-data/post-training-audit-protocol.json": "d69e53b794d9cc6fbc84706b913ef37e9b164228d47ff069aca02ac28dea4735",
+    "experiments/main-data/post-training-candidate-manifest.json": "964589acdfc03cc2ae21cc7158e4151c8d75c04074974ccda02da8336232ab39",
     "experiments/main-data/post-training-research.json": "5036027c1aa274c3f7b0f1aa6b07ad3f4a80016c90a866eee7cf27b096604c99",
-    "experiments/main-data/post-training-study-packet.json": "47cffb97f04f5ec09d7dd9d501640420125a6c0c40110eca855294874160f1a2",
+    "experiments/main-data/post-training-study-packet.json": "c1ddb284953ed89710050635e3aaff50525086c592703e770ffa8f8d3310bbf9",
     "experiments/main-data/qualification-result.json": "05e3c3c928abfc6db69c448c2353c5a19069b922c130b3de29f3979e5eeb610d",
-    "experiments/main-data/source-readiness.json": "c14b2650ec145573d0af9e75ded0ed15b73d0e655be3df37040de9491a1452b0",
+    "experiments/main-data/source-readiness.json": "8d7413b1311daa7314c4a99b698ebfbe740c45c039572fdb077e13c2599624cd",
+    "experiments/main-data/source-registry.json": "9530585316146633a5f421dc523ffe054bd904196bd09222d1a619d4e44eb483",
+    "experiments/main-data/source-rights-acceptance-template.json": "7c042152a7f82aeecbcd84d05bc32b37aed357c9bf447545d5e0bb9200d87d9b",
+    "experiments/main-data/source-rights-acceptance.json": "62215503ae86ffd01cb06e30d15ea42aaa416c7fd3a84bf390604343b11828cf",
+    "experiments/main-data/source-rights-decision-20260922.json": "38e064725d821dc5b36f82a7ba0591ab900c85ba3cecf000c7a7515af19d256a",
     "experiments/pilot/backup-result.json": "9f3248b7a50daae67a2cc3850b5afe68a5d19a2512f3fa5167a3084122bdf37a",
     "experiments/pilot/development-result.json": "c4f8b7e8226d9063398c33eec92d864488f3d1527a572816b29cb12b07d1ba69",
     "experiments/pilot/h100-run.json": "7e289c7189080bd6d3a1436cebb73a3925e73e06351972a48efe716bbb460de4",
     "experiments/pilot/supply.json": "044cdfd3d48a78f66fe39831b4f46cf4dcb6325e6e254453ba1ff5b94161b070",
     "experiments/qualification/model.json": "84d7ee22eaec7cc2b5c9ccad3c18b80af5aa73cada394ad3fb800e792e67f8e6",
     "experiments/qualification/throughput-3090/sweep.json": "56b1fce0fd067792585a950014d64d8f5610a83c2e6fe05ffaf957f622d8dddf",
-    "experiments/qualification/throughput-gh200.json": "548414a6a870f095471fd3d1539f65dcc3d8db838eae850487ac2d18435293d3",
+    "experiments/qualification/throughput-gh200.json": "dc868ce4ef96be148e5d8a28359f240c22af6f2cc82a97d2dc43d49ba3cf2f66",
+    "experiments/qualification/throughput-h100-preflight.json": "ebd7315f38f8ab55534dbb88f8427aa2d9edebcb04728855dc20636d67c30be4",
+    "experiments/qualification/throughput-h100.json": "3dafc5113caa9ecbff1f42f954fb93e7cb747bf02722275ab08498042fbbac4c",
     "experiments/qualification/timing-result.json": "3d285f483468756ef22bcf22c3a93cc9f59ca2930ea374cb84b6645a920ad7a0"
   },
   "launch_requirements": [

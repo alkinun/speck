@@ -136,7 +136,7 @@ application. It binds the FineWeb-Edu control and Ultra-FineWeb HQ candidate, pr
 overlap, and leaves source-use, family, contamination, eligible-supply and runtime gates open.
 
 The [natural-code candidate manifest](natural-code-candidate-manifest.json) now binds Stack-Edu,
-Stack v3 and the separate checked-code substitution route. It preserves the finite-stock and cohort
+Stack v3 and the separate checked-code substitution route, which is no longer a declared bank. It preserves the finite-stock and cohort
 limits, with zero eligible code tokens established and all provenance/correctness gates open.
 
 The [math candidate manifest](math-candidate-manifest.json) now separates FineMath, UltraData-Math,
@@ -175,11 +175,11 @@ gate here. Audit sources for every stage now; downstream runs require useful par
 | Thinking SFT | Eligible baseline versus outcome-verification selection from the same candidate pool. Same parent, task/length strata, masking, serialization and schedule; two paired data-order seeds with fresh optimizers. | One declared code/math or tool-task success endpoint, with general/protocol regressions and supervision density reported. Known-invalid examples enter neither arm. |
 | RL prompt feasibility | Conditional fixed-policy rollouts from the selected SFT checkpoint on candidate eligible prompt strata. | Verifier reliability, solvable difficulty, nontrivial success/failure groups and rollout cost. No RL training-data ablation is promised by this slot. |
 
-The baseline must itself pass eligibility. The 35/25/40 domain envelope and eight banks below remain
+The baseline must itself pass eligibility. The 35/25/40 domain envelope and six banks below remain
 preparation hypotheses. If a bank lacks qualified supply, explicitly revise the experimental baseline
-before making all arms; an unqualified checked-code bank is not a valid control. Within the code
-candidate, choose either a natural-source contrast (Stack-Edu versus Stack v3) or checked-code
-substitution after the fixed audits. Do not run both as undeclared extra arms. The natural-web
+before making all arms; that rule is what removed the checked-code and refined-math banks on
+2026-09-22. The code candidate is therefore the natural-source contrast (Stack-Edu versus Stack v3);
+checked-code substitution is unbanked and would need a revised freeze before it could be an arm. The natural-web
 candidate compares a qualified FineWeb-Edu control with selected Ultra-FineWeb HQ at fixed bank share;
 do not simultaneously tune the score threshold or serialization. DCLM/math alternatives enter only
 through a recorded replacement before launch, not an expanding sweep.
@@ -322,8 +322,9 @@ Deduplicate across banks and original/derived families before counting supply. C
 are not interchangeable licenses or evidence that content is already downloaded.
 
 Use existing released content first; this plan does not assume we can afford generating billions
-of new teacher tokens ourselves. The 5B checked-code exposure slot has a substantial
-unresolved supply gap. All inspected UltraData-Code L3 rows remain held. If a refined source fails
+of new teacher tokens ourselves. The former 5B checked-code preparation slot was re-frozen into
+natural code on 2026-09-22 rather than left standing against zero stock. All inspected
+UltraData-Code L3 rows remain held. If a refined source fails
 qualification or is too small, explicitly re-freeze its share into eligible natural material in the
 same domain, or shorten the horizon. Never silently repeat a small set to fill the target.
 

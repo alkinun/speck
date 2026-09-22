@@ -1,6 +1,6 @@
 # SpeckLabs: current decisions and next work
 
-Updated 2026-09-21. This is the status and work order for the first flagship program.
+Updated 2026-09-22. This is the status and work order for the first flagship program.
 Read the [program overview](docs/program.md) for the connected design, data, compute and release
 outline. [Main-data plan.json](experiments/main-data/plan.json) owns working numeric targets;
 experiment configurations and verified receipts own actual run settings and measured results.
@@ -68,37 +68,58 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 `build_supply_gap.py` and checked by `make plan-check`, so it moves as acquisition proceeds and
 cannot go stale. Today:
 
-| Bank | Preparation target | Retained candidate stock | Coverage | One-pass exposure cap |
-| --- | ---: | ---: | ---: | ---: |
-| selected_web | 25.0B | 0.351B | 1.41% | 1.40B |
-| independent_web | 5.0B | 2.307B | 46.13% | 46.13B |
-| natural_code | 30.0B | 0.477B | 1.59% | 1.59B |
-| checked_code | 5.0B | 0 | 0% | 0 |
-| natural_math | 20.0B | 1.124B | 5.62% | 5.62B |
-| refined_math | 5.0B | 0 | 0% | 0 |
-| reference_science | 5.0B | 1.402B | 28.04% | 28.04B |
-| refined_web | 5.0B | 1.489B | 29.79% | 29.79B |
-| **Total** | **100.0B** | **7.150B** | **7.15%** | — |
+| Bank | Weight | Preparation target | Retained candidate stock | Coverage | One-pass exposure cap |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| selected_web | 25% | 25.0B | 0.351B | 1.41% | 1.40B |
+| independent_web | 5% | 5.0B | 2.307B | 46.13% | 46.13B |
+| natural_code | 35% | 35.0B | 0.477B | 1.36% | 1.36B |
+| natural_math | 25% | 25.0B | 1.124B | 4.50% | 4.50B |
+| reference_science | 5% | 5.0B | 1.402B | 28.04% | 28.04B |
+| refined_web | 5% | 5.0B | 1.489B | 29.79% | 29.79B |
+| **Total** | **100%** | **100.0B** | **7.150B** | **7.15%** | — |
 
 Three facts follow, and they govern the order of work:
 
 1. **Zero eligible tokens are established.** The 7.15B is retained stock with every gate still open.
    It is an upper bound on what the gates could admit, not usable data.
-2. **Two banks have no stock at all.** `checked_code` and `refined_math` cap a one-pass run at zero
-   tokens at their declared weights. Either supply them or re-freeze the mixture without them; that
-   is a mixture decision, not an acquisition detail.
-3. **Among banks that have stock, `selected_web` binds at 1.40B — 1.76% of the 80B horizon.**
-   Every other bank could be complete and the horizon would still bind there.
+2. **No bank caps a one-pass run at zero any more.** The two that did, `checked_code` and
+   `refined_math`, held zero retained stock of any kind and were **re-frozen out of the mixture on
+   2026-09-22**. Each dropped share moved to the natural bank of its own domain, so total exposure
+   stays 80B and the declared 35% code / 25% math / 40% supporting split is unchanged. Derived code
+   and refined math are now *unbanked* candidates: qualifying either one later needs a revised
+   freeze and its own exposure ledger, never a quiet pour into a natural bank.
+3. **`natural_code` now binds at 1.36B — 1.70% of the 80B horizon.** The binding constraint moved
+   from `selected_web`, because raising the code share to 35% divides the same 0.477B of retained
+   code stock by a larger weight. Re-freezing created and destroyed no eligible token; it only
+   moved where the horizon binds, and it moved it onto the bank whose supply is hardest to grow.
 
 Closing the whole gap means roughly a **14x** increase in retained stock. That is acquisition,
 filtering and tokenization work: CPU, bandwidth and storage, consuming **no grant GPU-hours**. It
 can and should run before and during access, and it is why a throughput surplus buys nothing here.
 
-The gate matrix says where to start. `source_use` is open on all twelve candidates and eight of
-those are `open_named_decision` variants: they need a **recorded human decision**, not a
-computation. Nothing downstream moves until they close, so GH200 time spent waiting on them is
-wasted grant money. The joint family graph (`open_joint_graph` on eight candidates) is the second
-blocker and is deterministic offline work that can proceed in parallel.
+**Source use is decided.** The
+[acceptance record](experiments/main-data/source-rights-acceptance.json) was signed on 2026-09-22 by
+a named human authority over the nine sources the re-frozen mixture
+[selects](experiments/main-data/source-registry.json), at a declared scope of research training,
+paper publication and public model-weight release, with **no commercial use, no source-data
+redistribution and no derived-shard redistribution**. Six sources closed outright; three carry a
+recorded named decision with one specific mechanical dependency still open — origin and notice
+recovery for both code routes, and authoritative peS2o v3 licence-selection documentation. Three
+former candidates are recorded as **not selected**: `checked_code` and `nemotron_cc_math_4plus` with
+their dropped banks, and `ultradata_math_l2_preview` because every one of its 169,058 retained rows
+lacks host metadata, so no per-document attribution manifest can be produced for it at all.
+
+Every approval carries conditions, and the conditions are the substance. The two code routes are
+approved on a **per-file original-licence** basis with recovered notices, not on any dataset-level
+grant: an unlabelled or unresolved record is excluded rather than assumed permissive, all 75
+quota-blocked origin lookups stay out until evidence resolves them, and all 54 content-family holds
+persist across every stage. The single record traced end to end carried a term its MIT label did not
+express, which is why notice text governs and the scanner label does not.
+
+The joint family graph (`open_joint_graph`) is now the lead blocker and is deterministic offline work.
+`source_use` is open on three of nine selected sources; `family_partition` and `finite_supply` are
+open on all nine. Source use being decided **admits nothing** — no source is admitted, no eligible
+token exists, and no acquisition or training is authorized by that record.
 
 ## Completed evidence
 
@@ -163,8 +184,8 @@ The [natural-web candidate manifest](experiments/main-data/natural-web-candidate
 first source-specific application. It preserves the measured FineWeb-Edu/Ultra-FineWeb overlap while
 keeping the web contrast blocked until its remaining gates close.
 The [natural-code candidate manifest](experiments/main-data/natural-code-candidate-manifest.json)
-does the same for Stack-Edu, Stack v3 and the separate checked-code route; it records zero eligible
-code tokens and keeps the code contrast blocked.
+does the same for Stack-Edu and Stack v3; it records zero eligible code tokens and keeps the code
+contrast blocked. The separate checked-code route it also describes is no longer a declared bank.
 The [math candidate manifest](experiments/main-data/math-candidate-manifest.json) separates natural,
 filtered-web, refined/generated and unavailable math candidates; it keeps all math routes blocked until
 correctness, contamination and finite-supply gates close.
@@ -195,11 +216,14 @@ bounded order and stop rules for closing those gates.
    tokens, retained-bank exact overlap, math normalization links, assistant format/context coverage
    and a bounded RL prompt/reference inventory. The
    [qualification packet](experiments/main-data/QUALIFICATION.md#next-bounded-data-packet) owns
-   the remaining source-use, family/exclusion, correctness and finite-supply decisions. Do not repeat
+   the remaining family/exclusion, correctness and finite-supply decisions. Source use is no longer
+   among them: the [acceptance record](experiments/main-data/source-rights-acceptance.json) closed
+   it on 2026-09-22 for the nine selected sources, subject to per-source conditions that exclude
+   rather than admit whatever they do not cover. Do not repeat
    the completed code reading pass or infer quality from format, length, classifier scores or notices.
    GitHub origin recovery remains quota-blocked; preserve all 44 family holds and separate source 404s.
-   The working eight-bank mixture still lacks qualified checked-code/refined-math supply. Retained
-   HQ and natural-code totals also bound one-pass horizons below the maximum study-hour envelopes.
+   The mixture was re-frozen to six banks on 2026-09-22, so no bank is unsupplied; retained
+   HQ and natural-code totals still bound one-pass horizons below the maximum study-hour envelopes.
    Qualify additional supply or explicitly revise the finite research recipe/horizon; no silent replay
    or reassignment of derived-data shares. Use the measured assistant lengths and RL prompt links before
    selecting downstream packs. Adapter compatibility does not establish tool-task success.
@@ -210,6 +234,13 @@ bounded order and stop rules for closing those gates.
    [H100 throughput rental](experiments/qualification/throughput-h100.json) to obtain the flagship
    speedup before access. It costs no grant hours, and it is what keeps the 120-hour reservation
    from being the first place a 1.2B configuration is ever measured with checkpointing off.
+   Its [pre-flight is complete](experiments/qualification/throughput-h100-preflight.json): every
+   run's argument vector is now generated and checked against the real benchmark parser in
+   `make plan-check`, and the ladder was executed locally at the baseline configuration and in
+   end-to-end mode. Three defects were fixed that would each have failed on a metered GPU,
+   including an end-to-end run with no `--data-dir` at all. The
+   [runbook](docs/throughput-rental.md) is ready; it needs a rented instance and SSH access,
+   which are operator inputs, not repository work.
 5. **On access, qualify one worker then four.** Measure actual topology/ARM64 dependencies, kernels,
    batching, optimizer, communication, sustained throughput, restart/export and scheduler behavior.
    Declare every allocated GPU, including idle devices. Use results to cost the data studies and
@@ -248,7 +279,7 @@ Exact launch settings still depend on the evidence below; preparation receipts a
 | Area | Established | Required before the relevant experiment launches |
 | --- | --- | --- |
 | Direction and budget | Six-stage data-pipeline report; architecture study deferred; stage ownership totals 5,000 hours | Costed arms, confirmation allowance and stop rules within each cap |
-| Data | Pinned candidates, deterministic samples, exclusion methods and retained-stock counts | Qualified finite arm manifests, source-use decisions, family splits, eligible tokens and packing checks |
+| Data | Pinned candidates, deterministic samples, exclusion methods, retained-stock counts and a signed source-use record over nine selected sources | Qualified finite arm manifests, family splits, eligible tokens and packing checks; origin/notice recovery for both code routes and peS2o v3 licence documentation |
 | Backbone and runtime | 1.2B reference declared as the fixed substrate; completed H100 engineering baseline; throughput recipe selected on a 318M proxy | GH200/four-worker qualification, compiled-DDP qualification, flagship throughput measurement, FLOP accounting, recovery and measured cost |
 | Evaluation | Pilot development evidence and pinned exclusion inputs | Primary endpoints, development/final partitions, regression tolerances and comparator protocol |
 | Downstream stages | Stage objectives and separate research/production reservations | Useful parent checkpoints; qualified changed-data continuation, context and conditional RL paths |

@@ -1,7 +1,7 @@
 {
   "format": "speck_data_study_source_readiness",
   "format_version": 1,
-  "date": "2026-09-20",
+  "date": "2026-09-22",
   "status": "candidate_evidence_only_no_training_admission",
   "purpose": "Bind retained source evidence to the first pretraining data-study packet without treating inventory, format compatibility or overlap counts as eligibility.",
   "source_of_truth": {
@@ -80,7 +80,7 @@
         }
       ],
       "gates": {
-        "source_use": "open_no_named_decision",
+        "source_use": "closed",
         "family_partition": "open_joint_graph",
         "correctness": "not_applicable_for_natural_text_quality_review_open",
         "finite_supply": "retained_count_only_not_eligible_count",
@@ -88,8 +88,8 @@
       },
       "status": "candidate_inventory_not_admitted",
       "admitted": false,
+      "selected": true,
       "blockers": [
-        "source-use and notice decision",
         "joint family/benchmark partition",
         "eligible-token accounting",
         "measured comparison cost"
@@ -144,7 +144,7 @@
         }
       ],
       "gates": {
-        "source_use": "open_named_decision_and_cutoff_review",
+        "source_use": "closed",
         "family_partition": "open_joint_graph",
         "correctness": "not_applicable_for_natural_text_quality_review_open",
         "finite_supply": "retained_count_only_not_eligible_count",
@@ -152,10 +152,9 @@
       },
       "status": "candidate_inventory_not_admitted",
       "admitted": false,
+      "selected": true,
       "blockers": [
-        "source-use and notice decision",
         "joint family/benchmark partition",
-        "review flags and cutoff decision",
         "eligible-token accounting",
         "measured comparison cost",
         "full-shard eligible-token census under frozen exclusions",
@@ -247,7 +246,7 @@
         }
       ],
       "gates": {
-        "source_use": "open_origin_and_notice_recovery",
+        "source_use": "named_decision_recorded_origin_and_notice_recovery_open",
         "family_partition": "open_partial_graph_44_files_held",
         "correctness": "open_no_execution_oracle",
         "finite_supply": "no_eligible_tokens_established",
@@ -255,6 +254,7 @@
       },
       "status": "blocked_pending_source_and_supply_resolution",
       "admitted": false,
+      "selected": true,
       "blockers": [
         "origin/notice resolution",
         "family and benchmark partition",
@@ -335,7 +335,7 @@
         }
       ],
       "gates": {
-        "source_use": "open_origin_and_notice_recovery",
+        "source_use": "named_decision_recorded_origin_and_notice_recovery_open",
         "family_partition": "open_partial_graph",
         "correctness": "open_no_execution_oracle",
         "finite_supply": "bounded_review_cohort_only",
@@ -343,6 +343,7 @@
       },
       "status": "blocked_pending_source_and_supply_resolution",
       "admitted": false,
+      "selected": true,
       "blockers": [
         "origin/notice resolution",
         "family and benchmark partition",
@@ -407,10 +408,12 @@
         "finite_supply": "missing_qualified_supply",
         "runtime": "not_started"
       },
-      "status": "unavailable_candidate",
+      "status": "not_selected_retained_as_candidate_evidence",
       "admitted": false,
+      "selected": false,
       "blockers": [
-        "independently verified checked-code supply is not present"
+        "independently verified checked-code supply is not present",
+        "not selected by the re-frozen six-bank mixture"
       ],
       "qualification_evidence": {
         "verified_origin_join": false,
@@ -450,7 +453,7 @@
         }
       ],
       "gates": {
-        "source_use": "open_named_decision",
+        "source_use": "closed",
         "family_partition": "open_joint_graph",
         "correctness": "open_independent_solution_checks",
         "finite_supply": "retained_count_only_not_eligible_count",
@@ -458,8 +461,8 @@
       },
       "status": "candidate_inventory_not_admitted",
       "admitted": false,
+      "selected": true,
       "blockers": [
-        "source-use decision",
         "family partition",
         "independent correctness",
         "eligible-token accounting",
@@ -528,8 +531,9 @@
         "finite_supply": "retained_count_only_not_eligible_count",
         "runtime": "open"
       },
-      "status": "candidate_inventory_not_admitted",
+      "status": "not_selected_retained_as_candidate_evidence",
       "admitted": false,
+      "selected": false,
       "blockers": [
         "host/source lineage",
         "source-use decision",
@@ -538,7 +542,8 @@
         "eligible-token accounting",
         "all rows lack host metadata",
         "independent solution correctness and completeness checks",
-        "joint source-family and evaluation partition"
+        "joint source-family and evaluation partition",
+        "not selected by the re-frozen six-bank mixture: no per-document attribution manifest is possible while every retained row lacks host metadata"
       ],
       "qualification_evidence": {
         "retained_stock": {
@@ -583,7 +588,7 @@
         }
       ],
       "gates": {
-        "source_use": "open_named_decision",
+        "source_use": "closed",
         "family_partition": "open_joint_graph",
         "correctness": "open_generated_content_quality_review",
         "finite_supply": "retained_count_only_not_eligible_count",
@@ -591,8 +596,8 @@
       },
       "status": "candidate_inventory_not_admitted",
       "admitted": false,
+      "selected": true,
       "blockers": [
-        "source-use decision",
         "family partition",
         "independent quality checks",
         "eligible-token accounting"
@@ -619,7 +624,7 @@
         }
       ],
       "gates": {
-        "source_use": "open_named_decision",
+        "source_use": "named_decision_recorded_v3_license_semantics_open",
         "family_partition": "open_joint_graph",
         "correctness": "open_science_quality_review",
         "finite_supply": "retained_count_only_not_eligible_count",
@@ -627,11 +632,12 @@
       },
       "status": "candidate_inventory_not_admitted",
       "admitted": false,
+      "selected": true,
       "blockers": [
-        "source-use decision",
         "family partition",
         "quality checks",
-        "eligible-token accounting"
+        "eligible-token accounting",
+        "authoritative peS2o v3 licence-selection documentation"
       ]
     },
     {
@@ -655,7 +661,7 @@
         }
       ],
       "gates": {
-        "source_use": "open_named_decision",
+        "source_use": "closed",
         "family_partition": "open_joint_graph",
         "correctness": "open_reference_quality_review",
         "finite_supply": "retained_count_only_not_eligible_count",
@@ -663,8 +669,8 @@
       },
       "status": "candidate_inventory_not_admitted",
       "admitted": false,
+      "selected": true,
       "blockers": [
-        "source-use decision",
         "family partition",
         "quality checks",
         "eligible-token accounting"
@@ -702,7 +708,7 @@
         }
       ],
       "gates": {
-        "source_use": "open_manual_terms_decision",
+        "source_use": "closed",
         "family_partition": "open_joint_graph",
         "correctness": "open_arithmetic_triage_manual_review",
         "finite_supply": "sample_only_not_eligible_count",
@@ -710,6 +716,7 @@
       },
       "status": "candidate_sample_not_admitted",
       "admitted": false,
+      "selected": true,
       "qualification_evidence": {
         "source_report": {
           "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
@@ -761,7 +768,6 @@
         "decision": "retain_as_separate_filtered_math_candidate; do not admit until source-use, family, contamination, independent solution and finite-supply gates close"
       },
       "blockers": [
-        "source-use and upstream page terms decision",
         "joint source-family and evaluation partition",
         "independent solution correctness and completeness checks",
         "one likely source transcription error remains held; surrounding solutions are not certified",
@@ -796,15 +802,17 @@
         "finite_supply": "no_acquired_shards",
         "runtime": "not_started"
       },
-      "status": "unavailable_candidate",
+      "status": "not_selected_retained_as_candidate_evidence",
       "admitted": false,
+      "selected": false,
       "qualification_evidence": {
         "decision": "do_not_use_until_whole_objects_are acquired and independently qualified",
         "training_admitted": false
       },
       "blockers": [
         "all 46 listed LFS objects have unusable hashes",
-        "no shards acquired or verified"
+        "no shards acquired or verified",
+        "not selected by the re-frozen six-bank mixture"
       ]
     }
   ],
@@ -857,5 +865,52 @@
       }
     ],
     "decision_boundary": "Do not freeze a common comparison horizon or claim 100B supply from these counts. Use the minimum measured eligible bank after exclusions, family partition, correctness review and GH200 cost; revise the target explicitly if it is smaller."
+  },
+  "source_use_decision": {
+    "status": "recorded_by_named_human_authority",
+    "decided": "2026-09-22",
+    "authority": {
+      "name": "Alkın Ünlü",
+      "role": "Principal Investigator",
+      "organization": "SpeckLabs",
+      "authority_type": "human"
+    },
+    "acceptance_record": {
+      "path": "experiments/main-data/source-rights-acceptance.json",
+      "sha256": "62215503ae86ffd01cb06e30d15ea42aaa416c7fd3a84bf390604343b11828cf",
+      "format": "speck_human_source_rights_acceptance"
+    },
+    "completed_template": {
+      "path": "experiments/main-data/source-rights-decision-20260922.json",
+      "sha256": "38e064725d821dc5b36f82a7ba0591ab900c85ba3cecf000c7a7515af19d256a"
+    },
+    "blank_template": {
+      "path": "experiments/main-data/source-rights-acceptance-template.json",
+      "sha256": "7c042152a7f82aeecbcd84d05bc32b37aed357c9bf447545d5e0bb9200d87d9b"
+    },
+    "registry": {
+      "path": "experiments/main-data/source-registry.json",
+      "sha256": "9530585316146633a5f421dc523ffe054bd904196bd09222d1a619d4e44eb483"
+    },
+    "approved_source_ids": [
+      "cosmopedia_v2",
+      "finemath_4plus",
+      "fineweb_edu",
+      "finewiki_en",
+      "infiwebmath_4plus",
+      "pes2o_v3",
+      "stack_edu",
+      "stack_v3",
+      "ultrafineweb_hq"
+    ],
+    "not_selected_source_ids": [
+      "checked_code",
+      "nemotron_cc_math_4plus",
+      "ultradata_math_l2_preview"
+    ],
+    "scope": "research_training=true, paper_publication=true, public_model_weight_release=true, commercial_use=false, source_data_redistribution=false, derived_packed_shard_redistribution=false",
+    "what_this_closes": "The source-use gate, and only that gate, for the nine selected sources. Six are closed outright. Three carry a recorded named decision with a specific mechanical dependency still open: origin and notice recovery for the two code routes, and authoritative v3 licence-selection documentation for the science source.",
+    "what_this_does_not_close": "Family partition, correctness, finite supply and runtime remain open on every source. No source is admitted, no eligible token is established, and no training or acquisition is authorized. Every approval carries conditions recorded in the acceptance record, and a condition that is not met means the affected records are excluded, not admitted on trust.",
+    "generated_by": "scripts.source_rights_review --finalize, which refuses any record lacking a named human authority, a complete scope or unanimous approval, and never converts a pending decision into an approval itself."
   }
 }

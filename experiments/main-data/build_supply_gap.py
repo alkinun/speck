@@ -21,9 +21,7 @@ BANK_STOCK = {
     "selected_web": ("ultrafineweb_hq_distinct",),
     "independent_web": ("fineweb_edu",),
     "natural_code": ("retained_code",),
-    "checked_code": (),
     "natural_math": ("finemath_4plus",),
-    "refined_math": (),
     "reference_science": ("pes2o_v3", "finewiki_en"),
     "refined_web": ("cosmopedia_v2",),
 }
@@ -57,7 +55,12 @@ def build() -> dict:
         "ultrafineweb_hq_distinct_from_retained_fineweb_edu"
     ]["numerator_tokens"]
 
-    gate_status = {source["id"]: source["gates"] for source in readiness["sources"]}
+    # Gate counts are only meaningful over sources the mixture actually selects. Counting a
+    # dropped candidate as "open" would overstate the remaining work forever, since a source
+    # nobody intends to use is never going to have its gates closed.
+    selected = [source for source in readiness["sources"] if source.get("selected")]
+    dropped = [source for source in readiness["sources"] if not source.get("selected")]
+    gate_status = {source["id"]: source["gates"] for source in selected}
 
     banks = []
     for item in plan["main_pretraining"]["mixture"]:
@@ -137,6 +140,12 @@ def build() -> dict:
                 "weights a one-pass run is capped at zero tokens until they are supplied or the "
                 "mixture is re-frozen without them. Treat that as a mixture decision, not an "
                 "acquisition detail."
+            )
+            if zero_stock
+            else (
+                "Every declared bank has some retained candidate stock, so no bank caps a "
+                "one-pass run at zero. The 2026-09-22 re-freeze removed the two that did. This "
+                "says nothing about eligibility: zero eligible tokens are still established."
             ),
         },
         "binding_constraint": {
@@ -160,6 +169,7 @@ def build() -> dict:
         },
         "gate_summary": {
             "sources_tracked": len(gate_status),
+            "sources_not_selected": [source["id"] for source in dropped],
             "source_use_open": sum(
                 1 for gates in gate_status.values() if gates["source_use"] != "closed"
             ),

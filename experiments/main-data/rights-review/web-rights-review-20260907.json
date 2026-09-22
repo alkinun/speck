@@ -1,0 +1,127 @@
+{
+  "format": "speck_web_source_rights_review_packet",
+  "format_version": 1,
+  "status": "evidence_collected_human_acceptance_required_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "scope": "operational provenance, terms, attribution, and removal review for the four bounded web sources; not legal advice or a final ownership determination",
+  "evidence": [
+    {
+      "id": "ultrafineweb_card",
+      "source_revision": "02c85641e3d19a854be2e09139c25adaa9518063",
+      "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/openbmb--Ultra-FineWeb/README.md",
+      "sha256": "b93fcf284a97f9fb9b1e34b66c052b544e7bb2c8b564cbc10cfc7224b7aa0ab1",
+      "official_url": "https://huggingface.co/datasets/openbmb/Ultra-FineWeb"
+    },
+    {
+      "id": "ultrafineweb_apache_2_license",
+      "source_revision": "02c85641e3d19a854be2e09139c25adaa9518063",
+      "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/openbmb--Ultra-FineWeb/LICENSE",
+      "sha256": "202d02b14796563546e1a1d1e761410fa9e399bf7e1b85d8b43c972658341202",
+      "official_url": "https://huggingface.co/datasets/openbmb/Ultra-FineWeb/blob/02c85641e3d19a854be2e09139c25adaa9518063/LICENSE"
+    },
+    {
+      "id": "fineweb_edu_card",
+      "source_revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+      "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/HuggingFaceFW--fineweb-edu/README.md",
+      "sha256": "a0cc8998a20499432b28b6575f3046b714938eb8e11b8d59a1d25ddf3716061e",
+      "official_url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu"
+    },
+    {
+      "id": "fineweb_card",
+      "source_revision": "9bb295ddab0e05d785b879661af7260fed5140fc",
+      "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/HuggingFaceFW--fineweb/README.md",
+      "sha256": "2fb3e49e8aa62a7429b07b557cc49d578292174843fb6aa561b5fbe6afbff01c",
+      "official_url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb"
+    },
+    {
+      "id": "dclm_card",
+      "source_revision": "817d6752765f6a41261085171dd546b104f60626",
+      "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/mlfoundations--dclm-baseline-1.0-parquet/README.md",
+      "sha256": "fee0be33fa4d0639645208be1d72cb8b3a0e4850306f381b32db3b128fe938d8",
+      "official_url": "https://huggingface.co/datasets/mlfoundations/dclm-baseline-1.0-parquet"
+    },
+    {
+      "id": "odc_by_1_0_legal_code",
+      "retrieved_on": "2026-09-07",
+      "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/odc-by-1.0.html",
+      "sha256": "7d7e622bbb4b5f21b1c5cb2dd7ce8b1b747ee2c3ab9fc8309c19082e12d13b2d",
+      "official_url": "https://opendatacommons.org/licenses/by/1-0/"
+    },
+    {
+      "id": "cc_by_4_0_legal_code",
+      "retrieved_on": "2026-09-07",
+      "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/cc-by-4.0.txt",
+      "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411",
+      "official_url": "https://creativecommons.org/licenses/by/4.0/legalcode.txt"
+    },
+    {
+      "id": "common_crawl_terms",
+      "terms_last_updated": "2024-03-07",
+      "retrieved_on": "2026-09-07",
+      "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/commoncrawl-terms.html",
+      "sha256": "1573585e36eb372855ddb8a80718a4b52b758a7132e6c92343a828ab37cc2c60",
+      "official_url": "https://commoncrawl.org/terms-of-use"
+    }
+  ],
+  "source_review": {
+    "ultrafineweb_en_v1_4": {
+      "declared_release": "Apache-2.0 project release",
+      "upstream": "English data is based on FineWeb/Common Crawl",
+      "material_observation": "the pinned card explicitly instructs users to inspect each upstream dataset license; the project license alone is not treated as clearance of underlying pages",
+      "human_decision_required": "accept the FineWeb ODC-By and Common Crawl chain for the intended training and release scope, or reject Ultra-FineWeb"
+    },
+    "fineweb_edu": {
+      "declared_release": "ODC-By-1.0 plus Common Crawl terms",
+      "upstream": "filtered FineWeb/Common Crawl",
+      "material_observation": "ODC-By grants database rights with attribution but states that it does not govern individual contents",
+      "human_decision_required": "accept the database attribution plan, Common Crawl terms, and residual underlying-content risk, or reject FineWeb-Edu"
+    },
+    "dclm_baseline": {
+      "declared_release": "CC-BY-4.0 dataset release",
+      "upstream": "DCLM Pool derived from Common Crawl",
+      "material_observation": "the pinned card repeatedly describes research-only intended use and says it is not intended for production-ready models despite its CC-BY metadata",
+      "human_decision_required": "resolve the card's research-only language against the intended model/release scope and accept the Common Crawl chain, or reject DCLM"
+    },
+    "fineweb_base": {
+      "declared_release": "ODC-By-1.0 plus Common Crawl terms",
+      "upstream": "96 Common Crawl dumps",
+      "material_observation": "the card supplies source URLs and a PII removal channel and records prior domain removal in response to a cease-and-desist notice",
+      "human_decision_required": "accept the database attribution plan, Common Crawl terms, and residual underlying-content risk, or reject FineWeb"
+    }
+  },
+  "common_crawl_terms_observations": [
+    "use of Crawled Content signifies binding acceptance, including later modifications while use continues",
+    "crawled pages may have separate owner terms and Common Crawl does not warrant lawfulness or non-infringement",
+    "users must respect third-party copyright, privacy, and other rights",
+    "the indemnification clause expressly names developing, training, or deploying AI systems and generated content",
+    "the terms include releases, liability limits, California law, individual arbitration, and a class-action waiver"
+  ],
+  "proposed_attribution_and_removal_controls": [
+    "retain each record's source dataset, immutable dataset revision, released-content hash, original URL/host where supplied, and successor lineage",
+    "publish dataset-level credits and required ODC-By or CC-BY notices for every source actually used",
+    "preserve the Ultra-FineWeb, FineWeb/FineWeb-Edu, DCLM, and Common Crawl citations and links",
+    "name a human-controlled contact for rights, privacy, and removal requests before production acquisition",
+    "maintain a hash/URL/domain deny ledger that applies before future packing and can rebuild affected shards and attribution manifests",
+    "record upstream takedowns and term changes; do not silently mutate already frozen experiment data",
+    "decide separately whether any dataset or extracted text may be redistributed; model-weight release does not imply corpus redistribution"
+  ],
+  "non_conclusions": [
+    "dataset-level Apache-2.0, ODC-By, or CC-BY metadata clears copyright or other rights in every crawled page",
+    "public accessibility authorizes training, commercial use, redistribution, or every intended model release",
+    "technical PII, security, deduplication, and contamination filters resolve source rights",
+    "this packet constitutes acceptance of any license or terms"
+  ],
+  "acceptance_record_required": {
+    "authority": "named human with authority for the operating organization and intended use",
+    "must_record": [
+      "accepted or rejected source IDs",
+      "organization and intended research, publication, model-weight release, and any commercial scope",
+      "accepted evidence hashes and Common Crawl terms date",
+      "required notices and attribution placement",
+      "redistribution decision for source data and derived packed shards",
+      "removal contact, deny-ledger owner, response procedure, and rebuild policy",
+      "date, name, and signature or equivalent auditable approval"
+    ]
+  },
+  "decision": "no source is approved by this automated review; keep all four bounded successors blocked until the required human acceptance record exists"
+}

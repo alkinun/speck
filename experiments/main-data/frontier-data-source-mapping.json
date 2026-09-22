@@ -12,7 +12,7 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "c14b2650ec145573d0af9e75ded0ed15b73d0e655be3df37040de9491a1452b0"
+      "sha256": "8d7413b1311daa7314c4a99b698ebfbe740c45c039572fdb077e13c2599624cd"
     },
     "design_contract": {
       "path": "experiments/main-data/data-design-contract.json",

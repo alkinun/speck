@@ -1,0 +1,30 @@
+{
+  "format": "speck_reference_source_rights_review_packet",
+  "format_version": 1,
+  "status": "evidence_collected_human_acceptance_required_training_authority_blocked",
+  "recorded_on": "2026-09-07",
+  "scope": "operational page, thread, book, attribution, share-alike, redistribution, and removal review; not legal advice or a final ownership determination",
+  "evidence": [
+    {"id": "finewiki_card", "revision": "8bd13e72e6a002407649b3e898535f42ceb1aeb9", "path": "/mnt/speck-data/speck/evaluation-sources/reference-rights-v1/HuggingFaceFW--finewiki/README.md", "sha256": "669dd8da189c5cbbd9d1a63d28fb4325f23ca988f80be156141b2d158116ad3f"},
+    {"id": "stackexchange_card", "revision": "c0ac7373830c688a43fc12d1988c4b19ccd884ab", "path": "/mnt/speck-data/speck/evaluation-sources/reference-rights-v1/common-pile--stackexchange_filtered/README.md", "sha256": "3e04e4198a7a2b46ddf9b344c3ddefe3893d3edf14692e86d2ddb6a35b4a6f98"},
+    {"id": "gutenberg_card", "revision": "3cdf6879c807f4e4e063f2ceb23bc268d8c29ab7", "path": "/mnt/speck-data/speck/evaluation-sources/reference-rights-v1/common-pile--project_gutenberg_filtered/README.md", "sha256": "85a12539597181a9221599bf0139c8ffef39c07ed182d45ed65ff6549e1b547b"},
+    {"id": "libretexts_card", "revision": "70388bca52b4a93515e14b1d56618fd7944988fd", "path": "/mnt/speck-data/speck/evaluation-sources/reference-rights-v1/common-pile--libretexts_filtered/README.md", "sha256": "306cfd058fc6ea87dc8420c99b6c050f14ddf7d8668d3fe6568fc81528258ce4"},
+    {"id": "oercommons_card", "revision": "506b6159dadcbc0dc67611cea024eedb04232fb2", "path": "/mnt/speck-data/speck/evaluation-sources/reference-rights-v1/common-pile--oercommons_filtered/README.md", "sha256": "7e46c1eec8ab97d69bdcda1e99473828d4cad8296ec71cfbf890ac84705535aa"},
+    {"id": "pressbooks_card", "revision": "1a1d3b50d77f834370f8eb4c0d174668dd1676bb", "path": "/mnt/speck-data/speck/evaluation-sources/reference-rights-v1/common-pile--pressbooks_filtered/README.md", "sha256": "22799fad76ded1bf8a2cbe698528d9dfee4bdb66de25b1964bba9e87c22d7af5"}
+  ],
+  "material_decisions": [
+    "approve FineWiki/Wikipedia CC BY-SA and GFDL attribution and share-alike treatment for the intended model and any data release",
+    "resolve StackExchange attribution when sampled records preserve site/question URL but the observed author arrays are empty",
+    "confirm Project Gutenberg work-level public-domain status in every operating jurisdiction and comply with Gutenberg trademark/license policy",
+    "approve exact CC BY, CC BY-SA, GFDL, CC0, and public-domain identifiers and attribution/notice delivery for Common Pile educational sources",
+    "accept or reject Common Pile's stated risk of inaccurate or laundered license metadata",
+    "decide source-data and packed-shard redistribution separately from model-weight release"
+  ],
+  "required_controls": [
+    "retain page/thread/chapter/book ID, source URL, title, date, item license, source revision, and released-content hash",
+    "publish dataset and item-level attribution/notice bundles where required",
+    "maintain URL/page/book/hash deny ledgers and rebuild affected shards after verified correction or removal requests",
+    "name a human rights/removal owner and preserve an auditable acceptance record"
+  ],
+  "decision": "no reference source is approved by this automated review; all bounded successors remain blocked pending human acceptance"
+}

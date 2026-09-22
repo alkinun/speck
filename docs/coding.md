@@ -118,9 +118,11 @@ raises the known hold to **123 files / 209,751 tokens**; six previously content-
 present. This propagates existing evidence, without claiming a new complete content scan. Removing
 only these files would not establish a qualified remainder or complete family separation.
 
-At the working 80B base horizon, natural code needs 24B exposure / 30B eligible unique
-preparation, separately from 4B checked-code exposure / 5B eligible preparation. The retained stock covers 1.59% of natural
-code exposure before joint eligibility. Repetition is not an approved way to fill the gap.
+At the working 80B base horizon, natural code needs 28B exposure / 35B eligible unique
+preparation. That now includes the former checked-code share, which was re-frozen into this
+bank on 2026-09-22 after holding zero retained stock; total code demand is unchanged. The
+retained stock covers 1.36% of that preparation target before joint eligibility, which makes
+natural code the bank where the whole horizon binds. Repetition is not an approved way to fill the gap.
 The original census retains its historical planning denominator; current targets live in
 [the numeric plan](../experiments/main-data/plan.json).
 
@@ -334,7 +336,8 @@ Use the fixed Stack-Edu and Stack v3 audits to choose a feasible natural-source 
 Natural code plus independently checked exercises remains an alternative if qualified supply
 supports it. Keep total code share, non-intervened language coverage, non-code banks and serialization
 fixed. A declared Python substitution can change its selected source without silently changing
-the whole mixture. Do not add an extra checked-code arm or fill its quota by repeating a tiny bank.
+the whole mixture. Checked code is no longer a declared bank, so do not add it back as an extra
+arm or fill a code quota by repeating a tiny bank.
 
 The contrast tests its declared source/selection recipe. Checked-code substitution does not isolate
 synthesis, selection and verification separately; a source swap does not test repository packing.

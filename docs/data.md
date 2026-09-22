@@ -286,7 +286,7 @@ the evidence still required before the web contrast can enter screening.
 
 The [natural-code candidate manifest](../experiments/main-data/natural-code-candidate-manifest.json)
 binds the retained Stack-Edu census, the bounded Stack v3 cohort and the unavailable checked-code
-route. It keeps natural code separate from verified exercises and records the current zero-eligible-
+route, which stopped being a declared bank in the 2026-09-22 re-freeze. It keeps natural code separate from verified exercises and records the current zero-eligible-
 token boundary.
 
 The [math candidate manifest](../experiments/main-data/math-candidate-manifest.json) keeps natural

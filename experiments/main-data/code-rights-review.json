@@ -1,0 +1,169 @@
+{
+  "format": "speck_code_source_rights_review_packet",
+  "format_version": 1,
+  "status": "evidence_collected_human_acceptance_required_training_authority_blocked",
+  "recorded_on": "2026-09-22",
+  "scope": "Operational provenance, notice, attribution and removal review for the two selected natural-code sources. Not legal advice and not a final ownership determination. The 2026-09-07 rights review covered web, math, synthetic, science and reference but never code; the code slot held a technical tokenizer-supplement summary instead. This packet fills that slot from the code audits completed since.",
+  "evidence": [
+    {
+      "id": "retained_code_origins",
+      "kind": "in_repository_audit_receipt",
+      "path": "experiments/corpus-audit/retained-code-origins.json",
+      "sha256": "d61853b02a8c2016209fb3ba6b3d73b354abd9b61e8c3696439d9e45f9ea6d40",
+      "covers": "Bounded origin/history recovery for retained Stack-Edu and Stack v3 records"
+    },
+    {
+      "id": "code_notice_provenance",
+      "kind": "in_repository_audit_receipt",
+      "path": "experiments/corpus-audit/code-notice-provenance.json",
+      "sha256": "f7b8c05d26ceb1ebce7186fc3434b583219fbc3995e3e029e488391a34d6e26a",
+      "covers": "Ancestor-notice recovery and Git-blob verification for purpose-selected files"
+    },
+    {
+      "id": "code_family_provenance",
+      "kind": "in_repository_audit_receipt",
+      "path": "experiments/corpus-audit/code-family-provenance.json",
+      "sha256": "707eb5484c91ef12359580433321c6d693cc39a91ef3fe72eb2d930202c77b39",
+      "covers": "Content-family hold propagation across the reviewed code cohort"
+    },
+    {
+      "id": "code_provenance_inputs",
+      "kind": "in_repository_audit_receipt",
+      "path": "experiments/corpus-audit/code-provenance-inputs.json",
+      "sha256": "148189d4ad1fe872abeeb2a0bc79a7c4fbb8bf52b8cb27e7072cc2851723272d",
+      "covers": "Pinned upstream primary sources and the manual notice review that reads them"
+    },
+    {
+      "id": "stack_v3_origins",
+      "kind": "in_repository_audit_receipt",
+      "path": "experiments/corpus-audit/stack-v3-origins.json",
+      "sha256": "1da4ec51c2d1e320a4860376ea5df734a5f5dec16dec06f84efbbe86ea6be7e2",
+      "covers": "Host verification outcomes for the fixed Stack v3 review cohort"
+    },
+    {
+      "id": "stack_v3_broader",
+      "kind": "in_repository_audit_receipt",
+      "path": "experiments/corpus-audit/stack-v3-broader.json",
+      "sha256": "e9aa292f1ba99d072c7a5f318bcc46d17d522daddcf9db96b1b2618d1a284d2b",
+      "covers": "Frozen-group acquisition and the 44-repository / 80-file screened cohort"
+    },
+    {
+      "id": "code_yield_result",
+      "kind": "in_repository_audit_receipt",
+      "path": "experiments/corpus-audit/code-yield-result.json",
+      "sha256": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94",
+      "covers": "Stratified code-yield preflight across 11 languages and 72 strata"
+    },
+    {
+      "id": "code_application_origins",
+      "kind": "in_repository_audit_receipt",
+      "path": "experiments/corpus-audit/code-application-origins.json",
+      "sha256": "49932682280ceb291dff7827520787e148c76783f5488c0f083d41323f1b0ac8",
+      "covers": "Source revisions, complete trees and MIT notices for four application repositories"
+    },
+    {
+      "id": "code_supply",
+      "kind": "in_repository_audit_receipt",
+      "path": "experiments/corpus-audit/code-supply.json",
+      "sha256": "30a93d3afcfbf53c0b173eb7e56aaef728280625bcf5827e195309436db5e8fe",
+      "covers": "Full retained natural-code census: 714,369 files / 476,774,847 retokenized tokens"
+    },
+    {
+      "id": "openbmb_ultradata_code_card",
+      "kind": "pinned_upstream_primary_source",
+      "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/README.md",
+      "sha256": "2dd14e3b1dd88637d24e006a8a19f68e68c88e286e91aabd3511cedf068aeea4",
+      "official_url": "https://huggingface.co/datasets/openbmb/UltraData-Code/raw/85182d829f2ce7ea07cca72ebfc509deea1d9f5f/README.md",
+      "source_revision": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f"
+    },
+    {
+      "id": "openbmb_ultradata_code_license",
+      "kind": "pinned_upstream_primary_source",
+      "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/LICENSE",
+      "sha256": "202d02b14796563546e1a1d1e761410fa9e399bf7e1b85d8b43c972658341202",
+      "official_url": "https://huggingface.co/datasets/openbmb/UltraData-Code/raw/85182d829f2ce7ea07cca72ebfc509deea1d9f5f/LICENSE",
+      "source_revision": "85182d829f2ce7ea07cca72ebfc509deea1d9f5f"
+    },
+    {
+      "id": "stack_edu_record_upstream_license",
+      "kind": "pinned_upstream_primary_source",
+      "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/tdxutil-LICENSE",
+      "sha256": "774850fc0b9971b20b23df53e2fc326614b077c3250d5da5b442b6a1357326e8",
+      "official_url": "https://raw.githubusercontent.com/stroxler/tdxutil/8d21cb9c9a489da4c138dd05dd578ffea7765c2a/LICENSE",
+      "source_revision": "8d21cb9c9a489da4c138dd05dd578ffea7765c2a"
+    },
+    {
+      "id": "stack_edu_record_upstream_file",
+      "kind": "pinned_upstream_primary_source",
+      "path": "/mnt/speck-data/speck/openbmb-code-provenance-20260919/tdxutil-tdxutil-exceptions.py",
+      "sha256": "d81f9d28df636dc5b8a2aba04a1ff6c6f6905ec280f77f296afca7c4ee62062f",
+      "official_url": "https://raw.githubusercontent.com/stroxler/tdxutil/8d21cb9c9a489da4c138dd05dd578ffea7765c2a/tdxutil/exceptions.py",
+      "source_revision": "8d21cb9c9a489da4c138dd05dd578ffea7765c2a"
+    },
+    {
+      "id": "odc_by_1_0_legal_code",
+      "kind": "pinned_upstream_primary_source",
+      "path": "/mnt/speck-data/speck/evaluation-sources/web-rights-v1/odc-by-1.0.html",
+      "sha256": "7d7e622bbb4b5f21b1c5cb2dd7ce8b1b747ee2c3ab9fc8309c19082e12d13b2d",
+      "official_url": "https://opendatacommons.org/licenses/by/1-0/",
+      "retrieved_on": "2026-09-07"
+    }
+  ],
+  "source_review": {
+    "stack_edu": {
+      "retained_source_revision": "eeec5caac5cc3758a18f1d3ba4416837a9ba814c",
+      "declared_release": "No aggregate dataset licence text is pinned in local evidence. What is pinned is per-record detected-licence metadata plus Git-verified upstream notices for a bounded cohort. The retained rows label MIT.",
+      "upstream": "GitHub repositories surfaced through Stack-Edu metadata",
+      "verified_notice_example": "One fully traced record: tdxutil/exceptions.py at revision 8d21cb9c9a489da4c138dd05dd578ffea7765c2a, byte- and Git-blob-verified, whose upstream LICENSE carries an MIT-style copyright and permission notice plus an additional prohibition on promotional use of the author's name. The dataset's MIT label alone did not convey that extra term.",
+      "material_gaps": [
+        "75 of 104 currently unheld origin lookups are quota-blocked at GitHub and one earlier outcome is unresolved; current unheld origin coverage is 28/104.",
+        "44 of 218 reviewed records are held by content family and stay outside training.",
+        "Retained stock is 476,774,847 tokens, 1.36% of the re-frozen 35B code preparation target, and is not representative of the full upstream release.",
+        "No execution oracle exists, so no correctness claim attaches to any file."
+      ],
+      "human_decision_required": "Approve the original-licence allowlist and the per-file notice/attribution delivery mechanism, accept that dataset-level licence labels are not self-sufficient, and accept metadata-reliability risk for the intended release scope; or reject this source."
+    },
+    "stack_v3": {
+      "dataset_revision": "8f3f25d86e44fd691428131efd17af75d4716499",
+      "declared_release": "No aggregate dataset licence text is pinned in local evidence. The probe found detected-licence metadata on 1,841 of 47,826 file entries, so most entries carry no licence label at all.",
+      "upstream": "Public code repositories reached through Stack v3 metadata and blob storage",
+      "material_gaps": [
+        "Two pinned sources return 404 and ten upstream content identities are transformed without a recorded explanation.",
+        "10 of 80 cohort files are held by known family.",
+        "The 80-file / 44-repository cohort is a bounded review sample and cannot establish full-release eligible supply.",
+        "7,084 content-ID mismatches were observed in the feasibility probe: 6,557 carry explicit redaction markers and 527 do not."
+      ],
+      "human_decision_required": "Approve the original-licence allowlist, accept that the majority of entries lack licence metadata and must therefore be excluded rather than assumed permissive, and approve notice delivery; or reject this source."
+    }
+  },
+  "shared_material_observations": [
+    "A dataset-level licence statement governs the database or the collection, not each included file. Original per-file licences and notices continue to apply.",
+    "A detected-licence label is metadata produced by a scanner. The one record traced to its upstream notice in this evidence carried a term the label did not express.",
+    "Absence of a licence label is not permission. Entries without one must be excluded, not treated as unrestricted.",
+    "Git blob identity and byte matching establish transport and provenance, never permission.",
+    "Language, secret-scanning, deduplication and contamination gates do not resolve copyright or contractual rights, and closing them does not close this gate.",
+    "Quota-blocked origin lookups are infrastructure failures. They are not evidence that a repository is missing, unsuitable or unlicensed, and they must not be resolved by assumption."
+  ],
+  "proposed_attribution_and_removal_controls": [
+    "Retain dataset, revision, shard, released-content hash, repository path, recovered immutable revision, Git blob identity and detected licences in immutable attribution manifests for every admitted record.",
+    "Generate per-repository and per-file notice bundles, preserving original licence identifiers and any additional terms found in the upstream notice rather than the label.",
+    "Exclude every record whose origin, notice or licence is unresolved, including all quota-blocked lookups, until resolved by evidence.",
+    "Preserve all 44 Stack-Edu family holds and all 10 Stack v3 family holds across every stage, so a held file cannot re-enter through a different bank.",
+    "Maintain repository/path/blob/hash deny ledgers and rebuild affected packed shards rather than editing frozen evidence in place.",
+    "Name a human-controlled rights and removal contact before production acquisition."
+  ],
+  "acceptance_record_required": {
+    "authority": "named human with authority for the operating organization and intended use",
+    "must_record": [
+      "accepted or rejected source IDs and exact evidence hashes",
+      "the approved original-licence allowlist and its exclusion default for unlabelled files",
+      "notice and attribution delivery mechanism for admitted code",
+      "research, publication, model-weight release, commercial and redistribution scope",
+      "metadata-reliability risk disposition",
+      "removal contact, deny-ledger owner, response procedure and rebuild policy",
+      "date, name and signature or equivalent auditable approval"
+    ]
+  },
+  "decision": "No code source is approved by this automated review. It records the evidence and names the decision; the acceptance record in experiments/main-data/source-rights-acceptance.json is where a human takes it.",
+  "training_admitted": false
+}
