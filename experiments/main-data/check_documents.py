@@ -475,18 +475,30 @@ def _slug(heading: str) -> str:
     return text.replace(" ", "-")
 
 
+def _anchors(document: Path) -> set[str]:
+    """Collect the document's heading anchors, ignoring anything inside a code fence.
+
+    A shell comment in a ```bash block starts with "#" and would otherwise be read as a
+    heading, inventing an anchor that no reader can link to and that could mask a genuinely
+    broken one.
+    """
+    found: set[str] = set()
+    fenced = False
+    for line in document.read_text().splitlines():
+        if line.lstrip().startswith("```"):
+            fenced = not fenced
+            continue
+        if fenced:
+            continue
+        match = re.match(r"#{1,6}\s+(.*)", line)
+        if match:
+            found.add(_slug(match.group(1)))
+    return found
+
+
 def _check_links(documents: list[Path]) -> tuple[list[str], int]:
     """Resolve every relative link and heading anchor between guarded documents."""
-    anchors = {
-        document: {
-            _slug(match.group(1))
-            for match in (
-                re.match(r"#{1,6}\s+(.*)", line) for line in document.read_text().splitlines()
-            )
-            if match
-        }
-        for document in documents
-    }
+    anchors = {document: _anchors(document) for document in documents}
     known = {document.resolve(): document for document in documents}
     mismatches: list[str] = []
     checked = 0

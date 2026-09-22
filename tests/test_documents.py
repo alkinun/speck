@@ -187,3 +187,23 @@ def test_a_retired_bank_may_not_reappear_as_a_mixture_row(tmp_path, monkeypatch)
     )
     with pytest.raises(ValueError, match="re-freeze removed it"):
         checker.validate()
+
+
+def test_a_shell_comment_in_a_code_fence_is_not_a_heading(tmp_path, monkeypatch):
+    """`# Retain configs...` in a ```bash block is a comment, not an anchor."""
+    _isolated_tree(
+        tmp_path,
+        monkeypatch,
+        {"b.md": "# B\n\n```bash\n# Not a heading\nls\n```\n"},
+    )
+    assert checker._anchors(tmp_path / "b.md") == {"b"}
+    _isolated_tree(
+        tmp_path,
+        monkeypatch,
+        {
+            "a.md": "# A\n\nSee [b](b.md#not-a-heading).\n",
+            "b.md": "# B\n\n```bash\n# Not a heading\nls\n```\n",
+        },
+    )
+    with pytest.raises(ValueError, match="no such heading anchor"):
+        checker.validate()
