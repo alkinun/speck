@@ -74,7 +74,9 @@ nvidia-smi --query-gpu=name,memory.total,clocks.max.sm --format=csv
 
 Confirm the card is an 80 GiB H100 before spending anything. Then establish the noise band: run the
 first configuration **five times** and keep the spread. A delta smaller than that band is not a
-result.
+result. Repeat the first command with a unique label and output filename for each copy. The packet
+uses ten warmup steps and a thirty-step measured window; keep the full window after compilation has
+settled rather than shortening it to the old ten-step probe.
 
 Print the exact ladder from the packet rather than retyping it:
 

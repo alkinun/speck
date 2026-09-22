@@ -241,6 +241,9 @@ bounded order and stop rules for closing those gates.
    including an end-to-end run with no `--data-dir` at all. The
    [runbook](docs/throughput-rental.md) is ready; it needs a rented instance and SSH access,
    which are operator inputs, not repository work.
+   The [performance plan](docs/performance.md) is the pre-rental reference for MFU conventions,
+   noise handling, profile-based optimization targets, and the order for deciding whether a kernel
+   change is worth pursuing.
 5. **On access, qualify one worker then four.** Measure actual topology/ARM64 dependencies, kernels,
    batching, optimizer, communication, sustained throughput, restart/export and scheduler behavior.
    Declare every allocated GPU, including idle devices. Use results to cost the data studies and

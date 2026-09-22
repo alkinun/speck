@@ -15,6 +15,8 @@ Start with the [program overview](docs/program.md) for the training lifecycle, d
 release, and the [model notes](docs/model.md) for the reference backbone and the deferred
 architecture study. [PLAN.md](PLAN.md) gives current status and the next work;
 the [main data plan](experiments/main-data/README.md) records numeric targets and feasibility.
+The [performance and optimization plan](docs/performance.md) separates proxy evidence from flagship
+throughput, defines MFU and rate accounting, and gives the pre-rental profiling order.
 The H100 pilot and backups are complete; GH200/four-worker qualification and flagship training are ahead.
 [Research notes](docs/research.md) distinguish publisher findings from our own evidence. The
 [readiness summary](PLAN.md#readiness-for-experiment-design) identifies what we can design now and

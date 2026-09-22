@@ -24,6 +24,8 @@ receipts are separate from grant consumption. The completed pilot is evidence to
 next training job. The [model notes](model.md) define the reference backbone, which is the fixed
 substrate for this release; the [report outline](report.md#matched-external-comparison) defines how
 its release claims must be measured against contemporary comparators.
+The [performance and optimization plan](performance.md) owns the pre-rental throughput method,
+MFU convention, and kernel-prioritization work order.
 
 ## Training lifecycle
 

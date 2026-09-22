@@ -521,9 +521,14 @@ def run(args):
     tflops = model.flops_per_token(sequence_length) * tokens_per_second / 1e12
     median = statistics.median(durations)
     p90 = percentile(durations, 0.9)
+    duration_stddev = statistics.stdev(durations) if len(durations) > 1 else 0.0
+    step_rates = [tokens_per_step / duration for duration in durations]
+    rate_median = statistics.median(step_rates)
+    rate_p10 = percentile(step_rates, 0.1)
+    rate_p90 = percentile(step_rates, 0.9)
     result = {
         "format": "speck_throughput_probe",
-        "format_version": 1,
+        "format_version": 2,
         "label": args.label,
         "boundary": args.boundary,
         "benchmark": {
@@ -547,6 +552,10 @@ def run(args):
         "quality": {
             "stable": bool(p90 / median < 1.05) if median else None,
             "p90_over_median": p90 / median if median else None,
+            "step_seconds_stddev": duration_stddev,
+            "step_seconds_cv": duration_stddev / statistics.mean(durations)
+            if durations and statistics.mean(durations)
+            else None,
         },
         "geometry": {
             "batch_size": batch_size,
@@ -561,6 +570,11 @@ def run(args):
             "step_seconds_mean": statistics.mean(durations),
             "step_seconds_median": median,
             "step_seconds_p90": p90,
+            "step_seconds_min": min(durations),
+            "step_seconds_max": max(durations),
+            "tokens_per_second_median": rate_median,
+            "tokens_per_second_p10": rate_p10,
+            "tokens_per_second_p90": rate_p90,
             "loss_first": losses[0],
             "loss_last": losses[-1],
         },
@@ -589,6 +603,11 @@ def run(args):
         "model": {
             "parameters": model.parameter_count(),
             "flops_per_token": model.flops_per_token(sequence_length),
+            "flops_convention": (
+                "6 * linear operation estimate plus attention/recurrent estimate; includes "
+                "the vocabulary projection, excludes optimizer work and activation-recompute "
+                "overhead"
+            ),
         },
         "experiment": {
             "path": str(Path(args.experiment).resolve()),

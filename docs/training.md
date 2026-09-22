@@ -13,6 +13,10 @@ hardware, distributed geometry, and compiled path.
 
 ## Throughput settings
 
+The measurement definitions, current bottleneck evidence, H100 protocol, and optimization order
+are maintained in the [performance plan](performance.md). This section records implementation
+defaults and their qualification boundaries.
+
 The frozen pilot recipe is not an efficient configuration. A bounded RTX 3090 pass measured
 **2.084x** against it, taking model FLOPs utilization from 25.0% to 52.2%. The receipts are in
 [`experiments/qualification/throughput-3090/`](../experiments/qualification/throughput-3090/sweep.json).
