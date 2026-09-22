@@ -78,6 +78,17 @@ result. Repeat the first command with a unique label and output filename for eac
 uses ten warmup steps and a thirty-step measured window; keep the full window after compilation has
 settled rather than shortening it to the old ten-step probe.
 
+After the five baseline runs, create the machine-checked noise summary before reading any ladder
+delta:
+
+```bash
+uv run --no-sync python -m scripts.throughput_summary \
+  results/throughput-h100/h100-pilot-baseline-r*.json \
+  --output results/throughput-h100/baseline-summary.json
+```
+
+The helper rejects receipts with different geometry or runtime settings.
+
 Print the exact ladder from the packet rather than retyping it:
 
 ```bash

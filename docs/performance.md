@@ -60,6 +60,10 @@ Before the metered ladder:
    memory, and pin `TORCHINDUCTOR_CACHE_DIR` on persistent storage.
 2. Run the frozen pilot baseline five times. Keep all receipts and use their median and spread as
    the noise band. Do not call a later delta real when it is inside that band.
+   Summarize the repeated receipts with the repository helper:
+   `uv run --no-sync python -m scripts.throughput_summary results/throughput-h100/h100-pilot-baseline-r*.json
+   --output results/throughput-h100/baseline-summary.json`. It rejects mixed geometry or runtime
+   settings before calculating the band.
 3. Use at least ten warmup steps and a 30-step measured window for each selected configuration.
    The packet is already bound to this window; do not shorten it after the baseline noise band is
    known.
