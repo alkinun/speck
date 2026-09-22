@@ -1,4 +1,4 @@
-"""The one-pass bound must divide by the share the mixture actually declares."""
+"""Readiness records must agree with the declared mixture and the retained-data closeout."""
 
 import importlib.util
 import json
@@ -45,4 +45,16 @@ def test_a_bound_naming_no_bank_is_rejected(tmp_path):
     drifted.write_text(json.dumps(matrix))
 
     with pytest.raises(ValueError, match="names no declared bank"):
+        checker.validate(drifted)
+
+
+def test_an_inventory_that_drifts_from_its_cited_closeout_is_rejected(tmp_path):
+    matrix = json.loads(MATRIX.read_text())
+    pes2o = next(source for source in matrix["sources"] if source["id"] == "pes2o_v3")
+    # The superseded stock-v1 counts this entry once carried.
+    pes2o["inventory"].update(documents=55787, retained_tokens=403558463)
+    drifted = tmp_path / "source-readiness.json"
+    drifted.write_text(json.dumps(matrix))
+
+    with pytest.raises(ValueError, match="drifts from the closeout"):
         checker.validate(drifted)

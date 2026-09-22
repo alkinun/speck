@@ -15,6 +15,7 @@ from pathlib import Path
 from speck.provenance.io import file_sha256
 
 ROOT = Path(__file__).resolve().parents[2]
+CLOSEOUT = "experiments/corpus-audit/data-readiness.json"
 
 
 def _artifact(path, expected):
@@ -27,6 +28,7 @@ def _artifact(path, expected):
 def validate(matrix_path):
     matrix_path = Path(matrix_path).resolve()
     matrix = json.loads(matrix_path.read_text())
+    closeout = json.loads((ROOT / CLOSEOUT).read_text())
     if matrix.get("format") != "speck_data_study_source_readiness":
         raise ValueError("unsupported source-readiness format")
     if matrix.get("format_version") != 1:
@@ -111,6 +113,18 @@ def validate(matrix_path):
         for key, value in inventory.items():
             if isinstance(value, int) and value < 0:
                 raise ValueError(f"negative inventory count: {source['id']}.{key}")
+        # A retained count that cites the closeout must equal it. The peS2o entry once kept
+        # superseded stock-v1 counts, half the v2 stock the closeout and supply gap both use.
+        for evidence in source.get("evidence", []):
+            if evidence.get("path") != CLOSEOUT or "field" not in evidence:
+                continue
+            cited = closeout
+            for key in evidence["field"].split("."):
+                cited = cited[key]
+            if isinstance(cited, dict) and {"documents", "tokens"} <= cited.keys():
+                recorded = (inventory.get("documents"), inventory.get("retained_tokens"))
+                if recorded != (cited["documents"], cited["tokens"]):
+                    raise ValueError(f"retained inventory drifts from the closeout: {source['id']}")
 
     horizon = matrix["horizon_accounting"]
     target = horizon["working_target"]

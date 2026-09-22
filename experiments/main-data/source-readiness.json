@@ -609,8 +609,8 @@
         "science_support_bank"
       ],
       "inventory": {
-        "documents": 55787,
-        "retained_tokens": 403558463,
+        "documents": 113232,
+        "retained_tokens": 820097493,
         "within_source_exact_duplicate_copies": 0
       },
       "evidence": [
@@ -619,7 +619,7 @@
           "field": "pretraining.retained_non_code_banks.pes2o_v3"
         },
         {
-          "path": "/mnt/speck-data/speck/document-token-stock-v1/pes2o_v3/manifest.json",
+          "path": "/mnt/speck-data/speck/document-token-stock-v2/pes2o_v3/manifest.json",
           "kind": "retained_token_stock_manifest"
         }
       ],

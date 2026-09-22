@@ -8,7 +8,7 @@
   "source_of_truth": {
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "d5de528c7adeaeae5621d2783d0a6b7d57882a9bec8388b146a566a1e9e9354b"
+      "sha256": "2b3a25dfb1cb509932089bee9775875ed372b31ce136c205cc4a637f059e07dd"
     },
     "data_design_contract": {
       "path": "experiments/main-data/data-design-contract.json",
