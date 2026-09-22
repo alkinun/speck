@@ -78,13 +78,6 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
     evidence = compute["flagship_throughput_evidence"]
     if evidence["status"] != "proxy_only_flagship_speedup_unmeasured":
         raise ValueError("flagship throughput evidence must stay marked proxy-only")
-    implied = (
-        evidence["proxy_best_model_flops_utilization"]
-        / evidence["flagship_baseline_model_flops_utilization"]
-    )
-    if abs(evidence["implied_flagship_headroom"] - implied) > 1e-3:
-        raise ValueError("implied flagship headroom drifts from the recorded utilizations")
-
     # Read the three utilizations back out of the sweep itself. Copying them into
     # the plan is what let the proxy number be quoted as a flagship number in the
     # first place, so the copies stay bound to their source.

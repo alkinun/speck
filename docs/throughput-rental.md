@@ -24,7 +24,7 @@ records it. Three defects were found and fixed before any machine was rented:
   trace path, so the profile run would have died in `argparse` after the whole ladder was paid for.
 - The `h100-best-endtoend` run switches to end-to-end mode, which loads a packed manifest, but
   nothing supplied `--data-dir`. It would have fallen back to a cache path that does not exist on a
-  fresh host, so the one run that re-measures the overhead derate would have failed.
+  fresh host, so the loader-inclusive check would have failed.
 - Nothing bound the packet to the CLI at all.
 
 Every run now carries a machine-generated `argv`, checked against the real
@@ -98,7 +98,7 @@ uv run --no-sync python experiments/qualification/check_throughput_packet.py \
 
 Run the eight configurations in the packet's order. The first three isolate the pilot baseline, the
 checkpointing-off gain and the compile gain; the next three are the microbatch ladder; the last two
-re-measure the overhead derate and take the Hopper kernel profile at the selected microbatch. The
+measure packed-loader overhead and take the Hopper kernel profile at the selected microbatch. The
 two `selected` runs take the microbatch and accumulation that the ladder chose — substitute them,
 then re-run the checker to regenerate `argv` rather than hand-editing.
 
@@ -119,18 +119,18 @@ Stop and diagnose rather than explore:
 Copy the whole `results/throughput-h100/` directory and the profile trace back before deleting the
 instance, then record:
 
-- The **flagship speedup** over the frozen pilot recipe, stated as a flagship number. The 3090's
-  2.084x is a 318M proxy result against a 25.0% baseline; the flagship's own baseline is already
-  34.6%, implying 1.51x headroom to the same ceiling.
-- Measured flagship **model FLOPs utilization** on Hopper. The 3090 reached 34.6% where the H100
-  pilot reached 9.8% on identical code, which indicates a bandwidth-bound step. A Hopper figure near
-  10–12% is the expected result and is **not** a regression.
-- The remeasured **overhead derate**, replacing the pilot's 0.9459 in
-  `compute.throughput_reanchoring_rule`.
-- Whether the compile gain shrinks as predicted once the GEMMs are flagship-sized.
-- Whether the KDA custom-op work is worth funding, judged from the Hopper profile.
+- Flagship speedup over the baseline measured on this same host, with tokens per update fixed.
+- Estimated MFU with its timing boundary, FLOP estimate and dense BF16 peak denominator.
+- Loader-inclusive/compute throughput ratio. This does not replace the pilot's full-trainer
+  derate: neither benchmark mode measures startup, validation or checkpoint saves.
+- Memory headroom, repeated-run spread, warmup cost and graph-break diagnostics.
+- The selected Hopper trace and the next optimization supported by it.
 
-Then apply the predeclared re-anchoring rule in whichever direction the measurement points. A
+Use the [performance plan](performance.md) for the compact result handoff. A separate sustained
+trainer run at the selected cadence must measure the full-trainer derate; leave it unmeasured
+if the rental only executes this benchmark ladder.
+
+After GH200 and distributed qualification, apply the predeclared re-anchoring rule. A
 surplus does **not** buy a longer base run: the 80B horizon does not move, and freed hours return to
 data research and to the supply-bound stages, because this release is bounded by eligible tokens
 rather than by compute. A shortfall reduces the horizon and never the protected mid-training,

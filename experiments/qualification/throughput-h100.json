@@ -81,7 +81,7 @@
         "batch_size": 1,
         "no_compile": true
       },
-      "purpose": "Isolate the checkpointing-off gain, expected near 1.25x because it removes recompute FLOPs arithmetically.",
+      "purpose": "Measure the effect of removing activation recomputation at fixed geometry; the proxy gain is not a flagship prediction.",
       "argv": [
         "experiments/pilot",
         "--device",
@@ -118,7 +118,7 @@
         "accumulation": 32,
         "batch_size": 1
       },
-      "purpose": "Isolate the compile gain at the pilot microbatch. Record graph_break_count; it should match the six seen on Ampere.",
+      "purpose": "Measure combined model and optimizer compilation at the baseline microbatch. Record graph breaks and reasons; the proxy count is historical, not a required result.",
       "argv": [
         "experiments/pilot",
         "--device",
@@ -271,7 +271,7 @@
         "batch_size": "selected",
         "mode": "end-to-end"
       },
-      "purpose": "Re-measure the overhead derate on Hopper at production save cadence. The plan's 0.9459 ratio came from the pilot; compute mode excludes the startup, validation and saves the anchor includes.",
+      "purpose": "Measure packed-loader overhead against compute mode at the selected geometry. Both modes exclude startup, validation and saves; a separate sustained trainer run is required to measure the full-trainer derate.",
       "argv": [
         "experiments/pilot",
         "--device",
@@ -357,10 +357,10 @@
   ],
   "estimated_gpu_hours": 6,
   "decisions_to_record": [
-    "The flagship speedup over the frozen pilot recipe, stated as a flagship number. This is the number the 3090 pass could not produce: its 2.084x is a 318M proxy result against a 25.0% baseline, while the flagship's own baseline is already 34.6%, implying 1.51x headroom to the same ceiling.",
-    "Measured flagship model FLOPs utilization on Hopper. The 3090 reached 34.6% against the H100's 9.8% on identical code, which indicates a bandwidth-bound step; a Hopper figure near 10-12% is the expected result and is not a regression.",
-    "The remeasured overhead derate, replacing the pilot's 0.9459 in compute.throughput_reanchoring_rule.",
-    "Whether the compile gain shrinks as predicted once the GEMMs are flagship-sized.",
+    "Flagship speedup over the baseline measured on this host at the same tokens per update. The proxy MFU establishes no flagship ceiling.",
+    "Measured estimated MFU with timing boundary and dense BF16 peak convention. Cross-device MFU alone cannot identify bandwidth or launch bottlenecks.",
+    "Loader-inclusive/compute throughput ratio, kept separate from the full-trainer derate. Leave the latter unmeasured until a sustained trainer run includes startup, validation and saves.",
+    "Measured compile gain at flagship geometry, without assuming its direction or size from the proxy.",
     "Whether the KDA custom-op work is worth funding, judged from the Hopper profile."
   ],
   "does_not_transfer_to_gh200": [

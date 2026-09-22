@@ -558,8 +558,8 @@
       "current_anchor_field": "h100_full_trainer_tokens_per_second",
       "replacement_source": "experiments/qualification/throughput-gh200.json, the single-worker confirmation sweep, read from the gh200-pilot-baseline and the selected configuration.",
       "overhead_derate": 0.945884,
-      "overhead_derate_basis": "The confirmation sweep runs --mode compute for ten steps and excludes startup, inline validation and checkpoint saves. The current anchor is a full-trainer rate that includes them. Multiply any benchmark tokens/s by this measured pilot ratio (12859.198/13594.901) before converting it into horizon hours. Remeasure the ratio on GH200 at production save and validation cadence; the pilot value is an interim floor.",
-      "compile_warmup_boundary": "max-autotune warmup is not in the ten-step benchmark. Amortize it per wave, not per step, and only with the persistent TORCHINDUCTOR_CACHE_DIR the Slurm renderer now exports.",
+      "overhead_derate_basis": "The thirty-step compute benchmark excludes startup, inline validation and checkpoint saves. The pilot ratio (12859.198/13594.901) is an interim planning assumption, not a conservative bound. End-to-end benchmark mode adds only packed loading. Remeasure the full-trainer/steady ratio on GH200 with the selected recipe at production save and validation cadence; include measured distributed scaling when costing allocated GPU-hours.",
+      "compile_warmup_boundary": "The thirty-step benchmark excludes warmup. Warmup includes useful training work as well as compilation; amortize startup and requeue overhead per wave with the persistent TORCHINDUCTOR_CACHE_DIR.",
       "surplus_rule": "If the measured rate exceeds the anchor, the 80B 4K-base horizon does not move. Surplus hours return to data research and to the stages whose supply or tooling is the binding constraint. The deliverable is the pipeline, and eligible-token supply, not compute, is what currently bounds it.",
       "shortfall_rule": "If the measured rate falls below the anchor, reduce the 80B horizon rather than borrowing from protected mid-training, post-training or evaluation reservations.",
       "rationale": "Predeclared so the direction is fixed before the number is known. The failure mode this prevents is spending a throughput win on a longer base run that the data pipeline cannot supply and the release does not need."
@@ -570,11 +570,10 @@
       "flagship_baseline_model_flops_utilization": 0.34552398916173754,
       "proxy_baseline_model_flops_utilization": 0.2504915671976221,
       "proxy_best_model_flops_utilization": 0.5220485278776832,
-      "implied_flagship_headroom": 1.511,
-      "implied_flagship_headroom_basis": "The only flagship measurement in the sweep is the eager, activation-checkpointed baseline at 34.55% utilization. If the flagship reaches the proxy's 52.2% ceiling its speedup is 1.51x, not 2.08x, because its baseline was already the more efficient of the two. The checkpointing-off component is arithmetic and should transfer; the compile component is overhead and fusion and should shrink as the GEMMs grow.",
       "unmeasured": "No flagship configuration with activation checkpointing off was ever measured: two attempts reached 23.03 and 22.91 GiB before exhausting the 24 GiB card.",
       "resolution": "experiments/qualification/throughput-gh200.json benchmarks experiments/pilot, the 1.2B reference, so the confirmation sweep measures the flagship speedup directly. Quote no flagship speedup until it returns.",
-      "receipt": "experiments/qualification/throughput-3090/sweep.json"
+      "receipt": "experiments/qualification/throughput-3090/sweep.json",
+      "interpretation": "The proxy utilization is not a flagship ceiling. Cross-model or cross-device MFU ratios are not predicted speedups and do not identify a bandwidth bottleneck. Measure matched flagship variants on the destination hardware."
     }
   },
   "storage": {
@@ -628,9 +627,9 @@
     "experiments/pilot/supply.json": "044cdfd3d48a78f66fe39831b4f46cf4dcb6325e6e254453ba1ff5b94161b070",
     "experiments/qualification/model.json": "84d7ee22eaec7cc2b5c9ccad3c18b80af5aa73cada394ad3fb800e792e67f8e6",
     "experiments/qualification/throughput-3090/sweep.json": "56b1fce0fd067792585a950014d64d8f5610a83c2e6fe05ffaf957f622d8dddf",
-    "experiments/qualification/throughput-gh200.json": "e19e9cf681725dccef1e1d4b4a7239666b9aac1a8d17da168b43dc31a4f32116",
+    "experiments/qualification/throughput-gh200.json": "534fc9c94ec54f2e999bb4fa9ea33a46d1de240bf76ef2a6e8e7ce13844746d9",
     "experiments/qualification/throughput-h100-preflight.json": "ebd7315f38f8ab55534dbb88f8427aa2d9edebcb04728855dc20636d67c30be4",
-    "experiments/qualification/throughput-h100.json": "78bdb88997ec6dd7f1f504f556092286a44ff19aecf3383eb49ab76499ac935e",
+    "experiments/qualification/throughput-h100.json": "fdcd865aa90fd404b63267b3b4d754acb3bd288dcdae17e2163cd6b559c93bc1",
     "experiments/qualification/timing-result.json": "3d285f483468756ef22bcf22c3a93cc9f59ca2930ea374cb84b6645a920ad7a0"
   },
   "launch_requirements": [

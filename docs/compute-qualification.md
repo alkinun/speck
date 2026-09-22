@@ -174,7 +174,7 @@ The throughput phase exists because the frozen pilot recipe is inefficient. A bo
 measured 2.084x against it **on a 318M proxy** and selected a configuration; see
 [training](training.md#throughput-settings). That number is not the flagship's: the only 1.2B point
 in the sweep is the eager checkpointed baseline at 34.6% utilization, against the proxy baseline's
-25.0%, so the flagship's headroom to the same ceiling is 1.51x. This phase benchmarks
+25.0%. Neither utilization defines a ceiling for another model or device. This phase benchmarks
 `experiments/pilot`, the 1.2B reference, so it measures the real figure. Quote no flagship speedup
 before it returns.
 

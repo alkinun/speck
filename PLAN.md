@@ -141,13 +141,14 @@ token exists, and no acquisition or training is authorized by that record.
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
 | Retained-data closeout | Full HQ token/overlap census, full math text/index reconciliation, 500K SFT format census and sampled tool-aware lengths, bounded RL inventory | [Receipt](experiments/corpus-audit/data-readiness.json); finite stock bounds measured, source use/correctness/family eligibility and missing banks remain open |
 | Other data preparation | 6.799B retained source tokens before joint eligibility; 500K assistant rows inventoried; finite tool-aware SFT rehearsal | [Supply](experiments/pilot/supply.json), [assistant contract](docs/assistant.md); not main-run qualified supply |
-| Training throughput pass | 2.084x over the frozen pilot recipe **on a 318M proxy**; proxy utilization 25.0% to 52.2%; selected configuration is checkpointing off, compiled with max-autotune, determinism retained, Liger loss | [Sweep](experiments/qualification/throughput-3090/sweep.json), [GH200 confirmation](experiments/qualification/throughput-gh200.json); RTX 3090 sm_86 only. **This is not a flagship speedup.** The only 1.2B point measured is the eager checkpointed baseline at 34.6% utilization, so its headroom to the proxy's 52.2% ceiling is 1.51x, and no checkpointing-off flagship configuration fit the 24 GiB card. Absolute rates, microbatch and checkpointing need GH200 measurement |
+| Training throughput pass | 2.084x over the frozen pilot recipe **on a 318M proxy**; proxy utilization 25.0% to 52.2%; selected configuration is checkpointing off, compiled with max-autotune, determinism retained, Liger loss | [Sweep](experiments/qualification/throughput-3090/sweep.json), [GH200 confirmation](experiments/qualification/throughput-gh200.json); RTX 3090 sm_86 only. **This is not a flagship speedup.** The only 1.2B point measured is the eager checkpointed baseline at 34.6% utilization, which establishes no optimized ceiling, and no checkpointing-off flagship configuration fit the 24 GiB card. Absolute rates, microbatch and checkpointing need GH200 measurement |
 
 The [timing measurements](experiments/qualification/timing-result.json) additionally cover saves,
 validation, restart, SFT and prefill/decode. Microbatch four showed about 20% higher steady throughput
 in a short probe; sustained operation and recovery need qualification before adoption.
 Those pilot rates describe an inefficient configuration. The pilot ran eager, with activation
-checkpointing, at microbatch one, and reached about 9.8% model FLOPs utilization on the H100. The
+checkpointing, at microbatch one. Its full-trainer rate corresponds to about 9.8% estimated MFU;
+the steady optimizer rate corresponds to about 10.3% under the same FLOP convention. The
 [throughput pass](experiments/qualification/throughput-3090/sweep.json) measured 2.084x against
 that recipe locally **on a 318M proxy, not on the flagship**. Treat 12,859 tokens/s as a property
 of the frozen pilot, not as the machine's capability, and re-anchor the numeric plan only from
@@ -156,7 +157,7 @@ measured GH200 rates.
 Three rules govern that re-anchoring, all predeclared in
 `compute.throughput_reanchoring_rule` before the number is known:
 
-- **Apply the overhead derate.** The confirmation sweep runs `--mode compute` for ten steps and
+- **Apply the overhead derate.** The confirmation sweep runs `--mode compute` for thirty measured steps and
   excludes startup, inline validation and saves. The plan's anchor includes them. The measured
   pilot ratio is 0.9459; multiply by it before converting any benchmark rate into horizon hours,
   and remeasure the ratio on GH200 at production save cadence.

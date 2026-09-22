@@ -21,7 +21,7 @@
     "device_batch_size and accumulation, frozen; both are immutable on resume.",
     "activation_checkpointing, frozen; immutable on resume.",
     "deterministic, frozen; immutable on resume.",
-    "The flagship speedup over the frozen pilot recipe. This is the number the 3090 pass could not produce: its 2.084x is a 318M proxy result against a 25.0% baseline, while the flagship's own baseline is already 34.6%, implying 1.51x headroom to the same ceiling. Record the flagship figure and stop quoting the proxy one.",
+    "Flagship speedup over the baseline measured on this host at the same tokens per update. The proxy MFU establishes no flagship ceiling.",
     "Measured tokens per second per allocated GPU, which re-anchors every horizon in experiments/main-data/plan.json after applying compute.throughput_reanchoring_rule.overhead_derate. This sweep runs --mode compute and excludes startup, validation and saves; the anchor it replaces includes them.",
     "Whether the KDA custom-op work is worth funding, judged from the Hopper profile."
   ],
@@ -87,7 +87,7 @@
         "batch_size": 1,
         "no_compile": true
       },
-      "purpose": "Isolate the checkpointing-off gain on Hopper, expected near 1.25x.",
+      "purpose": "Measure the effect of removing activation recomputation at fixed geometry; the proxy gain is not a flagship prediction.",
       "argv": [
         "experiments/pilot",
         "--device",
@@ -124,7 +124,7 @@
         "accumulation": 32,
         "batch_size": 1
       },
-      "purpose": "Isolate the compile gain at the pilot microbatch. Record graph_break_count; it should match the six seen on Ampere.",
+      "purpose": "Measure combined model and optimizer compilation at the baseline microbatch. Record graph breaks and reasons; the proxy count is historical, not a required result.",
       "argv": [
         "experiments/pilot",
         "--device",
@@ -358,7 +358,7 @@
         "batch_size": "selected",
         "mode": "end-to-end"
       },
-      "purpose": "Loader cost at the production accumulation. The Ampere check ran at accumulation three and found none; accumulation is far higher here, so recheck.",
+      "purpose": "Measure packed-loader overhead against compute mode at the selected geometry. Both modes exclude startup, validation and saves; a separate sustained trainer run is required to measure the full-trainer derate.",
       "argv": [
         "experiments/pilot",
         "--device",

@@ -13,68 +13,21 @@ hardware, distributed geometry, and compiled path.
 
 ## Throughput settings
 
-The measurement definitions, current bottleneck evidence, H100 protocol, and optimization order
-are maintained in the [performance plan](performance.md). This section records implementation
-defaults and their qualification boundaries.
+The [performance plan](performance.md) defines timing boundaries, MFU accounting and optimization
+priorities. The RTX 3090 proxy selected checkpointing off, compiled execution with
+`max-autotune-no-cudagraphs`, deterministic kernels and Liger loss. These are candidates for the
+flagship; its optimized rate and memory headroom remain unmeasured.
 
-The frozen pilot recipe is not an efficient configuration. A bounded RTX 3090 pass measured
-**2.084x** against it, taking model FLOPs utilization from 25.0% to 52.2%. The receipts are in
-[`experiments/qualification/throughput-3090/`](../experiments/qualification/throughput-3090/sweep.json).
-Three settings account for nearly all of it, and all three are immutable on resume, so they must be
-frozen before production starts.
+Freeze microbatch, activation checkpointing and determinism on GH200 before production; these
+settings are immutable on resume. Microbatch affects loader scheduling even at constant global
+batch. Base training compiles both the model and BatchedMuon; the benchmark's compile toggle
+therefore measures their combined gain. The production call also requests typed loss diagnostics.
 
-**That 2.084x is a 318M proxy number and is not the flagship's speedup.** The proxy is a separate
-24-block, width-1024 model in [`experiments/throughput-proxy`](../experiments/throughput-proxy); it
-is geometry-matched to the reference layout, not parameter-matched to the 1.2B. Its baseline sits at
-25.0% utilization. The only flagship measurement in the whole sweep is the eager, checkpointed
-baseline, and that one is already at **34.6%**. If the flagship reaches the proxy's 52.2% ceiling
-its speedup is **1.51x**, because it started from the more efficient of the two baselines. No
-flagship configuration with checkpointing off was ever measured at all: two attempts reached 23.03
-and 22.91 GiB before exhausting the 24 GiB card.
-
-Expect the checkpointing-off component (1.248x) to transfer, since it removes recompute FLOPs
-arithmetically, and expect the compile component to shrink, since it is overhead and fusion and the
-flagship's GEMMs are larger. Quote no flagship speedup until it is measured on the 1.2B reference.
-Two packets do that, both benchmarking `experiments/pilot`:
-[`throughput-h100.json`](../experiments/qualification/throughput-h100.json) on rented time before
-grant access, at zero grant cost, and
-[`throughput-gh200.json`](../experiments/qualification/throughput-gh200.json) on the grant hardware,
-which is where `device_batch_size`, activation checkpointing and determinism are actually frozen.
-
-| Setting | Selected | Why |
-| --- | --- | --- |
-| `activation_checkpointing` | `false` | Recomputation costs about a quarter of executed FLOPs and buys memory that a 96 GiB card does not need. It is also what blocks compilation. |
-| compile | on, `max-autotune-no-cudagraphs` | With checkpointing on, `torch.compile` returns 1.008x, because FLA's `chunk_kda` carries `torch.compiler.disable` and Dynamo cannot tolerate a graph break inside a checkpointed region. With it off the same compile returns 1.612x. |
-| `deterministic` | `true`, retained | Determinism costs 1.086x, but raising the microbatch from one to two returns 1.104x. Reproducibility is affordable and the replay receipts depend on it. |
-| `loss_backend` | `liger` | The `torch` backend materializes the full vocabulary logits twice, once in float32. |
-| `device_batch_size` | choose on GH200 | Larger is better until memory binds. Changing it changes `global_stride` and therefore the data schedule, so it is not resume compatible. |
-
-CUDA graphs were measured and rejected: they cannot capture across the eager KDA islands and ran
-0.7% slower. The input pipeline was measured and cleared: end-to-end mode is 0.6% faster than
-synthetic compute, inside noise. Six graph breaks remain and are not cheaply removable, because
-bypassing the disable decorator still breaks on a lock context manager inside the library.
-
-Two consequences of selecting a compiled recipe are not yet qualified, and both are distributed:
-
-- **Compile under DistributedDataParallel has never been exercised.** `base.py` compiles the
-  DDP-wrapped module, and DDPOptimizer splits the graph at bucket boundaries, which is exactly
-  where the six remaining breaks could interact badly. The throughput sweep is single-GPU and the
-  four-worker replay used to hardcode eager. `scripts.training_replay --compile` now exists for
-  this; run it at four workers before any production wave.
-- **max-autotune warmup is not free on requeue.** The Slurm renderer exports a per-wave
-  `TORCHINDUCTOR_CACHE_DIR` so a preempted job reuses its compilation. Benchmark tokens/s also
-  excludes that warmup, so amortize it per wave when costing, not per step.
-
-Benchmark rates are not trainer rates. `scripts.benchmark --mode compute` excludes startup, inline
-validation and checkpoint saves; the plan's anchor includes them. The pilot measured that gap at
-0.9459, recorded as `compute.throughput_reanchoring_rule.overhead_derate`. Apply it before turning
-any measured rate into horizon hours, and remeasure it on GH200 at production save cadence.
-
-Confirm all of this on the real hardware with
-[`experiments/qualification/throughput-gh200.json`](../experiments/qualification/throughput-gh200.json)
-before freezing a production recipe. Ampere rankings do not transfer directly: the library's
-autotune configurations are Hopper-tuned, and the same code reached 34.6% utilization on a 3090
-against 9.8% on an H100, which indicates a bandwidth-bound rather than compute-bound step.
+Use the [H100 rental](throughput-rental.md) to measure single-GPU implementation deltas. Then
+qualify compiled four-worker DDP with `scripts.training_replay --compile` on the grant hardware.
+Persist `TORCHINDUCTOR_CACHE_DIR` across requeues and include warmup in wave costs. Benchmark
+`end-to-end` mode includes packed loading, but excludes validation and saves; a sustained trainer
+run is needed to update the full-trainer overhead ratio.
 
 New base and SFT checkpoints include every rank's Python, NumPy, CPU, and local CUDA RNG state
 inside the atomic metadata publication. Resume restores those generators after runtime/loader
