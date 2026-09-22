@@ -12,7 +12,7 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
   distinguishing page, template and component roles. All 174 currently unheld records are now read;
   two earlier reads are now held, so the 176 readings overlap the 44 family holds. Original labels,
   weights and document boundaries remain intact; this batch adds no verified origins.
-  The [coding guide](../../docs/coding.md#common-cohort-review) links the frozen earlier readings.
+  The [corpus-audit record](../corpus-audit/README.md) links the frozen earlier readings.
   The [family/provenance assessment](../corpus-audit/code-family-provenance.json) remains partial;
   the GoLLIE examples encountered earlier are exposed material when freezing final scoring coverage.
   No eligible yield, source ranking or admission follows.

@@ -70,9 +70,15 @@ former checks the actual loader, export and assistant path; the latter isolates 
 distributed behavior with a small deterministic workload. Neither result establishes model quality,
 long-context capability, sustained production throughput, or data eligibility.
 
-For the real-data phase, use the bundled checkout and run:
+For the real-data phase, extract the bundle on persistent storage, select the branch its manifest
+records, and verify the checkout commit against `bundle.json` before binding:
 
 ```bash
+cd /workspace/gh200-transfer
+speck_bundle_branch=$(python3 -c 'import json; print(json.load(open("bundle.json"))["branch"])')
+git clone --branch "$speck_bundle_branch" code.bundle code
+cd code
+# uv 0.12.1 (the preparation version), installed for ARM64, and Python 3.10.
 uv sync --locked --python 3.10 --extra gpu --extra linear --group dev --group transformers
 uv run --no-sync python -m scripts.gh200_check bind /workspace/gh200-transfer
 uv run --no-sync python -m scripts.gh200_check run /workspace/gh200-transfer \
@@ -80,9 +86,42 @@ uv run --no-sync python -m scripts.gh200_check run /workspace/gh200-transfer \
   --seconds 5400
 ```
 
+The bundle carries committed source and history, the frozen tokenizer, the verified 105M-token
+pilot pack and a finite assistant rehearsal. It deliberately contains no virtual environments,
+credentials, model downloads or local checkpoints. Do not publish the corpus payload, and do not
+copy this workstation's x86 environments onto an ARM64 host. The lock pins ARM64 CUDA 12.8 PyTorch
+2.9.1 and Triton 3.5.1 wheels; that they install and run on the rented image still needs
+confirmation. Use a persistent terminal, retain the console log, and watch this first qualification.
+
+`run` verifies the clean source commit and every input hash, records runtime/GPU identities, and
+executes five steps under one shared 90-minute deadline:
+
+1. Reopen the pilot pack, scan 64 loader batches, and replay saved batches in a fresh process.
+2. Check KDA numerical behavior, gradients, recurrence/cache and timing at bounded lengths.
+3. Train four full-size 4K base steps on real pilot data, restart from step two in a new process,
+   and compare model/optimizer tensors plus exact loader/RNG state. Its diagnostic batch is one
+   sequence; this is not the pilot optimization schedule.
+4. Exercise native cached generation and export/tokenizer/Transformers parity for that checkpoint.
+5. Initialize SFT from the identified base, train the finite assistant rehearsal in four optimizer
+   steps, repeat the restart check, then check generation and export again.
+
+Any failing phase stops the sequence and retains its logs, checkpoints and failed result. The
+deadline covers supervised child execution with cleanup grace; hashing, comparison, installation and
+transfer also consume rental time. It is not a provider billing cap or an instance-deletion
+mechanism, and the reported GPU-hours cover this attempt only.
+
 The command requires exactly one visible GPU. If the provider cannot expose one GPU separately,
 pass `--allow-other-gpu` only for an explicitly recorded engineering exception and charge every
-allocated idle GPU in the allocation ledger. That exception does not qualify single-GPU cost.
+allocated idle GPU in the allocation ledger. That exception does not qualify single-GPU cost. An
+H100 SXM/NVL/PCIe or H200 can run the same single-GPU sequence with that flag, using the host
+architecture's dependencies; that qualifies neither ARM64, Grace memory/interconnect behavior nor
+GH200 performance.
+
+Rebuild the bundle from current committed code. The historical transfer archive recorded in the
+[H100 timing receipt](../experiments/qualification/timing-result.json) predates the export and
+evaluator fixes, so it is evidence, not a current release artifact. The completed
+[pilot](../experiments/pilot/README.md) stays frozen, and no current bundle exists merely because
+the build command is documented here.
 
 For the distributed production replay, bind the current pilot configuration and run a finite
 four-step check with a restart at step two:

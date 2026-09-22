@@ -190,7 +190,7 @@
     "budget_check": "120 proxy screening + 40 objective/packing + 80 context + 80 confirmation + 40 support = 360 mid-training-research GPU-hours."
   },
   "linked_downstream_evaluation": {
-    "budget_owner": "post_training_research_150_gpu_hours",
+    "budget_owner": "post_training_research_170_gpu_hours",
     "fixed_sft": "Same SFT data, masks, supervised-token exposure, optimizer, schedule and evaluation identities for every retained mid-training arm.",
     "rl_feasibility": "Same prompts, environment, verifier, rollout budget and recovery policy; report early adaptation and held-out transfer rather than in-environment reward alone.",
     "efficiency_outputs": [

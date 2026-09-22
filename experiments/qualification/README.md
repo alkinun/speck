@@ -61,7 +61,8 @@ The 131,072-token batch also completed a four-step timing probe with 32 accumula
 Its approximately 13.7K tokens/s is a short one-worker measurement, not sustained throughput or a
 GH200/distributed projection. The receipt preserves failures, corrected verification, source commits,
 all-in cost boundaries, local evidence hashes, and the latest portable bundle. Use the
-[rental runbook](../../docs/gh200.md) for execution; actual allocation qualification remains open.
+[GH200 access qualification runbook](../../docs/compute-qualification.md) for execution; actual
+allocation qualification remains open.
 
 ## Measured planning inputs
 

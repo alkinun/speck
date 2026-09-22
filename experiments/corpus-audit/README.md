@@ -125,7 +125,7 @@ application revisions/notices, but the single direct test link is stale. The
 [stratified preflight](code-yield-result.json) now recovers/screens 138 files across 11 languages
 and 72 strata: 30 content flags, 31 sample family holds, no admission. Complete source-use/quality
 gates on this frozen sample before estimating yield. The
-[coding plan](../../docs/coding.md#retained-supply-census--2026-09-19) contains the language/role tables
+[census receipt](code-supply.json) contains the language/role tables
 and the gap to proposed exposure; no main-code supply is admitted.
 
 The 105M-token engineering pilot intentionally uses the six retained sources listed in
@@ -191,7 +191,7 @@ joint deduplication, benchmark exclusion, and tokenizer pipeline rather than a p
    cannot attribute improvement to an individual changed source. Keep final tests untouched and
    count all training, preparation and evaluation costs within the study reservation.
 
-The [current study design](../../docs/coding.md#first-comparison-to-prepare) and
+The [current study design](../../docs/data.md#code-priority-and-qualification) and
 [numeric plan](../main-data/plan.json) own the 700-hour pretraining study cap within 1,230 data-research hours and the H100 cost scenarios.
 They do not freeze a run length or guarantee that short-run learning will resolve the question.
 Record the result, uncertainty and recipe decision before main pretraining; later continuation
@@ -261,7 +261,7 @@ Main mixture weights and new-source admission remain undecided.
 
 ## Coding priority and bounded preview — 2026-09-18
 
-The [coding plan](../../docs/coding.md) keeps checked exercises as a candidate for the first
+The [data guide](../../docs/data.md#code-priority-and-qualification) kept checked exercises as a candidate for the first
 pretraining data comparison. [code-preview.json](code-preview.json) binds a separate UltraData-Code inspection:
 16 Python rows per tier, two schema probes, and 405,214 response bytes at a checked revision.
 Raw records remain outside Git. Static tokenization and syntax checks identify preparation needs;
@@ -349,7 +349,7 @@ No code ran and nothing is admitted. Raw files stay outside Git.
 ## Stratified code-yield preflight
 
 [Protocol](code-yield-plan.json), [result](code-yield-result.json), and
-[coding notes](../../docs/coding.md#stratified-retained-code-audit--2026-09-19) define the sample,
+[code section of the data guide](../../docs/data.md#code-priority-and-qualification) define the sample,
 separate eligibility gates and next assessment. Replay into a fresh external directory:
 
 ```bash
@@ -416,7 +416,7 @@ The [Markdown review](markdown-cohort-review.json) adds eighteen readings / 58,6
 completing all 22 unheld Markdown records. It brought coverage to 173 files / 342,499 tokens, with
 44 held and three unheld CSS/SCSS records then unread. Tutorials, reference/test excerpts and
 personal/project prose retain complete document boundaries; no new origins, holds or admissions result.
-The [coding guide](../../docs/coding.md#common-cohort-review) records findings and remaining gates.
+The [code section of the data guide](../../docs/data.md#code-priority-and-qualification) records the policy and remaining gates.
 No source ranking or eligible-yield estimate follows from these restricted batches.
 
 The [stylesheet closeout](stylesheet-cohort-review.json) adds the final three readings / 70,475 tokens.

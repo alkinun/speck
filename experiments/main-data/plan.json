@@ -194,7 +194,7 @@
         ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "qualification_priority": "Retained stock is 0.477B tokens before eligibility, bounding 30% one-pass exposure at 1.59B total tokens. Fixed-cohort reading is complete; preserve all 44 family holds and original frames. Origin coverage remains 28/104 unheld Stack-Edu and 68/70 unheld Stack v3; 75 Stack-Edu outcomes are quota-blocked, one earlier outcome unresolved, and two pinned Stack v3 sources return 404. Resume only after access changes. experiments/main-data/QUALIFICATION.md owns notice/lineage, family and finite-supply gates; experiments/corpus-audit/retained-code-origins.json binds the origin inventory. Natural code and verified exercises have separate gates; no eligible yield or admission.",
+        "qualification_priority": "Retained stock is 0.477B tokens before eligibility, bounding 35% one-pass exposure at 1.36B total tokens. Fixed-cohort reading is complete; preserve all 44 family holds and original frames. Origin coverage remains 28/104 unheld Stack-Edu and 68/70 unheld Stack v3; 75 Stack-Edu outcomes are quota-blocked, one earlier outcome unresolved, and two pinned Stack v3 sources return 404. Resume only after access changes. experiments/main-data/QUALIFICATION.md owns notice/lineage, family and finite-supply gates; experiments/corpus-audit/retained-code-origins.json binds the origin inventory. Natural code and verified exercises have separate gates; no eligible yield or admission.",
         "absorbed_bank": {
           "id": "checked_code",
           "exposure_tokens": 4000000000,
@@ -585,7 +585,7 @@
     "prepared_100b_uint16_token_id_bytes": 200000000000
   },
   "input_receipts": {
-    "experiments/corpus-audit/code-application-origins.json": "49932682280ceb291dff7827520787e148c76783f5488c0f083d41323f1b0ac8",
+    "experiments/corpus-audit/code-application-origins.json": "d7b8ad0a57582666a152f1581432985abdf15a95ba07ed2266a678bc4afec1ce",
     "experiments/corpus-audit/code-bundles.json": "13e5fdfd1ed66afe2efaa231b1baea59d92ebdf909c51916b552f6b39d934036",
     "experiments/corpus-audit/code-expansion.json": "27758b3858331843710bc4cb98a16a89c265bc3fa37457d3e9fbdc1209a5bbe1",
     "experiments/corpus-audit/code-supply.json": "30a93d3afcfbf53c0b173eb7e56aaef728280625bcf5827e195309436db5e8fe",
@@ -609,10 +609,10 @@
     "experiments/main-data/frontier-data-source-mapping.json": "23b58dfcf3ce8ca80b2ffa640f1791625aad1ba13cb069ef97d5fd221a80dcb9",
     "experiments/main-data/livecodebench-exclusion.json": "4c10bfc69ddf2f7379d2eae26bc3873ee8c5317a9d036cad495fe2728bbb536f",
     "experiments/main-data/math-candidate-manifest.json": "58960438e87ca5c359c1653969a967402702c12e7b5cd2433ed1ccfab950cbb8",
-    "experiments/main-data/mid-training-study-packet.json": "f5ceeace2168aeb143e1bab6d3fdc1709c2e68872ea67a83ec4858eb57535afe",
+    "experiments/main-data/mid-training-study-packet.json": "2286c731ca19474f1002b566214e8e5bdec2b725fa8dae0de5edc5a1389ee584",
     "experiments/main-data/natural-code-candidate-manifest.json": "7d9e13a82438ac26d0b07cf0e40bf6a83110f4c5137377451da92d9f327ae7c4",
     "experiments/main-data/natural-web-candidate-manifest.json": "592988818b591a6dfe15de02817daea46c05e32f1e3e8a294bb4f0ea6e55017b",
-    "experiments/main-data/post-training-audit-protocol.json": "254f2742c6650f917cce17a9b2ddd04efeffb6d306978932131fb7a2d8d05f4e",
+    "experiments/main-data/post-training-audit-protocol.json": "396f4ad2f122c84c5b35f0445300b7c579d39f032718f5b3b36bf356cc966e5c",
     "experiments/main-data/post-training-candidate-manifest.json": "8c4edf6d7f434fc2d876d78e66feac7c302edbf3bca606c82e5d0af6877aeee2",
     "experiments/main-data/post-training-research.json": "5036027c1aa274c3f7b0f1aa6b07ad3f4a80016c90a866eee7cf27b096604c99",
     "experiments/main-data/post-training-study-packet.json": "97a5c0cf9bde8d38b1cd57deaa5cb03871045592775f34e770a1b311fabbc4e6",

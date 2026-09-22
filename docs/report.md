@@ -160,9 +160,52 @@ recipe decisions as well as gains.
 
 Evaluate base, mid-trained, SFT and any RL checkpoints separately. Report source-held-out loss,
 executable code, checked math, instructions, model-driven tools, useful context and general regressions.
-The [evaluation guide](evaluation.md) and [competitive strategy](competitive.md) define protocols and
-matched external comparisons. Freeze task/scorer/comparator identities, development/final partitions,
-output budgets and failure denominators. Pilot subsets are not full-benchmark headline results.
+The [evaluation guide](evaluation.md) defines the protocols. Freeze task/scorer/comparator identities,
+development/final partitions, output budgets and failure denominators. Pilot subsets are not
+full-benchmark headline results.
+
+### Matched external comparison
+
+Publisher figures are contextual evidence, not results from a matched Speck evaluation. Reviewed
+2026-09-19; pin immutable weight/config/tokenizer revisions before execution. Different tokenizers,
+phase definitions, inference budgets and evaluation protocols prevent converting training-token
+ratios into capability ratios.
+
+| Reference | Published evidence | Role in our comparison |
+| --- | --- | --- |
+| [MiniCPM5-1B](https://huggingface.co/openbmb/MiniCPM5-1B) | 1.081B total / 0.680B non-embedding parameters; 128K context; 200B deep-thinking + 200B hybrid-thinking SFT tokens, followed by specialist RL and OPD | Primary contemporary reasoning/code/tool comparator; distinguish its base, SFT and final checkpoints |
+| [LFM2.5-1.2B-Thinking](https://huggingface.co/LiquidAI/LFM2.5-1.2B-Thinking) | Reported GSM8K 85.60, MATH-500 87.96 and BFCLv3 56.97; thinking results average five runs | Direct size/thinking/efficiency comparator, not an assumed weak baseline |
+| [Qwen3.5-0.8B](https://huggingface.co/Qwen/Qwen3.5-0.8B) | A smaller hybrid with text/vision support and a published thinking-mode evaluation | Lower-size contemporary comparator; restrict to text and account for total/non-embedding/vision parameters |
+| [OLMo 2-1B](https://huggingface.co/allenai/OLMo-2-0425-1B) | 4T stage-one tokens plus 50B mid-training; intermediate checkpoints are available | Base-learning reference; select nearby token checkpoints for research and final checkpoints for product comparisons |
+| [SmolLM2-1.7B](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B) | 11T training tokens | Upper-size base/reference, not the only or strongest contemporary product baseline |
+
+LFM's IFEval summary averages strict/loose prompt/instruction metrics and its BFCLv3 uses a custom
+handler, so neither converts to our strict metric or to Qwen's BFCL-v4. Training-token figures are
+publisher definitions, not counts under our tokenizer, and we have not reproduced these results.
+Parameter count alone is incomplete: Speck has about 65.5M tied embedding parameters, so its
+non-embedding count is approximately 1.130B.
+
+The 5,000-GPU-hour allowance does not support a confident broad best-in-class claim. The narrow
+competitive hypothesis to test is reliable Python/JavaScript/TypeScript repository repair and tool
+execution at bounded reasoning cost, with math and general instruction following as required
+regression checks. Four gates precede any competitive claim:
+
+1. Freeze a small task panel and the intended claim before selecting new training data — held-out
+   repository repair, code generation, multi-step tools, checked math and instruction retention.
+   Exclude those families from every new corpus and teacher-generation route. Do not tune on the
+   final partition or substitute convenient custom tasks for standard benchmarks.
+2. Run a bounded development comparison against the comparators above under matched tasks, tools,
+   context, output caps and declared reasoning modes. Record success, actual output tokens, latency,
+   memory and cost per successful task. Native chat templates are allowed; disclose adapters and
+   format failures. Compare base models separately.
+3. Set numerical success/regression tolerances from product requirements and development baselines,
+   then freeze them before final evaluation. A competitive claim requires matching or exceeding the
+   strongest selected comparator on the primary endpoint, or an explicit useful efficiency tradeoff
+   at an agreed quality floor. Report paired uncertainty and every declared endpoint; broad parity
+   requires broad results. Passing a schema or nominal context limit is insufficient.
+4. Assess runtime, eligible corpus and bounded learning evidence together. Charge runtime
+   qualification and the data comparison to their existing reservations. If capability or efficiency
+   falls short, publish that result and its limitations; openness alone establishes no advantage.
 
 Show quality versus training and inference budgets, including thinking tokens, tool calls and failed
 attempts. Distinguish equal-token, equal-FLOP and equal-wall-time comparisons. Report uncertainty;

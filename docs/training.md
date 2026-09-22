@@ -83,8 +83,9 @@ rehearsal uses `--no-compile`; compiled and multi-GPU continuation require measu
 exercises the production base trainer with four diagnostic steps and a restart after two. It
 compares every model/optimizer tensor and exact loader/RNG state. `--phase sft` uses a supplied
 finite SFT recipe whose computed step count must match `--steps`. Declare all allocated GPUs with
-`--allocated-gpus`; failed runs retain logs and checkpoints. See the [rental runbook](gh200.md)
-for the complete transferable workflow.
+`--allocated-gpus`; failed runs retain logs and checkpoints. See the
+[GH200 access qualification runbook](compute-qualification.md) for the complete transferable
+workflow.
 
 `make setup` installs the CPU environment. CUDA uses `uv sync --extra gpu --extra linear`;
 the allocation's arm64/CUDA environment must be checked on site.

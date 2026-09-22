@@ -14,9 +14,10 @@ separately budgeted releases.
 ## Reference architecture
 
 The reference **1.2B-total, all-active model** is defined in the
-[qualification configuration](../experiments/qualification/model.json). Freeze the selected geometry
-and tokenizer for data comparisons after the architecture decision; qualify implementation changes
-independently and preserve this historical reference configuration.
+[qualification configuration](../experiments/qualification/model.json). The geometry and tokenizer
+are already frozen for the data comparisons — by declaration, with no architecture decision pending
+on this allocation. Qualify implementation changes independently and preserve this reference
+configuration.
 
 - 1,195,884,576 total/active parameters; 24 layers, model width 2048.
 - Three KDA recurrent blocks followed by one global GQA block, repeated six times.
@@ -91,9 +92,11 @@ measurement, failure and claim rules.
 
 ## Later architecture research
 
-MoE, attention residuals, broad attention-layout searches and model-size sweeps remain future work.
-The first release permits only the bounded reference/control study described above. A measured blocker requiring a structural change must be recorded as a change to the
-selected model, with its data-comparison implications addressed explicitly.
+MoE, attention residuals, broad attention-layout searches and model-size sweeps remain future work,
+alongside the deferred reference/control comparison. **This release runs no architecture study at
+all**, so it can support no superiority or parity claim. A measured blocker requiring a structural
+change must be recorded as a change to the selected model, with its data-comparison implications
+addressed explicitly.
 
 Existing runtime variants serve historical checkpoint/export compatibility and behavioral fixtures.
 Their presence is not a research roadmap. Preserve the current data manifests, stage checkpoints,

@@ -134,13 +134,13 @@ The existing joint-exclusion stage supports checkpointed resume with the same co
 
 ## Before GPU execution
 
-For the current work order, follow [PLAN.md](../../PLAN.md#immediate-order-of-work). The
-[one-H100 launch packet](../../docs/pilot-rental.md) is built and CPU-validated, with a six-hour
-supervisor and cumulative budget reservations. The active H100 passed host preflight. The
-measured projection is 2.20 hours for training/validation/checkpoints plus approximately 2.15 hours
-for one development backend pass. Reserve six single-H100 hours including margin; grading, setup,
-transfer and failures still need accounting. The supervisor bounds execution; it does not stop
-provider billing. [rental-readiness.json](rental-readiness.json) records the archive and local checks.
+For the current work order, follow [PLAN.md](../../PLAN.md#immediate-order-of-work). **This run is
+closed and is not to be repeated**; the section below records how it executed. The one-H100 launch
+packet was built and CPU-validated with a six-hour supervisor and cumulative budget reservations,
+and [rental-readiness.json](rental-readiness.json) records the archive and local checks. The
+measured projection was 2.20 hours for training/validation/checkpoints plus approximately 2.15 hours
+for one development backend pass, against a six-hour reservation. The supervisor bounds execution;
+it does not stop provider billing.
 Keep the full run in a fresh output directory and preserve the earlier timing experiment separately.
 The main-corpus research and expanded coding protocol do not alter this frozen engineering run.
 
@@ -173,3 +173,47 @@ The four ranks collectively read the complete 105M-token schedule on CPU. Report
 exposures and exact replay of eight saved microbatches per rank. This validates rank slicing and
 fresh-process cursor replay; CUDA transfers, NCCL, optimizer restart, and scheduler behavior remain
 separate hardware checks. Use 25,600 batches for a complete one-worker scan into another directory.
+
+
+## Closed-out rental execution — 2026-09-19
+
+`scripts.pilot_rental` implements this workflow. Training, export, full development generation,
+isolated local code grading and backups are complete, and the
+[execution receipt](h100-run.json) preserves the original failures alongside the recovery. Nothing
+below authorizes a new run: it is the operational record, and the durable lessons carry forward to
+the [H100 throughput rental](../../docs/throughput-rental.md) and the
+[GH200 qualification](../../docs/compute-qualification.md).
+
+What actually happened, in order: the GPU workflow trained successfully, then failed offline export
+template enumeration. Recovery used staged template files and the original checkpoint, without
+retraining. Development evaluation started only after removing supervisor rank variables that
+incorrectly triggered distributed startup. The endpoint later refused SSH and the gateway reported
+the container missing; the original eight-hour watcher ended at 04:11 UTC without observing
+recovery. After a provider restart, a fresh complete development pass ran under a new four-hour
+reservation, reusing training and export. The 84 partial GSM8K rows were preserved rather than
+resumed, because the frozen evaluator has no resume support.
+
+Six lessons worth carrying into any future rental:
+
+- **A trainer stop is not a billing stop.** Provider billing and instance state are separate from
+  every local receipt here, and no tool in this repository deletes an instance.
+- **Supervise long transfers and deferred grading with persistent services.** This run's original
+  exec workers ended between task turns; their states and partial files were preserved before
+  migration to systemd user services, and the phase watcher now also checks worker liveness.
+- **Some hosts deny user-namespace creation**, which the code grader requires and will not bypass.
+  Pass `--defer-code-grading` to both `check` and `run`: generation and non-code scoring stay on the
+  GPU host, generated Python is never executed there, and `scripts.code_grade` finalizes locally
+  against the same protocol. That splits execution location only — not tasks, decoding, code tests
+  or their denominator.
+- **Verify backups by hash, not by a completed copy command.** Produce `SHA256SUMS` on the rental
+  with every attempt stopped and no writer active, then re-check it from the root of the local copy
+  and require every file to pass before shutdown. Reclaim remote checkpoints only after that, and
+  remove the remote completion marker before the weights.
+- **Never reuse or reset a ledger to unblock an attempt.** Reservations are retained after success
+  or failure, external cumulative usage can only increase, and a killed supervisor leaves its
+  reservation unresolved for deliberate inspection.
+- **Export parity needs the right comparison.** Comparing native and exported BF16 logits on
+  matching paths, then cached/full-pass semantics in FP32 on the same rounded weights, separated
+  ordinary reduced-precision rounding from genuine wrapper drift, which an earlier combined
+  comparison had conflated. CPU FP32 cached/full error was 4.77e-6. This establishes no
+  long-context accuracy.

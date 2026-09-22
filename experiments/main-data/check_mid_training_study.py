@@ -16,6 +16,19 @@ from pathlib import Path
 from speck.provenance.io import file_sha256
 
 ROOT = Path(__file__).resolve().parents[2]
+PLAN = ROOT / "experiments/main-data/plan.json"
+
+
+def _research_hours():
+    """Read both research reservations from the plan, never from a literal here.
+
+    The downstream-evaluation owner was hardcoded, so when the architecture study was
+    deferred and post-training research moved 150 -> 170 the packet and this check went
+    stale together and still agreed with each other. Reading the plan makes that
+    impossible: a reservation change now fails here until the packet is updated too.
+    """
+    research = json.loads(PLAN.read_text())["compute"]["data_experiments_breakdown_gpu_hours"]
+    return research["mid_training"], research["post_training"]
 
 
 def _artifact(path, expected):
@@ -82,14 +95,17 @@ def validate(packet_path):
         + confirmation["training_gpu_hours"]
         + support["gpu_hours"]
     )
-    if total != 360 or support["budget_check"] != (
+    mid_training_hours, post_training_hours = _research_hours()
+    if total != mid_training_hours or support["budget_check"] != (
         "120 proxy screening + 40 objective/packing + 80 context + 80 confirmation + 40 support = "
-        "360 mid-training-research GPU-hours."
+        f"{mid_training_hours} mid-training-research GPU-hours."
     ):
-        raise ValueError("mid-training research reservation must total 360 GPU-hours")
+        raise ValueError(
+            f"mid-training research reservation must total {mid_training_hours} GPU-hours"
+        )
     if (
         packet["linked_downstream_evaluation"]["budget_owner"]
-        != "post_training_research_150_gpu_hours"
+        != f"post_training_research_{post_training_hours}_gpu_hours"
     ):
         raise ValueError("downstream evaluation must remain outside the mid-training cap")
     if len(packet["trajectory_contract"]["required_fields"]) < 10:
