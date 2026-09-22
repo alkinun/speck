@@ -1,0 +1,48 @@
+"""The one-pass bound must divide by the share the mixture actually declares."""
+
+import importlib.util
+import json
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+SPEC = importlib.util.spec_from_file_location(
+    "check_source_readiness", ROOT / "experiments/main-data/check_source_readiness.py"
+)
+checker = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(checker)
+
+MATRIX = ROOT / "experiments/main-data/source-readiness.json"
+
+
+def test_the_recorded_matrix_agrees_with_the_current_mixture():
+    result = checker.validate(MATRIX)
+
+    assert result["admitted_sources"] == 0
+    assert result["status"] == "candidate_evidence_only_no_training_admission"
+
+
+def test_a_bound_divided_by_a_share_the_mixture_no_longer_has_is_rejected(tmp_path):
+    matrix = json.loads(MATRIX.read_text())
+    bound = matrix["horizon_accounting"]["one_pass_constraints"][0]
+    # Self-consistent arithmetic at a stale share: exactly the drift that passed before.
+    bound["declared_share_percent"] = 30
+    bound["maximum_total_exposure_tokens_before_exclusions"] = (
+        bound["numerator_tokens"] * 100
+    ) // 30
+    drifted = tmp_path / "source-readiness.json"
+    drifted.write_text(json.dumps(matrix))
+
+    with pytest.raises(ValueError, match="drifts from the mixture"):
+        checker.validate(drifted)
+
+
+def test_a_bound_naming_no_bank_is_rejected(tmp_path):
+    matrix = json.loads(MATRIX.read_text())
+    matrix["horizon_accounting"]["one_pass_constraints"][0].pop("bank")
+    drifted = tmp_path / "source-readiness.json"
+    drifted.write_text(json.dumps(matrix))
+
+    with pytest.raises(ValueError, match="names no declared bank"):
+        checker.validate(drifted)

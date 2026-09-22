@@ -17,7 +17,7 @@ changes without retokenizing. Recheck tokenizer fingerprints and hashes whenever
 | Source readers, configuration, packing, resume | `speck/data/{acquisition,configuration,packing,dataset}.py` |
 | Global disk-backed deduplication | `scripts.production_data_preprocess` (batched MinHash is the default; `--per-shingle-minhash` is a slower bitwise-identical fallback) |
 | Secret filtering, near duplicates, contamination | `scripts.text_gitleaks_filter`, `text_near_duplicates`, `text_contamination` |
-| Source-use review | `scripts.source_rights_review` (validates a pending human template; never makes an approval decision) |
+| Source-use review | `scripts.source_rights_review` (validates a pending human template; never makes an approval decision). Decided 2026-09-22: [acceptance record](../experiments/main-data/source-rights-acceptance.json) |
 | Checked retained-stock tokenization | `scripts.tokenize_stock` |
 | Distributed loading | `speck/data/loader.py` |
 
@@ -98,7 +98,7 @@ links the provenance, practical CPU and bundle checks. Natural-code eligibility 
 exercise verification remain separate; no inspected candidate is admitted by these checks.
 
 The [retained-code census](../experiments/corpus-audit/code-supply.json) verifies 714,369 files /
-476,774,847 tokens before joint eligibility: only 1.59% of the proposed 30B natural-code exposure.
+476,774,847 tokens before joint eligibility: only 1.36% of the 35B natural-code preparation target.
 The [fixed Stack-Edu cohort](../experiments/corpus-audit/code-yield-result.json) has 138 files /
 459,615 tokens and 31 known-family holds. The [broader Stack v3 preflight](../experiments/corpus-audit/stack-v3-broader.json)
 acquired sixteen groups, reconciling 29,347 repository rows / 379,942 entries, then selected
@@ -124,8 +124,9 @@ adds ten exact-match Stack-Edu origins, bringing coverage to 28/104 unheld Stack
 Stack v3 records. GitHub quota exhaustion leaves 75 Stack-Edu records unresolved, separately from
 one prior Stack-Edu failure and two pinned Stack v3 source 404s. The C++-only successful prefix is
 not a representative recovery rate. Pause quota-blocked requests until access changes and continue
-independent web/math qualification. Fixed-cohort reading is complete; source-use and broader family
-qualification remain open, including four path-verified Stack v3 ancestor-notice searches.
+independent web/math qualification. Fixed-cohort reading is complete. The named source-use decision for both code routes is
+recorded, but it is conditional on origin and notice recovery, which is still open along with
+broader family qualification, including four path-verified Stack v3 ancestor-notice searches.
 Parser success and passing test assertions cannot certify behavior, semantic preservation or eligibility.
 Complete source-use, provenance and family checks in the
 [qualification packet](../experiments/main-data/QUALIFICATION.md) before selecting finite experiment
@@ -262,8 +263,8 @@ records. The [manual review](../experiments/corpus-audit/infiwebmath-4plus-arith
 classifies the flags as binary notation, intentional counterexamples, puzzle notation, extraction
 truncation and one likely source transcription error. These classifications are triage evidence,
 not a correctness rate; symbolic, unit-bearing and multi-line reasoning remain unchecked. The
-source-readiness matrix records InfiWebMath as a separate non-admitted candidate with source-use,
-family, contamination, correctness and supply gates open.
+source-readiness matrix records InfiWebMath as a separate non-admitted candidate. Its source-use
+gate closed on 2026-09-22; family, contamination, correctness and supply remain open.
 
 The shared [stage-conditioned data-design contract](../experiments/main-data/data-design-contract.json)
 now binds the pretraining, mid-training and post-training packets. It standardizes manifest fields for
@@ -330,7 +331,8 @@ acquisition, repetition, GPU work or training.
    recovers/screens 138 files across 11 languages; no-hit records remain unresolved. Natural code
    needs traceable, useful content; verified exercises additionally need test linkage and independent
    oracles. Record weighted yield only after assessing the gates. The 0.477B retained tokens
-   do not establish the proposed 30B natural-code exposure or the separate checked-exercise bank.
+   do not establish the 35B natural-code preparation target. The separate checked-exercise bank
+   was re-frozen out of the mixture on 2026-09-22 rather than left standing against zero stock.
    For web, resolve source-use evidence, source families, overlap and source-aware extraction
    repair before counting accepted unique tokens. Keep candidate flags review-only and the HQ
    cutoff unchanged. Exact sample-token retention is not full-corpus yield. Extend DCLM previews

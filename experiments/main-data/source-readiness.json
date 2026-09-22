@@ -849,11 +849,12 @@
     "one_pass_constraints": [
       {
         "source": "stack_edu_combined_retained_code",
-        "declared_share_percent": 30,
+        "declared_share_percent": 35,
         "numerator_tokens": 476774847,
-        "maximum_total_exposure_tokens_before_exclusions": 1589249490,
-        "calculation": "floor(476774847 / 0.30)",
-        "constraint": "Natural-code stock is combined retained evidence, not eligible supply; the bound excludes all unresolved gates."
+        "maximum_total_exposure_tokens_before_exclusions": 1362213848,
+        "calculation": "floor(476774847 / 0.35)",
+        "constraint": "Natural-code stock is combined retained evidence, not eligible supply; the bound excludes all unresolved gates.",
+        "bank": "natural_code"
       },
       {
         "source": "ultrafineweb_hq_distinct_from_retained_fineweb_edu",
@@ -861,7 +862,8 @@
         "numerator_tokens": 351237925,
         "maximum_total_exposure_tokens_before_exclusions": 1404951700,
         "calculation": "floor(351237925 / 0.25)",
-        "constraint": "HQ distinct-token accounting is a candidate overlap bound; it does not close source-use, family, quality or runtime gates."
+        "constraint": "HQ distinct-token accounting is a candidate overlap bound; it does not close source-use, family, quality or runtime gates.",
+        "bank": "selected_web"
       }
     ],
     "decision_boundary": "Do not freeze a common comparison horizon or claim 100B supply from these counts. Use the minimum measured eligible bank after exclusions, family partition, correctness review and GH200 cost; revise the target explicitly if it is smaller."

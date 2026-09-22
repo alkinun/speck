@@ -90,3 +90,30 @@ def test_stale_readiness_horizon_rejected(tmp_path, plan, monkeypatch):
     monkeypatch.setattr(checker, "_load", stale_load)
     with pytest.raises(ValueError, match="source-readiness horizon"):
         validate_plan(tmp_path, plan)
+
+
+def test_re_frozen_banks_cannot_be_restored_without_a_revised_freeze(tmp_path, plan):
+    mixture = plan["main_pretraining"]["mixture"]
+    natural_code = next(item for item in mixture if item["id"] == "natural_code")
+    natural_code["weight_percent"] -= 5
+    natural_code["exposure_tokens"] -= 4_000_000_000
+    natural_code["eligible_unique_token_preparation_target"] -= 5_000_000_000
+    mixture.append(
+        {
+            "id": "checked_code",
+            "role": "Checked code explanations, exercises and repair",
+            "weight_percent": 5,
+            "exposure_tokens": 4_000_000_000,
+            "eligible_unique_token_preparation_target": 5_000_000_000,
+        }
+    )
+
+    with pytest.raises(ValueError, match="re-frozen out of the mixture"):
+        validate_plan(tmp_path, plan)
+
+
+def test_declared_domain_percentages_must_match_their_owning_banks(tmp_path, plan):
+    plan["main_pretraining"]["code_percent"] = 30
+
+    with pytest.raises(ValueError, match="code/math percentages drift"):
+        validate_plan(tmp_path, plan)

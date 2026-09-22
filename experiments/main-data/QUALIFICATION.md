@@ -289,8 +289,9 @@ serialization. Overlapping parent/filtered releases count once. The working six-
 [plan.json](plan.json) remain hypotheses; the chat suggestion of an 80/20 staged mixture has not
 become a launch recipe. No 100B qualified supply or GH200 compute-feasibility claim follows from this packet.
 
-The retained-data table and acquisition routes are now recorded; source-use, family and correctness
-decisions still gate accepted/rejected inventory and usable yield. Then freeze the eligible banks and
+The retained-data table and acquisition routes are now recorded. Source use was decided on
+2026-09-22 and is closed on six of the nine selected sources, conditionally recorded on three;
+family and correctness decisions still gate accepted/rejected inventory and usable yield. Then freeze the eligible banks and
 a bounded baseline/candidate comparison from matched fresh initializations. Run it before main pretraining and record the
 starting-recipe decision before freezing the production manifest. Neither source inspection nor
 a later continuation comparison substitutes for this gate.

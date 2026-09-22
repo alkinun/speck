@@ -112,7 +112,7 @@
     },
     "source_readiness": {
       "path": "experiments/main-data/source-readiness.json",
-      "sha256": "8d7413b1311daa7314c4a99b698ebfbe740c45c039572fdb077e13c2599624cd"
+      "sha256": "d5de528c7adeaeae5621d2783d0a6b7d57882a9bec8388b146a566a1e9e9354b"
     },
     "pretraining_study": {
       "path": "experiments/main-data/data-study-packet.json",
@@ -120,11 +120,11 @@
     },
     "mid_training_study": {
       "path": "experiments/main-data/mid-training-study-packet.json",
-      "sha256": "5e0f4e8f5a9c9cbfb07f2b21a5f77b2a1f25311ff4b2d1bed68f62329891a1ba"
+      "sha256": "f5ceeace2168aeb143e1bab6d3fdc1709c2e68872ea67a83ec4858eb57535afe"
     },
     "post_training_study": {
       "path": "experiments/main-data/post-training-study-packet.json",
-      "sha256": "c1ddb284953ed89710050635e3aaff50525086c592703e770ffa8f8d3310bbf9"
+      "sha256": "97a5c0cf9bde8d38b1cd57deaa5cb03871045592775f34e770a1b311fabbc4e6"
     },
     "qualification_rules": {
       "path": "experiments/main-data/qualification-rules.json",
@@ -136,31 +136,31 @@
     },
     "research_mapping": {
       "path": "experiments/main-data/frontier-data-source-mapping.json",
-      "sha256": "7a19b209310970a2e23c15925c41d08f3500996c677c5131885c2cb2866b3d4f"
+      "sha256": "23b58dfcf3ce8ca80b2ffa640f1791625aad1ba13cb069ef97d5fd221a80dcb9"
     },
     "candidate_manifest_preflight": {
       "path": "experiments/main-data/candidate-manifest-preflight.json",
-      "sha256": "d1385569b205d8c1b65ede9b908a5568d12e6dd82890374b2b64d2e21d2fd377"
+      "sha256": "0cefb1a01030313421a52c05e2199cfc47f4b840742984a70ef7d446c02c768d"
     },
     "natural_web_manifest": {
       "path": "experiments/main-data/natural-web-candidate-manifest.json",
-      "sha256": "30a777f1b0acd4c0af57f5cec6e68466393f55e0fb75c08b15aa486086ff847d"
+      "sha256": "592988818b591a6dfe15de02817daea46c05e32f1e3e8a294bb4f0ea6e55017b"
     },
     "natural_code_manifest": {
       "path": "experiments/main-data/natural-code-candidate-manifest.json",
-      "sha256": "ec58aa7fc6e15ab2e79ab067ee6f5caf8739d51fa3b8a859d8dcd53612a2ccdd"
+      "sha256": "7d9e13a82438ac26d0b07cf0e40bf6a83110f4c5137377451da92d9f327ae7c4"
     },
     "math_manifest": {
       "path": "experiments/main-data/math-candidate-manifest.json",
-      "sha256": "a9063c58ddeaec5fd0c9c496d74900cc5354c01ae8aa394be4da1e9f09470590"
+      "sha256": "58960438e87ca5c359c1653969a967402702c12e7b5cd2433ed1ccfab950cbb8"
     },
     "post_training_manifest": {
       "path": "experiments/main-data/post-training-candidate-manifest.json",
-      "sha256": "964589acdfc03cc2ae21cc7158e4151c8d75c04074974ccda02da8336232ab39"
+      "sha256": "8c4edf6d7f434fc2d876d78e66feac7c302edbf3bca606c82e5d0af6877aeee2"
     },
     "post_training_audit_protocol": {
       "path": "experiments/main-data/post-training-audit-protocol.json",
-      "sha256": "d69e53b794d9cc6fbc84706b913ef37e9b164228d47ff069aca02ac28dea4735"
+      "sha256": "254f2742c6650f917cce17a9b2ddd04efeffb6d306978932131fb7a2d8d05f4e"
     },
     "post_training_research": {
       "path": "experiments/main-data/post-training-research.json",
@@ -176,7 +176,7 @@
     "changes_made": "Added structured synthesis and design requirements; no source admission, mixture percentage or GPU allocation changed.",
     "mapping": {
       "path": "experiments/main-data/frontier-data-source-mapping.json",
-      "sha256": "7a19b209310970a2e23c15925c41d08f3500996c677c5131885c2cb2866b3d4f",
+      "sha256": "23b58dfcf3ce8ca80b2ffa640f1791625aad1ba13cb069ef97d5fd221a80dcb9",
       "status": "review_only_gate_implications_recorded"
     }
   }

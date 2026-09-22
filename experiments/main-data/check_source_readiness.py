@@ -118,7 +118,23 @@ def validate(matrix_path):
         target["total_exposure_tokens"] * target["preparation_factor"]
     ):
         raise ValueError("working-horizon preparation arithmetic is inconsistent")
+    # Each bound must name the bank whose weight it divides by, and that weight must be the one
+    # the plan actually declares. Checking only the internal arithmetic is not enough: after the
+    # 2026-09-22 re-freeze the code bound stayed self-consistent at a 30% share the mixture no
+    # longer had, and understated the binding constraint by 17% while passing every check.
+    mixture = json.loads((ROOT / "experiments/main-data/plan.json").read_text())
+    weights = {
+        item["id"]: item["weight_percent"] for item in mixture["main_pretraining"]["mixture"]
+    }
     for bound in horizon["one_pass_constraints"]:
+        bank = bound.get("bank")
+        if bank not in weights:
+            raise ValueError(f"one-pass bound names no declared bank: {bound['source']}")
+        if bound["declared_share_percent"] != weights[bank]:
+            raise ValueError(
+                f"one-pass bound share drifts from the mixture: {bound['source']} declares "
+                f"{bound['declared_share_percent']}%, bank {bank} carries {weights[bank]}%"
+            )
         expected = (bound["numerator_tokens"] * 100) // bound["declared_share_percent"]
         if bound["maximum_total_exposure_tokens_before_exclusions"] != int(expected):
             raise ValueError(f"one-pass bound arithmetic is inconsistent: {bound['source']}")

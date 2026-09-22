@@ -321,7 +321,7 @@ responses and the oversized Arcade wheel remain recorded acquisition limits.
 to resolve origins/notices, complete broader family/near-duplicate discovery and establish finite
 eligible inventories. The fixed-cohort reading pass is complete. Natural-code eligibility is
 separate from independent exercise verification. The retained 0.477B code stock supports at most
-**1.59B total one-pass tokens at 30% natural code**, before exclusions, validation and other bank
+**1.36B total one-pass tokens at 35% natural code**, before exclusions, validation and other bank
 constraints. Qualified supply and runtime cost jointly set the experiment horizon; longer confirmation
 runs need more eligible baseline data.
 

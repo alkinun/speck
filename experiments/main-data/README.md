@@ -70,7 +70,9 @@ execute corpus content or authorize training.
 
 The packet is deliberately design-only. Before any arm can run, every selected source needs named
 source-use decisions, family and near-duplicate partitions, independent correctness checks where
-claimed, finite accepted-token counts, a disjoint evaluation pack and measured GH200 cost. A future
+claimed, finite accepted-token counts, a disjoint evaluation pack and measured GH200 cost. The
+first of those is done: the [acceptance record](source-rights-acceptance.json) closed source use
+over the nine selected sources on 2026-09-22, subject to per-source conditions. It admits nothing. A future
 launch request must bind the qualified manifests and the existing rights/operations/firewall records.
 The packet does not authorize acquisition, training or a main-run mixture.
 
@@ -133,7 +135,8 @@ the checklist for source-specific qualification, not a launch manifest.
 
 The [natural-web candidate manifest](natural-web-candidate-manifest.json) is the first source-specific
 application. It binds the FineWeb-Edu control and Ultra-FineWeb HQ candidate, preserves the measured
-overlap, and leaves source-use, family, contamination, eligible-supply and runtime gates open.
+overlap. Source use closed for both on 2026-09-22; family, contamination, eligible-supply and
+runtime gates remain open.
 
 The [natural-code candidate manifest](natural-code-candidate-manifest.json) now binds Stack-Edu,
 Stack v3 and the separate checked-code substitution route, which is no longer a declared bank. It preserves the finite-stock and cohort
@@ -349,7 +352,7 @@ provides content locators rather than the actual files, so fetching and qualifyi
 be included. [UltraData-Code](https://huggingface.co/datasets/openbmb/UltraData-Code) is an additional
 candidate, subject to the existing lineage hold. Publisher corpus sizes and tokenizer counts do
 not establish our eligible supply. The retained 0.477B natural-code tokens bound a one-pass
-baseline at 1.59B total tokens with a 30% natural-code share, before exclusions, validation and other
+baseline at 1.36B total tokens with a 35% natural-code share, before exclusions, validation and other
 banks. Even the proposed short studies need additional qualified baseline supply or shorter common
 horizons; their hour caps do not imply that 1.85B/4.17B-token arms are available.
 
