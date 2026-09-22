@@ -5,7 +5,7 @@
   "purpose": "State the distance between the declared mixture and measured retained stock, so acquisition is planned against a number rather than an impression.",
   "generated_by": "experiments/main-data/build_supply_gap.py",
   "source_of_truth": {
-    "experiments/main-data/plan.json": "45433934bb8329e66a9e400ea53a044fd1fca41744300de78099652b5945ddac",
+    "experiments/main-data/plan.json": "7ad6b0dea52448b6c82b082376691d0a2d516129d2ead26686b386e675a44619",
     "experiments/pilot/supply.json": "044cdfd3d48a78f66fe39831b4f46cf4dcb6325e6e254453ba1ff5b94161b070",
     "experiments/main-data/source-readiness.json": "d5de528c7adeaeae5621d2783d0a6b7d57882a9bec8388b146a566a1e9e9354b"
   },

@@ -10,21 +10,21 @@
     "boundary": "This packet spends no part of the 5,000-GPU-hour allocation and does not draw on the 120-hour runtime-qualification reservation. Rental cost, storage, transfer and idle time are recorded in the external rental ledger, exactly as the completed H100 pilot was."
   },
   "why_h100": "The H100 SXM reaches about 989.5 bf16 TFLOPS, the same peak the GH200 sweep assumes, and the pilot's 12,859 tokens/s anchor was measured on one. Deltas measured here are therefore against the same baseline hardware the numeric plan is anchored to, which the 3090 pass could not offer.",
-  "command": "Run `python experiments/qualification/check_throughput_packet.py experiments/qualification/throughput-h100.json --print-commands` to print checked benchmark commands. This does not rewrite the packet. Replace selected overrides and their matching recorded argv values together, then re-run the checker before execution.",
+  "command": "From the clean bundled code checkout after `scripts.gh200_check bind ..`, run `python experiments/qualification/check_throughput_packet.py experiments/qualification/throughput-h100.json --print-commands`. Substitute selected geometry in the copied commands, preserving tokens per update; do not edit the tracked packet during measurement. Printed selected values are preflight probes, not measured selections.",
   "common": {
     "activation_checkpointing": false,
     "compile_mode": "max-autotune-no-cudagraphs",
     "deterministic": true,
-    "experiment": "experiments/pilot",
+    "experiment": "../relocated-base",
     "loss_backend": "liger",
     "mode": "compute",
     "peak_tflops": 989.5,
     "sequence_length": 4096,
     "steps": 30,
     "warmup_steps": 10,
-    "output_directory": "results/throughput-h100",
+    "output_directory": "../results/throughput-h100",
     "data_dir": "../pilot-data",
-    "data_dir_note": "Relative to the extracted rental bundle root, which places the packed 105M pilot pack at pilot-data/. Only the end-to-end run reads it; compute mode is synthetic. Without this the parser would silently fall back to ~/.cache/speck/benchmark-200m, which does not exist on a fresh rented host.",
+    "data_dir_note": "Relative to the bundled code/ checkout after binding. Only end-to-end mode reads the transported pilot-data/ pack; compute mode is synthetic.",
     "training_output": true
   },
   "prerequisites": [
@@ -46,7 +46,7 @@
       },
       "purpose": "Reproduce the frozen pilot recipe so every later delta is a flagship delta. The pilot's own H100 rates are 12,859 tokens/s over the full trainer and 13,595 steady optimizer tokens/s; this run is the compute-mode counterpart and is not directly comparable to the full-trainer figure.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -73,7 +73,7 @@
         "h100-pilot-baseline",
         "--explain",
         "--output",
-        "results/throughput-h100/h100-pilot-baseline.json"
+        "../results/throughput-h100/h100-pilot-baseline.json"
       ]
     },
     {
@@ -85,7 +85,7 @@
       },
       "purpose": "Measure the effect of removing activation recomputation at fixed geometry; the proxy gain is not a flagship prediction.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -112,7 +112,7 @@
         "h100-noac-eager",
         "--explain",
         "--output",
-        "results/throughput-h100/h100-noac-eager.json"
+        "../results/throughput-h100/h100-noac-eager.json"
       ]
     },
     {
@@ -123,7 +123,7 @@
       },
       "purpose": "Measure combined model and optimizer compilation at the baseline microbatch. Record graph breaks and reasons; the proxy count is historical, not a required result.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -151,7 +151,7 @@
         "h100-noac-compile-mb1",
         "--explain",
         "--output",
-        "results/throughput-h100/h100-noac-compile-mb1.json"
+        "../results/throughput-h100/h100-noac-compile-mb1.json"
       ]
     },
     {
@@ -162,7 +162,7 @@
       },
       "purpose": "Microbatch scaling at constant global batch.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -190,7 +190,7 @@
         "h100-mb2",
         "--explain",
         "--output",
-        "results/throughput-h100/h100-mb2.json"
+        "../results/throughput-h100/h100-mb2.json"
       ]
     },
     {
@@ -201,7 +201,7 @@
       },
       "purpose": "Microbatch scaling; the pilot's 20% short-probe gain at microbatch four is checked here under a stable measurement.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -229,7 +229,7 @@
         "h100-mb4",
         "--explain",
         "--output",
-        "results/throughput-h100/h100-mb4.json"
+        "../results/throughput-h100/h100-mb4.json"
       ]
     },
     {
@@ -240,7 +240,7 @@
       },
       "purpose": "Microbatch scaling; 80 GiB should permit this where 24 GiB could not.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -268,7 +268,7 @@
         "h100-mb8",
         "--explain",
         "--output",
-        "results/throughput-h100/h100-mb8.json"
+        "../results/throughput-h100/h100-mb8.json"
       ]
     },
     {
@@ -280,7 +280,7 @@
       },
       "purpose": "Measure packed-loader overhead against compute mode at the selected geometry. Both modes exclude startup, validation and saves; a separate sustained trainer run is required to measure the full-trainer derate.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -310,7 +310,7 @@
         "--data-dir",
         "../pilot-data",
         "--output",
-        "results/throughput-h100/h100-best-endtoend.json"
+        "../results/throughput-h100/h100-best-endtoend.json"
       ],
       "operator_substitutes": [
         "batch_size",
@@ -322,11 +322,11 @@
       "overrides": {
         "accumulation": "selected",
         "batch_size": "selected",
-        "profile": "results/throughput-h100/h100-best-profile.trace.json"
+        "profile": "../results/throughput-h100/h100-best-profile.trace.json"
       },
       "purpose": "Kernel profile on Hopper, to judge whether the KDA custom-op work is worth funding and whether FLA's Hopper-tuned autotune configurations reorder the Ampere ranking.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -354,9 +354,9 @@
         "h100-best-profile",
         "--explain",
         "--profile",
-        "results/throughput-h100/h100-best-profile.trace.json",
+        "../results/throughput-h100/h100-best-profile.trace.json",
         "--output",
-        "results/throughput-h100/h100-best-profile.json"
+        "../results/throughput-h100/h100-best-profile.json"
       ],
       "operator_substitutes": [
         "batch_size",

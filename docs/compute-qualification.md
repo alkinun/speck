@@ -86,6 +86,10 @@ uv run --no-sync python -m scripts.gh200_check run /workspace/gh200-transfer \
   --seconds 5400
 ```
 
+Run the throughput packet from this `code/` checkout after binding. It uses `../relocated-base`
+and writes to `../results/throughput-gh200`, keeping relocated inputs and outputs outside the
+clean source tree. Substitute selected geometry in the printed commands, not in the tracked packet.
+
 The bundle carries committed source and history, the frozen tokenizer, the verified 105M-token
 pilot pack and a finite assistant rehearsal. It deliberately contains no virtual environments,
 credentials, model downloads or local checkpoints. Do not publish the corpus payload, and do not

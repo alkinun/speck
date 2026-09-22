@@ -1,20 +1,20 @@
 {
   "boundary": "Single-worker throughput confirmation only. It does not qualify distributed execution, scheduler requeue, long-context cost or data eligibility, and it does not authorize production training. The four-worker and scheduler phases of the runbook remain separate.",
-  "command": "Run `python experiments/qualification/check_throughput_packet.py experiments/qualification/throughput-gh200.json --print-commands` to print checked benchmark commands. This does not rewrite the packet. Replace selected overrides and their matching recorded argv values together, then re-run the checker before execution.",
+  "command": "From the clean bundled code checkout after `scripts.gh200_check bind ..`, run `python experiments/qualification/check_throughput_packet.py experiments/qualification/throughput-gh200.json --print-commands`. Substitute selected geometry in the copied commands, preserving tokens per update; do not edit the tracked packet during measurement. Printed selected values are preflight probes, not measured selections.",
   "common": {
     "activation_checkpointing": false,
     "compile_mode": "max-autotune-no-cudagraphs",
     "deterministic": true,
-    "experiment": "experiments/pilot",
+    "experiment": "../relocated-base",
     "loss_backend": "liger",
     "mode": "compute",
     "peak_tflops": 989.5,
     "sequence_length": 4096,
     "steps": 30,
     "warmup_steps": 10,
-    "output_directory": "results/throughput-gh200",
+    "output_directory": "../results/throughput-gh200",
     "data_dir": "../pilot-data",
-    "data_dir_note": "Relative to the extracted rental bundle root, which places the packed 105M pilot pack at pilot-data/. Only the end-to-end run reads it; compute mode is synthetic. Without this the parser would silently fall back to ~/.cache/speck/benchmark-200m, which does not exist on a fresh rented host.",
+    "data_dir_note": "Relative to the bundled code/ checkout after binding. Only end-to-end mode reads the transported pilot-data/ pack; compute mode is synthetic.",
     "training_output": true
   },
   "date": "2026-09-21",
@@ -52,7 +52,7 @@
       },
       "purpose": "Reproduce the frozen pilot recipe so every later delta is a flagship delta measured on production hardware. The pilot's own H100 rates are 12,859 tokens/s over the full trainer and 13,595 steady optimizer tokens/s; this run is the compute-mode counterpart and is not directly comparable to the full-trainer figure.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -79,7 +79,7 @@
         "gh200-pilot-baseline",
         "--explain",
         "--output",
-        "results/throughput-gh200/gh200-pilot-baseline.json"
+        "../results/throughput-gh200/gh200-pilot-baseline.json"
       ]
     },
     {
@@ -91,7 +91,7 @@
       },
       "purpose": "Measure the effect of removing activation recomputation at fixed geometry; the proxy gain is not a flagship prediction.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -118,7 +118,7 @@
         "gh200-noac-eager",
         "--explain",
         "--output",
-        "results/throughput-gh200/gh200-noac-eager.json"
+        "../results/throughput-gh200/gh200-noac-eager.json"
       ]
     },
     {
@@ -129,7 +129,7 @@
       },
       "purpose": "Measure combined model and optimizer compilation at the baseline microbatch. Record graph breaks and reasons; the proxy count is historical, not a required result.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -157,7 +157,7 @@
         "gh200-noac-compile-mb1",
         "--explain",
         "--output",
-        "results/throughput-gh200/gh200-noac-compile-mb1.json"
+        "../results/throughput-gh200/gh200-noac-compile-mb1.json"
       ]
     },
     {
@@ -168,7 +168,7 @@
       },
       "purpose": "Microbatch scaling.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -196,7 +196,7 @@
         "gh200-mb2",
         "--explain",
         "--output",
-        "results/throughput-gh200/gh200-mb2.json"
+        "../results/throughput-gh200/gh200-mb2.json"
       ]
     },
     {
@@ -207,7 +207,7 @@
       },
       "purpose": "Microbatch scaling.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -235,7 +235,7 @@
         "gh200-mb4",
         "--explain",
         "--output",
-        "results/throughput-gh200/gh200-mb4.json"
+        "../results/throughput-gh200/gh200-mb4.json"
       ]
     },
     {
@@ -246,7 +246,7 @@
       },
       "purpose": "Microbatch scaling; 96 GiB should permit this where 24 GiB could not.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -274,7 +274,7 @@
         "gh200-mb8",
         "--explain",
         "--output",
-        "results/throughput-gh200/gh200-mb8.json"
+        "../results/throughput-gh200/gh200-mb8.json"
       ]
     },
     {
@@ -285,7 +285,7 @@
       },
       "purpose": "Upper bound on microbatch; expected to be memory limited.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -313,7 +313,7 @@
         "gh200-mb16",
         "--explain",
         "--output",
-        "results/throughput-gh200/gh200-mb16.json"
+        "../results/throughput-gh200/gh200-mb16.json"
       ]
     },
     {
@@ -325,7 +325,7 @@
       },
       "purpose": "Price determinism at the selected microbatch. On Ampere it cost 1.086x and a larger microbatch more than repaid it. Keep determinism unless Hopper disagrees sharply.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -353,7 +353,7 @@
         "gh200-best-nondet",
         "--explain",
         "--output",
-        "results/throughput-gh200/gh200-best-nondet.json"
+        "../results/throughput-gh200/gh200-best-nondet.json"
       ],
       "operator_substitutes": [
         "batch_size",
@@ -369,7 +369,7 @@
       },
       "purpose": "Measure packed-loader overhead against compute mode at the selected geometry. Both modes exclude startup, validation and saves; a separate sustained trainer run is required to measure the full-trainer derate.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -399,7 +399,7 @@
         "--data-dir",
         "../pilot-data",
         "--output",
-        "results/throughput-gh200/gh200-best-endtoend.json"
+        "../results/throughput-gh200/gh200-best-endtoend.json"
       ],
       "operator_substitutes": [
         "batch_size",
@@ -411,11 +411,11 @@
       "overrides": {
         "accumulation": "selected",
         "batch_size": "selected",
-        "profile": "results/throughput-gh200/gh200-best-profile.trace.json"
+        "profile": "../results/throughput-gh200/gh200-best-profile.trace.json"
       },
       "purpose": "Evaluate the stopping rule on Hopper: useful percent, largest non-useful kernel, launch stalls and graph breaks.",
       "argv": [
-        "experiments/pilot",
+        "../relocated-base",
         "--device",
         "cuda",
         "--mode",
@@ -443,9 +443,9 @@
         "gh200-best-profile",
         "--explain",
         "--profile",
-        "results/throughput-gh200/gh200-best-profile.trace.json",
+        "../results/throughput-gh200/gh200-best-profile.trace.json",
         "--output",
-        "results/throughput-gh200/gh200-best-profile.json"
+        "../results/throughput-gh200/gh200-best-profile.json"
       ],
       "operator_substitutes": [
         "batch_size",

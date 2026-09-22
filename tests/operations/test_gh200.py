@@ -87,6 +87,19 @@ def test_portable_bundle_relocates_clean_checkout_and_detects_tampering(tmp_path
     assert configs["tokenizer"]["directory"] == str(output / "tokenizer")
     assert configs["data"]["output_dir"] == str(output / "pilot-data")
     assert "output_name" not in configs["data"]
+    # Execute the packet's experiment lookup from the transported checkout, where the original
+    # workstation tokenizer path is unavailable. Both hardware packets use the same bundle layout.
+    from speck.config import load_experiment
+
+    for name in ("h100", "gh200"):
+        packet = (
+            Path(__file__).resolve().parents[2]
+            / f"experiments/qualification/throughput-{name}.json"
+        )
+        common = json.loads(packet.read_text())["common"]
+        assert load_experiment(common["experiment"], *configs) == configs
+        assert Path(common["data_dir"]).resolve() == output / "pilot-data"
+        assert not Path(common["output_directory"]).resolve().is_relative_to(output / "code")
     (output / "pilot-data/payload.bin").write_bytes(b"changed")
     with pytest.raises(ValueError, match="identity mismatch"):
         bind(output)

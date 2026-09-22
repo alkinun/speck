@@ -15,10 +15,10 @@ It does **not** replace the GH200 phase. `device_batch_size` is immutable on res
 96 GiB rather than 80 GiB, so it is still frozen on the grant hardware. Absolute tokens/s used to
 re-anchor horizons also come from the GH200, not from here.
 
-## Pre-flight is complete
+## Preflight evidence
 
 [`throughput-h100-preflight.json`](../experiments/qualification/throughput-h100-preflight.json)
-records it. Three defects were found and fixed before any machine was rented:
+records the earlier local preflight. Three defects were found and fixed before any machine was rented:
 
 - The `--profile` hole in the old command template was filled with a boolean. The flag takes a
   trace path, so the profile run would have died in `argparse` after the whole ladder was paid for.
@@ -65,12 +65,25 @@ private directory on the instance's persistent disk. Do not publish the corpus p
 
 ## On the instance
 
+From the extracted bundle root, clone its recorded branch, install the pinned GPU dependencies,
+and bind the transported inputs before printing benchmark commands:
+
 ```bash
-export TORCHINDUCTOR_CACHE_DIR=$PWD/inductor-cache   # compile max-autotune once, not per run
+speck_bundle_branch=$(python3 -c 'import json; print(json.load(open("bundle.json"))["branch"])')
+git clone --branch "$speck_bundle_branch" code.bundle code
+cd code
+uv sync --locked --python 3.10 --extra gpu --extra linear --group dev --group transformers
+uv run --no-sync python -m scripts.gh200_check bind ..
+export TORCHINDUCTOR_CACHE_DIR=$PWD/../inductor-cache   # preserve across runs
 export CUBLAS_WORKSPACE_CONFIG=:4096:8               # required by the deterministic recipe
-mkdir -p results/throughput-h100
+mkdir -p ../results/throughput-h100
 nvidia-smi --query-gpu=name,memory.total,clocks.max.sm --format=csv
 ```
+
+Run the remaining commands from `code/`. Binding verifies the bundled commit and input hashes,
+then creates `../relocated-base` with the transported tokenizer and packed-data paths. Both rental
+packets use that experiment; the source `experiments/pilot` contains workstation paths. Keep
+results and caches outside the checkout so measurement receipts continue to record a clean source.
 
 Confirm the card is an 80 GiB H100 before spending anything. Then establish the noise band: run the
 first configuration **five times** and keep the spread. A delta smaller than that band is not a
@@ -83,8 +96,8 @@ delta:
 
 ```bash
 uv run --no-sync python -m scripts.throughput_summary \
-  results/throughput-h100/h100-pilot-baseline-r*.json \
-  --output results/throughput-h100/baseline-summary.json
+  ../results/throughput-h100/h100-pilot-baseline-r*.json \
+  --output ../results/throughput-h100/baseline-summary.json
 ```
 
 Use fresh version 2 receipts from this checkout. The helper rejects mixed hardware, software,
@@ -102,10 +115,11 @@ uv run --no-sync python experiments/qualification/check_throughput_packet.py \
 Run the eight configurations in the packet's order. The first three isolate the pilot baseline, the
 checkpointing-off gain and the compile gain; the next three are the microbatch ladder; the last two
 measure packed-loader overhead and take the Hopper kernel profile at the selected microbatch. The
-two `selected` runs take the microbatch and accumulation that the ladder chose. Replace their
-`selected` overrides and the matching values in their recorded `argv`, then re-run the checker.
-`--print-commands` only prints commands; it does not rewrite the packet. Until selection, those
-commands contain preflight probe values, identified by an operator-substitution comment.
+two `selected` runs take the microbatch and accumulation that the ladder chose. Substitute those
+values in the copied commands, preserving 131,072 tokens per update. Keep the committed packet
+unchanged: editing it during the sweep would mark subsequent receipts dirty. `--print-commands`
+only prints commands; its selected entries contain preflight probe values identified by an
+operator-substitution comment. Each benchmark receipt records the arguments actually executed.
 
 Record SM clock, temperature and power around every run.
 
@@ -121,7 +135,7 @@ Stop and diagnose rather than explore:
 
 ## What to bring back
 
-Copy the whole `results/throughput-h100/` directory and the profile trace back before deleting the
+Copy the whole `../results/throughput-h100/` directory and the profile trace back before deleting the
 instance, then record:
 
 - Flagship speedup over the baseline measured on this same host, with tokens per update fixed.
