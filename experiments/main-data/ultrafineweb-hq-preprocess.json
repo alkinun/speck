@@ -1,0 +1,63 @@
+{
+  "boundary": "Preprocessing and candidate inventory only. Cross-stock families, partitions and all eligibility gates remain separate. Historical raw census totals are preserved.",
+  "cleanup": {
+    "path": "/mnt/speck-data/speck/joint-family-partition-20260922/hq-excluded/cleanup_receipt.json",
+    "sha256": "c4b5b5a7a4589609fed6df226f0e35abf5711ec57157249beabacf129a1aabb1"
+  },
+  "conversion": {
+    "path": "/mnt/speck-data/speck/joint-family-partition-20260922/hq-conversion.json",
+    "sha256": "f08223e004818eec49552fafe47c656d08c1733f433b32139749e539eb2d8b8b"
+  },
+  "date": "2026-09-22",
+  "document_inventory": {
+    "path": "/mnt/speck-data/speck/joint-family-partition-20260922/hq-stock/manifest.json",
+    "sha256": "2d2d3fa5ef6c7391b1146622c252afdb782bf2fd48f4657c61d9fc4b0d13efd9"
+  },
+  "format": "speck_ultrafineweb_hq_preprocess_receipt",
+  "format_version": 1,
+  "gpu_hours": 0,
+  "manifest": {
+    "path": "/mnt/speck-data/speck/joint-family-partition-20260922/hq-excluded/manifest.json",
+    "sha256": "135995fe6669c1bbc1f1c56ad50f75e586f092dc9ce06fc165fdd3313ded8d2f"
+  },
+  "method": "Existing production preprocessor, unchanged 10-token/128-permutation/16-band/0.8 policy and the same twelve ordered primary/unseen firewall references. SQLite construction used local SSD; immutable completed outputs were copied and hash-verified on the data disk. Retained token counts reuse the prior hash-bound per-document Mistral census by original ordinal and exact content identity; no new token shards.",
+  "plan": {
+    "path": "/mnt/speck-data/speck/joint-family-partition-20260922/hq-preprocess-plan.json",
+    "sha256": "cf4e038689a542aa7659c6916177df70097da370dca3a94c61496a0cc15fa61a"
+  },
+  "preparation_scripts": [
+    {
+      "path": "/mnt/speck-data/speck/joint-family-partition-20260922/prepare_hq.py",
+      "sha256": "ddd16a867a882e399ee6fb3dc6f846f1d4b1b3844927a9c75e841e2e806b2db9"
+    },
+    {
+      "path": "/mnt/speck-data/speck/joint-family-partition-20260922/finish_hq.py",
+      "sha256": "20f42fe7f095d5b383f3803e4277ac1ca9da9d75e0599c14056f2cf3f50b20bd"
+    }
+  ],
+  "preprocessor": {
+    "path": "speck/data/production_data.py",
+    "sha256": "a94ed78b95e9ab1297697657a0243dca7acb7e32b912318c7b9a79539b60b0be"
+  },
+  "preprocessor_source_commit": "46fa33acb3b232b5f5d4e272d29f2cb9c271ad88",
+  "recovery": "The first launch stopped before processing because the historical deny-ledger path was absent. The identical hash-bound ledger was restored from the preserved Git snapshot; the pass then completed.",
+  "result": {
+    "input_documents": 290761,
+    "input_tokens": 351718255,
+    "removed_by_kept_source": {
+      "acquired_train__web": 194,
+      "firewall_reference__web_primary": 11,
+      "firewall_reference__web_unseen": 2
+    },
+    "removed_by_reason": {
+      "exact_duplicate": 171,
+      "near_duplicate": 36
+    },
+    "removed_documents": 207,
+    "removed_tokens": 205274,
+    "retained_documents": 290554,
+    "retained_tokens": 351512981
+  },
+  "status": "retained_hq_preprocessed_not_training_authority",
+  "training_admitted": false
+}
