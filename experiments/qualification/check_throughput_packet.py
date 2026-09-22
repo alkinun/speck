@@ -155,7 +155,7 @@ def validate(packet_path: str | Path) -> dict:
 
         if run.get("argv") is not None and run["argv"] != argv:
             raise ValueError(
-                f"{run['label']}: recorded argv is stale; regenerate it from this checker"
+                f"{run['label']}: recorded argv is stale; update it to match the declared configuration"
             )
         checked.append({"label": run["label"], "substituted": substituted})
 
@@ -183,6 +183,7 @@ def main() -> None:
         help="emit the materialized command for each run, for the rental runbook",
     )
     args = parser.parse_args()
+    result = validate(args.packet)
     if args.print_commands:
         packet = json.loads(Path(args.packet).read_text())
         for run in packet["runs"]:
@@ -190,7 +191,7 @@ def main() -> None:
             note = f"  # operator substitutes: {', '.join(substituted)}" if substituted else ""
             print(f"PYTHONPATH=. python -m scripts.benchmark {' '.join(argv)}{note}")
         print()
-    print(json.dumps(validate(args.packet), indent=2, sort_keys=True))
+    print(json.dumps(result, indent=2, sort_keys=True))
 
 
 if __name__ == "__main__":

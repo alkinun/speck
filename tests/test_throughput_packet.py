@@ -9,7 +9,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "experiments/qualification"))
 
-from check_throughput_packet import validate  # noqa: E402
+from check_throughput_packet import main, validate  # noqa: E402
 
 PACKETS = (
     ROOT / "experiments/qualification/throughput-h100.json",
@@ -74,3 +74,16 @@ def test_production_training_output_cannot_be_disabled(packet, scope, tmp_path):
 
     with pytest.raises(ValueError, match="training_output must match the production trainer"):
         validate(broken)
+
+
+def test_print_commands_validates_before_emitting_commands(tmp_path, monkeypatch, capsys):
+    value = json.loads(PACKETS[0].read_text())
+    value["runs"][0]["argv"] = ["stale"]
+    broken = tmp_path / "throughput-h100.json"
+    broken.write_text(json.dumps(value))
+    monkeypatch.setattr(sys, "argv", ["check_throughput_packet", str(broken), "--print-commands"])
+
+    with pytest.raises(ValueError, match="recorded argv is stale"):
+        main()
+
+    assert capsys.readouterr().out == ""

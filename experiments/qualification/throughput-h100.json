@@ -10,7 +10,7 @@
     "boundary": "This packet spends no part of the 5,000-GPU-hour allocation and does not draw on the 120-hour runtime-qualification reservation. Rental cost, storage, transfer and idle time are recorded in the external rental ledger, exactly as the completed H100 pilot was."
   },
   "why_h100": "The H100 SXM reaches about 989.5 bf16 TFLOPS, the same peak the GH200 sweep assumes, and the pilot's 12,859 tokens/s anchor was measured on one. Deltas measured here are therefore against the same baseline hardware the numeric plan is anchored to, which the 3090 pass could not offer.",
-  "command": "Each run records its exact argument vector in runs[].argv, generated and verified by experiments/qualification/check_throughput_packet.py against the real speck.training.benchmark parser. Invoke it as `PYTHONPATH=. python -m scripts.benchmark $(argv)`; regenerate with `--print-commands` rather than hand-editing. The former prose template with {placeholder} holes is gone: it could not be checked, and its `--profile {profile}` hole took a boolean where the flag wants a trace path.",
+  "command": "Run `python experiments/qualification/check_throughput_packet.py experiments/qualification/throughput-h100.json --print-commands` to print checked benchmark commands. This does not rewrite the packet. Replace selected overrides and their matching recorded argv values together, then re-run the checker before execution.",
   "common": {
     "activation_checkpointing": false,
     "compile_mode": "max-autotune-no-cudagraphs",

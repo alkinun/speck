@@ -102,8 +102,10 @@ uv run --no-sync python experiments/qualification/check_throughput_packet.py \
 Run the eight configurations in the packet's order. The first three isolate the pilot baseline, the
 checkpointing-off gain and the compile gain; the next three are the microbatch ladder; the last two
 measure packed-loader overhead and take the Hopper kernel profile at the selected microbatch. The
-two `selected` runs take the microbatch and accumulation that the ladder chose — substitute them,
-then re-run the checker to regenerate `argv` rather than hand-editing.
+two `selected` runs take the microbatch and accumulation that the ladder chose. Replace their
+`selected` overrides and the matching values in their recorded `argv`, then re-run the checker.
+`--print-commands` only prints commands; it does not rewrite the packet. Until selection, those
+commands contain preflight probe values, identified by an operator-substitution comment.
 
 Record SM clock, temperature and power around every run.
 
