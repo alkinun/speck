@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import torch
+from torch.autograd import DeviceType
 
 from speck.config import load_experiment
 from speck.data.dataset import load_manifest
@@ -253,14 +254,16 @@ def classify_kernel(name):
 def kernel_summary(profiler, limit=25):
     """Fold the profiler's hottest device kernels into the receipt.
 
-    Operator and annotation rows are excluded because their device time already
-    counts the kernels they launch. Rows sharing a name are summed, since
+    Only CUDA events contribute: CPU custom-autograd rows can carry device time
+    for the very same kernels. Rows sharing a name are summed, since
     recording shapes splits one kernel across several entries. Launch-stall
     markers are reported separately rather than counted as kernel work.
     """
 
     merged = {}
     for event in profiler.key_averages():
+        if event.device_type != DeviceType.CUDA:
+            continue
         micros = getattr(event, "self_device_time_total", None)
         if micros is None:
             micros = getattr(event, "self_cuda_time_total", 0.0)
@@ -284,6 +287,7 @@ def kernel_summary(profiler, limit=25):
     for micros, _, _, kind in kernels:
         shares[kind] = shares.get(kind, 0.0) + micros
     return {
+        "accounting": "CUDA events only; summed kernel time, not elapsed wall time or GPU utilization",
         "self_device_time_total_us": total,
         "launch_stall_us": stalls,
         "useful_percent": 100.0 * (shares.get("gemm", 0.0) + shares.get("mixer", 0.0)) / total

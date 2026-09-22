@@ -21,10 +21,11 @@ MFU on a different GPU does not identify the bottleneck: launch latency, memory 
 selection, optimizer amortization and different timing boundaries must be measured separately.
 
 Historical profiles suggest investigating GEMMs, KDA, casts and launches. Their category shares
-are diagnostic only: `kernel_summary` classifies names and can include CPU custom-autograd events
-alongside device kernels. Launch-marker time is reported separately from the kernel denominator.
-Do not add those percentages or use them as a stopping threshold until kernel-only accounting is
-verified against the trace. Historical receipts remain unchanged.
+are historical diagnostics: the old summarizer could include CPU custom-autograd events alongside
+device kernels. The current `kernel_summary` filters to CUDA events before classifying names. Its
+denominator sums kernel durations, not wall time, and launch markers remain separate. Inspect the
+trace for overlap, idle time and classification errors before attributing a bottleneck. Historical
+receipts remain unchanged.
 
 ## Measurement definitions
 
