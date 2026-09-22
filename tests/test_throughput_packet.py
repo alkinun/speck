@@ -1,6 +1,7 @@
 """A rental packet must stay executable, because it is discovered on metered hardware."""
 
 import json
+import shlex
 import sys
 from pathlib import Path
 
@@ -87,3 +88,16 @@ def test_print_commands_validates_before_emitting_commands(tmp_path, monkeypatch
         main()
 
     assert capsys.readouterr().out == ""
+
+
+@pytest.mark.parametrize("packet", PACKETS, ids=lambda path: path.stem)
+def test_printed_commands_use_locked_environment_and_preserve_argv(packet, monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["check_throughput_packet", str(packet), "--print-commands"])
+    main()
+
+    runs = json.loads(packet.read_text())["runs"]
+    lines = capsys.readouterr().out.splitlines()
+    for run, line in zip(runs, lines, strict=False):
+        command = shlex.split(line, comments=True)
+        assert command[:6] == ["uv", "run", "--no-sync", "python", "-m", "scripts.benchmark"]
+        assert command[6:] == run["argv"]

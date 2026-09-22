@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shlex
 from pathlib import Path
 
 from speck.training.benchmark import arguments
@@ -189,7 +190,8 @@ def main() -> None:
         for run in packet["runs"]:
             argv, substituted = _materialize(run, _effective(packet["common"], run))
             note = f"  # operator substitutes: {', '.join(substituted)}" if substituted else ""
-            print(f"PYTHONPATH=. python -m scripts.benchmark {' '.join(argv)}{note}")
+            command = ["uv", "run", "--no-sync", "python", "-m", "scripts.benchmark", *argv]
+            print(f"{shlex.join(command)}{note}")
         print()
     print(json.dumps(result, indent=2, sort_keys=True))
 
