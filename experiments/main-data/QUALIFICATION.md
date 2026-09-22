@@ -167,15 +167,15 @@ The derived origin inventory reports disjoint evidence states, retaining each so
 
 | Cohort | Family-held files / observed tokens | Verified host files / observed tokens | Attempted unresolved files / observed tokens | Unattempted files / observed tokens |
 | --- | --- | --- | --- | --- |
-| Retained Stack-Edu | 34 / 171,947 | 28 / 52,329 | 76 / 235,339 | 0 / 0 |
+| Retained Stack-Edu | 34 / 171,947 | 58 / 136,124 | 46 / 151,544 | 0 / 0 |
 | Stack v3 | 10 / 10,652 | 68 / 121,397 | 2 / 1,162 | 0 / 0 |
 
-These are evidence categories, not eligible supply or pass rates. Of the 76 unresolved Stack-Edu
-records, 75 are quota-blocked in the latest batch and one preserves an earlier failed attempt. All
-records have an attempted outcome, but 74 new history requests returned no history data. Resume
-quota-blocked work only after quota recovery or an available authenticated route, retaining prior
-responses; do not reinterpret the C++-only successful prefix as representative. The acquisition now
-stops fresh API requests after observed quota exhaustion; that guard was added after this batch.
+These are evidence categories, not eligible supply or pass rates. The
+[quota-recovery pass](../corpus-audit/code-origin-recovery-20260922.json) verifies 30 more origins
+and 24 ancestor notices, preserving all 44 holds. Of the 46 unresolved Stack-Edu records,
+45 remain quota-blocked and one preserves the earlier failed attempt. One new verified origin
+uses pinned contents metadata after an oversized tree response; its notice search is incomplete.
+Fresh API requests stopped at the next quota exhaustion. Resume only after quota recovery.
 Keep the two Stack v3 404s outside training absent new evidence; do not substitute revisions or
 repeat unchanged failures. Continue independent web/math qualification while API recovery is blocked.
 Four Stack v3 path-verified files need ancestor-notice searches using bounded path traversal.

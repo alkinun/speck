@@ -111,7 +111,7 @@ lacks host metadata, so no per-document attribution manifest can be produced for
 
 Every approval carries conditions, and the conditions are the substance. The two code routes are
 approved on a **per-file original-licence** basis with recovered notices, not on any dataset-level
-grant: an unlabelled or unresolved record is excluded rather than assumed permissive, all 75
+grant: an unlabelled or unresolved record is excluded rather than assumed permissive, the remaining 45
 quota-blocked origin lookups stay out until evidence resolves them, and all 54 content-family holds
 persist across every stage. The single record traced end to end carried a term its MIT label did not
 express, which is why notice text governs and the scanner label does not.
@@ -227,7 +227,8 @@ bounded order and stop rules for closing those gates.
    it on 2026-09-22 for the nine selected sources, subject to per-source conditions that exclude
    rather than admit whatever they do not cover. Do not repeat
    the completed code reading pass or infer quality from format, length, classifier scores or notices.
-   GitHub origin recovery remains quota-blocked; preserve all 44 family holds and separate source 404s.
+   The [origin retry](experiments/corpus-audit/code-origin-recovery-20260922.json) recovered 30 more
+   exact host origins; 45 remain quota-blocked. Preserve all 44 cohort holds and separate source 404s.
    The mixture was re-frozen to six banks on 2026-09-22, so no bank is unsupplied; retained
    HQ and natural-code totals still bound one-pass horizons below the maximum study-hour envelopes.
    Qualify additional supply or explicitly revise the finite research recipe/horizon; no silent replay

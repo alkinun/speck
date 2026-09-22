@@ -145,11 +145,11 @@ adds seven verified host origins and reconfirms one, recovering Objective-C repo
 notice context. Eclipse declares separate code/non-code licenses; template attribution and restrictive
 Java wording remain unresolved. The [pinned-origin follow-up](../experiments/corpus-audit/pinned-code-origins.json)
 adds 42 verified origins. The subsequent [retained-origin recovery](../experiments/corpus-audit/retained-code-origins.json)
-adds ten exact-match Stack-Edu origins, bringing coverage to 28/104 unheld Stack-Edu and 68/70 unheld
-Stack v3 records. GitHub quota exhaustion leaves 75 Stack-Edu records unresolved, separately from
-one prior Stack-Edu failure and two pinned Stack v3 source 404s. The C++-only successful prefix is
-not a representative recovery rate. Pause quota-blocked requests until access changes and continue
-independent web/math qualification. Fixed-cohort reading is complete. The named source-use decision for both code routes is
+adds ten exact-match Stack-Edu origins. The [quota-recovery pass](../experiments/corpus-audit/code-origin-recovery-20260922.json)
+adds 30 more, bringing coverage to 58/104 unheld Stack-Edu and 68/70 unheld Stack v3 records.
+GitHub quota exhaustion still blocks 45 records; one earlier Stack-Edu failure and two pinned
+Stack v3 404s remain separate. These bounded recoveries do not estimate whole-stock recoverability.
+Resume blocked requests only after quota recovery. Fixed-cohort reading is complete. The named source-use decision for both code routes is
 recorded, but it is conditional on origin and notice recovery, which is still open along with
 broader family qualification, including four path-verified Stack v3 ancestor-notice searches.
 Parser success and passing test assertions cannot certify behavior, semantic preservation or eligibility.

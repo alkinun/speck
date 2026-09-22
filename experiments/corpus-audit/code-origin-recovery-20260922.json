@@ -1,0 +1,81 @@
+{
+  "boundary": "Exact host origins recovered; notice applicability, copied-source lineage, full family coverage and eligibility remain unresolved. All 44 existing cohort holds remain. One recovered file uses pinned contents metadata because the recursive tree exceeded the response cap, leaving its notice search incomplete. Successful earlier responses and all old quota failures are preserved; no source text was executed.",
+  "date": "2026-09-22",
+  "evidence": {
+    "path": "/mnt/speck-data/speck/code-origin-recovery-20260922/artifact-manifest.json",
+    "sha256": "ca8abe25c2a8872962ee77d378f9ffd0a0885569d91fb4c75bbb0326fc4d58a8"
+  },
+  "format": "speck_retained_code_origin_recovery",
+  "format_version": 1,
+  "prior_receipt": {
+    "path": "experiments/corpus-audit/retained-code-origins.json",
+    "sha256": "d61853b02a8c2016209fb3ba6b3d73b354abd9b61e8c3696439d9e45f9ea6d40"
+  },
+  "remaining": "45 quota-blocked records, the separate earlier Stack-Edu unresolved record, and the two pinned Stack v3 404s. Resume blocked requests only after quota recovery; do not treat infrastructure failures as source rejection.",
+  "replay": {
+    "path": "/mnt/speck-data/speck/code-origin-recovery-20260922/replay.json",
+    "sha256": "a7afbead77de9c32c36ed6f0a396c5181db3fa8af9966e33118c691c83ef043b"
+  },
+  "result": {
+    "automatic_retries": 0,
+    "complete_repository_trees": 29,
+    "corpus_execution": false,
+    "coverage": {
+      "stack_edu": {
+        "attempted_unresolved": {
+          "files": 46,
+          "observed_tokens": 151544
+        },
+        "family_held": {
+          "files": 34,
+          "observed_tokens": 171947
+        },
+        "host_verified": {
+          "files": 58,
+          "observed_tokens": 136124
+        }
+      },
+      "stack_v3": {
+        "attempted_unresolved": {
+          "files": 2,
+          "observed_tokens": 1162
+        },
+        "family_held": {
+          "files": 10,
+          "observed_tokens": 10652
+        },
+        "host_verified": {
+          "files": 68,
+          "observed_tokens": 121397
+        }
+      }
+    },
+    "distinct_verified_ancestor_notices": 24,
+    "files_verified_via_contents_metadata": 1,
+    "files_with_verified_ancestor_notices": 23,
+    "fresh_api_requests": 61,
+    "fresh_http_requests": 115,
+    "gpu_hours": 0,
+    "history_statuses": {
+      "200": 30,
+      "403": 1,
+      "quota_not_attempted": 44
+    },
+    "new_git_verified_host_origins": 30,
+    "prior_code_holds_preserved": 44,
+    "remaining_quota_blocked_records": 45,
+    "selected_records": 75,
+    "status": "exact_source_and_git_blob_verified_for_recovered_records",
+    "training_admitted": false
+  },
+  "selection": {
+    "path": "/mnt/speck-data/speck/code-origin-recovery-20260922/selection.json",
+    "sha256": "851d24e07b56847f98d717b8670da7a7cc513f4cff44cd34206de9a657acdb7e"
+  },
+  "status": "bounded_retry_partial_api_quota_exhausted",
+  "training_admitted": false,
+  "validation": {
+    "path": "/mnt/speck-data/speck/code-origin-recovery-20260922/validation.json",
+    "sha256": "7394b34e6d5f6dcca6eae3104174281f43beafb7f173ea7c92a925fefbecc5d3"
+  }
+}

@@ -487,8 +487,9 @@ separates inputs available for detailed design from the requirements for launchi
    [notice follow-up](../corpus-audit/code-notice-provenance.json) adds seven verified host origins and
    reconfirms one. The [pinned-origin follow-up](../corpus-audit/pinned-code-origins.json) adds 42 more:
    the [retained-origin recovery](../corpus-audit/retained-code-origins.json) adds ten exact-match
-   Stack-Edu origins. Coverage is now 28/104 unheld Stack-Edu and 68/70 unheld Stack v3. GitHub quota
-   exhaustion blocks 75 records; one earlier Stack-Edu failure and two Stack v3 404s remain separate.
+   Stack-Edu origins. The [quota-recovery pass](../corpus-audit/code-origin-recovery-20260922.json) adds 30 more.
+   Coverage is now 58/104 unheld Stack-Edu and 68/70 unheld Stack v3. Quota exhaustion still
+   blocks 45 records; one earlier Stack-Edu failure and two Stack v3 404s remain separate.
    Resume quota-blocked work only after access changes; continue independent web/math work meanwhile.
    Host-origin recovery and notice availability do not establish source-use approval or admission.
    Complete broader lineage and remaining notice/revision checks. The controlled syntax diagnostic
