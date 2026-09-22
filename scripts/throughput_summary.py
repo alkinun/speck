@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import math
 import statistics
 from pathlib import Path
-
-from speck.provenance.io import file_sha256
 
 
 def _summary(values: list[float]) -> dict[str, float]:
@@ -38,43 +38,110 @@ def summarize(paths: list[str | Path]) -> dict:
     if len(set(resolved)) != len(resolved):
         raise ValueError("receipt paths must be distinct")
 
-    records = []
+    records, inputs, identities = [], [], []
+    seen = set()
     for path in resolved:
-        record = json.loads(path.read_text(encoding="utf-8"))
-        if record.get("format") != "speck_throughput_probe":
-            raise ValueError(f"{path}: unsupported benchmark receipt format")
-        for section in ("benchmark", "geometry", "performance", "model", "experiment"):
-            if not isinstance(record.get(section), dict):
-                raise ValueError(f"{path}: missing benchmark section {section}")
+        payload = path.read_bytes()
+        digest = hashlib.sha256(payload).hexdigest()
+        if digest in seen:
+            raise ValueError("duplicate receipt content is not an independent repeat")
+        seen.add(digest)
+        record = json.loads(payload)
+        if record.get("format") != "speck_throughput_probe" or record.get("format_version") != 2:
+            raise ValueError(f"{path}: require a version 2 benchmark receipt")
+        try:
+            benchmark = record["benchmark"]
+            identity = {
+                "benchmark": {
+                    key: benchmark[key]
+                    for key in (
+                        "mode",
+                        "compiled",
+                        "compile_mode",
+                        "aggressive_fusion",
+                        "loss_backend",
+                        "activation_checkpointing",
+                        "deterministic",
+                        "training_output",
+                        "optimizer",
+                        "optimizer_step_compiled",
+                        "seed",
+                        "steps",
+                        "warmup_steps",
+                        "peak_tflops",
+                    )
+                },
+                "geometry": record["geometry"],
+                "model": record["model"],
+                "experiment": {
+                    key: record["experiment"][key] for key in ("fingerprint", "manifest")
+                },
+                "environment": {
+                    key: record["environment"][key]
+                    for key in (
+                        "device",
+                        "device_name",
+                        "device_capability",
+                        "torch",
+                        "cuda",
+                        "packages",
+                        "cublas_workspace_config",
+                        "git_revision",
+                        "git_dirty",
+                    )
+                },
+            }
+            if (
+                not identity["experiment"]["fingerprint"]
+                or not identity["environment"]["git_revision"]
+            ):
+                raise ValueError("missing configuration or source identity")
+            if identity["environment"]["git_dirty"] is not False:
+                raise ValueError("repeat comparisons require a clean source revision")
+            if record["quality"]["stable"] is not True:
+                raise ValueError("unstable receipt: diagnose before summarizing repeats")
+            for key in ("tokens_per_second", "step_seconds_median"):
+                value = record["performance"][key]
+                if (
+                    isinstance(value, bool)
+                    or not isinstance(value, (int, float))
+                    or not math.isfinite(value)
+                    or value <= 0
+                ):
+                    raise ValueError(f"{key} must be finite and positive")
+            mfu = record["performance"]["model_flops_utilization"]
+            peak = benchmark["peak_tflops"]
+            if peak is not None:
+                if (
+                    isinstance(peak, bool)
+                    or not isinstance(peak, (int, float))
+                    or not math.isfinite(peak)
+                    or peak <= 0
+                ):
+                    raise ValueError("peak_tflops must be finite and positive")
+                expected = (
+                    record["model"]["flops_per_token"]
+                    * record["performance"]["tokens_per_second"]
+                    / (peak * 1e12)
+                )
+                if (
+                    isinstance(mfu, bool)
+                    or not isinstance(mfu, (int, float))
+                    or not math.isfinite(mfu)
+                    or not math.isclose(mfu, expected)
+                ):
+                    raise ValueError("MFU does not match the recorded FLOP convention and peak")
+            elif mfu is not None:
+                raise ValueError("MFU requires a declared peak_tflops")
+        except (KeyError, TypeError) as error:
+            raise ValueError(f"{path}: incomplete benchmark identity or measurements") from error
+        identities.append(identity)
         records.append((path, record))
+        inputs.append({"path": str(path), "sha256": digest})
 
-    reference = records[0][1]
-    identity = {
-        "experiment_fingerprint": reference["experiment"].get("fingerprint"),
-        "geometry": reference["geometry"],
-        "benchmark": {
-            key: reference["benchmark"].get(key)
-            for key in (
-                "mode",
-                "compiled",
-                "compile_mode",
-                "loss_backend",
-                "activation_checkpointing",
-                "deterministic",
-                "training_output",
-                "optimizer",
-                "optimizer_step_compiled",
-            )
-        },
-    }
-    for path, record in records[1:]:
-        candidate = {
-            "experiment_fingerprint": record["experiment"].get("fingerprint"),
-            "geometry": record["geometry"],
-            "benchmark": {key: record["benchmark"].get(key) for key in identity["benchmark"]},
-        }
-        if candidate != identity:
-            raise ValueError(f"{path}: receipt does not match the first run's configuration")
+    identity = identities[0]
+    if any(candidate != identity for candidate in identities[1:]):
+        raise ValueError("receipt does not match the first run's hardware, source or configuration")
 
     rates = [float(record["performance"]["tokens_per_second"]) for _, record in records]
     step_seconds = [float(record["performance"]["step_seconds_median"]) for _, record in records]
@@ -92,12 +159,12 @@ def summarize(paths: list[str | Path]) -> dict:
     return {
         "format": "speck_throughput_repeat_summary",
         "format_version": 1,
-        "inputs": [{"path": str(path), "sha256": file_sha256(path)} for path, _ in records],
+        "inputs": inputs,
         "runs": len(records),
         "identity": identity,
         "summary": summary,
         "interpretation": (
-            "All inputs share the same experiment fingerprint, geometry, and runtime settings. "
+            "All inputs share recorded hardware, source, software, geometry and runtime settings. "
             "The maximum relative deviation from the median is a run-to-run noise band; it is "
             "not a confidence interval and does not establish a hardware-independent result."
         ),
@@ -113,7 +180,8 @@ def main(argv=None) -> None:
     print(result)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(result + "\n", encoding="utf-8")
+        with args.output.open("x", encoding="utf-8") as handle:
+            handle.write(result + "\n")
 
 
 if __name__ == "__main__":

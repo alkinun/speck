@@ -87,7 +87,10 @@ uv run --no-sync python -m scripts.throughput_summary \
   --output results/throughput-h100/baseline-summary.json
 ```
 
-The helper rejects receipts with different geometry or runtime settings.
+Use fresh version 2 receipts from this checkout. The helper rejects mixed hardware, software,
+source, data or runtime settings, unstable runs, copied receipts and invalid measurements. It
+refuses to overwrite an existing summary. The operator still verifies the physical instance and
+clock/power stability; matching recorded device names alone cannot establish those.
 
 Print the exact ladder from the packet rather than retyping it:
 

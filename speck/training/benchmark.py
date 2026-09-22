@@ -536,6 +536,7 @@ def run(args):
             "steps": args.steps,
             "warmup_steps": args.warmup_steps,
             "warmup_seconds": warmup_seconds,
+            "peak_tflops": args.peak_tflops,
             "compiled": not args.no_compile,
             "compile_mode": None if args.no_compile else args.compile_mode,
             "aggressive_fusion": not args.no_compile,
