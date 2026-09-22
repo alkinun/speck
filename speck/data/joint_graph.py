@@ -8,7 +8,6 @@ the same policy, and groups linked documents into families. It admits and remove
 """
 
 import hashlib
-import heapq
 import itertools
 import json
 import os
@@ -17,6 +16,8 @@ import shutil
 import sqlite3
 from collections import Counter
 from pathlib import Path
+
+import numpy as np
 
 from speck.data.sources.code_near_duplicates import _jaccard, _shingles, _tokens
 from speck.provenance.io import durable_json, file_sha256
@@ -99,22 +100,65 @@ def _connect(path):
     return sqlite3.connect(f"file:{path}?immutable=1", uri=True)
 
 
-def _stream(connection, query, name, index):
-    for row in connection.execute(query, (name,)):
-        yield row[:-1], index, row[-1]
+def _scan(connection, name):
+    """Read one source's documents and band rows in storage order.
+
+    Pass databases live on spinning disks. Index-ordered reads with a document lookup per
+    row cost one seek each, days at corpus scale; two table scans read each file once.
+    """
+
+    documents = {
+        seq: (dedup, content, offset)
+        for seq, dedup, content, offset in connection.execute(
+            "SELECT doc_seq, dedup_sha256, content_sha256, byte_offset FROM docs WHERE source_id=?",
+            (name,),
+        )
+    }
+    bands, keys, seqs = [], [], []
+    for band, value, seq in connection.execute("SELECT band, band_hash, doc_seq FROM bands"):
+        if seq in documents:
+            bands.append(band)
+            # An eight-byte prefix can only add candidates; each is verified by Jaccard.
+            keys.append(int.from_bytes(value[:8], "little"))
+            seqs.append(seq)
+    rows = (
+        np.array(bands, dtype=np.uint16),
+        np.array(keys, dtype=np.uint64),
+        np.array(seqs, dtype=np.int64),
+    )
+    return documents, rows
 
 
-def _merged_groups(connections, sources, query):
-    """Yield (key, [(source index, doc_seq), ...]) for keys held by two or more sources."""
+def _exact_pairs(scans):
+    owners = {}
+    for index, (documents, _) in enumerate(scans):
+        for seq, (dedup, _, _) in documents.items():
+            owners.setdefault(dedup, []).append((index, seq))
+    for members in owners.values():
+        if len(members) > 1:
+            yield from _cross_pairs(members)
 
-    streams = [
-        _stream(connection, query, source["name"], index)
-        for index, (connection, source) in enumerate(zip(connections, sources))
-    ]
-    for key, rows in itertools.groupby(heapq.merge(*streams), key=lambda row: row[0]):
-        members = [(index, seq) for _, index, seq in rows]
-        if len({index for index, _ in members}) > 1:
-            yield key, members
+
+def _band_pairs(scans):
+    """Yield cross-source pairs that share any whole MinHash band."""
+
+    band = np.concatenate([rows[0] for _, rows in scans])
+    key = np.concatenate([rows[1] for _, rows in scans])
+    seq = np.concatenate([rows[2] for _, rows in scans])
+    source = np.concatenate(
+        [np.full(len(rows[0]), index, dtype=np.uint16) for index, (_, rows) in enumerate(scans)]
+    )
+    order = np.lexsort((seq, source, key, band))
+    band, key, seq, source = band[order], key[order], seq[order], source[order]
+    if not len(band):
+        return
+    starts = np.flatnonzero(
+        np.concatenate(([True], (band[1:] != band[:-1]) | (key[1:] != key[:-1])))
+    )
+    mixed = np.minimum.reduceat(source, starts) != np.maximum.reduceat(source, starts)
+    ends = np.append(starts[1:], len(band))
+    for first, last in zip(starts[mixed], ends[mixed]):
+        yield from _cross_pairs(zip(source[first:last].tolist(), seq[first:last].tolist()))
 
 
 def _cross_pairs(members):
@@ -124,28 +168,26 @@ def _cross_pairs(members):
 
 
 class _Texts:
-    """Read and shingle a document at its recorded input offset."""
+    """Read and shingle a document at its recorded input offset, once per document."""
 
-    def __init__(self, connections, sources, policy):
-        self.connections = connections
+    def __init__(self, sources, scans, policy):
         self.sources = sources
+        self.scans = scans
         self.pattern = re.compile(policy["token_pattern"])
         self.policy = policy
         self.handles = {}
+        self.cache = {}
 
     def shingles(self, index, seq):
-        offset = (
-            self.connections[index]
-            .execute("SELECT byte_offset FROM docs WHERE doc_seq=?", (seq,))
-            .fetchone()[0]
-        )
-        handle = self.handles.get(index)
-        if handle is None:
-            handle = self.handles[index] = open(self.sources[index]["input"]["path"], "rb")
-        handle.seek(offset)
-        text = json.loads(handle.readline())[self.sources[index]["input"]["text_field"]]
-        tokens = _tokens(text, self.pattern, self.policy["maximum_document_tokens"])
-        return _shingles(tokens, self.policy["shingle_tokens"])
+        if (index, seq) not in self.cache:
+            handle = self.handles.get(index)
+            if handle is None:
+                handle = self.handles[index] = open(self.sources[index]["input"]["path"], "rb")
+            handle.seek(self.scans[index][0][seq][2])
+            text = json.loads(handle.readline())[self.sources[index]["input"]["text_field"]]
+            tokens = _tokens(text, self.pattern, self.policy["maximum_document_tokens"])
+            self.cache[(index, seq)] = _shingles(tokens, self.policy["shingle_tokens"])
+        return self.cache[(index, seq)]
 
     def close(self):
         for handle in self.handles.values():
@@ -190,52 +232,36 @@ def build(plan, output_directory, *, verify_inputs=True):
     if output.exists():
         raise ValueError(f"output directory already exists: {output}")
     sources, policy = _resolve(plan, verify_inputs)
-    connections = [_connect(source["database"]) for source in sources]
-    try:
-        exact = {}
-        for _, members in _merged_groups(
-            connections,
-            sources,
-            "SELECT dedup_sha256, doc_seq FROM docs WHERE source_id=? ORDER BY dedup_sha256",
-        ):
-            for pair in _cross_pairs(members):
-                exact[pair] = 1.0
-        candidates = set()
-        band_query = (
-            "SELECT b.band, b.band_hash, b.doc_seq FROM bands b JOIN docs d "
-            "ON d.doc_seq=b.doc_seq WHERE d.source_id=? ORDER BY b.band, b.band_hash"
-        )
-        for _, members in _merged_groups(connections, sources, band_query):
-            candidates.update(pair for pair in _cross_pairs(members) if pair not in exact)
-        texts = _Texts(connections, sources, policy)
-        near = {}
-        rejected = 0
+    scans = []
+    for source in sources:
+        connection = _connect(source["database"])
         try:
-            for first, second in sorted(candidates):
-                similarity = _jaccard(texts.shingles(*first), texts.shingles(*second))
-                if similarity >= policy["verified_jaccard_threshold"]:
-                    near[(first, second)] = similarity
-                else:
-                    rejected += 1
+            scans.append(_scan(connection, source["name"]))
         finally:
-            texts.close()
-
-        def identity(index, seq):
-            return (
-                sources[index]["id"],
-                connections[index]
-                .execute("SELECT content_sha256 FROM docs WHERE doc_seq=?", (seq,))
-                .fetchone()[0],
-            )
-
-        edges = sorted(
-            (identity(*first), identity(*second), kind, similarity)
-            for kind, found in (("exact", exact), ("near", near))
-            for (first, second), similarity in found.items()
-        )
-    finally:
-        for connection in connections:
             connection.close()
+    exact = dict.fromkeys(_exact_pairs(scans), 1.0)
+    candidates = {pair for pair in _band_pairs(scans) if pair not in exact}
+    texts = _Texts(sources, scans, policy)
+    near = {}
+    rejected = 0
+    try:
+        for first, second in sorted(candidates):
+            similarity = _jaccard(texts.shingles(*first), texts.shingles(*second))
+            if similarity >= policy["verified_jaccard_threshold"]:
+                near[(first, second)] = similarity
+            else:
+                rejected += 1
+    finally:
+        texts.close()
+
+    def identity(index, seq):
+        return sources[index]["id"], scans[index][0][seq][1]
+
+    edges = sorted(
+        (identity(*first), identity(*second), kind, similarity)
+        for kind, found in (("exact", exact), ("near", near))
+        for (first, second), similarity in found.items()
+    )
 
     families = _Families()
     pair_counts = Counter()
