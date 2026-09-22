@@ -1,0 +1,126 @@
+{
+  "format": "speck_compiled_recovery_diagnosis",
+  "format_version": 1,
+  "date": "2026-09-22",
+  "status": "cause_removed_single_worker_replay_passes",
+  "prior_failures": [
+    "experiments/qualification/compiled-recovery-3090.json",
+    "experiments/qualification/compiled-recovery-cache-3090.json"
+  ],
+  "scope": "Same 318M proxy and replay experiment as the prior screens; single RTX 3090, Torch 2.9.1+cu128, FLA 0.5.0, Triton 3.5.1, deterministic kernels. No Hopper, distributed or flagship claim.",
+  "method": "Load the saved step-two weights into the production base trainer, then repeat forward and backward on one fixed packed batch. Compare gradients bitwise and at rtol 1e-05, atol 1e-06 within one process and across fresh processes, varying only Inductor options.",
+  "within_process": "Production options: three repeats bitwise identical in loss and all 320 gradients.",
+  "across_processes": [
+    {
+      "options": "production (max_autotune, coordinate_descent_tuning, aggressive_fusion), shared warm cache",
+      "loss_equal": false,
+      "gradients_equal": 0,
+      "gradients_outside_tolerance": 282
+    },
+    {
+      "options": "production, independent cold cache",
+      "loss_equal": false,
+      "gradients_equal": 0,
+      "gradients_outside_tolerance": 289
+    },
+    {
+      "options": "coordinate_descent_tuning only",
+      "loss_equal": true,
+      "gradients_equal": 1,
+      "gradients_outside_tolerance": 213
+    },
+    {
+      "options": "eager",
+      "loss_equal": true,
+      "gradients_equal": 320,
+      "gradients_outside_tolerance": 0
+    },
+    {
+      "options": "plain torch.compile",
+      "loss_equal": true,
+      "gradients_equal": 320,
+      "gradients_outside_tolerance": 0
+    },
+    {
+      "options": "max_autotune only",
+      "loss_equal": true,
+      "gradients_equal": 320,
+      "gradients_outside_tolerance": 0
+    },
+    {
+      "options": "max_autotune and aggressive_fusion, independent cold Inductor caches",
+      "loss_equal": true,
+      "gradients_equal": 320,
+      "gradients_outside_tolerance": 0
+    }
+  ],
+  "cause_established": "Coordinate-descent tuning re-times Triton reduction configurations in every process, so processes with identical inputs select different reduction orders. Deterministic mode does not suppress it. Matching loss with differing gradients, as in the prior probe, is its signature.",
+  "runtime_fix": "COMPILE_OPTIONS in speck/operations/runtime.py (max_autotune, aggressive_fusion) is shared by base training, SFT, the compiled Muon step and the benchmark's max-autotune modes.",
+  "production_replay": {
+    "command": "scripts.training_replay <replay experiment> --compile --device cuda --seconds 900",
+    "source_commit": "fd9e216eda60ad01e25116da96912472063ca340",
+    "source_dirty": false,
+    "status": "pass",
+    "tolerance": {
+      "rtol": 1e-05,
+      "atol": 1e-06
+    },
+    "metadata": "exact: RNG and loader",
+    "model_tensors": 321,
+    "optimizer_tensors": 589,
+    "supervised_gpu_hours": 0.076
+  },
+  "throughput_cost": {
+    "configuration": "experiments/throughput-proxy, compute mode, batch 3, accumulation 3, sequence 4096, no activation checkpointing, deterministic, Liger, typed training output, 10 measured steps; arms alternated three times with separate persistent caches",
+    "with_coordinate_descent": {
+      "tokens_per_second": [
+        17845.4,
+        17770.5,
+        17701.5
+      ],
+      "warmup_seconds": [
+        203.6,
+        20.9,
+        15.1
+      ]
+    },
+    "without_coordinate_descent": {
+      "tokens_per_second": [
+        17772.5,
+        17650.2,
+        17632.7
+      ],
+      "warmup_seconds": [
+        165.5,
+        9.1,
+        9.1
+      ]
+    },
+    "paired_ratio": [
+      0.9959,
+      0.9932,
+      0.9961
+    ],
+    "reading": "About 0.5% slower on this proxy. The first run in each arm compiled from an empty cache; with a warm cache, the recipe without coordinate descent warmed in 9 s against 15 to 21 s, consistent with coordinate descent re-tuning in every process."
+  },
+  "decision": "Adopt COMPILE_OPTIONS without coordinate descent; tolerances unchanged. The 3090 sweep receipts measured the recipe with coordinate descent and stay unchanged. Compiled production still requires the Hopper throughput runs and the four-worker compiled replay.",
+  "local_artifacts": [
+    {
+      "path": "/mnt/speck-data/speck/compiled-backward-isolation-20260922/repeat.py",
+      "sha256": "66a4cc67c8dd8f80ad5914a7b60f3c7fa5a5722381b9352ccf5650bc0f2f507d"
+    },
+    {
+      "path": "/mnt/speck-data/speck/compiled-backward-isolation-20260922/compare.py",
+      "sha256": "0992aebcba194e608b7a72875f2dfef1f4d01ab6f9145dea1d363ca6729fe087"
+    },
+    {
+      "path": "/mnt/speck-data/speck/compiled-backward-isolation-20260922/replay-clean/result.json",
+      "sha256": "e596490141cc37ec51208d11eb9814174af04c709c89dbd7fd750e39d917ba0a"
+    },
+    {
+      "path": "/mnt/speck-data/speck/compiled-backward-isolation-20260922/throughput/run.py",
+      "sha256": "52d23e7627b7204184188509c69e02de5c95cdab1561504d0a8c28b03dceeb7f"
+    }
+  ],
+  "training_admitted": false
+}

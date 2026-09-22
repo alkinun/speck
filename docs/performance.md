@@ -32,11 +32,17 @@ failed on the 318M proxy: both production-trainer processes completed, but 286 o
 tensors exceeded the existing restart tolerance. Loader/RNG state and counters matched exactly.
 One cause is a cache change between eager FLA warmup and lazy Inductor initialization: identical
 KDA inputs selected different cached kernels. Runtime setup now fixes the Triton cache before
-either path starts. The [follow-up screen](../experiments/qualification/compiled-recovery-cache-3090.json)
-still fails production recovery from the clean fix commit. A matched-checkpoint probe produced
-identical loss but 85 gradient tensors outside tolerance; capture gradients before clipping to
-isolate FLA backward from surrounding compiled graphs. Keep compiled throughput runs exploratory.
-This is an Ampere finding, not a Hopper result.
+either path starts, but the [follow-up screen](../experiments/qualification/compiled-recovery-cache-3090.json)
+still failed. The [isolation receipt](../experiments/qualification/compiled-recovery-descent-3090.json)
+locates the remaining cause in Inductor's coordinate-descent tuning, which re-times reduction
+configurations in every process. With fixed weights and batch, each process was bitwise
+repeatable, but two fresh processes disagreed. Eager, plain compile and `max_autotune` alone agreed
+bitwise across processes, even from independent cold Inductor caches. Coordinate descent alone
+did not. Every compiled training path now uses the shared `COMPILE_OPTIONS`, which exclude it. The
+production replay then passed at the unchanged tolerance, including optimizer state. Paired proxy
+repeats measured the change at about 0.5% slower. The sweep's 2.084x includes coordinate descent,
+so it slightly overstates the current recipe. This is one Ampere worker; Hopper and four-worker
+compiled DDP remain unqualified.
 
 ## Measurement definitions
 
