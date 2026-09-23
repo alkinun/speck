@@ -13,7 +13,7 @@ from speck.model.generation import generate_tokens, validate_sampling
 from speck.operations.runtime import base_dir
 from speck.tokenization.chat import ChatTokenizer
 from speck.tokenization.tokenizer import get_tokenizer
-from speck.training.checkpoint import latest, load_metadata, load_model
+from speck.training.checkpoint import is_assistant_checkpoint, latest, load_metadata, load_model
 
 
 def arguments(argv=None):
@@ -89,7 +89,7 @@ def load_checkpoint_tokenizer(config, metadata):
     base_config = dict(config)
     version = base_config.pop("chat_format_version", None)
     tokenizer = get_tokenizer(**base_config)
-    if metadata.get("training_phase") == "sft":
+    if is_assistant_checkpoint(metadata):
         tokenizer = ChatTokenizer.from_metadata(
             tokenizer, metadata.get("resolved", {}).get("tokenizer")
         )
@@ -129,7 +129,7 @@ def main(argv=None):
     device = torch.device(args.device)
     model, metadata = load_checkpoint_model(checkpoint_dir, step, device)
     tokenizer = load_checkpoint_tokenizer(configs["tokenizer"], metadata)
-    if metadata.get("training_phase") == "sft":
+    if is_assistant_checkpoint(metadata):
         messages = []
         if args.system:
             messages.append({"role": "system", "content": args.system})

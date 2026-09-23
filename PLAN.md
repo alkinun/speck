@@ -176,8 +176,8 @@ count for the next allocation; it is not run here. Numeric subcaps live in the e
 
 Coverage is claimed per stage, never in aggregate, and
 [what that requires](docs/program.md#what-success-means) is fixed. Stages 1, 2 and 4 have trainers
-today, and stage 3 has best-fit masked rows; **stages 5 and 6 have no trainer yet** — only the
-fixed-policy feasibility harnesses, which perform no policy updates.
+today, stage 3 has best-fit masked rows, and stage 5 has a minimal
+[RL trainer](docs/training.md#reward-training) with checked verifiers; **stage 6 has no trainer yet**.
 
 That gap is two decisions, not one, and they have different costs and different deadlines:
 

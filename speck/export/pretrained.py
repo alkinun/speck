@@ -10,14 +10,14 @@ from safetensors.torch import load_file
 from speck.data.loader import manifest_fingerprint
 from speck.model.architecture import ArchitectureConfig
 from speck.provenance.io import file_sha256 as _sha256
-from speck.training.checkpoint import load_metadata, load_model
+from speck.training.checkpoint import is_assistant_checkpoint, load_metadata, load_model
 
 
 def checkpoint_tokenizer_fingerprint(metadata):
     """Recover a native checkpoint's tokenizer identity without trusting its current path."""
 
     resolved = metadata["resolved"]
-    if metadata.get("training_phase") == "sft":
+    if is_assistant_checkpoint(metadata):
         return resolved["tokenizer"]["base_fingerprint"]
     expected = resolved.get("tokenizer_fingerprint")
     if expected is not None:

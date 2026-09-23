@@ -23,6 +23,7 @@ from speck.tokenization.chat import ChatTokenizer
 from speck.tokenization.tokenizer import Tokenizer
 from speck.training.base import arguments, train
 from speck.training.checkpoint import load_model
+from speck.training.rl import RLTrainer
 from speck.training.sft import SFTTrainer
 from speck.training.sft_data import prepare_sft_dataset
 
@@ -180,10 +181,12 @@ def run_smoke(directory):
         raise AssertionError("smoke evaluation loss is not finite")
     mid_training_result = run_mid_training_smoke(directory, configs, tokenizer, resumed)
     sft_result = run_sft_smoke(directory, configs, tokenizer, resumed)
+    rl_result = run_rl_smoke(directory, configs, directory / "assistant")
     result = {
         "status": "pass",
         "mid_training": mid_training_result,
         "sft": sft_result,
+        "rl": rl_result,
         "resume": "exact_parameter_parity",
         "steps": 4,
         "evaluated_tokens": evaluation["evaluated_tokens"],
@@ -339,4 +342,56 @@ def run_sft_smoke(directory, configs, tokenizer, parent):
         "parent": "native_checkpoint",
         "resume": "exact_parameter_parity",
         "chat_format_version": 2,
+    }
+
+
+def run_rl_smoke(directory, configs, parent):
+    """Run verifier-rewarded group policy steps from the SFT checkpoint and resume them."""
+
+    prompts = directory / "rl-prompts.jsonl"
+    rows = [
+        {"domain": "Math", "query": f"{index} + {index}", "ground_truth": str(2 * index)}
+        for index in range(4)
+    ]
+    prompts.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    settings = {
+        "prompt_files": [str(prompts)],
+        "group_size": 4,
+        "prompts_per_step": 2,
+        "max_prompt_tokens": 48,
+        "max_new_tokens": 8,
+        "temperature": 1.0,
+        "steps": 2,
+        "lr": 0.001,
+        "min_lr": 0.1,
+        "warmup_steps": 0,
+        "weight_decay": 0.0,
+        "grad_clip": 1.0,
+        "optimizer": "adamw",
+        "save_every": 1,
+        "seed": 11,
+        "parent": native_pretrained_source(parent, 2),
+        "output_dir": str(directory / "rl"),
+    }
+    rl_configs = {"tokenizer": configs["tokenizer"], "rl": settings}
+    resumed = directory / "rl-resumed"
+    with (directory / "rl.log").open("w") as log, contextlib.redirect_stdout(log):
+        RLTrainer(rl_configs).run()
+        resumed.mkdir()
+        for name in (
+            "model_000001.pt",
+            "optimizer_000001.pt",
+            "metadata_000001.json",
+            "complete_000001",
+        ):
+            shutil.copy2(directory / "rl" / name, resumed / name)
+        RLTrainer({**rl_configs, "rl": {**settings, "output_dir": str(resumed)}}).run()
+    expected, actual = load_model(directory / "rl", 2, "cpu"), load_model(resumed, 2, "cpu")
+    for name in expected:
+        torch.testing.assert_close(actual[name], expected[name], rtol=0, atol=0)
+    return {
+        "steps": 2,
+        "parent": "sft_checkpoint",
+        "reward": "checked_math",
+        "resume": "exact_parameter_parity",
     }

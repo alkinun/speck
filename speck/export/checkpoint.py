@@ -20,7 +20,12 @@ from speck.export.transformers import (
 )
 from speck.provenance.io import atomic_json
 from speck.tokenization.tokenizer import get_tokenizer
-from speck.training.checkpoint import checkpoint_identity, latest, load_model
+from speck.training.checkpoint import (
+    checkpoint_identity,
+    is_assistant_checkpoint,
+    latest,
+    load_model,
+)
 
 TEMPLATE_REPO = "specklabs/Speck1-140M"
 TEMPLATE_REVISION = "155b759545645cc694545fab85cd7d4c385fd965"
@@ -47,7 +52,7 @@ def load_checkpoint_metadata(checkpoint_dir, step):
     if not path.is_file() or not complete.is_file():
         raise FileNotFoundError(f"checkpoint {step} is incomplete")
     metadata = json.loads(path.read_text(encoding="utf-8"))
-    if metadata.get("step") != step or metadata.get("training_phase") == "sft":
+    if metadata.get("step") != step or is_assistant_checkpoint(metadata):
         raise ValueError("checkpoint is not a matching pretraining checkpoint")
     resolved = metadata.get("resolved")
     if (
