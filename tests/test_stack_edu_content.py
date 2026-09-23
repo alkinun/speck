@@ -2,8 +2,11 @@
 
 import hashlib
 import importlib.util
+import json
 from pathlib import Path
 
+import pyarrow as pa
+import pyarrow.parquet as pq
 import pytest
 
 SPEC = importlib.util.spec_from_file_location(
@@ -55,3 +58,63 @@ def test_screen_reasons(text, change, reason):
 
 def test_missing_blob_is_counted_not_raised():
     assert content.screen(row(b""), None, PROSE, Benchmarks()) == ("blob_missing_404", None)
+
+
+def test_acquire_skips_retained_rows_and_resumes(tmp_path, monkeypatch):
+    rows = [
+        {
+            "blob_id": f"{index:040x}",
+            "language": "Python",
+            "repo_name": "owner/repo",
+            "path": f"/m{index}.py",
+            "src_encoding": "UTF-8",
+            "length_bytes": 500,
+            "int_score": score,
+            "detected_licenses": ["MIT"],
+            "license_type": "permissive",
+        }
+        for index, score in enumerate([4, 3, 5, 4, 4])
+    ]
+    metadata = tmp_path / "python.parquet"
+    pq.write_table(pa.Table.from_pylist(rows), metadata)
+    listing = tmp_path / "listing.json"
+    listing.write_text(
+        json.dumps({"files": [{"path": "Python/0.parquet", "local": str(metadata)}]})
+    )
+    census = tmp_path / "census.json"
+    history = {"historical_acquisition": {"consumed_eligible_rows": 1}}
+    census.write_text(json.dumps({"by_language": {"Python": history}}))
+    policy = tmp_path / "policy.json"
+    policy.write_text(
+        json.dumps(
+            {
+                "filters": {
+                    "accepted_detected_licenses": ["MIT"],
+                    "accepted_encodings": ["UTF-8"],
+                    "min_file_bytes": 100,
+                    "max_file_bytes": 1000,
+                    "English_prose": PROSE,
+                },
+                "excluded_path_components": ["vendor"],
+            }
+        )
+    )
+    calls = []
+
+    class FakeScreen:
+        def __init__(self, workers):
+            pass
+
+        def run(self, unit, workdir):
+            calls.append([row["blob_id"] for row in unit])
+            return [(None, "text", 7) for _ in unit]
+
+    monkeypatch.setattr(content, "POLICY", policy)
+    monkeypatch.setattr(content, "UNIT_ROWS", 2)
+    monkeypatch.setattr(content, "Screen", FakeScreen)
+    content.acquire(listing, census, "Python", "4+", tmp_path / "out")
+    assert calls == [[f"{2:040x}", f"{3:040x}"], [f"{4:040x}"]]
+    tranche = json.loads((tmp_path / "out/Python-4plus/tranche.json").read_text())
+    assert (tranche["units"], tranche["totals"]["rows"], tranche["totals"]["tokens"]) == (2, 3, 21)
+    content.acquire(listing, census, "Python", "4+", tmp_path / "out")
+    assert len(calls) == 2
