@@ -153,7 +153,7 @@ job's initial wall limit must be at most 12 hours (48 GPU-hours), reduced for pr
 remaining margin covers shutdown/accounting uncertainty. `budget.json` describes that envelope;
 it is not an executable budget guard. Bind it through the existing Slurm accounting workflow before
 launch. These four-GPU Slurm settings are not a ready-to-run one-H100 rental binding. A raw
-`speck train` command does not enforce a cumulative GPU-hour limit.
+`scripts.base_train` command does not enforce a cumulative GPU-hour limit.
 
 Inspect source-wise loss, gradient health, checkpoint replay, samples, actual mixture exposures,
 and end-to-end throughput. Retain intermediate checkpoints. Public capability results at this short
