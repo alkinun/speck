@@ -1,0 +1,61 @@
+{
+  "boundary": "Raw tokens before cross-crawl deduplication, firewall and family exclusion, projected from twelve shards. FineWeb, which Ultra-FineWeb filters, deduplicates within each crawl only, so shards from different crawls can repeat each other; within-crawl selection avoids that loss. Not supply and not an acquisition authorization.",
+  "crawls": {
+    "CC-MAIN-2025-30": {
+      "compressed_bytes": 73072111904,
+      "projected_raw_tokens": 26791149778,
+      "shards": 1000
+    },
+    "CC-MAIN-2025-33": {
+      "compressed_bytes": 75814107295,
+      "projected_raw_tokens": 27796474618,
+      "shards": 1000
+    },
+    "CC-MAIN-2025-38": {
+      "compressed_bytes": 78099357731,
+      "projected_raw_tokens": 28634338546,
+      "shards": 1000
+    },
+    "CC-MAIN-2025-43": {
+      "compressed_bytes": 91814791718,
+      "projected_raw_tokens": 33662963512,
+      "shards": 1000
+    },
+    "CC-MAIN-2025-47": {
+      "compressed_bytes": 81253600760,
+      "projected_raw_tokens": 29790809807,
+      "shards": 1000
+    },
+    "CC-MAIN-2025-51": {
+      "compressed_bytes": 77920505949,
+      "projected_raw_tokens": 28568764351,
+      "shards": 1000
+    }
+  },
+  "eligible_tokens_established": 0,
+  "format": "speck_ultrafineweb_hq_listing",
+  "format_version": 1,
+  "gpu_hours": 0,
+  "listing": {
+    "path": "/mnt/speck-data/speck/ultrafineweb-hq-inventory-20260923/listing.json",
+    "sha256": "669f6072045ee54c7d0559f48a5df05ada64ffaa825382b7269cca08415f8338"
+  },
+  "repository": "openbmb/Ultra-FineWeb",
+  "revision": "02c85641e3d19a854be2e09139c25adaa9518063",
+  "route": "data/ultrafineweb_l1_en_hq",
+  "status": "listing_only_not_training_admission",
+  "token_rate_basis": {
+    "census": "experiments/corpus-audit/web-hq-stratified.json",
+    "raw_tokens": "experiments/corpus-audit/data-readiness.json",
+    "raw_tokens_per_compressed_byte": 0.3666398723156237,
+    "sampled_compressed_bytes": 959301706,
+    "sampled_raw_tokens": 351718255,
+    "sampled_shards": 12
+  },
+  "totals": {
+    "compressed_bytes": 477974475357,
+    "projected_raw_tokens": 175244500612,
+    "shards": 6000
+  },
+  "training_admitted": false
+}

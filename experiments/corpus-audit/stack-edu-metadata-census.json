@@ -1,0 +1,739 @@
+{
+  "boundary": "Declared metadata bytes and projections only; no content fetched. Projected tokens apply the retained acquisition's content yield (prose, length, benchmark, security and Gitleaks rejections, then Mistral tokens) measured on int_score 4 and 5 rows; its transfer to int_score 3 is an assumption until a content probe measures it. Origin and notice recovery, family partition and exclusion remain open, so eligible tokens are zero.",
+  "by_language": {
+    "C": {
+      "by_score": {
+        "3": {
+          "declared_bytes": 13513093679,
+          "no_license_declared_bytes": 10694145303,
+          "no_license_rows": 3782780,
+          "pass_declared_bytes": 2057550570,
+          "pass_rows": 534173,
+          "rows": 4463789
+        },
+        "4": {
+          "declared_bytes": 2341359077,
+          "no_license_declared_bytes": 2127538412,
+          "no_license_rows": 1245412,
+          "pass_declared_bytes": 186821390,
+          "pass_rows": 102261,
+          "rows": 1362621
+        },
+        "5": {
+          "declared_bytes": 34142710,
+          "no_license_declared_bytes": 30276903,
+          "no_license_rows": 19518,
+          "pass_declared_bytes": 3481870,
+          "pass_rows": 2162,
+          "rows": 21965
+        }
+      },
+      "files": [
+        "C/train-00000-of-00002.parquet",
+        "C/train-00001-of-00002.parquet"
+      ],
+      "historical_acquisition": {
+        "all_release_rows_consumed": false,
+        "consumed_declared_bytes": 94694955,
+        "consumed_eligible_rows": 52059,
+        "tokens_before_full_exclusion": 21493845,
+        "tokens_per_declared_byte": 0.2269798322413269
+      },
+      "projected_tokens_by_score": {
+        "3": 467022483,
+        "4": 42404687,
+        "5": 790314
+      },
+      "yield_basis": "own_acquisition"
+    },
+    "C#": {
+      "by_score": {
+        "3": {
+          "declared_bytes": 32913209012,
+          "no_license_declared_bytes": 24282731631,
+          "no_license_rows": 8112549,
+          "pass_declared_bytes": 7530453323,
+          "pass_rows": 2106895,
+          "rows": 10439687
+        },
+        "4": {
+          "declared_bytes": 1970170892,
+          "no_license_declared_bytes": 1685334768,
+          "no_license_rows": 838828,
+          "pass_declared_bytes": 272275479,
+          "pass_rows": 140161,
+          "rows": 984214
+        },
+        "5": {
+          "declared_bytes": 1399307,
+          "no_license_declared_bytes": 1027964,
+          "no_license_rows": 806,
+          "pass_declared_bytes": 371343,
+          "pass_rows": 309,
+          "rows": 1115
+        }
+      },
+      "files": [
+        "CSharp/train-00000-of-00003.parquet",
+        "CSharp/train-00001-of-00003.parquet",
+        "CSharp/train-00002-of-00003.parquet"
+      ],
+      "projected_tokens_by_score": {
+        "3": 1537590391,
+        "4": 55594018,
+        "5": 75821
+      },
+      "yield_basis": "pooled_acquisition"
+    },
+    "C++": {
+      "by_score": {
+        "3": {
+          "declared_bytes": 39831036679,
+          "no_license_declared_bytes": 30378368544,
+          "no_license_rows": 11853913,
+          "pass_declared_bytes": 7497166518,
+          "pass_rows": 2099469,
+          "rows": 14344327
+        },
+        "4": {
+          "declared_bytes": 4159098301,
+          "no_license_declared_bytes": 3771793732,
+          "no_license_rows": 1726068,
+          "pass_declared_bytes": 342382690,
+          "pass_rows": 153068,
+          "rows": 1898188
+        },
+        "5": {
+          "declared_bytes": 8609982,
+          "no_license_declared_bytes": 7635299,
+          "no_license_rows": 3760,
+          "pass_declared_bytes": 873260,
+          "pass_rows": 421,
+          "rows": 4231
+        }
+      },
+      "files": [
+        "Cpp/train-00000-of-00004.parquet",
+        "Cpp/train-00001-of-00004.parquet",
+        "Cpp/train-00002-of-00004.parquet",
+        "Cpp/train-00003-of-00004.parquet"
+      ],
+      "historical_acquisition": {
+        "all_release_rows_consumed": true,
+        "consumed_declared_bytes": 343255950,
+        "consumed_eligible_rows": 153489,
+        "tokens_before_full_exclusion": 77198333,
+        "tokens_per_declared_byte": 0.22490020347790038
+      },
+      "projected_tokens_by_score": {
+        "3": 1686114275,
+        "4": 77001936,
+        "5": 196396
+      },
+      "yield_basis": "own_acquisition"
+    },
+    "Go": {
+      "by_score": {
+        "3": {
+          "declared_bytes": 4348289811,
+          "no_license_declared_bytes": 1840952317,
+          "no_license_rows": 898819,
+          "pass_declared_bytes": 2178821312,
+          "pass_rows": 721292,
+          "rows": 1700017
+        },
+        "4": {
+          "declared_bytes": 302871557,
+          "no_license_declared_bytes": 224575073,
+          "no_license_rows": 170134,
+          "pass_declared_bytes": 73139830,
+          "pass_rows": 41793,
+          "rows": 214746
+        },
+        "5": {
+          "declared_bytes": 3791274,
+          "no_license_declared_bytes": 3305229,
+          "no_license_rows": 2073,
+          "pass_declared_bytes": 453297,
+          "pass_rows": 299,
+          "rows": 2400
+        }
+      },
+      "files": [
+        "Go/train-00000-of-00001.parquet"
+      ],
+      "historical_acquisition": {
+        "all_release_rows_consumed": true,
+        "consumed_declared_bytes": 73593127,
+        "consumed_eligible_rows": 42092,
+        "tokens_before_full_exclusion": 20663202,
+        "tokens_per_declared_byte": 0.2807762469449083
+      },
+      "projected_tokens_by_score": {
+        "3": 611761270,
+        "4": 20535926,
+        "5": 127275
+      },
+      "yield_basis": "own_acquisition"
+    },
+    "Java": {
+      "by_score": {
+        "2": {
+          "declared_bytes": 102636211922,
+          "no_license_declared_bytes": 81007994396,
+          "no_license_rows": 24318632,
+          "pass_declared_bytes": 17260615077,
+          "pass_rows": 4256357,
+          "rows": 29325610
+        },
+        "3": {
+          "declared_bytes": 31367138269,
+          "no_license_declared_bytes": 27142775718,
+          "no_license_rows": 11668278,
+          "pass_declared_bytes": 3707943407,
+          "pass_rows": 1333283,
+          "rows": 13144509
+        },
+        "4": {
+          "declared_bytes": 4883978742,
+          "no_license_declared_bytes": 4580262494,
+          "no_license_rows": 2368722,
+          "pass_declared_bytes": 282371966,
+          "pass_rows": 133276,
+          "rows": 2512619
+        },
+        "5": {
+          "declared_bytes": 14842622,
+          "no_license_declared_bytes": 13853452,
+          "no_license_rows": 6932,
+          "pass_declared_bytes": 909820,
+          "pass_rows": 450,
+          "rows": 7420
+        }
+      },
+      "files": [
+        "Java/train-00000-of-00011.parquet",
+        "Java/train-00001-of-00011.parquet",
+        "Java/train-00002-of-00011.parquet",
+        "Java/train-00003-of-00011.parquet",
+        "Java/train-00004-of-00011.parquet",
+        "Java/train-00005-of-00011.parquet",
+        "Java/train-00006-of-00011.parquet",
+        "Java/train-00007-of-00011.parquet",
+        "Java/train-00008-of-00011.parquet",
+        "Java/train-00009-of-00011.parquet",
+        "Java/train-00010-of-00011.parquet"
+      ],
+      "historical_acquisition": {
+        "all_release_rows_consumed": true,
+        "consumed_declared_bytes": 283281786,
+        "consumed_eligible_rows": 133726,
+        "tokens_before_full_exclusion": 46994537,
+        "tokens_per_declared_byte": 0.16589325301698007
+      },
+      "projected_tokens_by_score": {
+        "2": 2863419584,
+        "3": 615122793,
+        "4": 46843604,
+        "5": 150932
+      },
+      "yield_basis": "own_acquisition"
+    },
+    "JavaScript": {
+      "by_score": {
+        "3": {
+          "declared_bytes": 31992928423,
+          "no_license_declared_bytes": 23682865860,
+          "no_license_rows": 8954759,
+          "pass_declared_bytes": 7441120252,
+          "pass_rows": 2193647,
+          "rows": 11365306
+        },
+        "4": {
+          "declared_bytes": 3150797921,
+          "no_license_declared_bytes": 2799581661,
+          "no_license_rows": 1589848,
+          "pass_declared_bytes": 316855694,
+          "pass_rows": 155456,
+          "rows": 1766909
+        },
+        "5": {
+          "declared_bytes": 223019853,
+          "no_license_declared_bytes": 208156217,
+          "no_license_rows": 112697,
+          "pass_declared_bytes": 13975498,
+          "pass_rows": 7947,
+          "rows": 121216
+        }
+      },
+      "files": [
+        "JavaScript/train-00000-of-00003.parquet",
+        "JavaScript/train-00001-of-00003.parquet",
+        "JavaScript/train-00002-of-00003.parquet"
+      ],
+      "historical_acquisition": {
+        "all_release_rows_consumed": true,
+        "consumed_declared_bytes": 330831192,
+        "consumed_eligible_rows": 163403,
+        "tokens_before_full_exclusion": 69119927,
+        "tokens_per_declared_byte": 0.20892808378237807
+      },
+      "projected_tokens_by_score": {
+        "3": 1554658995,
+        "4": 66200052,
+        "5": 2919874
+      },
+      "yield_basis": "own_acquisition"
+    },
+    "Markdown": {
+      "by_score": {
+        "3": {
+          "declared_bytes": 90979453237,
+          "no_license_declared_bytes": 56676119565,
+          "no_license_rows": 12095267,
+          "pass_declared_bytes": 24559750717,
+          "pass_rows": 5315744,
+          "rows": 18785976
+        },
+        "4": {
+          "declared_bytes": 9111162691,
+          "no_license_declared_bytes": 6773435896,
+          "no_license_rows": 1410562,
+          "pass_declared_bytes": 1996603893,
+          "pass_rows": 426535,
+          "rows": 1895227
+        },
+        "5": {
+          "declared_bytes": 23655284,
+          "no_license_declared_bytes": 18800187,
+          "no_license_rows": 4708,
+          "pass_declared_bytes": 4503058,
+          "pass_rows": 1055,
+          "rows": 5874
+        }
+      },
+      "files": [
+        "Markdown/train-00000-of-00005.parquet",
+        "Markdown/train-00001-of-00005.parquet",
+        "Markdown/train-00002-of-00005.parquet",
+        "Markdown/train-00003-of-00005.parquet",
+        "Markdown/train-00004-of-00005.parquet"
+      ],
+      "historical_acquisition": {
+        "all_release_rows_consumed": false,
+        "consumed_declared_bytes": 171210180,
+        "consumed_eligible_rows": 36195,
+        "tokens_before_full_exclusion": 17964030,
+        "tokens_per_declared_byte": 0.10492384272944517
+      },
+      "projected_tokens_by_score": {
+        "3": 2576903421,
+        "4": 209491352,
+        "5": 472478
+      },
+      "yield_basis": "own_acquisition"
+    },
+    "PHP": {
+      "by_score": {
+        "3": {
+          "declared_bytes": 28017758434,
+          "no_license_declared_bytes": 18660537420,
+          "no_license_rows": 6433471,
+          "pass_declared_bytes": 7823622827,
+          "pass_rows": 2807131,
+          "rows": 9654702
+        },
+        "4": {
+          "declared_bytes": 350678456,
+          "no_license_declared_bytes": 309472598,
+          "no_license_rows": 236005,
+          "pass_declared_bytes": 36835309,
+          "pass_rows": 20832,
+          "rows": 259040
+        },
+        "5": {
+          "declared_bytes": 751625,
+          "no_license_declared_bytes": 701992,
+          "no_license_rows": 710,
+          "pass_declared_bytes": 49250,
+          "pass_rows": 44,
+          "rows": 755
+        }
+      },
+      "files": [
+        "PHP/train-00000-of-00002.parquet",
+        "PHP/train-00001-of-00002.parquet"
+      ],
+      "projected_tokens_by_score": {
+        "3": 1597450614,
+        "4": 7521143,
+        "5": 10056
+      },
+      "yield_basis": "pooled_acquisition"
+    },
+    "Python": {
+      "by_score": {
+        "3": {
+          "declared_bytes": 59917282490,
+          "no_license_declared_bytes": 42695098554,
+          "no_license_rows": 15663982,
+          "pass_declared_bytes": 15095365953,
+          "pass_rows": 3616203,
+          "rows": 19682766
+        },
+        "4": {
+          "declared_bytes": 8681544306,
+          "no_license_declared_bytes": 7617863741,
+          "no_license_rows": 4846422,
+          "pass_declared_bytes": 978179588,
+          "pass_rows": 491192,
+          "rows": 5369830
+        },
+        "5": {
+          "declared_bytes": 378751651,
+          "no_license_declared_bytes": 344833131,
+          "no_license_rows": 212231,
+          "pass_declared_bytes": 31760346,
+          "pass_rows": 19995,
+          "rows": 233423
+        }
+      },
+      "files": [
+        "Python/train-00000-of-00005.parquet",
+        "Python/train-00001-of-00005.parquet",
+        "Python/train-00002-of-00005.parquet",
+        "Python/train-00003-of-00005.parquet",
+        "Python/train-00004-of-00005.parquet"
+      ],
+      "historical_acquisition": {
+        "all_release_rows_consumed": false,
+        "consumed_declared_bytes": 603556622,
+        "consumed_eligible_rows": 305889,
+        "tokens_before_full_exclusion": 123490220,
+        "tokens_per_declared_byte": 0.2046042003330054
+      },
+      "projected_tokens_by_score": {
+        "3": 3088575279,
+        "4": 200139652,
+        "5": 6498300
+      },
+      "yield_basis": "own_acquisition"
+    },
+    "Ruby": {
+      "by_score": {
+        "3": {
+          "declared_bytes": 4097993170,
+          "no_license_declared_bytes": 2345080127,
+          "no_license_rows": 1536736,
+          "pass_declared_bytes": 1325034949,
+          "pass_rows": 540383,
+          "rows": 2288362
+        },
+        "4": {
+          "declared_bytes": 832740188,
+          "no_license_declared_bytes": 707705656,
+          "no_license_rows": 563559,
+          "pass_declared_bytes": 72154885,
+          "pass_rows": 38939,
+          "rows": 656968
+        },
+        "5": {
+          "declared_bytes": 51190168,
+          "no_license_declared_bytes": 45426780,
+          "no_license_rows": 29066,
+          "pass_declared_bytes": 5035159,
+          "pass_rows": 2035,
+          "rows": 31544
+        }
+      },
+      "files": [
+        "Ruby/train-00000-of-00001.parquet"
+      ],
+      "projected_tokens_by_score": {
+        "3": 270549583,
+        "4": 14732799,
+        "5": 1028093
+      },
+      "yield_basis": "pooled_acquisition"
+    },
+    "Rust": {
+      "by_score": {
+        "3": {
+          "declared_bytes": 5101446463,
+          "no_license_declared_bytes": 1725038626,
+          "no_license_rows": 460277,
+          "pass_declared_bytes": 2524939057,
+          "pass_rows": 434584,
+          "rows": 1012971
+        },
+        "4": {
+          "declared_bytes": 433003920,
+          "no_license_declared_bytes": 202889882,
+          "no_license_rows": 77012,
+          "pass_declared_bytes": 175773575,
+          "pass_rows": 37822,
+          "rows": 122135
+        },
+        "5": {
+          "declared_bytes": 763124,
+          "no_license_declared_bytes": 465688,
+          "no_license_rows": 210,
+          "pass_declared_bytes": 184236,
+          "pass_rows": 53,
+          "rows": 273
+        }
+      },
+      "files": [
+        "Rust/train-00000-of-00001.parquet"
+      ],
+      "historical_acquisition": {
+        "all_release_rows_consumed": true,
+        "consumed_declared_bytes": 175957811,
+        "consumed_eligible_rows": 37875,
+        "tokens_before_full_exclusion": 44985199,
+        "tokens_per_declared_byte": 0.25565900566926236
+      },
+      "projected_tokens_by_score": {
+        "3": 645523408,
+        "4": 44938097,
+        "5": 47101
+      },
+      "yield_basis": "own_acquisition"
+    },
+    "SQL": {
+      "by_score": {
+        "3": {
+          "declared_bytes": 16734190845,
+          "no_license_declared_bytes": 13166927229,
+          "no_license_rows": 1399008,
+          "pass_declared_bytes": 1698882952,
+          "pass_rows": 229344,
+          "rows": 1684620
+        },
+        "4": {
+          "declared_bytes": 2880940657,
+          "no_license_declared_bytes": 2451997845,
+          "no_license_rows": 677385,
+          "pass_declared_bytes": 324960551,
+          "pass_rows": 94075,
+          "rows": 787181
+        },
+        "5": {
+          "declared_bytes": 141100263,
+          "no_license_declared_bytes": 133636905,
+          "no_license_rows": 30214,
+          "pass_declared_bytes": 6606411,
+          "pass_rows": 2172,
+          "rows": 32611
+        }
+      },
+      "files": [
+        "SQL/train-00000-of-00001.parquet"
+      ],
+      "historical_acquisition": {
+        "all_release_rows_consumed": false,
+        "consumed_declared_bytes": 68296024,
+        "consumed_eligible_rows": 19512,
+        "tokens_before_full_exclusion": 11997503,
+        "tokens_per_declared_byte": 0.1756691282643335
+      },
+      "projected_tokens_by_score": {
+        "3": 298441287,
+        "4": 57085536,
+        "5": 1160542
+      },
+      "yield_basis": "own_acquisition"
+    },
+    "Shell": {
+      "by_score": {
+        "3": {
+          "declared_bytes": 4578490073,
+          "no_license_declared_bytes": 3020368756,
+          "no_license_rows": 1928114,
+          "pass_declared_bytes": 1221624247,
+          "pass_rows": 752655,
+          "rows": 2829399
+        },
+        "4": {
+          "declared_bytes": 3477799457,
+          "no_license_declared_bytes": 2053559734,
+          "no_license_rows": 807073,
+          "pass_declared_bytes": 1154763778,
+          "pass_rows": 410385,
+          "rows": 1298361
+        },
+        "5": {
+          "declared_bytes": 14731922,
+          "no_license_declared_bytes": 8789908,
+          "no_license_rows": 3586,
+          "pass_declared_bytes": 5193817,
+          "pass_rows": 1906,
+          "rows": 5787
+        }
+      },
+      "files": [
+        "Shell/train-00000-of-00001.parquet"
+      ],
+      "historical_acquisition": {
+        "all_release_rows_consumed": false,
+        "consumed_declared_bytes": 52563894,
+        "consumed_eligible_rows": 19050,
+        "tokens_before_full_exclusion": 11986906,
+        "tokens_per_declared_byte": 0.22804448239698527
+      },
+      "projected_tokens_by_score": {
+        "3": 278584669,
+        "4": 263337508,
+        "5": 1184421
+      },
+      "yield_basis": "own_acquisition"
+    },
+    "Swift": {
+      "by_score": {
+        "3": {
+          "declared_bytes": 6388136231,
+          "no_license_declared_bytes": 4483970650,
+          "no_license_rows": 1705522,
+          "pass_declared_bytes": 1638168492,
+          "pass_rows": 540726,
+          "rows": 2309488
+        },
+        "4": {
+          "declared_bytes": 337213501,
+          "no_license_declared_bytes": 251999281,
+          "no_license_rows": 106315,
+          "pass_declared_bytes": 76158015,
+          "pass_rows": 27963,
+          "rows": 136733
+        },
+        "5": {
+          "declared_bytes": 28750787,
+          "no_license_declared_bytes": 22885803,
+          "no_license_rows": 6540,
+          "pass_declared_bytes": 5210078,
+          "pass_rows": 1366,
+          "rows": 8088
+        }
+      },
+      "files": [
+        "Swift/train-00000-of-00001.parquet"
+      ],
+      "projected_tokens_by_score": {
+        "3": 334486122,
+        "4": 15550170,
+        "5": 1063809
+      },
+      "yield_basis": "pooled_acquisition"
+    },
+    "TypeScript": {
+      "by_score": {
+        "3": {
+          "declared_bytes": 9761876788,
+          "no_license_declared_bytes": 4869696150,
+          "no_license_rows": 2426688,
+          "pass_declared_bytes": 4273217620,
+          "pass_rows": 1506231,
+          "rows": 4073348
+        },
+        "4": {
+          "declared_bytes": 410918228,
+          "no_license_declared_bytes": 263324518,
+          "no_license_rows": 157106,
+          "pass_declared_bytes": 136897381,
+          "pass_rows": 53012,
+          "rows": 213838
+        },
+        "5": {
+          "declared_bytes": 8019141,
+          "no_license_declared_bytes": 7117301,
+          "no_license_rows": 2842,
+          "pass_declared_bytes": 898257,
+          "pass_rows": 324,
+          "rows": 3170
+        }
+      },
+      "files": [
+        "TypeScript/train-00000-of-00001.parquet"
+      ],
+      "historical_acquisition": {
+        "all_release_rows_consumed": true,
+        "consumed_declared_bytes": 137795638,
+        "consumed_eligible_rows": 53336,
+        "tokens_before_full_exclusion": 30881145,
+        "tokens_per_declared_byte": 0.22410829143953018
+      },
+      "projected_tokens_by_score": {
+        "3": 957663499,
+        "4": 30679838,
+        "5": 201306
+      },
+      "yield_basis": "own_acquisition"
+    }
+  },
+  "eligible_tokens_established": 0,
+  "format": "speck_stack_edu_metadata_census",
+  "format_version": 1,
+  "gpu_hours": 0,
+  "historical_acquisition": {
+    "path": "/mnt/speck-data/speck/data-qualification-20260919/code-supply/acquisition.json",
+    "sha256": "7226f676529217047028e7ae4983f8739866054e4ad7cda19123eb89a551addf"
+  },
+  "metadata_files": 42,
+  "physical_rows": 167063359,
+  "pooled_tokens_per_declared_byte": 0.2041829788783847,
+  "predicate": {
+    "changed": "score floor lifted; each int_score reported separately",
+    "historical_score_floor": 4,
+    "policy": {
+      "path": "/mnt/speck-data/speck/data-qualification-20260919/code-expansion/metadata-policy.json",
+      "sha256": "cb4df9d268622d68643a9c09839bb188dbb406247ac8cde0f2fc7629f8b9349d"
+    },
+    "unchanged": "permissive licence type with every detected licence on the allowlist, encoding, 100 B to 1 MB size, vendor path components"
+  },
+  "repository": "HuggingFaceTB/stack-edu",
+  "revision": "eeec5caac5cc3758a18f1d3ba4416837a9ba814c",
+  "scan": {
+    "path": "/mnt/speck-data/speck/stack-edu-census-20260923/scan/scan.json",
+    "sha256": "31bea3708c3500f19a9aa18c14a559b76cf139eece30a8220fd8bb900d941f1b"
+  },
+  "status": "complete_metadata_census_not_training_admission",
+  "totals_by_score": {
+    "2": {
+      "declared_bytes": 102636211922,
+      "no_license_declared_bytes": 81007994396,
+      "no_license_rows": 24318632,
+      "pass_declared_bytes": 17260615077,
+      "pass_rows": 4256357,
+      "projected_tokens": 2863419584,
+      "rows": 29325610
+    },
+    "3": {
+      "declared_bytes": 379542323604,
+      "no_license_declared_bytes": 265664676450,
+      "no_license_rows": 88920163,
+      "pass_declared_bytes": 90573662196,
+      "pass_rows": 24731760,
+      "projected_tokens": 16520448089,
+      "rows": 117779267
+    },
+    "4": {
+      "declared_bytes": 43324277894,
+      "no_license_declared_bytes": 35821335291,
+      "no_license_rows": 16820451,
+      "pass_declared_bytes": 6426174024,
+      "pass_rows": 2326770,
+      "projected_tokens": 1152056318,
+      "rows": 19478610
+    },
+    "5": {
+      "declared_bytes": 933519713,
+      "no_license_declared_bytes": 846912759,
+      "no_license_rows": 435893,
+      "pass_declared_bytes": 79505700,
+      "pass_rows": 40538,
+      "projected_tokens": 15926718,
+      "rows": 479872
+    }
+  },
+  "training_admitted": false
+}
