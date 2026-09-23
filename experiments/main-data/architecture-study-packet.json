@@ -1,22 +1,19 @@
 {
   "format": "speck_architecture_efficiency_study_packet",
   "format_version": 1,
-  "date": "2026-09-20",
+  "date": "2026-09-23",
   "status": "deferred_to_a_later_allocation_design_preserved",
   "purpose": "Bind the single bounded backbone comparison required before data-study runs.",
   "evidence_boundary": "This packet fixes the comparison and accounting contract. It does not select a production backbone, authorize GPU work or create a broad architecture search.",
   "source_of_truth": {
     "reference_model": {
-      "path": "experiments/qualification/model.json",
-      "sha256": "84d7ee22eaec7cc2b5c9ccad3c18b80af5aa73cada394ad3fb800e792e67f8e6"
+      "path": "experiments/qualification/model.json"
     },
     "timing_receipt": {
-      "path": "experiments/qualification/timing-result.json",
-      "sha256": "3d285f483468756ef22bcf22c3a93cc9f59ca2930ea374cb84b6645a920ad7a0"
+      "path": "experiments/qualification/timing-result.json"
     },
     "qualification_result": {
-      "path": "experiments/main-data/qualification-result.json",
-      "sha256": "05e3c3c928abfc6db69c448c2353c5a19069b922c130b3de29f3979e5eeb610d"
+      "path": "experiments/main-data/qualification-result.json"
     }
   },
   "budget": {

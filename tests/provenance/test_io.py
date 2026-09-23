@@ -5,7 +5,7 @@ from threading import Barrier
 
 import pytest
 
-from speck.provenance.io import atomic_json, file_sha256
+from speck.provenance.io import atomic_json, check_reference, file_sha256
 
 
 @pytest.mark.parametrize("size", (0, 8 * 1024 * 1024 + 17))
@@ -52,3 +52,25 @@ def test_atomic_json_concurrent_writers_have_independent_staging_files(tmp_path,
         list(executor.map(lambda value: atomic_json(path, value), values))
     assert json.loads(path.read_text()) in values
     assert list(tmp_path.iterdir()) == [path]
+
+
+def test_repository_references_are_path_only(tmp_path):
+    (tmp_path / "record.json").write_text("{}")
+    assert check_reference({"path": "record.json"}, root=tmp_path) == tmp_path / "record.json"
+    for copied in ({"sha256": "0" * 64}, {"status": "draft"}, {"format": "x"}):
+        with pytest.raises(ValueError, match="path-only"):
+            check_reference({"path": "record.json", **copied}, root=tmp_path)
+    with pytest.raises(ValueError, match="missing referenced file"):
+        check_reference({"path": "absent.json"}, root=tmp_path)
+
+
+def test_external_references_carry_a_verified_digest(tmp_path):
+    root = tmp_path / "repository"
+    root.mkdir()
+    artifact = tmp_path / "artifact.bin"
+    artifact.write_bytes(b"data")
+    digest = hashlib.sha256(b"data").hexdigest()
+    assert check_reference({"path": str(artifact), "sha256": digest}, root=root) == artifact
+    for entry in ({"path": str(artifact)}, {"path": str(artifact), "sha256": "0" * 64}):
+        with pytest.raises(ValueError, match="checksum mismatch"):
+            check_reference(entry, root=root)

@@ -13,7 +13,7 @@ import argparse
 import json
 from pathlib import Path
 
-from speck.provenance.io import file_sha256
+from speck.provenance.io import check_reference
 
 ROOT = Path(__file__).resolve().parents[2]
 PLAN = ROOT / "experiments/main-data/plan.json"
@@ -31,13 +31,6 @@ def _research_hours():
     return research["mid_training"], research["post_training"]
 
 
-def _artifact(path, expected):
-    resolved = (ROOT / path).resolve() if not Path(path).is_absolute() else Path(path)
-    if file_sha256(resolved) != expected:
-        raise ValueError(f"artifact checksum mismatch: {resolved}")
-    return resolved
-
-
 def validate(packet_path):
     """Check design metadata only; this does not validate an executable trajectory."""
     packet = json.loads(Path(packet_path).resolve().read_text())
@@ -49,8 +42,7 @@ def validate(packet_path):
         raise ValueError("mid-training packet must remain design-only")
 
     for entry in packet["source_of_truth"].values():
-        if "sha256" in entry:
-            _artifact(entry["path"], entry["sha256"])
+        check_reference(entry)
 
     # These are separate comparisons, not a factorial sweep. Confirmation and
     # support remain reserved even if fewer screening candidates qualify.

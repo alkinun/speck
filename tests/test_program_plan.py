@@ -18,8 +18,8 @@ SPEC.loader.exec_module(checker)
 def plan():
     data = json.loads((ROOT / "experiments/main-data/plan.json").read_text())
     # Unit tests exercise budgeting independently of the retained evidence tree.
-    # Dedicated tests below provide their own checksum and missing-file cases.
-    data["input_receipts"] = {}
+    # Dedicated tests below provide their own missing-file cases.
+    data["input_receipts"] = []
     return data
 
 
@@ -58,23 +58,13 @@ def test_stale_screening_arm_count_rejected(tmp_path, plan):
 
 
 def test_missing_receipt_rejected(tmp_path, plan):
-    plan["input_receipts"] = {str(tmp_path / "missing.json"): "0" * 64}
-    with pytest.raises(ValueError, match="missing input receipt"):
+    plan["input_receipts"] = ["experiments/main-data/missing.json"]
+    with pytest.raises(ValueError, match="missing referenced file"):
         validate_plan(tmp_path, plan)
 
 
-def test_changed_receipt_rejected(tmp_path, plan):
-    receipt = tmp_path / "receipt.json"
-    receipt.write_text("{}")
-    plan["input_receipts"] = {str(receipt): "0" * 64}
-    with pytest.raises(ValueError, match="checksum mismatch"):
-        validate_plan(tmp_path, plan)
-
-
-def test_matching_receipt_counted(tmp_path, plan):
-    receipt = tmp_path / "receipt.json"
-    receipt.write_text("{}")
-    plan["input_receipts"] = {str(receipt): checker._sha256(receipt)}
+def test_existing_receipt_counted(tmp_path, plan):
+    plan["input_receipts"] = ["experiments/main-data/plan.json"]
     assert validate_plan(tmp_path, plan)["input_receipts_checked"] == 1
 
 
@@ -116,4 +106,18 @@ def test_declared_domain_percentages_must_match_their_owning_banks(tmp_path, pla
     plan["main_pretraining"]["code_percent"] = 30
 
     with pytest.raises(ValueError, match="code/math percentages drift"):
+        validate_plan(tmp_path, plan)
+
+
+def test_registry_bank_outside_the_mixture_rejected(tmp_path, plan, monkeypatch):
+    original_load = checker._load
+
+    def drifted_load(path):
+        value = original_load(path)
+        if path == "experiments/main-data/source-registry.json":
+            value["sources"][0]["bank"] = "checked_code"
+        return value
+
+    monkeypatch.setattr(checker, "_load", drifted_load)
+    with pytest.raises(ValueError, match="registry banks differ"):
         validate_plan(tmp_path, plan)

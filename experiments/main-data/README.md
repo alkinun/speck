@@ -129,9 +129,10 @@ The [frontier-data source mapping](frontier-data-source-mapping.json) is its com
 it ties each finding to pinned local evidence, names the gate implications and records remaining
 measurement gaps. It is an evidence index, not a source-admission decision.
 
-The [candidate manifest preflight](candidate-manifest-preflight.json) normalizes those requirements
-across all 12 candidates. It currently finds zero complete manifests and zero eligible tokens; this is
-the checklist for source-specific qualification, not a launch manifest.
+The [source-readiness matrix](source-readiness.json) is the one record of per-source identity,
+inventory, gates, blockers and manifest-field completeness. It currently finds zero complete manifests
+and zero eligible tokens. The candidate manifests below name those sources and add only domain
+evidence and comparison contracts.
 
 The [natural-web candidate manifest](natural-web-candidate-manifest.json) is the first source-specific
 application. It binds the FineWeb-Edu control and Ultra-FineWeb HQ candidate, preserves the measured

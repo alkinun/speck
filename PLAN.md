@@ -64,7 +64,7 @@ publisher quality label establishes flagship-scale supply. No automatic repetiti
 
 ## The binding constraint is supply, not compute
 
-[`supply-gap.json`](experiments/main-data/supply-gap.json) is derived from the pinned receipts by
+[`supply-gap.json`](experiments/main-data/supply-gap.json) is derived from the plan and stock receipts by
 `build_supply_gap.py` and checked by `make plan-check`, so it moves as acquisition proceeds and
 cannot go stale. Today:
 
@@ -187,8 +187,8 @@ candidate weights or study arms; keep all five source-readiness gates explicit.
 The [shared data-design contract](experiments/main-data/data-design-contract.json) now binds the
 stage, lineage, quality, coverage, dependency and contamination fields required by every data-stage
 manifest. It changes design metadata only; it does not admit sources or alter the allocation.
-The [candidate manifest preflight](experiments/main-data/candidate-manifest-preflight.json) applies
-those fields to all 12 candidates and currently finds no complete manifest or eligible token.
+The [source-readiness matrix](experiments/main-data/source-readiness.json) records them per source
+and currently finds no complete manifest or eligible token.
 
 The [natural-web candidate manifest](experiments/main-data/natural-web-candidate-manifest.json) is the
 first source-specific application. It preserves the measured FineWeb-Edu/Ultra-FineWeb overlap while

@@ -1,7 +1,7 @@
 {
   "format": "speck_main_data_working_plan",
   "format_version": 2,
-  "date": "2026-09-22",
+  "date": "2026-09-23",
   "status": "working_preparation_targets_not_launch_manifest",
   "research_scope": {
     "focus": "An open data pipeline and recipe spanning all six training stages: pretraining, endpoint decay, mid-training, post-training SFT, post-training RL and final self-distillation. The 1.2B model is the evidence that the pipeline works end to end, not the deliverable.",
@@ -21,40 +21,28 @@
     ],
     "candidate_contrast": "Screen at most one code-bank contrast, one natural-web source contrast and one calibrated AI-generation/provenance-filter contrast against a shared eligible baseline. Checked-code substitution remains an alternative only with qualified supply. Confirm one selected intervention; no untested combination or broad weight sweep.",
     "data_design_contract": {
-      "path": "experiments/main-data/data-design-contract.json",
-      "status": "shared_design_requirements_only_no_source_admission"
+      "path": "experiments/main-data/data-design-contract.json"
     },
     "source_mapping": {
-      "path": "experiments/main-data/frontier-data-source-mapping.json",
-      "status": "review_only_no_gate_closure"
-    },
-    "candidate_manifest_preflight": {
-      "path": "experiments/main-data/candidate-manifest-preflight.json",
-      "status": "preflight_only_no_source_admission"
+      "path": "experiments/main-data/frontier-data-source-mapping.json"
     },
     "natural_web_manifest": {
-      "path": "experiments/main-data/natural-web-candidate-manifest.json",
-      "status": "candidate_manifest_not_admitted"
+      "path": "experiments/main-data/natural-web-candidate-manifest.json"
     },
     "natural_code_manifest": {
-      "path": "experiments/main-data/natural-code-candidate-manifest.json",
-      "status": "candidate_manifest_not_admitted"
+      "path": "experiments/main-data/natural-code-candidate-manifest.json"
     },
     "math_manifest": {
-      "path": "experiments/main-data/math-candidate-manifest.json",
-      "status": "candidate_manifest_not_admitted"
+      "path": "experiments/main-data/math-candidate-manifest.json"
     },
     "post_training_manifest": {
-      "path": "experiments/main-data/post-training-candidate-manifest.json",
-      "status": "candidate_manifest_not_admitted"
+      "path": "experiments/main-data/post-training-candidate-manifest.json"
     },
     "post_training_audit_protocol": {
-      "path": "experiments/main-data/post-training-audit-protocol.json",
-      "status": "design_only_not_training_authority"
+      "path": "experiments/main-data/post-training-audit-protocol.json"
     },
     "post_training_research": {
-      "path": "experiments/main-data/post-training-research.json",
-      "status": "reviewed_hypotheses_not_training_authority"
+      "path": "experiments/main-data/post-training-research.json"
     }
   },
   "model": {
@@ -80,8 +68,7 @@
     ],
     "decision": "Deferred. The reference backbone is frozen by declaration as the fixed substrate for the data studies. Retain the control geometry and measurement list for the next allocation; report the deferral and its consequence rather than any comparison result.",
     "packet": {
-      "path": "experiments/main-data/architecture-study-packet.json",
-      "status": "design_only_not_training_authority"
+      "path": "experiments/main-data/architecture-study-packet.json"
     },
     "proposed_control": {
       "status": "shape_count_checked_not_runtime_qualified_or_selected_for_production",
@@ -159,12 +146,8 @@
         "weight_percent": 25,
         "exposure_tokens": 20000000000,
         "eligible_unique_token_preparation_target": 25000000000,
-        "candidate_sources": [
-          "openbmb/Ultra-FineWeb"
-        ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false,
-        "qualification_priority": "Prioritize the pinned HQ route. Twelve-shard full token census and exact overlap with retained FineWeb-Edu are recorded in experiments/corpus-audit/data-readiness.json. Preserve the unchanged cutoff and review-only extraction flags. Source-use, broader family/near-duplicate exclusions, extraction quality and eligible supply remain open; no admission."
+        "admitted_by_this_plan": false
       },
       {
         "id": "independent_web",
@@ -172,14 +155,8 @@
         "weight_percent": 5,
         "exposure_tokens": 4000000000,
         "eligible_unique_token_preparation_target": 5000000000,
-        "candidate_sources": [
-          "HuggingFaceFW/fineweb-edu",
-          "mlfoundations/dclm-baseline-1.0-parquet",
-          "HuggingFaceTB/dclm-edu"
-        ],
         "source_allocations_frozen": false,
-        "admitted_by_this_plan": false,
-        "candidate_filter_review": "DCLM-Edu stricter candidate uses edu_int_score >= 3; edu_score >= 3 is a different filter. Neither is admitted; partial-viewer previews do not establish full-release retention."
+        "admitted_by_this_plan": false
       },
       {
         "id": "natural_code",
@@ -187,14 +164,8 @@
         "weight_percent": 35,
         "exposure_tokens": 28000000000,
         "eligible_unique_token_preparation_target": 35000000000,
-        "candidate_sources": [
-          "HuggingFaceTB/stack-edu",
-          "openbmb/UltraData-Code:L2",
-          "HuggingFaceCode/stack-v3-train"
-        ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "qualification_priority": "Retained stock is 0.477B tokens before eligibility, bounding 35% one-pass exposure at 1.36B total tokens. Fixed-cohort reading is complete; preserve all 45 cohort family holds and original frames. Origin coverage is now 58/103 unheld Stack-Edu and 68/70 unheld Stack v3; 44 unheld Stack-Edu outcomes are quota-blocked, one earlier outcome unresolved, and two pinned Stack v3 sources return 404. Resume only after access changes. experiments/main-data/QUALIFICATION.md owns notice/lineage, family and finite-supply gates; experiments/main-data/family-partition.json binds current cohort holds and origin coverage. Natural code and verified exercises have separate gates; no eligible yield or admission.",
         "absorbed_bank": {
           "id": "checked_code",
           "exposure_tokens": 4000000000,
@@ -208,16 +179,8 @@
         "weight_percent": 25,
         "exposure_tokens": 20000000000,
         "eligible_unique_token_preparation_target": 25000000000,
-        "candidate_sources": [
-          "openbmb/UltraData-Math:L2",
-          "HuggingFaceTB/finemath:finemath-4plus",
-          "nvidia/Nemotron-CC-Math-v1:4plus",
-          "nvidia/OpenMathInstruct-2",
-          "HuggingFaceTB/finemath:infiwebmath-3plus"
-        ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false,
-        "qualification_priority": "Full retained FineMath/L2 text-index and overlap checks are recorded in experiments/corpus-audit/data-readiness.json. One normalized link is not an automatic exclusion; L2 row-level host attribution and independent solution correctness remain open. Nemotron inventory has unusable masked object hashes; no shards acquired.",
         "absorbed_bank": {
           "id": "refined_math",
           "exposure_tokens": 4000000000,
@@ -231,11 +194,6 @@
         "weight_percent": 5,
         "exposure_tokens": 4000000000,
         "eligible_unique_token_preparation_target": 5000000000,
-        "candidate_sources": [
-          "retained FineWiki",
-          "retained peS2o",
-          "HuggingFaceFW/finepdfs-edu:English if qualified"
-        ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false
       },
@@ -245,10 +203,6 @@
         "weight_percent": 5,
         "exposure_tokens": 4000000000,
         "eligible_unique_token_preparation_target": 5000000000,
-        "candidate_sources": [
-          "openbmb/Ultra-FineWeb-L3",
-          "retained Cosmopedia v2 comparator"
-        ],
         "source_allocations_frozen": false,
         "admitted_by_this_plan": false
       }
@@ -583,59 +537,58 @@
     "boundary": "Token IDs only; indexes, masks, raw text, deduplication databases, checkpoints and backups cost extra. Two-TB scratch is a working allowance, not a measured footprint. Acquisition should be bounded and streamed.",
     "prepared_100b_uint16_token_id_bytes": 200000000000
   },
-  "input_receipts": {
-    "experiments/corpus-audit/code-application-origins.json": "d7b8ad0a57582666a152f1581432985abdf15a95ba07ed2266a678bc4afec1ce",
-    "experiments/corpus-audit/code-bundles.json": "13e5fdfd1ed66afe2efaa231b1baea59d92ebdf909c51916b552f6b39d934036",
-    "experiments/corpus-audit/code-expansion.json": "27758b3858331843710bc4cb98a16a89c265bc3fa37457d3e9fbdc1209a5bbe1",
-    "experiments/corpus-audit/code-supply.json": "30a93d3afcfbf53c0b173eb7e56aaef728280625bcf5827e195309436db5e8fe",
-    "experiments/corpus-audit/code-yield-result.json": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94",
-    "experiments/corpus-audit/data-readiness.json": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549",
-    "experiments/corpus-audit/natural-code-cohort.json": "a21c229e369f1fdacdeb0f217656fc3c646c3e7071d3eab919bb92542e8d5e77",
-    "experiments/corpus-audit/natural-web-inspection.json": "3f27886a4173c64a771beea134f1f383caf5944707cc259c2f4cdb85e1168681",
-    "experiments/corpus-audit/practical-code-checks.json": "4fb16e23039659f13cf575440cbeea098a8922895a507f43bec95ff1ffcb7e34",
-    "experiments/corpus-audit/recipe-review.json": "42c0c6d6822b52ee3449f1917e997d039848e40a2ed5903b317d375705508948",
-    "experiments/corpus-audit/web-filter-validation.json": "b390a64790f1b9ab83f0a54350805275810031e1afc13a5f7724b02127ab7879",
-    "experiments/corpus-audit/web-hq-stratified.json": "2c508679bfb7340799e99c77f8bbbf97d29957c5511829f0e07318647bd5d024",
-    "experiments/corpus-audit/web-inventory-dclm.json": "438f5f61aee6087959e461ceb20760dbc0de5d8bb775199a3711a09e617f8906",
-    "experiments/corpus-audit/web-variants.json": "13917e1d1e209ea7b913579f12de5093f84e9332f7c413bfc0ffdc0a1fbb1fcf",
-    "experiments/main-data/architecture-study-packet.json": "4297a531833c0135e3ceedaef094a570883c1f5c2fe38e4b2cf35565c259c390",
-    "experiments/main-data/candidate-manifest-preflight.json": "0a87aad0641bd6c7adaf115ed75937fbdc360c40ce7457d588f848c5ae411dfa",
-    "experiments/main-data/code-rights-review.json": "de92fed021f777648625157c563b3fb9b4f6797f1c9bab4b5016081144d6c04d",
-    "experiments/main-data/data-closeout.json": "813afc9fdcebd4cb95a586933c6b03a27eb533befa4e0321f031b1fa4177e7a1",
-    "experiments/main-data/data-design-contract.json": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58",
-    "experiments/main-data/data-study-packet.json": "f9c4c2473e1ac2f4db482b65480526bf6306dae7db8de8c86ec1cecade00b40b",
-    "experiments/main-data/frontier-data-research.json": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",
-    "experiments/main-data/frontier-data-source-mapping.json": "2562a915e8add69d7b502316bfb4cb58d6af6a7da77a46fbbc8f062d3d50ac81",
-    "experiments/main-data/livecodebench-exclusion.json": "4c10bfc69ddf2f7379d2eae26bc3873ee8c5317a9d036cad495fe2728bbb536f",
-    "experiments/main-data/math-candidate-manifest.json": "d6cb274989de5889b9505479571134b8dd351eafc73b5b565d3812f3b94af2f8",
-    "experiments/main-data/mid-training-study-packet.json": "bc06bb1b7142b987ebfc21866b40d0481c101aba5a11728f3f20db8acc02752d",
-    "experiments/main-data/natural-code-candidate-manifest.json": "0367744f0808c31df42c67d9c561137a81dbebae840423c55f9dd0f5962c3847",
-    "experiments/main-data/natural-web-candidate-manifest.json": "ff877226cba9341073390b8badad594b9a61e30e1891ca1c1ae825103474b110",
-    "experiments/main-data/post-training-audit-protocol.json": "318a7345ead5b8e6e50a6b4a7a5d5c218298d477fc50c3fa87f73898c5f615d7",
-    "experiments/main-data/post-training-candidate-manifest.json": "58b69701e9f8cf59e9101b2e897ac509dd0ef5a3132a6357189c394decd5d166",
-    "experiments/main-data/post-training-research.json": "5036027c1aa274c3f7b0f1aa6b07ad3f4a80016c90a866eee7cf27b096604c99",
-    "experiments/main-data/post-training-study-packet.json": "433a84a6e8ff3e01f91cfe5eaa34717a97a04b7ee366df48603da7e0b6cbde60",
-    "experiments/main-data/qualification-result.json": "05e3c3c928abfc6db69c448c2353c5a19069b922c130b3de29f3979e5eeb610d",
-    "experiments/main-data/source-readiness.json": "4e2cbc3fed17682412f285250d5b734ffe7b791af8f885f10adb87ac5ae2541b",
-    "experiments/main-data/source-registry.json": "9530585316146633a5f421dc523ffe054bd904196bd09222d1a619d4e44eb483",
-    "experiments/main-data/source-rights-acceptance-template.json": "7c042152a7f82aeecbcd84d05bc32b37aed357c9bf447545d5e0bb9200d87d9b",
-    "experiments/main-data/source-rights-acceptance.json": "62215503ae86ffd01cb06e30d15ea42aaa416c7fd3a84bf390604343b11828cf",
-    "experiments/main-data/source-rights-decision-20260922.json": "38e064725d821dc5b36f82a7ba0591ab900c85ba3cecf000c7a7515af19d256a",
-    "experiments/pilot/backup-result.json": "9f3248b7a50daae67a2cc3850b5afe68a5d19a2512f3fa5167a3084122bdf37a",
-    "experiments/pilot/development-result.json": "c4f8b7e8226d9063398c33eec92d864488f3d1527a572816b29cb12b07d1ba69",
-    "experiments/pilot/h100-run.json": "7e289c7189080bd6d3a1436cebb73a3925e73e06351972a48efe716bbb460de4",
-    "experiments/pilot/supply.json": "044cdfd3d48a78f66fe39831b4f46cf4dcb6325e6e254453ba1ff5b94161b070",
-    "experiments/qualification/model.json": "84d7ee22eaec7cc2b5c9ccad3c18b80af5aa73cada394ad3fb800e792e67f8e6",
-    "experiments/qualification/throughput-3090/sweep.json": "56b1fce0fd067792585a950014d64d8f5610a83c2e6fe05ffaf957f622d8dddf",
-    "experiments/qualification/throughput-gh200.json": "0bdadf206223415f7caf1d0ecc24348c30bb928dd938828f5c4e2494aaaecb5e",
-    "experiments/qualification/throughput-h100-preflight.json": "ebd7315f38f8ab55534dbb88f8427aa2d9edebcb04728855dc20636d67c30be4",
-    "experiments/qualification/throughput-h100.json": "036a2bd213c29404cb0bee0b1e86e75572d83dbcc34205c21546c120066105e4",
-    "experiments/qualification/timing-result.json": "3d285f483468756ef22bcf22c3a93cc9f59ca2930ea374cb84b6645a920ad7a0",
-    "experiments/corpus-audit/code-origin-recovery-20260922.json": "e1d9653bf199600fea0a3f3f3057104a0b03fd0158f4beccac0cc9ceeff894ec",
-    "experiments/main-data/family-partition.json": "4c697ba0702ba2b97d1b5fdbf10f108b8211f57673d96b1294a633e1ecc78197",
-    "experiments/main-data/family-partition-plan.json": "852544a32f4045722bb09c85f20f118467f29a46306bf234d46fdc58d60dbac7",
-    "experiments/main-data/ultrafineweb-hq-preprocess.json": "dbc75a942648e6d21410ba0bfe56396febcd143b2848650165ee96f7273f8878"
-  },
+  "input_receipts": [
+    "experiments/corpus-audit/code-application-origins.json",
+    "experiments/corpus-audit/code-bundles.json",
+    "experiments/corpus-audit/code-expansion.json",
+    "experiments/corpus-audit/code-origin-recovery-20260922.json",
+    "experiments/corpus-audit/code-supply.json",
+    "experiments/corpus-audit/code-yield-result.json",
+    "experiments/corpus-audit/data-readiness.json",
+    "experiments/corpus-audit/natural-code-cohort.json",
+    "experiments/corpus-audit/natural-web-inspection.json",
+    "experiments/corpus-audit/practical-code-checks.json",
+    "experiments/corpus-audit/recipe-review.json",
+    "experiments/corpus-audit/web-filter-validation.json",
+    "experiments/corpus-audit/web-hq-stratified.json",
+    "experiments/corpus-audit/web-inventory-dclm.json",
+    "experiments/corpus-audit/web-variants.json",
+    "experiments/main-data/architecture-study-packet.json",
+    "experiments/main-data/code-rights-review.json",
+    "experiments/main-data/data-closeout.json",
+    "experiments/main-data/data-design-contract.json",
+    "experiments/main-data/data-study-packet.json",
+    "experiments/main-data/family-partition-plan.json",
+    "experiments/main-data/family-partition.json",
+    "experiments/main-data/frontier-data-research.json",
+    "experiments/main-data/frontier-data-source-mapping.json",
+    "experiments/main-data/livecodebench-exclusion.json",
+    "experiments/main-data/math-candidate-manifest.json",
+    "experiments/main-data/mid-training-study-packet.json",
+    "experiments/main-data/natural-code-candidate-manifest.json",
+    "experiments/main-data/natural-web-candidate-manifest.json",
+    "experiments/main-data/post-training-audit-protocol.json",
+    "experiments/main-data/post-training-candidate-manifest.json",
+    "experiments/main-data/post-training-research.json",
+    "experiments/main-data/post-training-study-packet.json",
+    "experiments/main-data/qualification-result.json",
+    "experiments/main-data/source-readiness.json",
+    "experiments/main-data/source-registry.json",
+    "experiments/main-data/source-rights-acceptance-template.json",
+    "experiments/main-data/source-rights-acceptance.json",
+    "experiments/main-data/source-rights-decision-20260922.json",
+    "experiments/main-data/ultrafineweb-hq-preprocess.json",
+    "experiments/pilot/backup-result.json",
+    "experiments/pilot/development-result.json",
+    "experiments/pilot/h100-run.json",
+    "experiments/pilot/supply.json",
+    "experiments/qualification/model.json",
+    "experiments/qualification/throughput-3090/sweep.json",
+    "experiments/qualification/throughput-gh200.json",
+    "experiments/qualification/throughput-h100-preflight.json",
+    "experiments/qualification/throughput-h100.json",
+    "experiments/qualification/timing-result.json"
+  ],
   "launch_requirements": [
     "confirmed hardware and measured multiworker runtime",
     "backbone frozen by declaration before pretraining-data experiments; the architecture/efficiency comparison is deferred to a later allocation and is not a prerequisite here",

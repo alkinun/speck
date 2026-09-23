@@ -1,14 +1,14 @@
 {
   "format": "speck_supply_gap",
   "format_version": 1,
-  "status": "derived_from_pinned_receipts_no_admission",
+  "status": "derived_from_receipts_no_admission",
   "purpose": "State the distance between the declared mixture and measured retained stock, so acquisition is planned against a number rather than an impression.",
   "generated_by": "experiments/main-data/build_supply_gap.py",
-  "source_of_truth": {
-    "experiments/main-data/plan.json": "d54f9f7d9dd4898480102ded1bb24e971d451818a6585726fce40dbb80c85a88",
-    "experiments/pilot/supply.json": "044cdfd3d48a78f66fe39831b4f46cf4dcb6325e6e254453ba1ff5b94161b070",
-    "experiments/main-data/source-readiness.json": "4e2cbc3fed17682412f285250d5b734ffe7b791af8f885f10adb87ac5ae2541b"
-  },
+  "source_of_truth": [
+    "experiments/main-data/plan.json",
+    "experiments/pilot/supply.json",
+    "experiments/main-data/source-readiness.json"
+  ],
   "banks": [
     {
       "id": "selected_web",

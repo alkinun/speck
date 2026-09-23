@@ -1,7 +1,7 @@
 {
   "format": "speck_data_preparation_closeout",
   "format_version": 1,
-  "date": "2026-09-20",
+  "date": "2026-09-23",
   "status": "preparation_complete_external_research_reviewed_recipe_revision_pending",
   "purpose": "Freeze the current evidence-only data state before integrating externally compiled dataset research. This receipt closes local deterministic preparation; it does not admit sources or authorize acquisition or training.",
   "completed_scope": [
@@ -48,28 +48,6 @@
       "boundary": "Research contrasts, controls, budgets and gates are fixed. No packet authorizes acquisition, training or production mixture selection."
     }
   ],
-  "gate_summary": {
-    "source_use": {
-      "status": "open",
-      "decision_needed": "Named rights/notice/applicability decision per selected source and transformation."
-    },
-    "family_partition": {
-      "status": "open",
-      "decision_needed": "Frozen exact/near-duplicate/source-family graph with disjoint training, development and final evaluation families."
-    },
-    "correctness": {
-      "status": "open",
-      "decision_needed": "Independent checks for worked math, generated solutions, code exercises, SFT outcomes and reward references."
-    },
-    "finite_supply": {
-      "status": "open",
-      "decision_needed": "Accepted unique tokens/rows, exclusions, storage/acquisition cost and repetition policy per declared bank."
-    },
-    "runtime": {
-      "status": "open",
-      "decision_needed": "GH200 single/four-worker qualification and common comparison horizon."
-    }
-  },
   "external_research_intake": {
     "required_fields": [
       "dataset_or_source_name_and_role",
@@ -103,81 +81,57 @@
   },
   "source_of_truth": {
     "data_readiness": {
-      "path": "experiments/corpus-audit/data-readiness.json",
-      "sha256": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549"
+      "path": "experiments/corpus-audit/data-readiness.json"
     },
     "recipe_review": {
-      "path": "experiments/corpus-audit/recipe-review.json",
-      "sha256": "42c0c6d6822b52ee3449f1917e997d039848e40a2ed5903b317d375705508948"
+      "path": "experiments/corpus-audit/recipe-review.json"
     },
     "source_readiness": {
-      "path": "experiments/main-data/source-readiness.json",
-      "sha256": "4e2cbc3fed17682412f285250d5b734ffe7b791af8f885f10adb87ac5ae2541b"
+      "path": "experiments/main-data/source-readiness.json"
     },
     "pretraining_study": {
-      "path": "experiments/main-data/data-study-packet.json",
-      "sha256": "f9c4c2473e1ac2f4db482b65480526bf6306dae7db8de8c86ec1cecade00b40b"
+      "path": "experiments/main-data/data-study-packet.json"
     },
     "mid_training_study": {
-      "path": "experiments/main-data/mid-training-study-packet.json",
-      "sha256": "f5ceeace2168aeb143e1bab6d3fdc1709c2e68872ea67a83ec4858eb57535afe"
+      "path": "experiments/main-data/mid-training-study-packet.json"
     },
     "post_training_study": {
-      "path": "experiments/main-data/post-training-study-packet.json",
-      "sha256": "433a84a6e8ff3e01f91cfe5eaa34717a97a04b7ee366df48603da7e0b6cbde60"
+      "path": "experiments/main-data/post-training-study-packet.json"
     },
     "qualification_rules": {
-      "path": "experiments/main-data/qualification-rules.json",
-      "sha256": "6279b75e5515a136b795056b6405745b551c3835e7956b551dd1c070bc2310b0"
+      "path": "experiments/main-data/qualification-rules.json"
     },
     "design_contract": {
-      "path": "experiments/main-data/data-design-contract.json",
-      "sha256": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58"
+      "path": "experiments/main-data/data-design-contract.json"
     },
     "research_mapping": {
-      "path": "experiments/main-data/frontier-data-source-mapping.json",
-      "sha256": "2562a915e8add69d7b502316bfb4cb58d6af6a7da77a46fbbc8f062d3d50ac81"
-    },
-    "candidate_manifest_preflight": {
-      "path": "experiments/main-data/candidate-manifest-preflight.json",
-      "sha256": "0a87aad0641bd6c7adaf115ed75937fbdc360c40ce7457d588f848c5ae411dfa"
+      "path": "experiments/main-data/frontier-data-source-mapping.json"
     },
     "natural_web_manifest": {
-      "path": "experiments/main-data/natural-web-candidate-manifest.json",
-      "sha256": "ff877226cba9341073390b8badad594b9a61e30e1891ca1c1ae825103474b110"
+      "path": "experiments/main-data/natural-web-candidate-manifest.json"
     },
     "natural_code_manifest": {
-      "path": "experiments/main-data/natural-code-candidate-manifest.json",
-      "sha256": "0367744f0808c31df42c67d9c561137a81dbebae840423c55f9dd0f5962c3847"
+      "path": "experiments/main-data/natural-code-candidate-manifest.json"
     },
     "math_manifest": {
-      "path": "experiments/main-data/math-candidate-manifest.json",
-      "sha256": "d6cb274989de5889b9505479571134b8dd351eafc73b5b565d3812f3b94af2f8"
+      "path": "experiments/main-data/math-candidate-manifest.json"
     },
     "post_training_manifest": {
-      "path": "experiments/main-data/post-training-candidate-manifest.json",
-      "sha256": "58b69701e9f8cf59e9101b2e897ac509dd0ef5a3132a6357189c394decd5d166"
+      "path": "experiments/main-data/post-training-candidate-manifest.json"
     },
     "post_training_audit_protocol": {
-      "path": "experiments/main-data/post-training-audit-protocol.json",
-      "sha256": "254f2742c6650f917cce17a9b2ddd04efeffb6d306978932131fb7a2d8d05f4e"
+      "path": "experiments/main-data/post-training-audit-protocol.json"
     },
     "post_training_research": {
-      "path": "experiments/main-data/post-training-research.json",
-      "sha256": "5036027c1aa274c3f7b0f1aa6b07ad3f4a80016c90a866eee7cf27b096604c99"
+      "path": "experiments/main-data/post-training-research.json"
     }
   },
   "launch_boundary": "This closeout is an evidence handoff. It does not authorize corpus acquisition, source substitution, training, repetition, GPU spending or publication claims.",
-  "next_action": "Execute the bounded downstream audit protocol after source/parent gates close: structural SFT audit, stratified outcome/tool review, then fixed-policy verifier feasibility.",
   "external_research": {
     "path": "experiments/main-data/frontier-data-research.json",
-    "sha256": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5",
-    "status": "reviewed_primary_reports_hypotheses_only",
     "changes_made": "Added structured synthesis and design requirements; no source admission, mixture percentage or GPU allocation changed.",
     "mapping": {
-      "path": "experiments/main-data/frontier-data-source-mapping.json",
-      "sha256": "2562a915e8add69d7b502316bfb4cb58d6af6a7da77a46fbbc8f062d3d50ac81",
-      "status": "review_only_gate_implications_recorded"
+      "path": "experiments/main-data/frontier-data-source-mapping.json"
     }
   }
 }

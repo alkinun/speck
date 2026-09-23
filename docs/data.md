@@ -303,9 +303,9 @@ The [source-mapping receipt](../experiments/main-data/frontier-data-source-mappi
 which existing audits support each reviewed hypothesis and which readiness gates remain open. It is
 an evidence index, not a source-admission decision.
 
-The [candidate manifest preflight](../experiments/main-data/candidate-manifest-preflight.json) applies
-the shared fields to all 12 candidates. It records five pinned identities, zero complete manifests and
-zero established eligible tokens, so the next work is qualification rather than training.
+The [source-readiness matrix](../experiments/main-data/source-readiness.json) is the one record of
+per-source gates and manifest-field completeness; it finds zero complete manifests and zero eligible
+tokens, so the next work is qualification rather than training.
 
 The first source-specific application is the [natural-web candidate manifest](../experiments/main-data/natural-web-candidate-manifest.json).
 It records the FineWeb-Edu control, the Ultra-FineWeb HQ route, their bounded exact-overlap result and

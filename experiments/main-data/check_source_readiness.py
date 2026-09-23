@@ -12,17 +12,12 @@ import argparse
 import json
 from pathlib import Path
 
-from speck.provenance.io import file_sha256
+from speck.provenance.io import check_reference
 
 ROOT = Path(__file__).resolve().parents[2]
 CLOSEOUT = "experiments/corpus-audit/data-readiness.json"
-
-
-def _artifact(path, expected):
-    resolved = (ROOT / path).resolve() if not Path(path).is_absolute() else Path(path)
-    if file_sha256(resolved) != expected:
-        raise ValueError(f"artifact checksum mismatch: {resolved}")
-    return resolved
+ACCEPTANCE = "experiments/main-data/source-rights-acceptance.json"
+CONTRACT = "experiments/main-data/data-design-contract.json"
 
 
 def validate(matrix_path):
@@ -38,7 +33,7 @@ def validate(matrix_path):
 
     receipts = matrix["source_of_truth"]
     for entry in receipts.values():
-        _artifact(entry["path"], entry["sha256"])
+        check_reference(entry)
 
     sources = matrix["sources"]
     ids = [source["id"] for source in sources]
@@ -46,6 +41,13 @@ def validate(matrix_path):
         raise ValueError("source IDs must be unique")
     if not sources or any(source.get("admitted") is not False for source in sources):
         raise ValueError("every source must remain explicitly non-admitted")
+    acceptance = json.loads((ROOT / ACCEPTANCE).read_text())
+    if {source["id"] for source in sources if source["selected"]} != set(
+        acceptance["approved_source_ids"]
+    ):
+        raise ValueError("selected sources differ from the signed source-use acceptance")
+    vocabulary = matrix["manifest_field_vocabulary"]
+    required = json.loads((ROOT / CONTRACT).read_text())["manifest_schema"]["required_fields"]
     for source in sources:
         if not source.get("evidence") or not source.get("blockers"):
             raise ValueError(f"source lacks evidence or blockers: {source['id']}")
@@ -57,6 +59,13 @@ def validate(matrix_path):
             "runtime",
         }:
             raise ValueError(f"incomplete gate set: {source['id']}")
+        # No manifest is complete until finite eligible supply exists, so no field may be bound.
+        fields = source["manifest_fields"]
+        if list(fields) != required or not set(fields.values()) <= vocabulary.keys():
+            raise ValueError(f"manifest fields drift from the shared contract: {source['id']}")
+        eligible = source.get("inventory", {}).get("eligible_unique_tokens_established", 0)
+        if type(eligible) is not int or eligible != 0:
+            raise ValueError(f"source cannot claim eligible tokens: {source['id']}")
         if source["id"] in {
             "finemath_4plus",
             "ultradata_math_l2_preview",

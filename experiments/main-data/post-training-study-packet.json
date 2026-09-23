@@ -2,28 +2,23 @@
   "format": "speck_post_training_data_study_packet",
   "format_version": 2,
   "status": "design_only_not_training_authority",
-  "date": "2026-09-20",
+  "date": "2026-09-23",
   "purpose": "Bind a post-training data comparison that measures verified supervision value and conditional RL prompt feasibility from the same useful parent.",
   "source_of_truth": {
     "working_plan": {
-      "path": "experiments/main-data/plan.json",
-      "status": "working_targets_not_launch_settings"
+      "path": "experiments/main-data/plan.json"
     },
     "data_readiness": {
-      "path": "experiments/corpus-audit/data-readiness.json",
-      "sha256": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549"
+      "path": "experiments/corpus-audit/data-readiness.json"
     },
     "qualification_rules": {
-      "path": "experiments/main-data/qualification-rules.json",
-      "sha256": "6279b75e5515a136b795056b6405745b551c3835e7956b551dd1c070bc2310b0"
+      "path": "experiments/main-data/qualification-rules.json"
     },
     "source_readiness": {
-      "path": "experiments/main-data/source-readiness.json",
-      "sha256": "4e2cbc3fed17682412f285250d5b734ffe7b791af8f885f10adb87ac5ae2541b"
+      "path": "experiments/main-data/source-readiness.json"
     },
     "design_contract": {
-      "path": "experiments/main-data/data-design-contract.json",
-      "sha256": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58"
+      "path": "experiments/main-data/data-design-contract.json"
     }
   },
   "common_contract": {

@@ -1,42 +1,34 @@
 {
   "format": "speck_post_training_audit_protocol",
   "format_version": 1,
-  "date": "2026-09-20",
+  "date": "2026-09-23",
   "status": "design_only_not_training_authority",
   "purpose": "Define the bounded structural, outcome and verifier checks required before selecting SFT data or running fixed-policy RL feasibility.",
   "evidence_boundary": "This protocol fixes audit strata and stop rules; it does not acquire sources, execute external corpus code, admit rows, update a policy or authorize GPU work.",
   "source_of_truth": {
     "candidate_manifest": {
-      "path": "experiments/main-data/post-training-candidate-manifest.json",
-      "sha256": "58b69701e9f8cf59e9101b2e897ac509dd0ef5a3132a6357189c394decd5d166"
+      "path": "experiments/main-data/post-training-candidate-manifest.json"
     },
     "study_packet": {
-      "path": "experiments/main-data/post-training-study-packet.json",
-      "sha256": "433a84a6e8ff3e01f91cfe5eaa34717a97a04b7ee366df48603da7e0b6cbde60"
+      "path": "experiments/main-data/post-training-study-packet.json"
     },
     "data_readiness": {
-      "path": "experiments/corpus-audit/data-readiness.json",
-      "sha256": "2e5c53b1e7474858f0a1ab026a6b73427e3da38ac4a5322e200e439bf2707549"
+      "path": "experiments/corpus-audit/data-readiness.json"
     },
     "sft_audit_cli": {
-      "path": "scripts/sft_audit.py",
-      "sha256": "ac31949aab3c8545a838cc441c27e5b49256e7ffc32fd112aa7b1c19f1521704"
+      "path": "scripts/sft_audit.py"
     },
     "sft_audit_impl": {
-      "path": "speck/training/sft_audit.py",
-      "sha256": "9715d78eb530a7b5ae00d665947c3f7f8d041b41bb6ec4548c050566ec9b477b"
+      "path": "speck/training/sft_audit.py"
     },
     "tool_environment": {
-      "path": "speck/evaluation/tools.py",
-      "sha256": "05c1038e085e4200bacab2cee2950684b592d2eb9b5af852de0d663dee3dbd5b"
+      "path": "speck/evaluation/tools.py"
     },
     "qualification_rules": {
-      "path": "experiments/main-data/qualification-rules.json",
-      "sha256": "6279b75e5515a136b795056b6405745b551c3835e7956b551dd1c070bc2310b0"
+      "path": "experiments/main-data/qualification-rules.json"
     },
     "post_training_research": {
-      "path": "experiments/main-data/post-training-research.json",
-      "sha256": "5036027c1aa274c3f7b0f1aa6b07ad3f4a80016c90a866eee7cf27b096604c99"
+      "path": "experiments/main-data/post-training-research.json"
     }
   },
   "audit_order": [

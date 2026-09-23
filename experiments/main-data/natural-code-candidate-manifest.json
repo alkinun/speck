@@ -1,42 +1,34 @@
 {
   "format": "speck_natural_code_candidate_manifest",
   "format_version": 1,
-  "date": "2026-09-20",
+  "date": "2026-09-23",
   "status": "candidate_manifest_not_admitted",
   "purpose": "Bind the retained Stack-Edu and bounded Stack v3 evidence for the natural-code pretraining contrast while keeping checked exercises separate.",
   "evidence_boundary": "This manifest records retained code stock, bounded cohort results and provenance limits. It does not establish source rights, complete repository families, behavioral correctness, eligible supply or training authority.",
   "source_of_truth": {
     "source_readiness": {
-      "path": "experiments/main-data/source-readiness.json",
-      "sha256": "4e2cbc3fed17682412f285250d5b734ffe7b791af8f885f10adb87ac5ae2541b"
+      "path": "experiments/main-data/source-readiness.json"
     },
     "data_design_contract": {
-      "path": "experiments/main-data/data-design-contract.json",
-      "sha256": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58"
+      "path": "experiments/main-data/data-design-contract.json"
     },
     "code_supply": {
-      "path": "experiments/corpus-audit/code-supply.json",
-      "sha256": "30a93d3afcfbf53c0b173eb7e56aaef728280625bcf5827e195309436db5e8fe"
+      "path": "experiments/corpus-audit/code-supply.json"
     },
     "code_yield": {
-      "path": "experiments/corpus-audit/code-yield-result.json",
-      "sha256": "e853602c2676414a1f3f89f37c943be7ff10434c01d26cd6c80cbf9fa31a5a94"
+      "path": "experiments/corpus-audit/code-yield-result.json"
     },
     "stack_v3_frame": {
-      "path": "experiments/corpus-audit/stack-v3-broader.json",
-      "sha256": "e9aa292f1ba99d072c7a5f318bcc46d17d522daddcf9db96b1b2618d1a284d2b"
+      "path": "experiments/corpus-audit/stack-v3-broader.json"
     },
     "stack_v3_origins": {
-      "path": "experiments/corpus-audit/stack-v3-origins.json",
-      "sha256": "1da4ec51c2d1e320a4860376ea5df734a5f5dec16dec06f84efbbe86ea6be7e2"
+      "path": "experiments/corpus-audit/stack-v3-origins.json"
     },
     "retained_origins": {
-      "path": "experiments/corpus-audit/retained-code-origins.json",
-      "sha256": "d61853b02a8c2016209fb3ba6b3d73b354abd9b61e8c3696439d9e45f9ea6d40"
+      "path": "experiments/corpus-audit/retained-code-origins.json"
     },
     "origin_recovery": {
-      "path": "experiments/corpus-audit/code-origin-recovery-20260922.json",
-      "sha256": "e1d9653bf199600fea0a3f3f3057104a0b03fd0158f4beccac0cc9ceeff894ec"
+      "path": "experiments/corpus-audit/code-origin-recovery-20260922.json"
     }
   },
   "common_contract": {
@@ -63,16 +55,6 @@
   "candidates": [
     {
       "id": "stack_edu",
-      "role": "natural_code_control_or_candidate",
-      "identity": {
-        "retained_source_revision": "eeec5caac5cc3758a18f1d3ba4416837a9ba814c"
-      },
-      "inventory": {
-        "documents": 714369,
-        "retained_tokens_with_bos_eos": 476774847,
-        "eligible_unique_tokens_established": 0,
-        "known_benchmark_hold_tokens": 174977
-      },
       "measured_preflight": {
         "retained_documents": 714369,
         "retained_tokens_with_bos_eos": 476774847,
@@ -102,36 +84,10 @@
           "path": "experiments/corpus-audit/code-origin-recovery-20260922.json",
           "field": "result.coverage.stack_edu"
         }
-      ],
-      "gate_status": {
-        "source_use": "open_origin_and_notice_recovery",
-        "family_partition": "open_full_stock_graph_45_cohort_files_held",
-        "correctness": "open_no_execution_oracle",
-        "finite_supply": "no_eligible_tokens_established",
-        "runtime": "open"
-      },
-      "admitted": false,
-      "blockers": [
-        "origin/notice resolution",
-        "family and benchmark partition",
-        "independent correctness checks",
-        "eligible supply and cost",
-        "44 unheld quota-blocked origin outcomes and one earlier unresolved outcome",
-        "retained stock is not representative of the full upstream release"
       ]
     },
     {
       "id": "stack_v3",
-      "role": "natural_code_candidate",
-      "identity": {
-        "dataset_revision": "8f3f25d86e44fd691428131efd17af75d4716499"
-      },
-      "inventory": {
-        "review_repositories": 44,
-        "review_files": 80,
-        "review_tokens_with_bos_eos": 133211,
-        "eligible_tokens_established": 0
-      },
       "measured_preflight": {
         "frame_repositories": 29347,
         "frame_file_entries": 379942,
@@ -161,32 +117,10 @@
           "path": "experiments/corpus-audit/stack-v3-origins.json",
           "field": "results.transformations"
         }
-      ],
-      "gate_status": {
-        "source_use": "open_origin_and_notice_recovery",
-        "family_partition": "open_full_stock_graph_45_cohort_files_held",
-        "correctness": "open_no_execution_oracle",
-        "finite_supply": "bounded_review_cohort_only",
-        "runtime": "open"
-      },
-      "admitted": false,
-      "blockers": [
-        "origin/notice resolution",
-        "family and benchmark partition",
-        "independent correctness checks",
-        "full finite eligible supply",
-        "two pinned source 404s",
-        "ten unexplained transformed identities",
-        "bounded cohort cannot establish full-release eligible supply"
       ]
     },
     {
       "id": "checked_code",
-      "role": "conditional_checked_exercise_substitution",
-      "identity": "not available; no independently verified checked-code route is bound",
-      "inventory": {
-        "qualified_supply_tokens": null
-      },
       "measured_preflight": {
         "rows_with_commit_id": 0,
         "qualified_supply_tokens": null
@@ -200,17 +134,6 @@
           "path": "experiments/corpus-audit/code-provenance.json",
           "field": "rejections"
         }
-      ],
-      "gate_status": {
-        "source_use": "not_started",
-        "family_partition": "not_started",
-        "correctness": "not_started",
-        "finite_supply": "missing_qualified_supply",
-        "runtime": "not_started"
-      },
-      "admitted": false,
-      "blockers": [
-        "independently verified checked-code supply is not present"
       ]
     }
   ],
@@ -236,19 +159,12 @@
     "study_slot": "pretraining screening code_bank_candidate; select one natural-source route or a qualified checked-code replacement, never an undeclared extra arm"
   },
   "required_before_screening": [
-    "Named source-use and notice decision for the selected natural-code route.",
+    "Per-file origin and notice recovery required by the 2026-09-22 source-use decision; unresolved records stay excluded.",
     "Complete repository/fork/rename/derivative/benchmark family graph and held-out partition.",
     "Independent content-quality review and benchmark contamination firewall.",
     "Eligible Mistral token count by language/role/length stratum after all holds and exclusions.",
     "Separate checked-exercise provenance, specification, dependency, oracle and wrong-control evidence if substitution is proposed.",
     "Measured GH200 cost and common comparison horizon."
-  ],
-  "next_actions": [
-    "Complete source/origin/use and semantic-quality outcomes for the frozen Stack-Edu sample; preserve all holds and unresolved files.",
-    "Resolve Stack v3 content-ID mismatches, notices, source-use decisions and full family links before expanding the cohort.",
-    "Keep checked-code substitution unavailable until an independently verified origin/correctness manifest exists.",
-    "Compute eligible supply separately from natural-code yield and verified-exercise feasibility.",
-    "Keep all code candidates outside the study arm until a revised source-readiness receipt and finite manifest close the gates."
   ],
   "admission_boundary": "This is a launch-blocked candidate manifest. It does not admit natural code or checked exercises, authorize acquisition or change the pretraining study budget."
 }
