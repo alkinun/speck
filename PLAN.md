@@ -103,8 +103,8 @@ primary research evidence is added.
 1. **Complete family partition and exclusion coverage.** Candidate splits exist for six text stocks
    and the code review cohort ([receipt](experiments/main-data/family-partition.json)). Close
    `family_partition` with the full retained-code graph and intended benchmark coverage before
-   exercise derivation. Carry all 45 cohort holds into every stage. Resume the 44 unheld
-   quota-blocked origin lookups; unresolved records and source 404s stay excluded. The
+   exercise derivation. Carry all 45 cohort holds into every stage. Origins are verified for
+   100/103 unheld Stack-Edu and 68/70 Stack v3 records; the rest stay excluded. The
    [qualification packet](experiments/main-data/QUALIFICATION.md) owns this recovery state.
 2. **Turn the inventory into finite eligible arms.** Count eligible tokens per bank after
    exclusions. Retained natural-code stock caps a one-pass run at 1.36B code tokens, so qualify

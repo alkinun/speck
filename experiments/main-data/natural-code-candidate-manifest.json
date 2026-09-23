@@ -28,7 +28,7 @@
       "path": "experiments/corpus-audit/retained-code-origins.json"
     },
     "origin_recovery": {
-      "path": "experiments/corpus-audit/code-origin-recovery-20260922.json"
+      "path": "experiments/corpus-audit/code-origin-recovery-20260923.json"
     }
   },
   "common_contract": {
@@ -81,7 +81,7 @@
           "field": "cohort_and_holds"
         },
         {
-          "path": "experiments/corpus-audit/code-origin-recovery-20260922.json",
+          "path": "experiments/corpus-audit/code-origin-recovery-20260923.json",
           "field": "result.coverage.stack_edu"
         }
       ]
