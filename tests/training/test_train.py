@@ -1,4 +1,5 @@
 import copy
+import json
 import math
 from pathlib import Path
 
@@ -6,13 +7,12 @@ import pytest
 import torch
 
 from speck.config import load_experiment
-from speck.model import CausalLMTrainingOutput, SpeckForCausalLM
+from speck.model import SpeckForCausalLM
 from speck.model.architecture import (
     ArchitectureConfig,
     AttentionSpec,
     BlockConfig,
     BlockGroup,
-    RoutedSwiGLUSpec,
     StageConfig,
     SwiGLUSpec,
 )
@@ -249,9 +249,6 @@ def test_stop_at_tokens_is_restricted_to_configured_milestones(tmp_path):
     )
     assert trainer.args.stop_at_tokens == 50_000_000
     assert trainer.args.seed == 42
-    assert trainer.args.load_balance_coefficient == 0.01
-    assert trainer.args.router_z_loss_coefficient == 0.001
-    assert trainer.args.diagnostics_every == 100
     assert trainer.args.data_token_offset == 0
 
     with pytest.raises(ValueError, match="configured checkpoint"):
@@ -325,8 +322,8 @@ def test_data_branch_keeps_the_training_recipe_fixed():
 
 
 def test_context_architecture_only_allows_positional_changes():
-    experiment = historical_repository() / "experiments" / "Speck1-140M"
-    model = load_experiment(experiment, "model")["model"]
+    reference = Path(__file__).parents[2] / "experiments/qualification/model.json"
+    model = json.loads(reference.read_text())
     extended = {
         **model,
         "max_position_embeddings": 131_072,
@@ -336,29 +333,9 @@ def test_context_architecture_only_allows_positional_changes():
     assert context_compatible_architecture(model, extended)
     changed = {**extended, "embedding_size": model["embedding_size"] + 1}
     assert not context_compatible_architecture(model, changed)
-    scope_changed = copy.deepcopy(extended)
-    attention = scope_changed["blocks"][1]["block"]["stages"][0]["branches"][0]
-    attention["scope"] = "sliding"
-    attention["window_size"] = 32
-    assert not context_compatible_architecture(model, scope_changed)
-    assert context_compatible_architecture(
-        model,
-        scope_changed,
-        allow_attention_scope_change=True,
-    )
     rope_changed = copy.deepcopy(extended)
-    rope_changed["blocks"][1]["block"]["stages"][0]["branches"][0]["rope_dim"] = 0
+    rope_changed["blocks"][1]["block"]["stages"][0]["branches"][0]["rope_dim"] = 2
     assert not context_compatible_architecture(model, rope_changed)
-    assert context_compatible_architecture(
-        model,
-        rope_changed,
-        allow_attention_scope_change=True,
-    )
-    assert not context_compatible_architecture(
-        model,
-        changed,
-        allow_attention_scope_change=True,
-    )
 
 
 def test_branch_inherits_global_and_schedule_positions():
@@ -512,55 +489,5 @@ def test_optimization_step_averages_accumulated_losses():
     )
 
     torch.testing.assert_close(loss, expected)
-    assert torch.isfinite(grad_norm)
-    assert next_batch[2] == {"batch": 2}
-
-
-def test_optimization_step_averages_typed_moe_losses_and_routing():
-    config = ArchitectureConfig(
-        (
-            BlockGroup(
-                BlockConfig(
-                    8,
-                    (StageConfig((RoutedSwiGLUSpec(4, num_experts=4, top_k=2),)),),
-                )
-            ),
-        ),
-        embedding_size=8,
-        vocab_size=16,
-        max_position_embeddings=8,
-    )
-    model = SpeckForCausalLM(config)
-    model.init_weights()
-    optimizer = model.optimizer(name="muon")
-    batches = [
-        (torch.randint(0, 16, (1, 4)), torch.randint(0, 16, (1, 4)), {"batch": index})
-        for index in range(3)
-    ]
-    expected = [
-        model(inputs, targets, return_training_output=True) for inputs, targets, _ in batches[:2]
-    ]
-
-    output, grad_norm, next_batch = optimization_step(
-        model,
-        tuple(model.parameters()),
-        optimizer,
-        iter(batches[1:]),
-        batches[0],
-        accumulation=2,
-        grad_clip=1.0,
-        lr=1e-3,
-        return_training_output=True,
-    )
-
-    assert isinstance(output, CausalLMTrainingOutput)
-    torch.testing.assert_close(
-        output.total_loss,
-        torch.stack([item.total_loss for item in expected]).mean(),
-    )
-    torch.testing.assert_close(
-        output.routing[0].utilization,
-        torch.stack([item.routing[0].utilization for item in expected]).mean(dim=0),
-    )
     assert torch.isfinite(grad_norm)
     assert next_batch[2] == {"batch": 2}

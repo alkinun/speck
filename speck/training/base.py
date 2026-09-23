@@ -18,7 +18,7 @@ from speck.config import load_experiment
 from speck.data.data_launch import verify_launch_receipt
 from speck.data.dataset import load_manifest, resolve_data_dir, verify_shards
 from speck.data.loader import manifest_fingerprint, packed_loader
-from speck.model import CausalLMTrainingOutput, build_model
+from speck.model import build_model
 from speck.model.architecture import ArchitectureConfig
 from speck.operations.random_state import (
     gather_training_rng,
@@ -48,7 +48,6 @@ from speck.training.checkpoint import (
 )
 from speck.training.step import (
     assert_finite_parameters,
-    average_training_output,
     branch_position,
     checkpoint_global_tokens,
     checkpoint_milestones,
@@ -70,9 +69,6 @@ _BRANCH_FIXED_SETTINGS = (
     "optimizer",
     "world_size",
     "seed",
-    "load_balance_coefficient",
-    "router_z_loss_coefficient",
-    "diagnostics_every",
     "requires_data_launch_authority",
 )
 _SCHEDULE_SETTINGS = ("lr", "warmup_steps", "min_lr", "lr_schedule", "decay_fraction")
@@ -82,7 +78,6 @@ _IMMUTABLE_RESUME_SETTINGS = (
     "sequence_length",
     "activation_checkpointing",
     "loss_backend",
-    "allow_attention_scope_change",
     "device_batch_size",
     "batch_tokens",
     "train_tokens",
@@ -101,9 +96,6 @@ _IMMUTABLE_RESUME_SETTINGS = (
     "training_phase",
     "branch_kind",
     "seed",
-    "load_balance_coefficient",
-    "router_z_loss_coefficient",
-    "diagnostics_every",
     "requires_data_launch_authority",
 )
 _LEGACY_RESUME_DEFAULTS = {
@@ -118,10 +110,6 @@ _LEGACY_RESUME_DEFAULTS = {
     "branch_kind": "same",
     "activation_checkpointing": False,
     "loss_backend": "torch",
-    "allow_attention_scope_change": False,
-    "load_balance_coefficient": 0.01,
-    "router_z_loss_coefficient": 0.001,
-    "diagnostics_every": 100,
     "requires_data_launch_authority": False,
 }
 
@@ -158,21 +146,12 @@ def changed_context_settings(previous, current):
     ]
 
 
-def context_compatible_architecture(previous, current, allow_attention_scope_change=False):
+def context_compatible_architecture(previous, current):
     """Allow positional capacity changes without allowing parameter-topology drift."""
 
     ignored = {"max_position_embeddings", "rope_theta", "rope_scaling_factor"}
     previous = ArchitectureConfig.from_dict(previous).settings()
     current = ArchitectureConfig.from_dict(current).settings()
-    if allow_attention_scope_change:
-        for config in (previous, current):
-            for group in config["blocks"]:
-                for stage in group["block"]["stages"]:
-                    for branch in stage["branches"]:
-                        if branch["kind"] == "attention":
-                            branch["scope"] = "parameterless"
-                            branch["window_size"] = None
-                            branch["rope_dim"] = None
     return {key: value for key, value in previous.items() if key not in ignored} == {
         key: value for key, value in current.items() if key not in ignored
     }
@@ -329,15 +308,11 @@ class BaseTrainer:
         args.deterministic = getattr(args, "deterministic", False)
         if type(args.deterministic) is not bool:
             raise ValueError("deterministic must be boolean")
-        args.allow_attention_scope_change = getattr(args, "allow_attention_scope_change", False)
         args.branch_kind = self.cli.branch_kind
         args.lr_schedule = getattr(args, "lr_schedule", "cosine")
         args.decay_fraction = getattr(args, "decay_fraction", None)
         args.wandb_group = getattr(args, "wandb_group", None)
         args.seed = getattr(args, "seed", 42)
-        args.load_balance_coefficient = getattr(args, "load_balance_coefficient", 0.01)
-        args.router_z_loss_coefficient = getattr(args, "router_z_loss_coefficient", 0.001)
-        args.diagnostics_every = getattr(args, "diagnostics_every", 100)
         args.requires_data_launch_authority = getattr(args, "requires_data_launch_authority", False)
         if not isinstance(args.requires_data_launch_authority, bool):
             raise ValueError("requires_data_launch_authority must be boolean")
@@ -349,16 +324,6 @@ class BaseTrainer:
         args.stop_at_tokens = getattr(self.cli, "stop_at_tokens", None)
         if not isinstance(args.seed, int) or isinstance(args.seed, bool):
             raise ValueError("seed must be an integer")
-        for key in ("load_balance_coefficient", "router_z_loss_coefficient"):
-            value = getattr(args, key)
-            if not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0:
-                raise ValueError(f"{key} must be a finite non-negative number")
-        if (
-            not isinstance(args.diagnostics_every, int)
-            or isinstance(args.diagnostics_every, bool)
-            or args.diagnostics_every < 1
-        ):
-            raise ValueError("diagnostics_every must be a positive integer")
         if args.stop_at_tokens is not None and args.stop_at_tokens not in args.checkpoint_tokens:
             raise ValueError("--stop-at-tokens must name a configured checkpoint token milestone")
         for key in ("save_every", "eval_every"):
@@ -650,7 +615,6 @@ class BaseTrainer:
             context_compatible_architecture(
                 parent_metadata["config"],
                 self.config.export(),
-                allow_attention_scope_change=self.args.allow_attention_scope_change,
             )
             if context_branch
             else stored_config == self.config.settings()
@@ -716,7 +680,6 @@ class BaseTrainer:
             "parameters": self.model.parameter_count(),
             "active_parameters": self.model.active_parameter_count(),
             "optimizer_roles": self.model.optimizer_role_counts(self.optimizer),
-            "routing": self.model.routing_config(),
             "manifest": self.manifest_hash,
             "dataset": dataset_provenance,
             "world_size": self.world_size,
@@ -973,8 +936,7 @@ class BaseTrainer:
         for step in range(self.start_step, self.steps):
             completed = step + 1
             session_completed = completed - self.start_step
-            should_diagnose = completed % args.diagnostics_every == 0
-            should_log = completed == 1 or completed % args.log_every == 0 or should_diagnose
+            should_log = completed == 1 or completed % args.log_every == 0
             milestone = self.milestones.get(completed)
             stop_now = self.stop_step == completed
             should_validate = (
@@ -995,7 +957,7 @@ class BaseTrainer:
                 args.lr_schedule,
                 args.decay_fraction,
             )
-            training_output, grad_norm, batch = optimization_step(
+            loss, grad_norm, batch = optimization_step(
                 self.train_model,
                 self.parameters,
                 self.optimizer,
@@ -1005,12 +967,7 @@ class BaseTrainer:
                 args.grad_clip,
                 args.lr * scale,
                 self.distributed,
-                return_training_output=True,
-                load_balance_coefficient=args.load_balance_coefficient,
-                router_z_loss_coefficient=args.router_z_loss_coefficient,
             )
-            if not isinstance(training_output, CausalLMTrainingOutput):
-                raise TypeError("training step did not return typed loss diagnostics")
             self.inputs, self.targets, self.data_state = batch
             self.completed_step = completed
             timing_steps += 1
@@ -1031,15 +988,9 @@ class BaseTrainer:
                     self.elapsed_training += window_duration
                 duration = window_duration / timing_steps
             if self.distributed and should_log:
-                average_training_output(training_output, True)
+                dist.all_reduce(loss, op=dist.ReduceOp.AVG)
             if should_log:
-                self._log_step(
-                    completed,
-                    training_output,
-                    grad_norm,
-                    duration,
-                    should_diagnose,
-                )
+                self._log_step(completed, loss, grad_norm, duration)
             if self._after_optimizer_step(
                 completed,
                 validation_loss,
@@ -1082,7 +1033,7 @@ class BaseTrainer:
                 self.milestones.get(self.steps),
             )
 
-    def _log_step(self, completed, output, grad_norm, duration, diagnostics):
+    def _log_step(self, completed, loss, grad_norm, duration):
         assert duration is not None
         args = self.args
         data_state = self.data_state
@@ -1092,10 +1043,7 @@ class BaseTrainer:
             "progress/step": self.global_step_offset + completed,
             "progress/phase_step": completed,
             "progress/tokens": args.global_token_offset + completed * args.batch_tokens,
-            "train/loss": output.total_loss.item(),
-            "train/lm_loss": output.lm_loss.item(),
-            "train/load_balance_loss": output.load_balance_loss.item(),
-            "train/router_z_loss": output.z_loss.item(),
+            "train/loss": loss.item(),
             "train/lr": float(self.optimizer.param_groups[0]["lr"]),
             "train/grad_norm": float(grad_norm),
             "performance/tokens_per_second": args.batch_tokens / duration,
@@ -1116,42 +1064,6 @@ class BaseTrainer:
             metrics["performance/peak_reserved_vram_mib"] = (
                 torch.cuda.max_memory_reserved(self.device) / 2**20
             )
-        routed_operations = self.model.routed_operations()
-        for stats in output.routing:
-            prefix = f"routing/{stats.layer}"
-            experts = stats.utilization.numel()
-            normalized_entropy = stats.entropy / math.log(experts) if experts > 1 else 1.0
-            mean_utilization = stats.utilization.mean()
-            utilization_cv = stats.utilization.std(unbiased=False) / mean_utilization.clamp_min(
-                1e-20
-            )
-            metrics[f"{prefix}/entropy"] = stats.entropy.item()
-            metrics[f"{prefix}/normalized_entropy"] = float(normalized_entropy)
-            metrics[f"{prefix}/utilization_min"] = stats.utilization.min().item()
-            metrics[f"{prefix}/utilization_max"] = stats.utilization.max().item()
-            metrics[f"{prefix}/utilization_cv"] = utilization_cv.item()
-            metrics[f"{prefix}/zero_load_experts"] = int((stats.utilization == 0).sum())
-            if diagnostics:
-                operation = routed_operations[stats.layer]
-                weight_squares = sum(
-                    bank.float().square().sum(dim=(1, 2))
-                    for bank in (operation.gate_proj, operation.up_proj, operation.down_proj)
-                )
-                gradient_squares = sum(
-                    (
-                        bank.grad.float().square().sum(dim=(1, 2))
-                        if bank.grad is not None
-                        else torch.zeros(bank.size(0), device=bank.device, dtype=torch.float32)
-                    )
-                    for bank in (operation.gate_proj, operation.up_proj, operation.down_proj)
-                )
-                weight_norms = weight_squares.sqrt()
-                gradient_norms = gradient_squares.sqrt()
-                for expert in range(experts):
-                    expert_prefix = f"{prefix}/expert_{expert}"
-                    metrics[f"{expert_prefix}/utilization"] = stats.utilization[expert].item()
-                    metrics[f"{expert_prefix}/weight_norm"] = weight_norms[expert].item()
-                    metrics[f"{expert_prefix}/gradient_norm"] = gradient_norms[expert].item()
         self.tracking.log(metrics)
         print0(
             f"step {metrics['progress/step']:,}/{self.global_step_offset + self.steps:,} | "

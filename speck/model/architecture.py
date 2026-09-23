@@ -33,89 +33,34 @@ def _validate_delta_geometry(spec, name):
 class AttentionSpec:
     head_dim: int
     num_key_value_heads: int
-    scope: str = "global"
-    window_size: int | None = None
     rope_dim: int | None = None
-    output_gate: str = "none"
-    memory: str | None = None
-    memory_role: str = "none"
     kind: str = field(init=False, default="attention")
 
     @property
     def active_rope_dim(self):
         return self.head_dim if self.rope_dim is None else self.rope_dim
 
-    @property
-    def reads_memory(self):
-        return self.memory_role == "read"
-
-    @property
-    def writes_memory(self):
-        return self.memory_role == "write"
-
     def __post_init__(self):
         _integer_fields(self, "head_dim", "num_key_value_heads")
-        if self.window_size is not None:
-            _integer_fields(self, "window_size")
         if self.rope_dim is not None:
             _integer_fields(self, "rope_dim")
         if self.head_dim < 2 or self.head_dim % 2:
             raise ValueError("attention head dimensions must be positive and even")
         if self.num_key_value_heads < 1:
             raise ValueError("attention KV heads must be positive")
-        if self.scope not in {"global", "sliding"}:
-            raise ValueError("attention scope must be global or sliding")
-        if self.scope == "sliding":
-            if self.window_size is None or self.window_size < 1:
-                raise ValueError("sliding attention requires a positive window")
-        elif self.window_size is not None:
-            raise ValueError("global attention cannot define a window")
-        rope_dim = self.head_dim if self.rope_dim is None else self.rope_dim
+        rope_dim = self.active_rope_dim
         if rope_dim < 0 or rope_dim > self.head_dim or rope_dim % 2:
             raise ValueError("attention RoPE dimensions must be even and within the head")
-        if self.output_gate not in {"none", "headwise", "elementwise"}:
-            raise ValueError("attention output gate must be none, headwise, or elementwise")
-        if self.memory_role not in {"none", "write", "read"}:
-            raise ValueError("attention memory role must be none, write, or read")
-        if (self.memory is None) != (self.memory_role == "none"):
-            raise ValueError("attention memory labels and roles must be declared together")
-        if self.memory is not None and not self.memory:
-            raise ValueError("attention memory labels cannot be empty")
-        if self.memory_role != "none" and self.scope != "global":
-            raise ValueError("shared attention memory requires global scope")
 
 
-@dataclass(frozen=True)
-class GatedCausalConvSpec:
-    inner_size: int
-    kernel_size: int
-    kind: str = field(init=False, default="gated_causal_conv")
-
-    def __post_init__(self):
-        _integer_fields(self, "inner_size", "kernel_size")
-        if self.inner_size < 1:
-            raise ValueError("convolution inner sizes must be positive")
-        if self.kernel_size < 2:
-            raise ValueError("convolution kernels must contain at least two positions")
-
-
-@dataclass(frozen=True)
-class GatedDeltaNetSpec:
-    key_head_dim: int
-    value_head_dim: int
-    num_key_heads: int
-    num_value_heads: int
-    conv_kernel_size: int = 4
-    output_gate_activation: str = "silu"
-    decay_initialization: str = "speck"
-    kind: str = field(init=False, default="gated_deltanet")
-
-    def __post_init__(self):
-        _validate_delta_geometry(self, "Gated DeltaNet")
-        if self.output_gate_activation not in {"sigmoid", "silu"}:
-            raise ValueError("Gated DeltaNet output gate activation must be sigmoid or silu")
-        if self.decay_initialization not in {"fla", "speck"}:
-            raise ValueError("Gated DeltaNet decay initialization must be fla or speck")
+# Checkpoint metadata written before these options were removed records them at their defaults.
+_LEGACY_ATTENTION_DEFAULTS = {
+    "scope": "global",
+    "window_size": None,
+    "output_gate": "none",
+    "memory": None,
+    "memory_role": "none",
+}
 
 
 @dataclass(frozen=True)
@@ -147,43 +92,20 @@ class SwiGLUSpec:
             raise ValueError("SwiGLU intermediate sizes must be positive")
 
 
-@dataclass(frozen=True)
-class RoutedSwiGLUSpec:
-    intermediate_size: int
-    num_experts: int
-    top_k: int
-    kind: str = field(init=False, default="routed_swiglu")
-
-    def __post_init__(self):
-        _integer_fields(self, "intermediate_size", "num_experts", "top_k")
-        if self.intermediate_size < 1:
-            raise ValueError("routed SwiGLU intermediate sizes must be positive")
-        if self.num_experts < 1:
-            raise ValueError("routed SwiGLU expert counts must be positive")
-        if not 1 <= self.top_k <= self.num_experts:
-            raise ValueError("routed SwiGLU top_k must be between one and num_experts")
-
-
-OperationSpec = (
-    AttentionSpec
-    | GatedCausalConvSpec
-    | GatedDeltaNetSpec
-    | KimiDeltaAttentionSpec
-    | SwiGLUSpec
-    | RoutedSwiGLUSpec
-)
+OperationSpec = AttentionSpec | KimiDeltaAttentionSpec | SwiGLUSpec
 
 
 def operation_from_dict(value):
     value = dict(value)
     kind = value.pop("kind")
+    if kind == "attention":
+        for key, default in _LEGACY_ATTENTION_DEFAULTS.items():
+            if value.pop(key, default) != default:
+                raise ValueError(f"unsupported attention option: {key}")
     classes = {
         "attention": AttentionSpec,
-        "gated_causal_conv": GatedCausalConvSpec,
-        "gated_deltanet": GatedDeltaNetSpec,
         "kimi_delta_attention": KimiDeltaAttentionSpec,
         "swiglu": SwiGLUSpec,
-        "routed_swiglu": RoutedSwiGLUSpec,
     }
     if kind not in classes:
         raise ValueError(f"unknown architecture operation: {kind}")
@@ -334,41 +256,6 @@ class ArchitectureConfig:
                 and self.expected_active_parameters > self.expected_parameters
             ):
                 raise ValueError("expected active parameters cannot exceed total parameters")
-        self._validate_shared_memory()
-
-    def _validate_shared_memory(self):
-        """Bind every attention memory reader to exactly one earlier writer."""
-
-        writers = {}
-        for invocation in self.execution_plan:
-            for stage in invocation.block.stages:
-                for branch in stage.branches:
-                    if not isinstance(branch, AttentionSpec) or branch.memory is None:
-                        continue
-                    if branch.writes_memory:
-                        if branch.memory in writers:
-                            raise ValueError("each attention memory must have exactly one writer")
-                        writers[branch.memory] = (invocation.occurrence_index, branch)
-                        continue
-                    entry = writers.get(branch.memory)
-                    if entry is None or entry[0] >= invocation.occurrence_index:
-                        raise ValueError("attention memory readers must follow their memory writer")
-                    writer = entry[1]
-                    geometry = (
-                        writer.head_dim,
-                        writer.num_key_value_heads,
-                        writer.active_rope_dim,
-                        writer.scope,
-                    )
-                    if geometry != (
-                        branch.head_dim,
-                        branch.num_key_value_heads,
-                        branch.active_rope_dim,
-                        branch.scope,
-                    ):
-                        raise ValueError(
-                            "attention memory readers must match their writer key geometry"
-                        )
 
     @property
     def logical_depth(self):
@@ -421,7 +308,7 @@ class ArchitectureConfig:
         return values
 
     def active_parameter_count(self, total_parameters):
-        """Return theoretical per-token parameters, charging only selected experts."""
+        """Return per-token parameters; every parameter is active in a dense model."""
 
         if (
             isinstance(total_parameters, bool)
@@ -429,23 +316,7 @@ class ArchitectureConfig:
             or total_parameters < 1
         ):
             raise ValueError("total parameters must be a positive integer")
-        inactive = 0
-        seen = set()
-        for invocation in self.execution_plan:
-            if invocation.weight_key in seen:
-                continue
-            seen.add(invocation.weight_key)
-            hidden_size = invocation.block.hidden_size
-            for stage in invocation.block.stages:
-                for operation in stage.branches:
-                    if isinstance(operation, RoutedSwiGLUSpec):
-                        inactive += (
-                            (operation.num_experts - operation.top_k)
-                            * 3
-                            * hidden_size
-                            * operation.intermediate_size
-                        )
-        return total_parameters - inactive
+        return total_parameters
 
     @classmethod
     def from_dict(cls, value):

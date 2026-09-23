@@ -105,9 +105,23 @@ mid-training production cap, leave stage tokens unset, and treat 64K/128K as fut
 revision. No production stage borrows reserve automatically.
 Only short-context training has a measured cost reference, and it describes the inefficient frozen
 pilot recipe. The selected throughput recipe was chosen on a 318M proxy; the flagship rate is
-measured on GH200 before any horizon is re-anchored, under the derate and surplus rules predeclared
-in `compute.throughput_reanchoring_rule`. The backbone no longer changes under a study decision. Freeze stage costs and stop
-conditions; unused budget is not a requirement to spend.
+measured on GH200 before any horizon is re-anchored, under three rules predeclared in
+`compute.throughput_reanchoring_rule`:
+
+- **Apply the overhead derate.** The confirmation sweep runs `--mode compute` for thirty measured
+  steps and excludes startup, inline validation and saves; the plan's anchor includes them. Multiply
+  benchmark rates by the measured pilot ratio of 0.9459 before converting them into horizon hours,
+  and remeasure the ratio on GH200 at production save cadence.
+- **A surplus does not buy a longer base run.** The 80B horizon does not move; freed hours return
+  to data research and to whichever stage is supply- or tooling-bound, because eligible tokens, not
+  compute, bound this release.
+- **A shortfall reduces the horizon**, never the protected mid-training, post-training or
+  evaluation reservations.
+
+Four GPUs are not four times cheaper: they raise aggregate speed while consuming four GPU-hours per
+elapsed hour, and no GH200 or distributed speedup is assumed. `speck/operations/slurm.py` enforces
+the 4,550 scheduled + 450 protected split. Freeze stage costs and stop conditions; unused budget is
+not a requirement to spend.
 
 ## Model and runtime
 

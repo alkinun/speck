@@ -55,8 +55,6 @@ def _materialize(run: dict, config: dict) -> tuple[list[str], list[str]]:
 
     argv = [config["experiment"], "--device", "cuda", "--mode", config["mode"]]
     argv += ["--loss-backend", config["loss_backend"]]
-    if config.get("training_output"):
-        argv += ["--training-output"]
     argv += ["--sequence-length", str(config["sequence_length"])]
     argv += [
         "--activation-checkpointing"
@@ -103,10 +101,6 @@ def validate(packet_path: str | Path) -> dict:
     outputs = set()
     for run in runs:
         config = _effective(common, run)
-        if config.get("training_output") is not True:
-            raise ValueError(
-                f"{run['label']}: training_output must match the production trainer (true)"
-            )
         argv, substituted = _materialize(run, config)
         parsed = arguments(argv)
 
@@ -116,7 +110,6 @@ def validate(packet_path: str | Path) -> dict:
             "experiment": config["experiment"],
             "mode": config["mode"],
             "loss_backend": config["loss_backend"],
-            "training_output": config["training_output"],
             "sequence_length": config["sequence_length"],
             "activation_checkpointing": config["activation_checkpointing"],
             "deterministic": config["deterministic"],

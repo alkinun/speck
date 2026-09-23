@@ -53,8 +53,8 @@ The ordered access procedure is the [GH200 qualification runbook](docs/compute-q
 | Export a checkpoint | [Releasing](docs/releasing.md) |
 | Make a change | [Contributing](CONTRIBUTING.md) |
 
-Installed commands: `speck train`, `speck sft`, `speck infer`, `speck evaluate`, `speck benchmark`,
-and `speck export`. Each accepts `--help`; preparation commands use `python -m scripts.<command>`.
+Every command is `python -m scripts.<command>` (for example `scripts.base_train`,
+`scripts.sft_train`, `scripts.infer`) and accepts `--help`.
 Provide explicit experiment paths. Runtime data/checkpoints/logs live outside Git, under
 `~/.cache/speck` by default; set `speck_base_dir` for another volume.
 

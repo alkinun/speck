@@ -5,7 +5,6 @@ from types import SimpleNamespace
 import pytest
 import torch
 
-from speck.model import CausalLMTrainingOutput
 from speck.operations import trainer as slurm_base_train
 from speck.training import base as base_train
 from speck.training.checkpoint import save
@@ -140,7 +139,6 @@ def test_checkpoint_json_refuses_nan(tmp_path):
 def test_resume_compile_window_is_counted_as_startup_not_steady(monkeypatch):
     trainer = object.__new__(base_train.BaseTrainer)
     trainer.args = SimpleNamespace(
-        diagnostics_every=1_000,
         log_every=1_000,
         eval_every=0,
         save_every=0,
@@ -150,8 +148,6 @@ def test_resume_compile_window_is_counted_as_startup_not_steady(monkeypatch):
         decay_fraction=None,
         grad_clip=1.0,
         lr=1e-3,
-        load_balance_coefficient=0.0,
-        router_z_loss_coefficient=0.0,
     )
     trainer.start_step = trainer.completed_step = 20
     trainer.steps = trainer.schedule_steps = 31
@@ -173,7 +169,7 @@ def test_resume_compile_window_is_counted_as_startup_not_steady(monkeypatch):
 
     def optimization(*args, **kwargs):
         zero = torch.tensor(0.0)
-        return CausalLMTrainingOutput(zero, zero, zero, zero, ()), zero, (object(),) * 3
+        return zero, zero, (object(),) * 3
 
     clock = iter((0.0, 100.0, 100.0, 110.0, 110.0))
     monkeypatch.setattr(base_train, "optimization_step", optimization)

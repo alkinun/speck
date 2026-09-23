@@ -25,9 +25,6 @@ build-backend = "setuptools.build_meta"
 include = ["speck*", "scripts*"]
 namespaces = false
 
-[project.scripts]
-speck = "speck.cli:main"
-
 [dependency-groups]
 dataset-build = [
     "datasketch==2.0.0",

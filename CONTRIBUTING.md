@@ -33,8 +33,9 @@ report the exhaustion as a test failure.
 
 The `speck` package owns behavior; `scripts` provides command entry points. Package code must not
 import command scripts. Keep data order, checkpoint tensor names, optimizer state, and resume
-semantics stable unless a behavioral change is explicit and tested. Model variants retained in the
-runtime support checkpoint compatibility; they do not imply active architecture searches.
+semantics stable unless a behavioral change is explicit and tested. The runtime implements only
+what the reference model and its preserved control use: global attention with optional RoPE, KDA
+and SwiGLU. Earlier variants live in Git history.
 Remove unreferenced helpers and superseded active documentation rather than adding compatibility
 wrappers or parallel plans. Check callers, export dependencies and historical fixtures before
 removing runtime functionality. Preserve completed evidence in its original form.

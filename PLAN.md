@@ -1,66 +1,13 @@
-# SpeckLabs: current decisions and next work
+# SpeckLabs: status and next work
 
-Updated 2026-09-23. This is the status and work order for the first flagship program.
-Read the [program overview](docs/program.md) for the connected design, data, compute and release
-outline. [Main-data plan.json](experiments/main-data/plan.json) owns working numeric targets;
-experiment configurations and verified receipts own actual run settings and measured results.
-Update these in place. Historical proposals and failures remain in Git and their original receipts.
+Updated 2026-09-23. This is the status and the one work order for the first program. The
+[program overview](docs/program.md) owns the design: goal, stages, model, data and compute.
+[plan.json](experiments/main-data/plan.json) owns the numbers; experiment configurations and
+verified receipts own actual run settings and results. Update these in place; history stays in Git.
 
-## Goal and selected decisions
-
-**The deliverable is an open data pipeline and recipe covering all six training stages, and a
-1.2B model that proves the pipeline works end to end.** The stages are pretraining, endpoint decay,
-mid-training, post-training SFT, post-training RL and final self-distillation from rejection-sampled
-RL output. Each needs its own data manifest, exposure ledger, budget line and receipt; a stage
-without all four is not covered, however good the resulting model is.
-
-The goal is explicitly *not* a state-of-the-art 1.2B. It is a pipeline we can scale, since the
-next allocation is expected to be several times larger and will fund architecture search and bigger
-runs. Where a choice trades model quality against pipeline strength or openness, take the pipeline.
-
-Release the base and a coding-centered generalist assistant with an open technical report. Primary
-uses are agentic coding, normal coding, math reasoning and tools; general usefulness remains a
-regression check. External models are comparators or qualified teachers, not our base
-initialization.
-
-- **Reference model:** 1,195,884,576 total/active parameters; 24 layers, width 2048; three KDA
-  recurrent blocks then one global NoPE GQA block, repeated six times. Dense SwiGLU throughout,
-  intermediate width 5120, tied embeddings, sigmoid KDA gates. **Fixed substrate for this release,
-  frozen by declaration rather than selected over a control.** The bounded architecture/efficiency
-  comparison is deferred to a later allocation with its design preserved; no MoE or size sweep.
-- **Tokenizer fixed:** Mistral 32K; 32,003 embedding rows include three assistant role IDs.
-- **Compute envelope:** 5,000 total GPU-hours across four GH200s, equivalent to 1,250 hours with
-  all four allocated, within a nominal 90-day access window. The allocation is confirmed; access
-  start timing, site details and GH200 throughput remain unconfirmed.
-- **Behavior selected:** one always-thinking protocol with brief/deep reasoning and tool actions;
-  no supported non-thinking response mode. Preserve separate base and assistant checkpoints.
-- **Mid-training target:** move from a 4K capability bridge to 16K repository reasoning and 32K long-horizon agentic coding; the combined capability/context/agentic production reservation is 600 GPU-hours. 64K/128K is deferred.
-- **Future ambition:** 50,000 GH200-hours and larger models; no future allocation is assumed funded.
-
-The [model notes](docs/model.md) define the reference backbone. The architecture comparison was
-deferred on 2026-09-21 and its 200 hours moved to data research and reference-only efficiency
-profiling; the [packet](experiments/main-data/architecture-study-packet.json) is preserved intact
-for the next allocation. **No architecture superiority or parity claim may appear in this report:**
-the backbone was fixed, not compared. MoE, attention residuals and broad searches remain later work
-alongside it. The first report centers on datasets and training, with reference-only
-training/inference efficiency evidence. High efficiency and competitive quality are hypotheses to
-measure. The [program overview](docs/program.md#training-lifecycle) defines stage boundaries.
-
-## Working recipes, not launch settings
-
-| Area | Preparation target | Still to resolve |
-| --- | --- | --- |
-| Pretraining | 80B 4K-base working horizon; initial 35% code, 25% math, 40% supporting material; explicit natural/curated/derived decay study | Qualified source supply and measured GH200 cost; 100B is deferred because the revised 1,800-hour 4K reservation must protect the expanded mid-training stages |
-| Capability/mid-training | 4K repository/tool bridge, 16K multi-file repository reasoning and 32K long-horizon agentic coding with replay, grounded workflows and executable traces | Trajectory environments, selective loss masks, packing, changed-data continuation, context cost and useful transfer remain to be qualified |
-| Thinking SFT | 1.5M unique qualified conversations, within a 1–2M range | Correctness, source-family deduplication, complete long examples and supervised/context token totals |
-| Reward training | Conditional verifiable math/code rewards after useful SFT | Trainer, rollout integration, verifiers, recovery and affordable measured benefit |
-| Endpoint decay | Three-way natural/curated/derived decay study on two paired seeds, 180 research hours; 250 production hours inside the 1,800-hour base reservation | A matched stable parent, a decay manifest per arm and separately identified derived lineage |
-| Final self-distillation | Rejection-sampled from the promoted RL parent, verified and mixed with anchor data; 100 production hours plus a 30-hour pilot | A promoted RL or SFT parent, a frozen prompt pool, pinned environments and held-out transfer evidence |
-| Data research | 1,230 hours: 700 pretraining, 360 mid-training, 170 post-training | Screening and confirmation before each production stage; useful parents for downstream comparisons |
-
-The [main data plan](experiments/main-data/README.md) specifies candidate sources and counting rules.
-Retained stock, admitted data and training exposure are different quantities. No small preview or
-publisher quality label establishes flagship-scale supply. No automatic repetition fills a gap.
+The deliverable is an open data pipeline covering all six training stages, and a 1.2B model that
+proves it end to end. The backbone is fixed by declaration, so no architecture claim is available
+on this allocation. 5,000 GH200 GPU-hours are confirmed; access timing and GH200 throughput are not.
 
 ## The binding constraint is supply, not compute
 
@@ -78,55 +25,30 @@ cannot go stale. Today:
 | refined_web | 5% | 5.0B | 1.489B | 29.79% | 29.79B |
 | **Total** | **100%** | **100.0B** | **7.150B** | **7.15%** | — |
 
-Three facts follow, and they govern the order of work:
+Three facts govern the order of work:
 
-1. **Zero eligible tokens are established.** The 7.15B is retained stock with every gate still open.
-   It is an upper bound on what the gates could admit, not usable data.
-2. **No bank caps a one-pass run at zero any more.** The two that did, `checked_code` and
-   `refined_math`, held zero retained stock of any kind and were **re-frozen out of the mixture on
-   2026-09-22**. Each dropped share moved to the natural bank of its own domain, so total exposure
-   stays 80B and the declared 35% code / 25% math / 40% supporting split is unchanged. Derived code
-   and refined math are now *unbanked* candidates: qualifying either one later needs a revised
-   freeze and its own exposure ledger, never a quiet pour into a natural bank.
-3. **`natural_code` now binds at 1.36B — 1.70% of the 80B horizon.** The binding constraint moved
-   from `selected_web`, because raising the code share to 35% divides the same 0.477B of retained
-   code stock by a larger weight. Re-freezing created and destroyed no eligible token; it only
-   moved where the horizon binds, and it moved it onto the bank whose supply is hardest to grow.
+1. **Zero eligible tokens are established.** The 7.15B is retained stock with every gate still open:
+   an upper bound on what the gates could admit, not usable data.
+2. **`natural_code` binds at 1.36B, 1.70% of the 80B horizon.** Since the
+   [2026-09-22 re-freeze](experiments/main-data/README.md#base-mixture) no bank caps a one-pass run
+   at zero, and the binding bank is the one whose supply is hardest to grow.
+3. **Closing the gap is acquisition, not compute.** Roughly a **14x** increase in retained stock is
+   CPU, bandwidth and storage work that consumes no grant GPU-hours, so it runs before and during
+   access, and a throughput surplus buys nothing here.
 
-Closing the whole gap means roughly a **14x** increase in retained stock. That is acquisition,
-filtering and tokenization work: CPU, bandwidth and storage, consuming **no grant GPU-hours**. It
-can and should run before and during access, and it is why a throughput surplus buys nothing here.
+**Source use is decided and admits nothing.** The signed
+[acceptance record](experiments/main-data/source-rights-acceptance.json) covers the nine
+[selected sources](experiments/main-data/source-registry.json) for research training, paper
+publication and public weight release, with no commercial use and no redistribution of source data
+or derived shards. It is closed on six sources. The two code routes are approved per file, on the
+original licence and recovered notice, so unresolved records stay excluded; peS2o v3 still needs
+authoritative licence-selection documentation. Family holds persist across every stage.
 
-**Source use is decided for all nine selected sources and closed on six.** The
-[acceptance record](experiments/main-data/source-rights-acceptance.json) was signed on 2026-09-22 by
-a named human authority over the nine sources the re-frozen mixture
-[selects](experiments/main-data/source-registry.json), at a declared scope of research training,
-paper publication and public model-weight release, with **no commercial use, no source-data
-redistribution and no derived-shard redistribution**. Six sources closed outright; three carry a
-recorded named decision with one specific mechanical dependency still open — origin and notice
-recovery for both code routes, and authoritative peS2o v3 licence-selection documentation. Three
-former candidates are recorded as **not selected**: `checked_code` and `nemotron_cc_math_4plus` with
-their dropped banks, and `ultradata_math_l2_preview` because every one of its 169,058 retained rows
-lacks host metadata, so no per-document attribution manifest can be produced for it at all.
-
-Every approval carries conditions, and the conditions are the substance. The two code routes are
-approved on a **per-file original-licence** basis with recovered notices, not on any dataset-level
-grant: an unlabelled or unresolved record is excluded rather than assumed permissive. The remaining
-44 unheld quota-blocked origin lookups stay out until evidence resolves them, and all recorded
-content-family holds persist across every stage. The single record traced end to end carried a term its MIT label did not
-express, which is why notice text governs and the scanner label does not.
-
-The [joint candidate partitions](experiments/main-data/family-partition.json) now cover six text
-stocks, including preprocessed UltraFineWeb-HQ, and the 218-file code review cohort. The frozen
-rule assigns whole families to 90% train / 5% development / 5% final hash buckets; both legacy
-firewall reference pools remain excluded. All 675 earlier text edges survive unchanged. A new
-exact firewall match raises code cohort holds to 45. The full retained-code graph and intended
-benchmark coverage still keep `family_partition` open. Raw supply bounds above precede these
-holdout reservations and remaining eligibility gates.
-
-`source_use` is open on three of nine selected sources; `family_partition` and `finite_supply` are
-open on all nine. Source use being decided **admits nothing** — no source is admitted, no eligible
-token exists, and no acquisition or training is authorized by that record.
+**Family partitions are candidates, not splits.** Six text stocks and the 218-file code cohort are
+[partitioned](experiments/main-data/family-partition.json) into whole-family 90/5/5 buckets with 45
+code holds. The full retained-code graph and intended benchmark coverage keep `family_partition`
+open on every source; the [qualification packet](experiments/main-data/QUALIFICATION.md) owns the
+detail.
 
 ## Completed evidence
 
@@ -249,41 +171,6 @@ The [proposed research design](experiments/main-data/README.md#research-before-t
 specifies contrasts, controls, endpoints, maximum run counts and protected confirmation costs.
 The [architecture control](docs/model.md#proposed-control-and-decision) keeps its checked parameter
 count for the next allocation; it is not run here. Numeric subcaps live in the existing plan.
-
-## Compute
-
-The [numeric plan](experiments/main-data/plan.json) owns the reservation table and
-[the overview](docs/program.md#compute-and-allocation) renders it with subdivisions, shares and
-four-GPU equivalents. It reserves **120 hours for runtime and efficiency qualification, 1,230 for
-data experiments, 1,800 for the 4K base reservation, 600 for capability/context/agentic
-mid-training production, 800 for post-training production and 450 protected for
-evaluation/recovery: 5,000 total GPU-hours**. Data research divides into 700/360/170 hours across
-pretraining/mid-training/post-training. Inside the base reservation: **1,550 stable phase, 250
-endpoint decay**. Inside post-training: **450 SFT, 200 conditional RL, 100 final self-SFT, 50
-teacher and verification work**. `speck/operations/slurm.py` enforces the scheduled/protected split
-of 4,550 + 450, and `make plan-check` fails if those constants, or any of these figures written in
-prose, drift from the plan.
-
-**The horizon has little margin.** At the measured H100 full-trainer rate the 1,800-hour
-reservation supports about 83.3B tokens before long-context and agentic overhead; an illustrative
-80% rate supports about 66.7B. Freeze the final horizon only after GH200 throughput and the 16K/32K
-costs are measured; 100B and the old 320B/400B scales are deferred. The measured GH200 rate
-re-anchors the horizon under three rules predeclared in `compute.throughput_reanchoring_rule`:
-
-- **Apply the overhead derate.** The confirmation sweep runs `--mode compute` for thirty measured
-  steps and excludes startup, inline validation and saves. The plan's anchor includes them. The
-  measured pilot ratio is 0.9459; multiply by it before converting any benchmark rate into horizon
-  hours, and remeasure the ratio on GH200 at production save cadence.
-- **A surplus does not buy a longer base run.** If the measured rate beats the anchor, the 80B
-  horizon does not move and the freed hours return to data research and to whichever stage is
-  supply- or tooling-bound. Eligible-token supply, not compute, is what bounds this release.
-- **A shortfall reduces the horizon**, never the protected mid-training, post-training or
-  evaluation reservations.
-
-**Four GPUs are not four times cheaper.** They increase aggregate speed while consuming four
-GPU-hours per elapsed hour, and close no per-GPU efficiency gap. No GH200 or distributed speedup is
-assumed, the rough 90-calendar-day window is not 90 days of continuous four-GPU funding, and
-completed external rental costs stay outside this allocation. No GH200 jobs have launched.
 
 ## Stage 5 and 6 coverage is unclaimed
 

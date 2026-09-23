@@ -27,7 +27,7 @@ uv run --no-sync python -m scripts.checkpoint_loss_eval PATH_TO_EXPERIMENT \
   --checkpoint-dir CHECKPOINT_DIRECTORY --eval-tokens 65536 --no-compile
 ```
 
-This reports held-out loss, with per-source diagnostics. `speck evaluate` is equivalent.
+This reports held-out loss, with per-source diagnostics.
 `instruct_eval` supplies small local assistant diagnostics; these are not a complete benchmark suite.
 `open_slm_eval` integrates pinned external benchmark tooling in a separate `open-slm` environment.
 Every script accepts `--help`.
