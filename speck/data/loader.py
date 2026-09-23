@@ -19,31 +19,45 @@ _MAX_WEIGHT_CYCLE = 100_000
 
 
 class PackedTokenSource:
-    """Expose one source and split as a contiguous memory-mapped token stream."""
+    """Expose one source and split as a contiguous memory-mapped token stream.
+
+    Row-packed sources carry a parallel uint8 loss mask over the same positions.
+    """
 
     def __init__(self, data_dir, source, split):
         self.data_dir = Path(data_dir)
         self.source_id = source["id"]
         split_manifest = source["splits"][split]
         self.shard_manifests = split_manifest["shards"]
-        self.shards = []
-        self.ends = []
-        total = 0
-        for shard in self.shard_manifests:
-            path = self.data_dir / shard["path"]
-            expected_bytes = shard["tokens"] * np.dtype("<u2").itemsize
-            if not path.exists() or path.stat().st_size != expected_bytes:
-                raise ValueError(f"invalid packed token shard: {path}")
-            self.shards.append(np.memmap(path, mode="r", dtype="<u2"))
-            total += shard["tokens"]
-            self.ends.append(total)
-        if total != split_manifest["tokens"] or not self.shards:
+        self.row_tokens = (source.get("packing") or {}).get("row_tokens")
+        self.shards, self.ends = self._map(split_manifest["shards"], "<u2")
+        self.masks = None
+        if self.row_tokens is not None:
+            self.masks, mask_ends = self._map(split_manifest["mask_shards"], "u1")
+            if mask_ends != self.ends:
+                raise ValueError(f"mask shards do not align with tokens for {self.source_id}")
+        if not self.shards or self.ends[-1] != split_manifest["tokens"]:
             raise ValueError(f"invalid {split} token count for source {self.source_id}")
-        self.total_tokens = total
+        self.total_tokens = self.ends[-1]
 
-    def read(self, start, count, dtype=np.int64):
+    def _map(self, shards, dtype):
+        arrays, ends, total = [], [], 0
+        for shard in shards:
+            path = self.data_dir / shard["path"]
+            if (
+                not path.exists()
+                or path.stat().st_size != shard["tokens"] * np.dtype(dtype).itemsize
+            ):
+                raise ValueError(f"invalid packed shard: {path}")
+            arrays.append(np.memmap(path, mode="r", dtype=dtype))
+            total += shard["tokens"]
+            ends.append(total)
+        return arrays, ends
+
+    def read(self, start, count, dtype=np.int64, mask=False):
         if start < 0 or count < 0 or start + count > self.total_tokens:
             raise IndexError(f"packed token read is out of range for source {self.source_id}")
+        arrays = self.masks if mask else self.shards
         if count == 0:
             return np.empty(0, dtype=dtype)
         pieces = []
@@ -53,8 +67,8 @@ class PackedTokenSource:
             shard_index = bisect.bisect_right(self.ends, position)
             shard_start = 0 if shard_index == 0 else self.ends[shard_index - 1]
             offset = position - shard_start
-            take = min(remaining, len(self.shards[shard_index]) - offset)
-            pieces.append(self.shards[shard_index][offset : offset + take])
+            take = min(remaining, len(arrays[shard_index]) - offset)
+            pieces.append(arrays[shard_index][offset : offset + take])
             position += take
             remaining -= take
         return np.array(
@@ -338,6 +352,12 @@ def packed_loader(
         source_id: PackedTokenSource(data_dir, source, split)
         for source_id, source in sources.items()
     }
+    for source in packed.values():
+        if source.row_tokens not in (None, sequence_length):
+            raise ValueError(
+                f"source {source.source_id} is packed in {source.row_tokens}-token rows; "
+                f"train it at that sequence length, not {sequence_length}"
+            )
     local_stride = batch_size * sequence_length
     global_stride = local_stride * world_size
     required = local_stride + 1
@@ -415,6 +435,12 @@ def packed_loader(
         rows = flat.unfold(0, sequence_length + 1, sequence_length)
         inputs = rows[:, :-1]
         targets = rows[:, 1:]
+        if source.masks is not None:
+            mask = torch.from_numpy(source.read(rank_offset, required, dtype=np.uint8, mask=True))
+            mask = mask.to(device, non_blocking=True).unfold(
+                0, sequence_length + 1, sequence_length
+            )
+            targets = targets.masked_fill(mask[:, 1:] == 0, -100)
         yield inputs, targets, state
 
         source_offsets[source_id] += global_stride

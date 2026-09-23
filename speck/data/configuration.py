@@ -28,6 +28,7 @@ _SOURCE_FIELDS = {
     "language_column",
     "metadata_columns",
     "filters",
+    "packing",
 }
 
 
@@ -235,6 +236,12 @@ def _validate_source(source):
             _integer(filters[key], f"source {source_id} {key}", minimum=1)
     if filters.get("min_tokens", 1) > filters.get("max_tokens", math.inf):
         raise ValueError(f"source {source_id} min_tokens cannot exceed max_tokens")
+    packing = source.get("packing")
+    if packing is not None:
+        if not isinstance(packing, dict) or set(packing) != {"row_tokens", "open_rows"}:
+            raise ValueError(f"source {source_id} packing needs exactly row_tokens and open_rows")
+        for key in ("row_tokens", "open_rows"):
+            _integer(packing[key], f"source {source_id} packing {key}", minimum=1)
     return {
         **source,
         "revision": source.get("revision"),

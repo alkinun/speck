@@ -112,6 +112,7 @@ from speck.data.configuration import (
 from speck.data.configuration import (
     validate_data_settings as validate_data_settings,
 )
+from speck.data.packing import BestFitRows
 from speck.data.packing import TokenShardWriter as TokenShardWriter
 from speck.data.validation import fingerprint, slice_sha256
 from speck.provenance.io import file_sha256 as _file_hash
@@ -221,8 +222,33 @@ class SourceBuilder:
             )
             for split in ("train", "val")
         }
+        # Row-packed sources keep whole records in fixed rows beside a parallel loss mask.
+        self.packing = source.get("packing")
+        self.masks = {}
+        self.packers = {}
+        self.rejected_long_records = {
+            split: restored_splits.get(split, {}).get("rejected_long_records", 0)
+            for split in ("train", "val")
+        }
+        if self.packing is not None:
+            for split in ("train", "val"):
+                restored = restored_splits.get(split, {})
+                self.masks[split] = TokenShardWriter(
+                    self.directory,
+                    split,
+                    shard_tokens,
+                    shards=restored.get("mask_shards", []),
+                    total_tokens=restored.get("tokens", 0),
+                    dtype="u1",
+                    name=f"{split}_mask",
+                )
+                self.packers[split] = BestFitRows(
+                    self.packing["row_tokens"], self.packing["open_rows"], tokenizer.eos_id
+                )
         self._synced_shards = {
-            shard["path"] for writer in self.writers.values() for shard in writer.shards
+            shard["path"]
+            for writer in (*self.writers.values(), *self.masks.values())
+            for shard in writer.shards
         }
         self.document_counts = {
             split: restored_splits.get(split, {}).get("documents", 0) for split in ("train", "val")
@@ -244,11 +270,13 @@ class SourceBuilder:
                     self.dedup_hash.update(chunk)
                     remaining -= len(chunk)
 
+    def _tokens(self, split):
+        pending = self.packers[split].pending_tokens if self.packers else 0
+        return self.writers[split].total_tokens + pending
+
     @property
     def complete(self):
-        return all(
-            self.writers[split].total_tokens >= self.targets[split] for split in self.writers
-        )
+        return all(self._tokens(split) >= self.targets[split] for split in self.writers)
 
     def _process(self, batch):
         pending = set()
@@ -269,7 +297,7 @@ class SourceBuilder:
                 if _is_validation_document(normalized, self.seed, self.validation_fraction)
                 else "train"
             )
-            if self.writers[preferred].total_tokens >= self.targets[preferred]:
+            if self._tokens(preferred) >= self.targets[preferred]:
                 continue
             pending.add(digest_integer)
             rows.append((document, digest, digest_integer, preferred))
@@ -283,15 +311,16 @@ class SourceBuilder:
         for (document, digest, digest_integer, split), token_ids in zip(rows, token_rows):
             if self.complete:
                 break
-            writer = self.writers[split]
-            if writer.total_tokens >= self.targets[split]:
+            if self._tokens(split) >= self.targets[split]:
                 continue
             minimum_tokens = self.source["filters"].get("min_tokens", 1)
             maximum_tokens = self.source["filters"].get("max_tokens", math.inf)
             if not minimum_tokens <= len(token_ids) <= maximum_tokens:
                 continue
-            start_token = writer.total_tokens
-            written = writer.write(token_ids)
+            if self.packing is not None and len(token_ids) > self.packing["row_tokens"]:
+                # Whole records only: an over-long record is counted and left out, never cut.
+                self.rejected_long_records[split] += 1
+                continue
             self.accepted_hashes.add(digest_integer)
             self.dedup_file.write(digest)
             self.dedup_hash.update(digest)
@@ -303,11 +332,8 @@ class SourceBuilder:
             record = {
                 "content_hash": hashlib.sha256(document["content"].encode()).hexdigest(),
                 "dedup_hash": digest.hex(),
-                "end_token": start_token + written,
                 "source_id": self.source_id,
                 "split": split,
-                "start_token": start_token,
-                "tokens": written,
             }
             score = document.get("score")
             if score is not None:
@@ -318,10 +344,37 @@ class SourceBuilder:
                     for key, value in metadata.items()
                     if value is not None
                 }
-            line = (json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n").encode()
-            self.index_file.write(line)
-            self.index_hash.update(line)
             self.document_counts[split] += 1
+            if self.packing is None:
+                start_token = self.writers[split].total_tokens
+                self._index(record, start_token, self.writers[split].write(token_ids))
+            else:
+                # The record's BOS is context, never a target.
+                mask = [0] + [1] * (len(token_ids) - 1)
+                self._write_rows(split, self.packers[split].add(token_ids, mask, record))
+
+    def _index(self, record, start_token, tokens):
+        record = {**record, "start_token": start_token, "end_token": start_token + tokens}
+        record["tokens"] = tokens
+        line = (json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n").encode()
+        self.index_file.write(line)
+        self.index_hash.update(line)
+
+    def _write_rows(self, split, rows):
+        for tokens, mask, records in rows:
+            start = self.writers[split].total_tokens
+            self.writers[split].write(tokens)
+            self.masks[split].write(mask)
+            for record, offset, length in records:
+                self._index(record, start + offset, length)
+
+    def _flush_rows(self, tail=False):
+        for split, packer in self.packers.items():
+            self._write_rows(split, packer.flush())
+            if tail:
+                # One unsupervised token lets the loader read its row plus one lookahead token.
+                self.writers[split].write([self.tokenizer.eos_id])
+                self.masks[split].write([0])
 
     def consume(self, documents):
         batch = []
@@ -353,7 +406,7 @@ class SourceBuilder:
             self._process(batch)
 
     def _sync_outputs(self):
-        for writer in self.writers.values():
+        for writer in (*self.writers.values(), *self.masks.values()):
             writer.finish()
             for shard in writer.shards:
                 if shard["path"] in self._synced_shards:
@@ -366,6 +419,8 @@ class SourceBuilder:
         _sync_file(self.dedup_file)
 
     def progress(self, next_file_index):
+        # Open rows are closed at every checkpoint so a resumed build restores exact state.
+        self._flush_rows()
         self._sync_outputs()
         files = self.resolved["files"]
         journal_end = self.dedup_file.tell()
@@ -383,6 +438,14 @@ class SourceBuilder:
                     "tokens": self.writers[split].total_tokens,
                     "documents": self.document_counts[split],
                     "shards": list(self.writers[split].shards),
+                    **(
+                        {
+                            "mask_shards": list(self.masks[split].shards),
+                            "rejected_long_records": self.rejected_long_records[split],
+                        }
+                        if self.packing is not None
+                        else {}
+                    ),
                 }
                 for split in ("train", "val")
             },
@@ -412,6 +475,7 @@ class SourceBuilder:
             raise RuntimeError(
                 f"source {self.source_id} was exhausted before meeting its budgets: {missing}"
             )
+        self._flush_rows(tail=True)
         self._sync_outputs()
         self.index_file.close()
         final_index = self.index_path
@@ -430,6 +494,11 @@ class SourceBuilder:
                 "documents": self.document_counts[split],
                 "shards": _prefixed_shards(self.writers[split].shards, self.source_id),
             }
+            if self.packing is not None:
+                split_summaries[split]["mask_shards"] = _prefixed_shards(
+                    self.masks[split].shards, self.source_id
+                )
+                split_summaries[split]["rejected_long_records"] = self.rejected_long_records[split]
         summary = {
             "id": self.source_id,
             "repo": self.source["repo"],
@@ -462,6 +531,8 @@ class SourceBuilder:
         }
         if self.source.get("language_detector") is not None:
             summary["language_detector"] = self.source["language_detector"]
+        if self.packing is not None:
+            summary["packing"] = {**self.packing, "kind": "best_fit_rows"}
         _atomic_json(self.directory / "source.json", summary)
         return summary
 
@@ -1098,6 +1169,16 @@ def _validate_text_manifest(manifest):
                 != split_manifest["tokens"]
             ):
                 raise ValueError(f"packed dataset source {source_id} has invalid {split} shards")
+        packing = source.get("packing")
+        if packing is not None:
+            for split in ("train", "val"):
+                split_manifest = source["splits"][split]
+                masks = split_manifest.get("mask_shards", [])
+                if sum(shard.get("tokens", 0) for shard in masks) != split_manifest["tokens"]:
+                    raise ValueError(f"packed dataset source {source_id} has invalid {split} masks")
+                # Whole rows plus one unsupervised lookahead token.
+                if split_manifest["tokens"] % packing.get("row_tokens", 0) != 1:
+                    raise ValueError(f"packed dataset source {source_id} has partial {split} rows")
         if source.get("documents") != source.get("document_index", {}).get("records"):
             raise ValueError(f"packed dataset source {source_id} document index is invalid")
         journal = source.get("dedup_journal", {})
@@ -1148,11 +1229,13 @@ def verify_shards(data_dir=None, manifest=None):
     manifest = _validate_manifest(manifest) if manifest is not None else load_manifest(data_dir)
     for source in manifest["sources"]:
         for split in source["splits"].values():
-            for shard in split["shards"]:
+            shards = [(shard, "<u2") for shard in split["shards"]]
+            shards += [(shard, "u1") for shard in split.get("mask_shards", [])]
+            for shard, dtype in shards:
                 path = data_dir / shard["path"]
-                expected_bytes = shard["tokens"] * np.dtype("<u2").itemsize
+                expected_bytes = shard["tokens"] * np.dtype(dtype).itemsize
                 if not path.is_file() or path.stat().st_size != expected_bytes:
-                    raise ValueError(f"invalid packed token shard: {path}")
+                    raise ValueError(f"invalid packed shard: {path}")
                 _verify_file(path, shard["sha256"])
         index = source["document_index"]
         index_path = data_dir / index["path"]
