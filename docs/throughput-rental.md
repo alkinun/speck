@@ -151,6 +151,6 @@ trainer run at the selected cadence must measure the full-trainer derate; leave 
 if the rental only executes this benchmark ladder.
 
 After GH200 and distributed qualification, apply the predeclared
-[re-anchoring rules](../PLAN.md#compute); a surplus does **not** buy a longer base run.
+[re-anchoring rules](program.md#compute-and-allocation); a surplus does **not** buy a longer base run.
 
 Verify the instance is actually deleted. Provider billing state is separate from local backups.
