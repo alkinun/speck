@@ -111,10 +111,10 @@ primary research evidence is added.
    additional supply or explicitly revise the finite recipe/horizon; no silent replay or
    reassignment of derived-data shares. Use the measured assistant lengths and RL prompt links
    before selecting downstream packs; adapter compatibility does not establish tool-task success.
-3. **Close the trainer gaps on the workstation.** Stage 3 needs selective loss masks, best-fit
-   packing and 16K/32K sequence support before any mid-training comparison. Stages 5 and 6 need the
-   [build-or-decline decision](#stage-5-and-6-coverage-is-unclaimed), which is due before access.
-   Neither spends grant hours.
+3. **Close the trainer gaps on the workstation.** Stage 3 best-fit masked rows and chat records
+   are [implemented](docs/training.md#mid-training-readiness); 16K/32K runtime still needs GH200
+   qualification. Stages 5 and 6 are [being built](#stage-5-and-6-coverage-is-unclaimed): a minimal RL
+   trainer, rollout and verifiers, then rejection-sampled self-SFT. Neither spends grant hours.
 4. **Prepare the reference-model GH200 packet before access.** Bind current source and exact inputs,
    checks, workload sizes, measurements and stop conditions, and rebuild the transfer bundle from
    current committed code. No paid run starts from this outline. In the same window, run the
@@ -176,8 +176,8 @@ count for the next allocation; it is not run here. Numeric subcaps live in the e
 
 Coverage is claimed per stage, never in aggregate, and
 [what that requires](docs/program.md#what-success-means) is fixed. Stages 1, 2 and 4 have trainers
-today. Stage 3 still needs selective loss masks and best-fit packing; **stages 5 and 6 have no
-trainer at all** — only the fixed-policy feasibility harnesses, which perform no policy updates.
+today, and stage 3 has best-fit masked rows; **stages 5 and 6 have no trainer yet** — only the
+fixed-policy feasibility harnesses, which perform no policy updates.
 
 That gap is two decisions, not one, and they have different costs and different deadlines:
 
@@ -191,6 +191,9 @@ That gap is two decisions, not one, and they have different costs and different 
   taken against real numbers. Building the trainer does not commit those hours; declining to build
   releases them to the supply-bound stages.
 
-Until the build decision is recorded, stage 5 and 6 coverage is **unclaimed**, and no release text
-may assume it. If the answer is not to build, report both stages as **not covered with the reason
-recorded** — that is an acceptable outcome, stated plainly, and it is not the same as silence.
+**Build decision, recorded 2026-09-23 by the principal investigator: build.** The scope is a
+minimal GRPO-style trainer over checked-math and sandboxed-code verifiers, built on the existing
+fixed-policy harnesses, then rejection-sampled final self-SFT. It is due before access. The 200
+conditional RL hours stay uncommitted until the GH200 closeout. Stage 5 and 6 coverage remains
+**unclaimed** until those trainers exist and pass their own qualification; if they do not, report
+both stages as **not covered with the reason recorded**.

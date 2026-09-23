@@ -42,7 +42,7 @@ belong to later releases with separately funded experiments.
 | Downstream data research | Compare repository, workflow, trajectory, context, SFT, RL and self-distillation data on appropriate parent checkpoints | 360 hours for mid-training and 170 for post-training; separate from production exposure |
 | Stage 1 — Pretraining, stable phase | Broad code/math/general foundations using next-token prediction | 1,550 of the 1,800-hour base reservation; uses the revised 80B 4K-base working horizon; main data/runtime not yet qualified |
 | Stage 2 — Endpoint decay | Late-stage capability enrichment under a declared decay schedule, with natural, curated and derived arms separately identified by lineage | 250 production hours plus a 180-hour three-arm, two-seed research study; needs a matched stable parent and a per-arm decay manifest |
-| Stage 3 — Mid-training (capability, context, agentic) | Repository, repair, tool-use and long-horizon continuation with replay, grounded workflows and executable traces; learn coherent repositories, tool state and recovery while retaining short tasks | 600 production hours for the whole 4K/16K/32K sequence; 32K is the first release target; selective loss masks and changed-data/context branches remain to qualify |
+| Stage 3 — Mid-training (capability, context, agentic) | Repository, repair, tool-use and long-horizon continuation with replay, grounded workflows and executable traces; learn coherent repositories, tool state and recovery while retaining short tasks | 600 production hours for the whole 4K/16K/32K sequence; 32K is the first release target; best-fit masked rows and changed-data branches are implemented and smoke-tested, 16K/32K runtime remains to qualify |
 | Stage 4 — Post-training SFT | Verified reasoning and complete tool trajectories with assistant-only supervision | 450 production hours; working 1.5M unique conversations; small 4K rehearsal complete, production data unqualified |
 | Stage 5 — Post-training RL | Improve outcomes with verified rewards on checkable math and sandboxed code | 200 conditional production hours plus 40 research hours. **No RL trainer exists in this repository.** Trainer, rollout engine, verifiers and recovery are all unbuilt and gate both this stage and stage 6 |
 | Stage 6 — Final self-distillation | Rejection-sample the promoted RL parent, verify and deduplicate, mix with verified anchor data, then run assistant-masked self-SFT | 100 production hours plus a 30-hour pilot; preserve the pre-self-SFT parent and promote only on held-out transfer |
@@ -205,8 +205,8 @@ declared base horizon, with any revised weights recorded separately from the ini
 Develop repository, code, math, repair and tool-use capability using selected, independently checked
 material and broad-data replay. Add issues, reviews, pull requests, commits, diffs, dependency-linked
 files, tool schemas, grounded workflows and executable trajectories only with lineage and outcome
-evidence. Start with next-token prediction; any output/action-only masking needs an explicit adapter,
-mask fingerprint and resume qualification. Plain token packing does not implement it.
+evidence. Start with next-token prediction; output/action-only masks use row-packed sources, whose
+implementation boundary is in [training](training.md#mid-training-readiness).
 
 The production sequence is 4K capability bridge, 16K repository reasoning and 32K agentic
 continuation. The 4K stage teaches repository structure, repair and tool schemas. The 16K stage
