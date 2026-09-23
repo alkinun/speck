@@ -294,12 +294,6 @@ def _table_rows(text: str):
             yield index, cells
 
 
-def _numbers(cell: str) -> list[int]:
-    return [
-        int(value.replace(",", "")) for value in re.findall(r"(?<![\d.])(\d[\d,]*)(?![\d.])", cell)
-    ]
-
-
 def _bare_total(cells: list[str]) -> int | None:
     """Return the row's first cell that is purely a number, or None.
 
