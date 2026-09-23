@@ -1,6 +1,6 @@
 # SpeckLabs first program: execution overview
 
-2026-09-22. SpeckLabs' first model and paper center on the data pipeline across all six training
+2026-09-23. SpeckLabs' first model and paper center on the data pipeline across all six training
 stages: our own pretrained base and an always-thinking assistant for
 agentic coding, normal coding, math and tools. This document explains the program; [PLAN.md](../PLAN.md) records
 current status and work order. The [numeric plan](../experiments/main-data/plan.json) owns working
@@ -149,12 +149,8 @@ Start at **4,096 tokens**, using packed, qualified material and a frozen run man
 packing/document-boundary semantics and verify them consistently across KDA and global attention;
 do not silently claim repository coherence or document isolation from concatenated shards.
 Keep the starting mixture at 35% code, 25% math, 30% natural web, 5% reference/science and 5%
-refined educational web. The mixture was re-frozen over **six banks** on 2026-09-22: `checked_code`
-and `refined_math` held zero retained stock of any kind, so each capped a one-pass run at zero
-tokens at its declared weight. Each dropped share moved to the natural bank of its own domain, so
-total exposure stays 80B and the declared domain split is unchanged. Derived code and refined math
-are now unbanked candidates; qualifying either needs a revised freeze and its own exposure ledger,
-never a quiet pour into a natural bank.
+refined educational web, over the **six banks** of the 2026-09-22 re-freeze described in the
+[main data plan](../experiments/main-data/README.md#base-mixture).
 
 The bank table, with candidate source routes and preparation targets, lives once in the
 [main data plan](../experiments/main-data/README.md#base-mixture); `plan.json` owns the numbers it
@@ -168,9 +164,10 @@ Candidate releases are not automatically admitted supply. Freeze source eligibil
 benchmark exclusions, source-family partitions, language coverage and actual token counts first.
 
 Preparation targets 100B eligible unique tokens for an 80B 4K-base working exposure,
-allowing selection headroom and normally one pass. Current retained pilot-source stocks total only
-6.799B before joint eligibility, including 0.477B code tokens. A 16-file code audit or passing generated
-tests cannot close that supply gap. Keep raw stock, qualified unique supply, exposure/replay and
+allowing selection headroom and normally one pass. Retained candidate stock totals 7.150B across the
+six banks before joint eligibility, including 0.477B code tokens; the
+[supply gap](../experiments/main-data/supply-gap.json) derives it per bank. A bounded code audit or
+passing generated tests cannot close that gap. Keep raw stock, qualified unique supply, exposure/replay and
 rejected material as separate counts. If refined supply fails, explicitly revise within-domain
 shares or shorten the horizon; do not silently repeat examples or assume unbudgeted teacher generation.
 
@@ -396,25 +393,9 @@ accelerated serving integration is assumed qualified merely because base trainin
 
 ## Execution gates and next work
 
-1. **Now, on CPU:** use the completed practical-code checks and the
-   [qualification packet](../experiments/main-data/QUALIFICATION.md) to finish benchmark/family
-   exclusions, then audit web/math and assistant quality/long-tail supply in bounded packets.
-   Prepare the reference-model hardware packet. The architecture/control study is deferred.
-2. **On GH200 access:** follow the [GH200 qualification runbook](compute-qualification.md):
-   qualify one worker, then four, then the scheduler canary; measure sustained effective throughput,
-   recovery and inference. Reconcile prior external rentals and unused reservation headroom.
-3. **Before main training:** the backbone is already fixed by declaration, so go straight to data.
-   Freeze data-study manifests, paired fresh initializations, controls, endpoints and
-   screening/confirmation costs. Run within the 700-hour pretraining research cap,
-   record selection or an inconclusive result, then freeze the main admitted mixture, repetition,
-   batch, schedule, cadence and affordable horizon. No main-run launch precedes this decision.
-4. **After a useful pretraining checkpoint:** execute qualified capability continuation within the
-   separate 600-hour mid-training production cap, then qualify context stages and short-task retention. Prepare and train verified
-   thinking SFT. Compare downstream data recipes on useful parent checkpoints before committing
-   each stage, within its declared budget. Attempt RL only with working verifiers and bounded cost,
-   then evaluate final self-SFT against the preserved selected SFT/RL parent.
-5. **Before release:** finish matched development comparisons, freeze the selected checkpoint/recipe,
-   then score final tests and publish measured capability, efficiency and limitations with artifacts.
-
-The [technical report outline](report.md) follows these same stages. Decision changes update this
-outline, PLAN.md and affected numeric fields together; completed receipts remain immutable.
+[PLAN.md](../PLAN.md#immediate-order-of-work) owns the single work order. In outline: data
+qualification on CPU now, GH200 one-worker then four-worker qualification on access, the
+pretraining data study before main training, downstream stages from useful parent checkpoints, and
+final tests only after the recipe and checkpoint are frozen. The
+[technical report outline](report.md) follows these same stages. Decision changes update this
+overview, PLAN.md and affected numeric fields together; completed receipts remain immutable.

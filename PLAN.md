@@ -1,6 +1,6 @@
 # SpeckLabs: current decisions and next work
 
-Updated 2026-09-22. This is the status and work order for the first flagship program.
+Updated 2026-09-23. This is the status and work order for the first flagship program.
 Read the [program overview](docs/program.md) for the connected design, data, compute and release
 outline. [Main-data plan.json](experiments/main-data/plan.json) owns working numeric targets;
 experiment configurations and verified receipts own actual run settings and measured results.
@@ -97,7 +97,7 @@ Closing the whole gap means roughly a **14x** increase in retained stock. That i
 filtering and tokenization work: CPU, bandwidth and storage, consuming **no grant GPU-hours**. It
 can and should run before and during access, and it is why a throughput surplus buys nothing here.
 
-**Source use is decided.** The
+**Source use is decided for all nine selected sources and closed on six.** The
 [acceptance record](experiments/main-data/source-rights-acceptance.json) was signed on 2026-09-22 by
 a named human authority over the nine sources the re-frozen mixture
 [selects](experiments/main-data/source-registry.json), at a declared scope of research training,
@@ -146,9 +146,9 @@ token exists, and no acquisition or training is authorized by that record.
 | Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
 | Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions; later full token census below |
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
-| Retained-data closeout | Full HQ token/overlap census, full math text/index reconciliation, 500K SFT format census and sampled tool-aware lengths, bounded RL inventory | [Receipt](experiments/corpus-audit/data-readiness.json); finite stock bounds measured, source use/correctness/family eligibility and missing banks remain open |
+| Retained-data closeout | Full HQ token/overlap census, full math text/index reconciliation, 500K SFT format census and sampled tool-aware lengths, bounded RL inventory | [Receipt](experiments/corpus-audit/data-readiness.json); finite stock bounds measured; correctness, family eligibility and finite supply remain open |
 | Joint family partitions | 5,492,692 candidate documents / 6,674,432,945 measured tokens; six text stocks and the code review cohort; 90/5/5 family buckets | [Receipt](experiments/main-data/family-partition.json); 45 code holds, full code inventory and benchmark coverage still open; no admission |
-| Other data preparation | 6.799B retained source tokens before joint eligibility; 500K assistant rows inventoried; finite tool-aware SFT rehearsal | [Supply](experiments/pilot/supply.json), [assistant contract](docs/assistant.md); not main-run qualified supply |
+| Other data preparation | 6.799B retained pilot-source tokens before joint eligibility (7.150B with distinct HQ, as in the supply gap); 500K assistant rows inventoried; finite tool-aware SFT rehearsal | [Supply](experiments/pilot/supply.json), [assistant contract](docs/assistant.md); not main-run qualified supply |
 | Training throughput pass | 2.084x over the frozen pilot recipe **on a 318M proxy**; proxy utilization 25.0% to 52.2%; selected configuration is checkpointing off, compiled with max-autotune, determinism retained, Liger loss | [Sweep](experiments/qualification/throughput-3090/sweep.json), [GH200 confirmation](experiments/qualification/throughput-gh200.json); RTX 3090 sm_86 only. **This is not a flagship speedup.** The only 1.2B point measured is the eager checkpointed baseline at 34.6% utilization, which establishes no optimized ceiling, and no checkpointing-off flagship configuration fit the 24 GiB card. Absolute rates, microbatch and checkpointing need GH200 measurement |
 | Compiled restart parity | Coordinate-descent tuning found to vary kernel choice per process and removed; compiled base replay on the 318M proxy and compiled SFT replay on the 1.2B reference pass at the unchanged tolerance with exact RNG/loader state and optimizer parity | [Base](experiments/qualification/compiled-recovery-descent-3090.json), [SFT](experiments/qualification/compiled-sft-recovery-3090.json); one RTX 3090 worker, SFT with checkpointing on. About 0.5% proxy throughput cost. Hopper and four-worker compiled DDP remain unqualified |
 
@@ -163,99 +163,44 @@ that recipe locally **on a 318M proxy, not on the flagship**. Treat 12,859 token
 of the frozen pilot, not as the machine's capability, and re-anchor the numeric plan only from
 measured GH200 rates.
 
-Three rules govern that re-anchoring, all predeclared in
-`compute.throughput_reanchoring_rule` before the number is known:
-
-- **Apply the overhead derate.** The confirmation sweep runs `--mode compute` for thirty measured steps and
-  excludes startup, inline validation and saves. The plan's anchor includes them. The measured
-  pilot ratio is 0.9459; multiply by it before converting any benchmark rate into horizon hours,
-  and remeasure the ratio on GH200 at production save cadence.
-- **A surplus does not buy a longer base run.** If the measured rate beats the anchor, the 80B
-  horizon does not move and the freed hours return to data research and to whichever stage is
-  supply- or tooling-bound. Eligible-token supply, not compute, is what bounds this release.
-- **A shortfall reduces the horizon**, never the protected mid-training, post-training or
-  evaluation reservations.
 SFT padded positions/s are not supervised tokens/s. Earlier estimates and failed attempts remain
 historical; do not repeat the completed pilot because a preparation document still contains commands.
 
 ## Immediate order of work
 
-The local data-preparation pass is now closed for the current evidence. The
-[data closeout](experiments/main-data/data-closeout.json) records the supplied frontier-data
-research synthesis. Map its hypotheses to pinned source evidence before changing source identities,
-candidate weights or study arms; keep all five source-readiness gates explicit.
-The [shared data-design contract](experiments/main-data/data-design-contract.json) now binds the
-stage, lineage, quality, coverage, dependency and contamination fields required by every data-stage
-manifest. It changes design metadata only; it does not admit sources or alter the allocation.
-The [source-readiness matrix](experiments/main-data/source-readiness.json) records them per source
-and currently finds no complete manifest or eligible token.
+This is the one work order; other documents link here rather than keep their own. The data design
+contract, candidate manifests and post-training audit protocol are recorded and described in the
+[main data plan](experiments/main-data/README.md);
+[`source-readiness.json`](experiments/main-data/source-readiness.json) is the one record of
+per-source gates and blockers. None admits a source. Change a gate only on primary evidence; do not
+reopen completed deterministic audits or infer eligibility from a paper's headline result, format,
+length, classifier scores or notices. Extend the
+[source-mapping receipt](experiments/main-data/frontier-data-source-mapping.json) whenever new
+primary research evidence is added.
 
-The [natural-web candidate manifest](experiments/main-data/natural-web-candidate-manifest.json) is the
-first source-specific application. It preserves the measured FineWeb-Edu/Ultra-FineWeb overlap while
-keeping the web contrast blocked until its remaining gates close.
-The [natural-code candidate manifest](experiments/main-data/natural-code-candidate-manifest.json)
-does the same for Stack-Edu and Stack v3; it records zero eligible code tokens and keeps the code
-contrast blocked. The separate checked-code route it also describes is no longer a declared bank.
-The [math candidate manifest](experiments/main-data/math-candidate-manifest.json) separates natural,
-filtered-web, refined/generated and unavailable math candidates; it keeps all math routes blocked until
-correctness, contamination and finite-supply gates close.
-The [post-training candidate manifest](experiments/main-data/post-training-candidate-manifest.json)
-binds the assistant and reward inventories while keeping structural validity, outcome verification,
-tool trajectories and fixed-policy RL feasibility as separate downstream gates.
-The [post-training audit protocol](experiments/main-data/post-training-audit-protocol.json) fixes the
-bounded order and stop rules for closing those gates.
-
-1. **Map the reviewed research to source evidence.** The
-   [source-mapping receipt](experiments/main-data/frontier-data-source-mapping.json) now attaches each
-   finding to pinned local audits and records the remaining gate implications. Extend it with a source
-   configuration, sampling frame, processing method, baseline, measured result and limitation whenever
-   new primary evidence is added.
-   Update the candidate review and source-readiness matrix only when primary evidence supports the
-   corresponding gate. Do not reopen completed deterministic audits or infer eligibility from a
-   paper's headline result.
-2. **After research intake, complete main-data eligibility and coverage.** The bounded Python/JS/TS practical checks are
-   complete and [recorded](experiments/corpus-audit/practical-code-checks.json). The
-   [qualification packet](experiments/main-data/QUALIFICATION.md) pins broader exclusion inputs
-   and defines family separation. LiveCodeBench release-v6 public-text coverage is now pinned;
-   finish the full source-family graph and intended scoring coverage before exercise derivation.
-   The 16-row UltraData-Code L3 preview remains held for lineage.
-3. **Turn the completed data inventory into finite eligible arms.** The
-   [source-readiness matrix](experiments/main-data/source-readiness.json) binds the retained inventories,
-   gate status and one-pass horizon bounds to the design-only data packet. The
-   [data-readiness closeout](experiments/corpus-audit/data-readiness.json) measures full retained HQ
-   tokens, retained-bank exact overlap, math normalization links, assistant format/context coverage
-   and a bounded RL prompt/reference inventory. The
-   [qualification packet](experiments/main-data/QUALIFICATION.md#next-bounded-data-packet) owns
-   the remaining family/exclusion, correctness and finite-supply decisions. Source use is no longer
-   among them: the [acceptance record](experiments/main-data/source-rights-acceptance.json) closed
-   it on 2026-09-22 for the nine selected sources, subject to per-source conditions that exclude
-   rather than admit whatever they do not cover. Do not repeat
-   the completed code reading pass or infer quality from format, length, classifier scores or notices.
-   The [origin retry](experiments/corpus-audit/code-origin-recovery-20260922.json) recovered 30 more
-   exact host origins; after the new firewall hold, 44 unheld records remain quota-blocked.
-   Carry all 45 cohort holds into the full stock graph and every stage; keep source 404s separate.
-   The mixture was re-frozen to six banks on 2026-09-22, so no bank is unsupplied; retained
-   HQ and natural-code totals still bound one-pass horizons below the maximum study-hour envelopes.
-   Qualify additional supply or explicitly revise the finite research recipe/horizon; no silent replay
-   or reassignment of derived-data shares. Use the measured assistant lengths and RL prompt links before
-   selecting downstream packs. Adapter compatibility does not establish tool-task success.
+1. **Complete family partition and exclusion coverage.** Candidate splits exist for six text stocks
+   and the code review cohort ([receipt](experiments/main-data/family-partition.json)). Close
+   `family_partition` with the full retained-code graph and intended benchmark coverage before
+   exercise derivation. Carry all 45 cohort holds into every stage. Resume the 44 unheld
+   quota-blocked origin lookups; unresolved records and source 404s stay excluded. The
+   [qualification packet](experiments/main-data/QUALIFICATION.md) owns this recovery state.
+2. **Turn the inventory into finite eligible arms.** Count eligible tokens per bank after
+   exclusions. Retained natural-code stock caps a one-pass run at 1.36B code tokens, so qualify
+   additional supply or explicitly revise the finite recipe/horizon; no silent replay or
+   reassignment of derived-data shares. Use the measured assistant lengths and RL prompt links
+   before selecting downstream packs; adapter compatibility does not establish tool-task success.
+3. **Close the trainer gaps on the workstation.** Stage 3 needs selective loss masks, best-fit
+   packing and 16K/32K sequence support before any mid-training comparison. Stages 5 and 6 need the
+   [build-or-decline decision](#stage-5-and-6-coverage-is-unclaimed), which is due before access.
+   Neither spends grant hours.
 4. **Prepare the reference-model GH200 packet before access.** Bind current source and exact inputs,
-   checks, workload sizes, measurements and stop conditions. Rebuild the historical transfer bundle;
-   do not treat its old source commit as the current release. No paid run starts from this outline.
-   In the same window, run the external
-   [H100 throughput rental](experiments/qualification/throughput-h100.json) to obtain the flagship
-   speedup before access. It costs no grant hours, and it is what keeps the 120-hour reservation
-   from being the first place a 1.2B configuration is ever measured with checkpointing off.
-   Its [pre-flight is complete](experiments/qualification/throughput-h100-preflight.json): every
-   run's argument vector is now generated and checked against the real benchmark parser in
-   `make plan-check`, and the ladder was executed locally at the baseline configuration and in
-   end-to-end mode. Three defects were fixed that would each have failed on a metered GPU,
-   including an end-to-end run with no `--data-dir` at all. The
-   [runbook](docs/throughput-rental.md) is ready; it needs a rented instance and SSH access,
-   which are operator inputs, not repository work.
-   The [performance plan](docs/performance.md) is the pre-rental reference for MFU conventions,
-   noise handling, profile-based optimization targets, and the order for deciding whether a kernel
-   change is worth pursuing.
+   checks, workload sizes, measurements and stop conditions, and rebuild the transfer bundle from
+   current committed code. No paid run starts from this outline. In the same window, run the
+   external [H100 throughput rental](docs/throughput-rental.md) to measure the flagship speedup
+   before access; it costs no grant hours and keeps the 120-hour reservation from being the first
+   place a checkpointing-off 1.2B configuration is measured. Its pre-flight is complete and it needs
+   only a rented instance and SSH access. The [performance plan](docs/performance.md) is the
+   pre-rental reference for MFU conventions, noise handling and kernel priorities.
 5. **On access, qualify one worker then four.** Measure actual topology/ARM64 dependencies, kernels,
    batching, optimizer, communication, sustained throughput, restart/export and scheduler behavior.
    Declare every allocated GPU, including idle devices. Use results to cost the data studies and
@@ -265,8 +210,11 @@ bounded order and stop rules for closing those gates.
    `scripts.training_replay --compile` before trusting any compiled production rate. Then apply the
    predeclared re-anchoring rule in either direction.
 6. **Research the starting recipe.** The backbone is declared, not compared; the architecture study
-   is deferred. Run data screening, the decay study and confirmation from
-   matched fresh initializations after source/runtime qualification. Use fixed held-out source losses
+   is deferred. Bind evaluation packs and numeric decision thresholds, and measure GH200 costs,
+   before freezing seeds, common token horizons and executable configs. Run data screening, the
+   decay study and confirmation from matched fresh initializations after source/runtime
+   qualification; reduce the proposed matrix if needed without silently spending confirmation or
+   production funds. Use fixed held-out source losses
    and development capability curves; keep final tests untouched. Record the result and limitations,
    then freeze the main mixture and schedule. Pretraining data research has 700 hours; reserve
    confirmation/evaluation cost before screening. The other 530 data-research hours belong to
@@ -280,10 +228,8 @@ bounded order and stop rules for closing those gates.
    long SFT. Promote reward training only for measured gains. Pin final endpoints/comparators before
    selection; keep final tests untouched.
 
-Runtime and data preparation are the active tracks. Audit sources for all stages now. The starting
-mixture study precedes main pretraining; mid-training and assistant model comparisons need useful
-parent checkpoints and measured costs. Use milestone checks and bounded supervisors, not frequent
-manual progress polling or duplicate workers.
+Use milestone checks and bounded supervisors, not frequent manual progress polling or duplicate
+workers.
 
 ## Readiness for experiment design
 
@@ -304,12 +250,6 @@ specifies contrasts, controls, endpoints, maximum run counts and protected confi
 The [architecture control](docs/model.md#proposed-control-and-decision) keeps its checked parameter
 count for the next allocation; it is not run here. Numeric subcaps live in the existing plan.
 
-The fixed code reading pass and retained-data closeout are complete. Next produce eligible finite arms,
-then bind evaluation packs and numeric decision thresholds. Measure GH200 costs before freezing
-seed values, common token horizons and executable configs. Reduce the proposed matrix if needed
-without silently spending confirmation or production funds. Audit downstream sources now; run their
-comparisons from useful parents only after the recorded runtime gaps are closed.
-
 ## Compute
 
 The [numeric plan](experiments/main-data/plan.json) owns the reservation table and
@@ -324,21 +264,26 @@ teacher and verification work**. `speck/operations/slurm.py` enforces the schedu
 of 4,550 + 450, and `make plan-check` fails if those constants, or any of these figures written in
 prose, drift from the plan.
 
-Two things about this allocation are easy to get wrong, so they are restated here rather than only
-in the overview:
+**The horizon has little margin.** At the measured H100 full-trainer rate the 1,800-hour
+reservation supports about 83.3B tokens before long-context and agentic overhead; an illustrative
+80% rate supports about 66.7B. Freeze the final horizon only after GH200 throughput and the 16K/32K
+costs are measured; 100B and the old 320B/400B scales are deferred. The measured GH200 rate
+re-anchors the horizon under three rules predeclared in `compute.throughput_reanchoring_rule`:
 
-- **A throughput surplus does not buy a longer base run.** At the measured H100 full-trainer rate
-  the 1,800-hour reservation supports about 83.3B tokens before long-context and agentic overhead,
-  so the 80B working horizon has little margin; an illustrative 80% rate supports about 66.7B. If
-  the measured rate beats the anchor the horizon still does not move — the predeclared surplus rule
-  sends those hours to data research and the supply-bound stages, because this release is bounded by
-  eligible tokens, not compute. A shortfall reduces the horizon and never the protected
-  reservations. Freeze the final horizon only after GH200 throughput and the 16K/32K costs are
-  measured; 100B and the old 320B/400B scales are deferred.
-- **Four GPUs are not four times cheaper.** They increase aggregate speed while consuming four
-  GPU-hours per elapsed hour, and close no per-GPU efficiency gap. No GH200 or distributed speedup
-  is assumed, the rough 90-calendar-day window is not 90 days of continuous four-GPU funding, and
-  completed external rental costs stay outside this allocation. No GH200 jobs have launched.
+- **Apply the overhead derate.** The confirmation sweep runs `--mode compute` for thirty measured
+  steps and excludes startup, inline validation and saves. The plan's anchor includes them. The
+  measured pilot ratio is 0.9459; multiply by it before converting any benchmark rate into horizon
+  hours, and remeasure the ratio on GH200 at production save cadence.
+- **A surplus does not buy a longer base run.** If the measured rate beats the anchor, the 80B
+  horizon does not move and the freed hours return to data research and to whichever stage is
+  supply- or tooling-bound. Eligible-token supply, not compute, is what bounds this release.
+- **A shortfall reduces the horizon**, never the protected mid-training, post-training or
+  evaluation reservations.
+
+**Four GPUs are not four times cheaper.** They increase aggregate speed while consuming four
+GPU-hours per elapsed hour, and close no per-GPU efficiency gap. No GH200 or distributed speedup is
+assumed, the rough 90-calendar-day window is not 90 days of continuous four-GPU funding, and
+completed external rental costs stay outside this allocation. No GH200 jobs have launched.
 
 ## Stage 5 and 6 coverage is unclaimed
 

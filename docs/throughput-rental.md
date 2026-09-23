@@ -150,10 +150,7 @@ Use the [performance plan](performance.md) for the compact result handoff. A sep
 trainer run at the selected cadence must measure the full-trainer derate; leave it unmeasured
 if the rental only executes this benchmark ladder.
 
-After GH200 and distributed qualification, apply the predeclared re-anchoring rule. A
-surplus does **not** buy a longer base run: the 80B horizon does not move, and freed hours return to
-data research and to the supply-bound stages, because this release is bounded by eligible tokens
-rather than by compute. A shortfall reduces the horizon and never the protected mid-training,
-post-training or evaluation reservations.
+After GH200 and distributed qualification, apply the predeclared
+[re-anchoring rules](../PLAN.md#compute); a surplus does **not** buy a longer base run.
 
 Verify the instance is actually deleted. Provider billing state is separate from local backups.

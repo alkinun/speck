@@ -129,34 +129,15 @@ but eligible full-corpus supply and a better score cutoff remain unestablished.
 Code supply is the binding constraint on the whole horizon and has its own section below; see
 [code priority and qualification](#code-priority-and-qualification) for the census, the cohorts and
 the gates. In short: the retained stock covers 1.36% of the natural-code preparation target, and
-checked code stopped being a declared bank in the 2026-09-22 re-freeze.
+checked code stopped being a declared bank in the
+[2026-09-22 re-freeze](../experiments/main-data/README.md#base-mixture).
 
-The [reading closeout](../experiments/corpus-audit/stylesheet-cohort-review.json) and
-[current partitions](../experiments/main-data/family-partition.json) record
-**176 full texts / 412,974 tokens reviewed**, **45 currently held records**, and **no unheld records still
-unread**. Original sampling factors and source labels are preserved; observed language, dialect
-and file role are recorded separately. A family hold alone does not establish an exact benchmark
-match or justify replacing a sampled record. All 173 currently unheld records are read; the other
-three full reads are now held, so reading and hold counts overlap.
-
-The [corpus-audit record](../experiments/corpus-audit/README.md) holds the per-batch readings,
-redaction checks and package/family evidence. The final stylesheet readings distinguish page, template and
-component roles. The [notice follow-up](../experiments/corpus-audit/code-notice-provenance.json)
-adds seven verified host origins and reconfirms one, recovering Objective-C repository and Eclipse
-notice context. Eclipse declares separate code/non-code licenses; template attribution and restrictive
-Java wording remain unresolved. The [pinned-origin follow-up](../experiments/corpus-audit/pinned-code-origins.json)
-adds 42 verified origins. The subsequent [retained-origin recovery](../experiments/corpus-audit/retained-code-origins.json)
-adds ten exact-match Stack-Edu origins. The [quota-recovery pass](../experiments/corpus-audit/code-origin-recovery-20260922.json)
-adds 30 more. With the new firewall hold, coverage is 58/103 unheld Stack-Edu and 68/70 unheld
-Stack v3 records. Quota exhaustion still blocks 44 unheld records; one earlier Stack-Edu failure
-and two pinned Stack v3 404s remain separate. These bounded recoveries do not estimate whole-stock recoverability.
-Resume blocked requests only after quota recovery. Fixed-cohort reading is complete. The named source-use decision for both code routes is
-recorded, but it is conditional on origin and notice recovery, which is still open along with
-broader family qualification, including four path-verified Stack v3 ancestor-notice searches.
-Parser success and passing test assertions cannot certify behavior, semantic preservation or eligibility.
-Complete source-use, provenance and family checks in the
-[qualification packet](../experiments/main-data/QUALIFICATION.md) before selecting finite experiment
-inventories. No source ranking, eligible yield or bulk-filter adoption follows from this completed reading pass.
+The fixed code cohort's reading pass is complete. Its holds, origin and notice recovery, and
+family-partition state are recorded once in the
+[qualification packet](../experiments/main-data/QUALIFICATION.md), which the conditional source-use
+decision for both code routes depends on. Parser success and passing test assertions cannot certify
+behavior, semantic preservation or eligibility, and no source ranking, eligible yield or bulk-filter
+adoption follows from the reading pass.
 
 The [September 18 reopen](../experiments/pilot/supply.json) verifies all shard hashes and every document-index span for the five
 retained token stocks used by the pilot. It counts the larger local `document-token-stock-v2`
@@ -171,7 +152,9 @@ peS2o-v3 bank once; the earlier local stock version is not additional supply. St
 | peS2o v3 | 820,097,493 | 5% |
 | FineWiki English | 582,070,378 | 5% |
 
-These are 6,799,101,985 source tokens before joint eligibility, not a 6.8B training manifest.
+These are 6,799,101,985 source tokens before joint eligibility, not a 6.8B training manifest; the
+[supply gap](../experiments/main-data/supply-gap.json) adds the distinct HQ web stock and assigns
+stock to the six current banks.
 At the frozen pilot weights, total code supply gives a 3.18B-token single-pass mixture upper bound;
 the 5% Go share within code lowers it to **2,755,093,600 total mixture tokens**. Validation reserves,
 benchmark exclusions, and joint duplicates reduce that ceiling. FineWeb's corresponding ceiling
@@ -253,6 +236,10 @@ and the existing stock's length-selection bias.
 public cards, snapshots existing local SFT receipts and links bounded viewer-sample diagnostics.
 The viewer samples are separate from bulk acquisition and older retained-stock identities;
 card revision pins do not establish the revision served by the live viewer.
+This queue predates the 2026-09-22 re-freeze. The
+[source registry](../experiments/main-data/source-registry.json) now fixes the nine selected
+sources; checked exercises, UltraData-Math L2 and Nemotron-CC-Math are not selected, so their rows
+below are review questions for a later revised freeze, not current candidates.
 
 | Priority | Source | Specific question |
 | --- | --- | --- |
@@ -289,41 +276,24 @@ records. The [manual review](../experiments/corpus-audit/infiwebmath-4plus-arith
 classifies the flags as binary notation, intentional counterexamples, puzzle notation, extraction
 truncation and one likely source transcription error. These classifications are triage evidence,
 not a correctness rate; symbolic, unit-bearing and multi-line reasoning remain unchecked. The
-source-readiness matrix records InfiWebMath as a separate non-admitted candidate. Its source-use
-gate closed on 2026-09-22; family, contamination, correctness and supply remain open.
+[source-readiness matrix](../experiments/main-data/source-readiness.json) records InfiWebMath as a
+separate non-admitted candidate and owns its gate status.
 
-The shared [stage-conditioned data-design contract](../experiments/main-data/data-design-contract.json)
-now binds the pretraining, mid-training and post-training packets. It standardizes manifest fields for
-stage, source family, transformation, quality, coverage, dependency, contamination and lineage, while
-keeping natural, grounded, synthetic, repository-event and agent-trajectory banks distinct. This is a
-design requirement for the next source-mapping pass; it does not change the working mixture, admit a
-source or authorize a run.
+Design records for this evidence:
 
-The [source-mapping receipt](../experiments/main-data/frontier-data-source-mapping.json) now records
-which existing audits support each reviewed hypothesis and which readiness gates remain open. It is
-an evidence index, not a source-admission decision.
+- The [data-design contract](../experiments/main-data/data-design-contract.json) fixes the
+  manifest fields every stage records: stage, source family, transformation, quality, coverage,
+  dependency, contamination and lineage.
+- The [source-mapping receipt](../experiments/main-data/frontier-data-source-mapping.json) indexes
+  which audits support each reviewed hypothesis; it closes no gate.
+- The [source-readiness matrix](../experiments/main-data/source-readiness.json) owns per-source
+  gates and manifest-field completeness; it finds zero complete manifests and zero eligible tokens.
+- The [natural-web](../experiments/main-data/natural-web-candidate-manifest.json),
+  [natural-code](../experiments/main-data/natural-code-candidate-manifest.json),
+  [math](../experiments/main-data/math-candidate-manifest.json) and
+  [post-training](../experiments/main-data/post-training-candidate-manifest.json) candidate
+  manifests add domain evidence and comparison contracts for those sources.
 
-The [source-readiness matrix](../experiments/main-data/source-readiness.json) is the one record of
-per-source gates and manifest-field completeness; it finds zero complete manifests and zero eligible
-tokens, so the next work is qualification rather than training.
-
-The first source-specific application is the [natural-web candidate manifest](../experiments/main-data/natural-web-candidate-manifest.json).
-It records the FineWeb-Edu control, the Ultra-FineWeb HQ route, their bounded exact-overlap result and
-the evidence still required before the web contrast can enter screening.
-
-The [natural-code candidate manifest](../experiments/main-data/natural-code-candidate-manifest.json)
-binds the retained Stack-Edu census, the bounded Stack v3 cohort and the unavailable checked-code
-route, which stopped being a declared bank in the 2026-09-22 re-freeze. It keeps natural code separate from verified exercises and records the current zero-eligible-
-token boundary.
-
-The [math candidate manifest](../experiments/main-data/math-candidate-manifest.json) keeps natural
-worked material, filtered web math, refined/generated solutions and unavailable sources separate. The
-InfiWebMath arithmetic review remains a triage diagnostic; it does not certify solution correctness or
-eligible supply.
-
-The [post-training candidate manifest](../experiments/main-data/post-training-candidate-manifest.json)
-binds the 500K-row assistant census and 44,369 reward-prompt rows. Structural serializability,
-independent outcomes, tool trajectories and fixed-policy RL feasibility remain separate gates.
 The [post-training research synthesis](../experiments/main-data/post-training-research.json) keeps
 general SFT, reasoning SFT, agent trajectories, RL prompts, preference/critique data and on-policy
 teacher feedback as separate banks. It retains the always-thinking release baseline while defining
@@ -334,7 +304,8 @@ The intended pretraining composition is selected broad natural text, meaningful 
 math/science, reference/documents and a controlled refined/synthetic component. Preserve everyday,
 nontechnical topics and varied prose as well as difficult educational material. Retain source-family
 identity across original pages, rewrites, Q&A and instruction derivatives; several dataset names
-can represent the same underlying information. Review source-use evidence per component.
+can represent the same underlying information. Carry each component's recorded source-use
+conditions.
 
 ## Data preparation closeout — 2026-09-20
 
@@ -344,42 +315,18 @@ format audits, candidate card reviews, bounded diagnostics and the three design-
 are complete for the current local evidence. No source is admitted: rights, family partitions,
 independent correctness, finite eligible supply and GH200 cost remain explicit gates.
 
-The supplied frontier-data research is now recorded in the structured synthesis and linked from the
-closeout. The next data change is source-specific mapping of those hypotheses into pinned candidate
-manifests. Preserve existing receipts, attach new claims to a sampling frame and baseline, and
-revise source readiness only when the five gates are supported. The closeout does not authorize new
-acquisition, repetition, GPU work or training.
+The supplied frontier-data research is recorded in the structured synthesis and linked from the
+closeout. Attach new claims to a sampling frame and baseline, and revise source readiness only when
+the five gates are supported. The closeout does not authorize new acquisition, repetition, GPU work
+or training.
 
-### Next deliverables and decisions
+### Order of work
 
-1. Complete origin/source-use and semantic-quality assessment on the
-   [frozen stratified sample](../experiments/corpus-audit/code-yield-result.json). Its first pass
-   recovers/screens 138 files across 11 languages; no-hit records remain unresolved. Natural code
-   needs traceable, useful content; verified exercises additionally need test linkage and independent
-   oracles. Record weighted yield only after assessing the gates. The 0.477B retained tokens
-   do not establish the 35B natural-code preparation target. The separate checked-exercise bank
-   was re-frozen out of the mixture on 2026-09-22 rather than left standing against zero stock.
-   For web, resolve source-use evidence, source families, overlap and source-aware extraction
-   repair before counting accepted unique tokens. Keep candidate flags review-only and the HQ
-   cutoff unchanged. Exact sample-token retention is not full-corpus yield. Extend DCLM previews
-   into comparable source-file evidence only for a concrete coverage/eligibility question before
-   freezing allocations; no unqualified split or stricter cutoff inherits a quality advantage.
-2. Use the completed format/context audit to verify retained code/math reasoning and tool trajectories, including
-   useful brief reasoning. Include complete examples in each available length band: <=4K, 4–16K,
-   16–32K and 32–128K. Keep longer examples separately. Prioritize answer correctness, useful
-   reasoning, tool-result consistency, concise ordinary assistance and source identity.
-3. Extend the completed bounded practical-code checks to corpus-scale source eligibility and
-   benchmark/family exclusions. Admit only traceable material with independent checks; do not
-   turn every source on the shortlist into a separate GPU experiment.
-4. Recount usable supply and freeze token-based domain, source, length and reasoning-depth weights
-   for the relevant phase. SFT needs both supervised-token and total-context counts. Final
-   percentages depend on those measurements; the working allocation guides preparation.
-   Training stock is not the same as exposure.
-5. Price and run a bounded baseline/candidate comparison from matched fresh initializations before
-   main pretraining. Freeze the contrast after source qualification and record the recipe decision
-   before launch. Track held-out source loss and development capability versus tokens/GPU-hours,
-   preparation cost and regressions. Audit post-training sources now; evaluate their training
-   recipes on useful parent checkpoints before committing the downstream stage budgets.
+[PLAN.md](../PLAN.md#immediate-order-of-work) owns the order of data work. The methods it applies
+are in this guide: count accepted unique tokens only after family, overlap and extraction review;
+keep candidate flags review-only; include complete assistant examples in each length band (<=4K,
+4–16K, 16–32K and 32–128K); keep training stock, supervised tokens and exposure as separate counts;
+and choose recipes from matched fresh initializations before main pretraining.
 
 Plan broad pretraining, then separately budgeted capability/context/agentic mid-training toward
 16K/32K, using short replay, followed by an SFT recipe spanning
@@ -419,10 +366,10 @@ verifies 714,369 files / 476,774,847 tokens before joint eligibility across 11 l
 the 35B natural-code preparation target, which makes natural code the bank where the whole horizon
 binds. That stock supports at most **1.36B total one-pass tokens at 35% natural code**, before
 exclusions, validation and other bank constraints. The
-[corpus-audit record](../experiments/corpus-audit/README.md) owns the per-batch narrative — the
-stratified 138-file yield preflight, the Stack v3 cohort, the completed 176-file reading pass, the
-45 cohort holds and the origin/notice recovery — and its receipts hold the evidence. Repetition is
-not an approved way to fill the gap.
+[corpus-audit record](../experiments/corpus-audit/README.md) owns the per-batch narrative of the
+yield preflight, the Stack v3 cohort and the reading pass; the
+[qualification packet](../experiments/main-data/QUALIFICATION.md) owns the current cohort holds and
+origin/notice recovery. Repetition is not an approved way to fill the gap.
 
 **First comparison to prepare.** The
 [research design](../experiments/main-data/README.md#research-before-the-main-run) owns the

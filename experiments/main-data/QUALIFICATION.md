@@ -1,6 +1,6 @@
 # Main-data qualification packet
 
-2026-09-20. CPU preparation only. The model, working mixture, pilot and evaluation remain unchanged.
+2026-09-23. CPU preparation only. The model, working mixture, pilot and evaluation remain unchanged.
 [qualification-rules.json](qualification-rules.json) owns version-one eligibility rules;
 [qualification-inputs.json](qualification-inputs.json) pins the bounded exclusion inputs and source
 snapshot. Candidate partitions and a clean content screen never authorize training.
@@ -143,9 +143,11 @@ a fresh blind evaluation set.
 
 ## Next bounded data packet
 
-The fixed-cohort reading pass is complete. Reuse its retained evidence for source-use and inventory
-qualification; do not open another reading sample without a concrete unresolved coverage question.
-The closeout reconciles the original observed tokens without treating held/read counts as disjoint:
+The fixed-cohort reading pass is complete. Reuse its retained evidence for origin/notice recovery,
+the conditions of the signed source-use decision, and inventory qualification; do not open another
+reading sample without a concrete unresolved coverage question. At the reading closeout, before the
+joint firewall hold, the counts reconcile the original observed tokens without treating held/read
+counts as disjoint:
 
 | Cohort | Original files / tokens | Unheld, read files / tokens | Held, previously read files / tokens | Held, unread files / tokens |
 | --- | --- | --- | --- | --- |
@@ -157,7 +159,7 @@ estimates or comparable quality rates. The next deliverable uses the existing in
 
 | Qualification gate | Evidence needed before a decision |
 | --- | --- |
-| Identity and source use | Resolve host/upstream revisions, consumed transformations and applicable notices; retain explicit unresolved outcomes |
+| Identity, origins and notices | Resolve host/upstream revisions, consumed transformations and the applicable notices the signed source-use decision requires; retain explicit unresolved outcomes |
 | Families and exclusions | Extend known links to copied/transformed families and near-duplicates; freeze graph and scoring coverage before partitioning |
 | Intended use | Record document role and contextual limitations; require independent oracles only for claimed verified exercises |
 | Finite supply | Count deduplicated eligible tokens, exclusions and acquisition costs separately per bank; use supply and runtime to bound the shared study horizon |
@@ -186,8 +188,9 @@ The recovered Eclipse NOTICE explains its code/non-code labels; dependency appli
 Resolve the Java restrictive wording and Ororus template attribution alongside host/upstream context;
 file headers and dataset license metadata do not independently authorize source use. Review embedded application data in
 dumps separately from schema quality; a test path or snapshot is not an independent result oracle.
-Use the updated 44-record family holds, including GoLLIE, vendored Pylint and the metadata-identified
-LeetCode collection and Borealis `svcomp` record. The metadata-only holds are conservative, not proven
+Use the current 45 family holds, including GoLLIE, vendored Pylint, the metadata-identified
+LeetCode collection, the Borealis `svcomp` record and the exact firewall match
+`strategist922/bigpipe` `SPEC/Acl.md`. The metadata-only holds are conservative, not proven
 matches to the intended scoring suite; do not inspect their task text to tune exclusions. Extend the
 partial graph beyond known repository/alias/dependency links; no exact consumed-byte duplicates in
 the 218 records does not settle near-duplicates or transformed copies. Arcade 2.5.7 and stringutils 0.3.0 installed identities
@@ -210,19 +213,23 @@ Report each cohort against its own sampling frame and weights. The retained Stac
 Stack v3 samples do not support raw pass-percentage comparisons or pooled eligible yield.
 Use completed gates to prepare finite candidate inventories for the
 [proposed study](README.md#research-before-the-main-run); the completed reading pass cannot select a
-corpus winner or supply the full confirmation horizon. Remaining source comparisons are:
+corpus winner or supply the full confirmation horizon. Remaining comparisons among the
+[selected sources](source-registry.json) are:
 
 | Lane | Candidates | Required comparison |
 | --- | --- | --- |
-| Natural web | Ultra-FineWeb English/HQ; FineWeb-Edu control; DCLM baseline/Edu | Separate selection thresholds, source provenance, boilerplate, topic/language diversity, duplication and retained tokens |
-| Math | FineMath 4+; UltraData-Math L2; filtered InfiWebMath 4+; then Nemotron-CC-Math 4plus | Intact questions/solutions, conservative arithmetic triage, checkable correctness, topic/difficulty coverage and shared source families |
-| Natural code | Retained Stack-Edu; Stack v3; source-resolved UltraData-Code L2 | Multilingual practical roles, source/test/docs linkage, immutable origins, dependency cost and eligible token yield |
-| Generated material | Web/math L3 and checked code derivatives | Source grounding, independent answer/test verification, teacher lineage and rejection rates; held separately from natural stock |
+| Natural web | Ultra-FineWeb HQ; FineWeb-Edu control | Source provenance, boilerplate, topic/language diversity, duplication and retained tokens at the unchanged cutoff |
+| Math | FineMath 4+; filtered InfiWebMath 4+ | Intact questions/solutions, conservative arithmetic triage, checkable correctness, topic/difficulty coverage and shared source families |
+| Natural code | Retained Stack-Edu; Stack v3 | Multilingual practical roles, source/test/docs linkage, immutable origins, dependency cost and eligible token yield |
+
+Not selected on 2026-09-22: DCLM baseline/Edu, UltraData-Math L2, Nemotron-CC-Math 4plus,
+source-resolved UltraData-Code L2, and generated web/math L3 or checked-code derivatives. Each
+enters only through a recorded replacement and a revised freeze.
 
 The [pinned UltraFineWeb variant inspection](../corpus-audit/web-variants.json) distinguishes
 `data/ultrafineweb_en` (the default English split, described as FineWeb-derived) from
 `data/ultrafineweb_l1_en_hq` (the publisher's newer L1-derived selected route, claiming crawl coverage
-through CC-MAIN-2025-51). Inspect both against FineWeb-Edu before choosing a bank. The separate
+through CC-MAIN-2025-51). The registry selects the HQ route. The separate
 `ultrafineweb_en_v1_4` directory remains unqualified; its name alone does not establish selection
 semantics or superiority. That initial inspection acquired only metadata/card bytes.
 
@@ -242,8 +249,8 @@ source-aware repair, source eligibility and usable-token counts remain open. The
 above closes inventory accounting; immutable linkage and expanded supply remain the next code work.
 The inventory follow-up also distinguishes DCLM-Edu's `edu_int_score >= 3` from
 `edu_score >= 3`; the two predicates retain different preview records. DCLM viewer indexes
-are partial, so their samples establish schema/content questions only. Score/domain-stratified
-comparison, source-use review and joint deduplication remain open. No corpus-wide quality
+are partial, so their samples establish schema/content questions only. DCLM is outside the
+selected source set. No corpus-wide quality
 ranking follows from these sampling frames.
 
 ### Retained inventory closeout — 2026-09-19
@@ -270,7 +277,7 @@ checked-code and refined-math inventories were resolved by decision rather than 
 both banks were re-frozen out of the mixture on 2026-09-22 and their shares merged into the
 natural bank of the same domain. Obtain qualified supply or explicitly revise the bounded
 research recipe/horizon. Never silently replace refined shares, repeat scarce sources or treat the
-40/90-hour arm caps as guaranteed token supply. Compute reservations and main working weights are unchanged.
+30/40/60-hour arm caps as guaranteed token supply. Compute reservations and main working weights are unchanged.
 
 The pinned downstream inventories reconcile against their release metadata. The Nemotron 4plus
 listing has 46 files / 62.19 GB but unusable masked LFS hashes; no shard was acquired or verified.
@@ -291,11 +298,8 @@ serialization. Overlapping parent/filtered releases count once. The working six-
 [plan.json](plan.json) remain hypotheses; the chat suggestion of an 80/20 staged mixture has not
 become a launch recipe. No 100B qualified supply or GH200 compute-feasibility claim follows from this packet.
 
-The retained-data table and acquisition routes are now recorded. Source use was decided on
-2026-09-22 and is closed on six of the nine selected sources, conditionally recorded on three;
-family and correctness decisions still gate accepted/rejected inventory and usable yield. Then freeze the eligible banks and
-a bounded baseline/candidate comparison from matched fresh initializations. Run it before main pretraining and record the
-starting-recipe decision before freezing the production manifest. Neither source inspection nor
-a later continuation comparison substitutes for this gate.
+Source use was decided on 2026-09-22: closed on six of the nine selected sources and conditionally
+recorded on three. Family and correctness decisions still gate accepted/rejected inventory and usable
+yield; the work order is in [PLAN.md](../../PLAN.md#immediate-order-of-work).
 Post-training still needs reasoning/tool verification and complete long examples; its 1.5M working
 target is not supplied by these pretraining checks.
