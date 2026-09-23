@@ -44,7 +44,7 @@ belong to later releases with separately funded experiments.
 | Stage 2 — Endpoint decay | Late-stage capability enrichment under a declared decay schedule, with natural, curated and derived arms separately identified by lineage | 250 production hours plus a 180-hour three-arm, two-seed research study; needs a matched stable parent and a per-arm decay manifest |
 | Stage 3 — Mid-training (capability, context, agentic) | Repository, repair, tool-use and long-horizon continuation with replay, grounded workflows and executable traces; learn coherent repositories, tool state and recovery while retaining short tasks | 600 production hours for the whole 4K/16K/32K sequence; 32K is the first release target; best-fit masked rows and changed-data branches are implemented and smoke-tested, 16K/32K runtime remains to qualify |
 | Stage 4 — Post-training SFT | Verified reasoning and complete tool trajectories with assistant-only supervision | 450 production hours; working 1.5M unique conversations; small 4K rehearsal complete, production data unqualified |
-| Stage 5 — Post-training RL | Improve outcomes with verified rewards on checkable math and sandboxed code | 200 conditional production hours plus 40 research hours. **No RL trainer exists in this repository.** Trainer, rollout engine, verifiers and recovery are all unbuilt and gate both this stage and stage 6 |
+| Stage 5 — Post-training RL | Improve outcomes with verified rewards on checkable math and sandboxed code | 200 conditional production hours plus 40 research hours. A minimal single-process GRPO trainer with checked-math and sandboxed-code verifiers exists and is smoke-tested; distributed rollout, recovery and measured benefit remain to qualify, and gate stage 6 |
 | Stage 6 — Final self-distillation | Rejection-sample the promoted RL parent, verify and deduplicate, mix with verified anchor data, then run assistant-masked self-SFT | 100 production hours plus a 30-hour pilot; preserve the pre-self-SFT parent and promote only on held-out transfer |
 
 Record each stage's parent, data families, unique supply, actual exposure/replay, objective, schedule
@@ -306,7 +306,8 @@ are frozen after measured cost and the pilot decision. Generation and verificati
 
 ### Conditional RL
 
-RL is planned, not implemented/qualified as a production pipeline here. The fixed-policy feasibility
+A minimal GRPO-style trainer is [implemented](training.md#reward-training) but not qualified as a
+production pipeline. The fixed-policy feasibility
 harnesses in [`speck/evaluation/rl_feasibility.py`](../speck/evaluation/rl_feasibility.py) and
 [`speck/evaluation/rl_code.py`](../speck/evaluation/rl_code.py) now provide deterministic tool
 episodes, test-backed code-task receipts, reset/replay accounting, transcript/task-suite fingerprints

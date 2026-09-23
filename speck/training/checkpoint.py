@@ -312,3 +312,9 @@ def load_timing(directory, step):
     if not path.is_file():
         return None
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def is_assistant_checkpoint(metadata):
+    """SFT and RL checkpoints use the chat tokenizer recorded in their metadata."""
+
+    return metadata.get("training_phase") in ("sft", "rl")

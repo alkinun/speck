@@ -23,7 +23,12 @@ from speck.operations.runtime import base_dir
 from speck.provenance.io import atomic_json
 from speck.tokenization.chat import ChatTokenizer
 from speck.tokenization.tokenizer import Tokenizer
-from speck.training.checkpoint import checkpoint_identity, latest, load_model
+from speck.training.checkpoint import (
+    checkpoint_identity,
+    is_assistant_checkpoint,
+    latest,
+    load_model,
+)
 
 CODE_REPO = "specklabs/Speck1-140M-Instruct"
 CODE_REVISION = "16ad80599d499490b70317770a84a18466719bba"
@@ -205,8 +210,12 @@ def load_metadata(checkpoint_dir, step):
     if not complete.is_file() or not path.is_file():
         raise FileNotFoundError(f"checkpoint {step} is incomplete")
     metadata = json.loads(path.read_text(encoding="utf-8"))
-    if metadata.get("training_phase") != "sft" or metadata.get("step") != step:
-        raise ValueError("checkpoint is not a matching SFT checkpoint")
+    if not is_assistant_checkpoint(metadata) or metadata.get("step") != step:
+        raise ValueError("checkpoint is not a matching assistant checkpoint")
+    if metadata["training_phase"] == "rl":
+        if metadata.get("settings", {}).get("steps") != step:
+            raise ValueError("checkpoint has not completed its configured RL steps")
+        return metadata
     resolved = metadata.get("resolved", {})
     epochs = resolved.get("epochs")
     if metadata.get("data_state", {}).get("epoch") != epochs or resolved.get("steps") != step:
@@ -573,7 +582,7 @@ def validate_tokenizer_parity(output_dir, metadata, *, base_fingerprint=None):
     output_dir = Path(output_dir)
     base = Tokenizer(output_dir / "tokenizer.model")
     chat_metadata = metadata.get("resolved", {}).get("tokenizer", {})
-    is_chat = metadata.get("training_phase") == "sft"
+    is_chat = is_assistant_checkpoint(metadata)
     expected = chat_metadata["base_fingerprint"] if is_chat else base_fingerprint
     if expected is None or base.fingerprint() != expected:
         raise ValueError("export tokenizer differs from the checkpoint")

@@ -141,8 +141,18 @@ per real trajectory source.
 Before executing any mid-training stage, freeze parent identity, objective, data, schedule, optimizer
 policy and cost, and qualify resume. Capability, repository and agentic continuation use the combined
 600-hour mid-training production reservation; 16K/32K context changes are part of that reservation.
-No production RL trainer exists yet; its data, rollout and verifier requirements are in [the
-program](program.md#conditional-rl).
+## Reward training
+
+`python -m scripts.rl_train EXPERIMENT` trains stage 5 from a hash-pinned SFT or RL checkpoint named
+in `rl.json`. For each prompt it samples a group of completions from the current policy over the
+full vocabulary, scores them with the checked-math or sandboxed stdin/stdout verifier in
+`speck/evaluation/verifiers.py`, normalizes rewards within the group, and takes one on-policy
+step on completion tokens. Groups whose rewards are all equal carry no signal and are counted;
+unverifiable domains and over-long prompts are counted and skipped. Sampling is seeded per step,
+so resume is exact. The trainer is single-process, with no KL penalty, reference model or
+clipping; distributed rollout, long-context RL and measured benefit remain to qualify. The smoke
+run checks the plumbing only: its tiny model earns no reward. Data and verifier requirements are in
+[the program](program.md#conditional-rl).
 
 ## Assistant training and generation
 
