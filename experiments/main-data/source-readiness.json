@@ -33,7 +33,7 @@
       "path": "experiments/main-data/data-design-contract.json"
     },
     "code_origin_recovery": {
-      "path": "experiments/corpus-audit/code-origin-recovery-20260922.json"
+      "path": "experiments/corpus-audit/code-origin-recovery-20260923.json"
     },
     "family_partition": {
       "path": "experiments/main-data/family-partition.json"
@@ -291,7 +291,7 @@
         "family and benchmark partition",
         "independent correctness checks",
         "eligible supply and cost",
-        "44 unheld quota-blocked origin outcomes and one earlier unresolved outcome",
+        "three unresolved origin outcomes: one earlier failure, one deleted repository, one path with no commit history",
         "retained stock is not representative of the full upstream release"
       ],
       "qualification_evidence": {
@@ -310,16 +310,17 @@
           "original_tokens": 459615,
           "family_held_files": 35,
           "family_held_tokens": 172401,
-          "host_verified_unheld_files": 58,
-          "host_verified_unheld_tokens": 136124,
-          "attempted_unresolved_files": 45,
-          "attempted_unresolved_tokens": 151090
+          "host_verified_unheld_files": 100,
+          "host_verified_unheld_tokens": 279641,
+          "attempted_unresolved_files": 3,
+          "attempted_unresolved_tokens": 7573
         },
         "origin_recovery": {
           "unheld_records": 103,
-          "host_verified": 58,
-          "quota_blocked": 44,
-          "earlier_unresolved": 1
+          "host_verified": 100,
+          "quota_blocked": 0,
+          "earlier_unresolved": 1,
+          "source_unresolved": 2
         },
         "decision": "retain_as_natural_code_candidate_only; no yield estimate or study route selected",
         "training_admitted": false

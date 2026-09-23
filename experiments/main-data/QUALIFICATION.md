@@ -16,7 +16,7 @@ history and each receipt owns its detail. None of this establishes eligible yiel
 | [Stratified preflight](../corpus-audit/code-yield-result.json) and [Stack v3 broader preflight](../corpus-audit/stack-v3-broader.json) | Fixed review cohorts of 138 retained Stack-Edu and 80 Stack v3 files (218 records), replayed exactly offline |
 | [Reading closeout](../corpus-audit/stylesheet-cohort-review.json) | 176 files / 412,974 tokens read; all 173 currently unheld records are read |
 | [Joint partitions](family-partition.json) | 45 cohort family holds after the exact firewall match `strategist922/bigpipe` `SPEC/Acl.md`; candidate 90/5/5 family buckets |
-| [Origin recovery](../corpus-audit/code-origin-recovery-20260922.json) | Verified host origins for 58/103 unheld Stack-Edu and 68/70 unheld Stack v3 records; 44 Stack-Edu lookups quota-blocked, one earlier failure, two Stack v3 404s |
+| [Origin recovery](../corpus-audit/code-origin-recovery-20260923.json) | Verified host origins for 100/103 unheld Stack-Edu and 68/70 unheld Stack v3 records; none quota-blocked. Unresolved: one earlier Stack-Edu failure, one deleted repository, one path with no commit history, two Stack v3 404s |
 | [Practical-code checks](../corpus-audit/practical-code-checks.json) | Python and JS/TS feasibility method and a 13,236-file multilingual coverage sample; not a corpus-wide correctness rate |
 | [Bounded screen](qualification-result.json) | 37 files against 22 lanes / 18,958 rows: seven content flags, 22 files quarantined by family, 15 with candidate partitions only |
 
@@ -102,8 +102,8 @@ pooled yield or raw pass-rate comparisons. Each gate needs its own evidence:
 
 Open code items:
 
-- Resume the 44 quota-blocked Stack-Edu lookups only after quota recovery; keep the earlier failure
-  and the two Stack v3 404s outside training absent new evidence, without substituting revisions.
+- Keep the three unresolved Stack-Edu records and the two Stack v3 404s outside training absent new
+  evidence, without substituting revisions.
 - Four path-verified Stack v3 files need bounded ancestor-notice searches. Host verification does
   not resolve copied or vendored provenance.
 - Resolve the Eclipse dependency applicability, the Java restrictive wording and the Ororus

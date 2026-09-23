@@ -448,6 +448,14 @@ reconciling original counts/tokens. It adds no semantic readings, holds, eligibl
 The [retained-origin recovery](retained-code-origins.json) attempts all 85 previously unattempted
 unheld Stack-Edu records through bounded path histories. Ten C++ origins and ten ancestor notices
 are verified; 74 history requests and one tree check are blocked by GitHub quota exhaustion.
-Current linked origin coverage is 28/104 unheld Stack-Edu and 68/70 unheld Stack v3. The successful
+Linked origin coverage was then 28/104 unheld Stack-Edu and 68/70 unheld Stack v3. The successful
 prefix is quota/order-dependent, not a source-quality estimate. All 218 assessments remain unchanged.
-Resume blocked requests only after access changes; independent web/math qualification can proceed.
+
+The [2026-09-22 quota retry](code-origin-recovery-20260922.json) re-ran the 75 blocked records with
+one worker and verified 30 more origins before quota ran out again, leaving 45 blocked; the joint
+partition then held one of them by an exact firewall match. The
+[2026-09-23 authenticated retry](code-origin-recovery-20260923.json) ran the remaining 44 with
+authenticated API requests: 42 origins and 37 distinct ancestor notices are verified. One repository
+returns 404 and one path has no commit history, so they stay unresolved with the earlier failure.
+Nothing remains quota-blocked; the [qualification packet](../main-data/QUALIFICATION.md) holds the
+current coverage.

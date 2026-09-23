@@ -1,0 +1,98 @@
+{
+  "format": "speck_retained_code_origin_recovery",
+  "format_version": 1,
+  "date": "2026-09-23",
+  "status": "authenticated_retry_complete_no_quota_blocked_records",
+  "prior_receipt": {
+    "path": "experiments/corpus-audit/code-origin-recovery-20260922.json"
+  },
+  "selection": {
+    "path": "/mnt/speck-data/speck/code-origin-recovery-20260923/selection.json",
+    "sha256": "d2f4e5ad0170465bd75bc3a759379c7ff56dc9bfc20acde10191c06e42e262b6"
+  },
+  "inputs": {
+    "path": "/mnt/speck-data/speck/code-origin-recovery-20260923/retry-inputs.json",
+    "sha256": "accbdba38994219914ec0c19c22a4ebc0d9c042c1c6cdeef7d58821cc06c3236"
+  },
+  "implementation_and_validation_scripts": [
+    {
+      "path": "/mnt/speck-data/speck/code-origin-recovery-20260923/prepare.py",
+      "sha256": "4b0cd7fa869b24f0e1ba3e327f54162d2687684627064f6a98d04fd4eed09496"
+    },
+    {
+      "path": "/mnt/speck-data/speck/code-origin-recovery-20260923/acquire.py",
+      "sha256": "62dadcfd35b6b0ee9d41a262ffee574f847f98147aad2ca0803f45f49d4ecbde"
+    },
+    {
+      "path": "/mnt/speck-data/speck/code-origin-recovery-20260923/validate.py",
+      "sha256": "c302b0cce82cf6706d43fea71c9b665022243627f60d82d92416bb261ae9c047"
+    }
+  ],
+  "validation": {
+    "path": "/mnt/speck-data/speck/code-origin-recovery-20260923/validation.json",
+    "sha256": "0bcb4400b213cfb36300eec49d09274e10a7fc713e87095d8b11235b10292971"
+  },
+  "replay": {
+    "path": "/mnt/speck-data/speck/code-origin-recovery-20260923/replay.json",
+    "sha256": "2700587610bbfc7b0f4617dd96730d08736c41fe189f323813604cd3cb20f0e6"
+  },
+  "evidence": {
+    "path": "/mnt/speck-data/speck/code-origin-recovery-20260923/artifact-manifest.json",
+    "sha256": "ec1b663dd9b5fbb58d85feba972392be551d54ba500a2354fed75bec61a1e004"
+  },
+  "result": {
+    "automatic_retries": 0,
+    "code_holds_preserved": 45,
+    "complete_repository_trees": 40,
+    "corpus_execution": false,
+    "coverage": {
+      "stack_edu": {
+        "attempted_unresolved": {
+          "files": 3,
+          "observed_tokens": 7573
+        },
+        "family_held": {
+          "files": 35,
+          "observed_tokens": 172401
+        },
+        "host_verified": {
+          "files": 100,
+          "observed_tokens": 279641
+        }
+      },
+      "stack_v3": {
+        "attempted_unresolved": {
+          "files": 2,
+          "observed_tokens": 1162
+        },
+        "family_held": {
+          "files": 10,
+          "observed_tokens": 10652
+        },
+        "host_verified": {
+          "files": 68,
+          "observed_tokens": 121397
+        }
+      }
+    },
+    "distinct_verified_ancestor_notices": 37,
+    "files_verified_via_contents_metadata": 2,
+    "files_with_verified_ancestor_notices": 33,
+    "fresh_api_requests": 88,
+    "fresh_http_requests": 178,
+    "gpu_hours": 0,
+    "history_statuses": {
+      "200": 43,
+      "404": 1
+    },
+    "new_git_verified_host_origins": 42,
+    "remaining_quota_blocked_records": 0,
+    "selected_records": 44,
+    "source_unresolved_records": 2,
+    "status": "exact_source_and_git_blob_verified_for_recovered_records",
+    "training_admitted": false
+  },
+  "boundary": "Exact host origins recovered with authenticated GitHub API requests; the token was read from the environment and is recorded nowhere. Notice applicability, copied-source lineage, full family coverage and eligibility remain unresolved. All 45 cohort holds remain; the firewall-held record was not retried. Two recovered files use pinned contents metadata because the recursive tree exceeded the response cap, leaving their notice searches incomplete. No source text was executed.",
+  "remaining": "Three unheld Stack-Edu records stay unresolved and excluded: the earlier failed attempt, litong01/hfrd (repository returns 404) and gaia3d/mago3d (path has no commit history). The two pinned Stack v3 404s remain separate.",
+  "training_admitted": false
+}
