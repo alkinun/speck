@@ -70,10 +70,15 @@ def test_post_training_subdivision_drift_is_rejected(tmp_path, plan):
         validate_plan(tmp_path, plan)
 
 
-def test_a_slash_compound_is_checked_as_one_claim(tmp_path, plan):
+def test_a_slash_compound_is_checked_as_one_claim(tmp_path, plan, monkeypatch):
     """ "700/360/170-hour" is a single claim about three reservations, not three loose numbers."""
     splits = checker._splits(plan)
     assert "data research split" in [description for description, _, _ in splits]
+    _isolated_tree(
+        tmp_path / "docs",
+        monkeypatch,
+        {"a.md": "# A\n\nData research divides into 700/360/170 hours across stages.\n"},
+    )
     plan["compute"]["data_experiments_breakdown_gpu_hours"]["pretraining"] += 10
     with pytest.raises(ValueError, match="data research split"):
         validate_plan(tmp_path, plan)
@@ -115,7 +120,7 @@ def test_a_research_envelope_table_row_is_adjudicated(tmp_path, plan):
         validate_plan(tmp_path, plan)
 
 
-def test_a_one_pass_bound_must_match_the_derived_supply_gap(tmp_path, plan, monkeypatch):
+def test_a_one_pass_bound_must_match_the_derived_supply_gap(tmp_path, monkeypatch):
     """One-pass bounds are derived, so a typed copy must never outlive its source."""
     supply = json.loads((ROOT / "experiments/main-data/supply-gap.json").read_text())
     for bank in supply["banks"]:
@@ -124,6 +129,11 @@ def test_a_one_pass_bound_must_match_the_derived_supply_gap(tmp_path, plan, monk
     path = tmp_path / "supply-gap.json"
     path.write_text(json.dumps(supply))
     monkeypatch.setattr(checker, "SUPPLY_GAP", path)
+    _isolated_tree(
+        tmp_path / "docs",
+        monkeypatch,
+        {"a.md": "# A\n\nRetained code bounds the 35% natural-code share at 1.36B tokens.\n"},
+    )
     with pytest.raises(ValueError, match="one-pass bound"):
         checker.validate()
 
