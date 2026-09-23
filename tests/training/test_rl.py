@@ -109,6 +109,7 @@ def test_trainer_runs_steps_and_resumes_exactly(tmp_path, monkeypatch):
     settings = {
         "prompt_files": [str(prompts)],
         "group_size": 4,
+        "activation_checkpointing": False,
         "prompts_per_step": 2,
         "max_prompt_tokens": 32,
         "max_new_tokens": 8,

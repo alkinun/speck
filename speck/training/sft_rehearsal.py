@@ -19,7 +19,20 @@ from speck.training.sft_audit import iter_local_rows
 from speck.training.sft_data import prepare_sft_dataset
 
 
-def prepare(paths, output, tokenizer, prepared, *, train_per_kind=32, val_per_kind=8, pool=256):
+def prepare(
+    paths,
+    output,
+    tokenizer,
+    prepared,
+    *,
+    train_per_kind=32,
+    val_per_kind=8,
+    pool=256,
+    kinds=("text", "tools"),
+    subsets=None,
+    name="gh200-assistant-rehearsal",
+):
+    """Select complete conversations; `subsets` restricts rows to `source:subset` labels."""
     if min(train_per_kind, val_per_kind) < 1 or pool < max(train_per_kind, val_per_kind):
         raise ValueError(
             "positive sample counts and a sufficiently large candidate pool are required"
@@ -33,6 +46,8 @@ def prepare(paths, output, tokenizer, prepared, *, train_per_kind=32, val_per_ki
         inputs.append({"path": str(path), "bytes": before.st_size, "sha256": file_sha256(path)})
         for raw in iter_local_rows(path):
             row = decode_chat_record(raw)
+            if subsets and f"{row.get('source')}:{row.get('subset')}" not in subsets:
+                continue
             kind = (
                 "tools"
                 if row["tools"] or any(m.get("tool_calls") for m in row["messages"])
@@ -66,7 +81,7 @@ def prepare(paths, output, tokenizer, prepared, *, train_per_kind=32, val_per_ki
         print(f"Censused {serial:,} rows: {path.name}", flush=True)
     exclusion = BenchmarkExclusion(prepared)
     selected, identities, rejected, seen = {"train": [], "val": []}, [], Counter(), set()
-    for kind in ("text", "tools"):
+    for kind in kinds:
         for split, count in (("train", train_per_kind), ("val", val_per_kind)):
             accepted = 0
             for _, _, identity, row in sorted(candidates.get((kind, split), []), reverse=True):
@@ -133,7 +148,7 @@ def prepare(paths, output, tokenizer, prepared, *, train_per_kind=32, val_per_ki
         files.append({"filename": path.name, "split": split, "sha256": file_sha256(path)})
     dataset = {
         "format": "messages_v1",
-        "name": "gh200-assistant-rehearsal",
+        "name": name,
         "files": files,
         "expected_samples": sum(map(len, selected.values())),
         "validation_samples": len(selected["val"]),
@@ -149,6 +164,7 @@ def prepare(paths, output, tokenizer, prepared, *, train_per_kind=32, val_per_ki
         "inputs": inputs,
         "census": dict(census),
         "candidate_pool_per_kind_split": pool,
+        "subsets": sorted(subsets) if subsets else None,
         "rejections": dict(rejected),
         "selected": identities,
         "dataset": dataset,
@@ -167,6 +183,11 @@ def main(argv=None):
     parser.add_argument("--tokenizer", required=True)
     parser.add_argument("--prepared-evaluation", required=True)
     parser.add_argument("--pool", type=int, default=256)
+    parser.add_argument("--train-per-kind", type=int, default=32)
+    parser.add_argument("--val-per-kind", type=int, default=8)
+    parser.add_argument("--kind", action="append", choices=("text", "tools"))
+    parser.add_argument("--subset", action="append", help="source:subset label to keep")
+    parser.add_argument("--name", default="gh200-assistant-rehearsal")
     args = parser.parse_args(argv)
     prepare(
         args.inputs,
@@ -174,6 +195,11 @@ def main(argv=None):
         ChatTokenizer(Tokenizer(args.tokenizer)),
         json.loads(Path(args.prepared_evaluation).read_text()),
         pool=args.pool,
+        train_per_kind=args.train_per_kind,
+        val_per_kind=args.val_per_kind,
+        kinds=tuple(args.kind or ("text", "tools")),
+        subsets=set(args.subset or ()),
+        name=args.name,
     )
 
 

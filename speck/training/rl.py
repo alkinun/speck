@@ -40,6 +40,7 @@ SETTINGS = {
     "weight_decay",
     "grad_clip",
     "optimizer",
+    "activation_checkpointing",
     "save_every",
     "seed",
     "parent",
@@ -62,6 +63,8 @@ def validate_settings(settings):
         raise ValueError("group-relative advantages need at least two completions per prompt")
     if not isinstance(settings["temperature"], (int, float)) or settings["temperature"] <= 0:
         raise ValueError("temperature must be positive")
+    if type(settings["activation_checkpointing"]) is not bool:
+        raise ValueError("activation_checkpointing must be boolean")
     if set(settings["parent"]) != {"checkpoint_dir", "step", "model_sha256", "metadata_sha256"}:
         raise ValueError("parent must name a native checkpoint and its sha256 digests")
     return settings
@@ -147,6 +150,7 @@ class RLTrainer:
         )
         self.output = Path(self.settings["output_dir"])
         self.model = load_parent(self.settings["parent"], self.tokenizer).to(self.device)
+        self.model.set_gradient_checkpointing(self.settings["activation_checkpointing"])
         self.optimizer = self.model.optimizer(
             self.settings["lr"], self.settings["weight_decay"], self.settings["optimizer"]
         )
@@ -193,11 +197,14 @@ class RLTrainer:
         loss_sum = torch.zeros((), device=self.device)
         for prompt, completions, rewards in groups:
             advantages = group_advantages(rewards)
-            if not advantages.any():
-                continue
-            loss, _ = policy_loss(self.model, prompt["tokens"], completions, advantages)
-            (loss / tokens).backward()
-            loss_sum += loss.detach()
+            # One completion per backward bounds activation memory by the longest sequence,
+            # not the group; the summed gradient is the same.
+            for completion, advantage in zip(completions, advantages):
+                if not advantage:
+                    continue
+                loss, _ = policy_loss(self.model, prompt["tokens"], [completion], advantage[None])
+                (loss / tokens).backward()
+                loss_sum += loss.detach()
         assert_finite(loss_sum, "non-finite RL loss")
         scale = lr_scale(
             step, settings["steps"], settings["warmup_steps"], settings["min_lr"], "cosine"
