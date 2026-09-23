@@ -203,9 +203,9 @@ def execute_case(request, directory, device, rank=0, world_size=1, restart_from=
                 )
                 for i in range(settings["accumulation"])
             ]
-            # The shared step fetches lookahead after each microbatch. Its final sentinel is never trained.
+            # The shared step reads every microbatch, then one lookahead sentinel that is never trained.
             iterator = iter([(x, y, None) for x, y, _ in batches[1:]] + [(None, None, None)])
-            loss, norm, _ = optimization_step(
+            loss, norm, _, _ = optimization_step(
                 train_model,
                 parameters,
                 optimizer,

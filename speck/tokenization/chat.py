@@ -328,3 +328,13 @@ def get_chat_tokenizer(chat_format_version=2, **config):
     from speck.tokenization.tokenizer import get_tokenizer
 
     return ChatTokenizer(get_tokenizer(**config), format_version=chat_format_version)
+
+
+def get_experiment_tokenizer(config):
+    """Return the base tokenizer, or the chat tokenizer when the experiment declares one."""
+
+    if "chat_format_version" in config:
+        return get_chat_tokenizer(**config)
+    from speck.tokenization.tokenizer import get_tokenizer
+
+    return get_tokenizer(**config)

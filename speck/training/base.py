@@ -37,7 +37,7 @@ from speck.operations.runtime import (
     verify_distributed_identity,
 )
 from speck.provenance.repository import repository_root as find_repository_root
-from speck.tokenization.tokenizer import get_tokenizer
+from speck.tokenization.chat import get_experiment_tokenizer
 from speck.training.checkpoint import (
     checkpoint_identity,
     latest,
@@ -252,8 +252,8 @@ def validate(model, loader, steps, world_size, source_ids):
     for _ in range(steps):
         inputs, targets, state = next(loader)
         index = source_indices[state["selected_source"]]
-        losses[index] += model(inputs, targets)
-        counts[index] += 1
+        losses[index] += model(inputs, targets, loss_reduction="sum")
+        counts[index] += (targets != -100).sum()
     if world_size > 1:
         dist.all_reduce(losses)
         dist.all_reduce(counts)
@@ -420,7 +420,7 @@ class BaseTrainer:
             self.branch_schedule = self.cli.branch_schedule
 
     def _load_and_verify_data(self):
-        self.tokenizer = get_tokenizer(**self.configs["tokenizer"])
+        self.tokenizer = get_experiment_tokenizer(self.configs["tokenizer"])
         self.manifest = load_manifest(self.args.data_dir)
         self.manifest_hash = manifest_fingerprint(self.manifest)
         self.source_ids = tuple(source["id"] for source in self.manifest["sources"])
@@ -957,7 +957,7 @@ class BaseTrainer:
                 args.lr_schedule,
                 args.decay_fraction,
             )
-            loss, grad_norm, batch = optimization_step(
+            loss, grad_norm, batch, _ = optimization_step(
                 self.train_model,
                 self.parameters,
                 self.optimizer,
@@ -987,8 +987,6 @@ class BaseTrainer:
                 if session_completed > 10:
                     self.elapsed_training += window_duration
                 duration = window_duration / timing_steps
-            if self.distributed and should_log:
-                dist.all_reduce(loss, op=dist.ReduceOp.AVG)
             if should_log:
                 self._log_step(completed, loss, grad_norm, duration)
             if self._after_optimizer_step(

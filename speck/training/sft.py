@@ -40,12 +40,11 @@ from speck.training.sft_data import (
     load_sft_manifest,
     resolve_sft_data_dir,
     sft_loader,
-    sft_optimization_step,
     sft_plan,
     validate_sft,
     verify_sft_dataset,
 )
-from speck.training.step import lr_scale
+from speck.training.step import lr_scale, optimization_step
 
 
 def arguments():
@@ -506,7 +505,7 @@ class SFTTrainer:
                 args.save_every > 0 and completed % args.save_every == 0
             ) or completed == self.steps
             scale = lr_scale(step, self.steps, args.warmup_steps, args.min_lr)
-            loss, grad_norm, batch, supervised = sft_optimization_step(
+            loss, grad_norm, batch, supervised = optimization_step(
                 self.train_model,
                 self.parameters,
                 self.optimizer,

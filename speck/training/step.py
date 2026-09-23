@@ -194,27 +194,50 @@ def optimization_step(
     cudagraphs=False,
     step_probe=None,
 ):
+    """Optimize one batch normalized by its global count of supervised targets.
+
+    Targets of -100 are unsupervised. For an unmasked stream every microbatch supervises the
+    same number of tokens, so this equals the mean of microbatch means; for masked records it
+    weights every supervised token equally across microbatches and ranks.
+    """
+
+    batches = [batch]
+    for _ in range(accumulation - 1):
+        batches.append(next(loader))
+    next_batch = next(loader)
+    device = batch[0].device
+    supervised = sum(
+        ((current[1] != -100).sum() for current in batches),
+        start=torch.zeros((), device=device, dtype=torch.long),
+    )
+    if distributed:
+        dist.all_reduce(supervised, op=dist.ReduceOp.SUM)
+    if device.type == "cuda":
+        torch._assert_async(supervised > 0, "optimizer batch has no supervised tokens")
+    elif not supervised.item():
+        raise ValueError("optimizer batch has no supervised tokens")
+
     optimizer.zero_grad(set_to_none=True)
-    loss_sum = torch.zeros((), device=batch[0].device)
+    loss_sum = torch.zeros((), device=device)
+    # DDP averages gradients over ranks, so scaling by the world size restores a global sum.
+    scale = (dist.get_world_size() if distributed else 1) / supervised
     if cudagraphs:
         torch.compiler.cudagraph_mark_step_begin()
-    for micro_step in range(accumulation):
+    for index, current in enumerate(batches):
         context = (
-            train_model.no_sync()
-            if distributed and micro_step + 1 < accumulation
-            else nullcontext()
+            train_model.no_sync() if distributed and index + 1 < accumulation else nullcontext()
         )
         with context:
-            loss = train_model(batch[0], batch[1])
-            (loss / accumulation).backward()
+            loss = train_model(current[0], current[1], loss_reduction="sum")
+            (loss * scale).backward()
         loss_sum += loss.detach()
-        batch = next(loader)
-
-    assert_finite(loss_sum, "non-finite training loss", distributed)
+    if distributed:
+        dist.all_reduce(loss_sum, op=dist.ReduceOp.SUM)
+    assert_finite(loss_sum, "non-finite training loss")
     set_optimizer_lr(optimizer, lr)
     grad_norm = torch.nn.utils.clip_grad_norm_(parameters, grad_clip)
     assert_finite(grad_norm, "non-finite training gradients")
     if step_probe is not None:
         step_probe()
     optimizer.step()
-    return loss_sum / accumulation, grad_norm, batch
+    return loss_sum / supervised, grad_norm, next_batch, supervised

@@ -169,7 +169,7 @@ def test_resume_compile_window_is_counted_as_startup_not_steady(monkeypatch):
 
     def optimization(*args, **kwargs):
         zero = torch.tensor(0.0)
-        return zero, zero, (object(),) * 3
+        return zero, zero, (object(),) * 3, 1
 
     clock = iter((0.0, 100.0, 100.0, 110.0, 110.0))
     monkeypatch.setattr(base_train, "optimization_step", optimization)

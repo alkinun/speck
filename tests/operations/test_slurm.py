@@ -511,7 +511,7 @@ def test_slurm_trainer_checkpoints_usr1_at_optimizer_boundary(monkeypatch):
     def optimization(*args, **kwargs):
         trainer._signal_requested = True
         zero = torch.tensor(0.0)
-        return zero, zero, (object(), object(), object())
+        return zero, zero, (object(), object(), object()), 1
 
     monkeypatch.setattr(slurm_base_train.base_train, "optimization_step", optimization)
     trainer._run_steps()

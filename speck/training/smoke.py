@@ -2,6 +2,7 @@
 
 import contextlib
 import io
+import json
 import math
 import shutil
 from pathlib import Path
@@ -177,9 +178,11 @@ def run_smoke(directory):
     )
     if not math.isfinite(evaluation["loss"]):
         raise AssertionError("smoke evaluation loss is not finite")
+    mid_training_result = run_mid_training_smoke(directory, configs, tokenizer, resumed)
     sft_result = run_sft_smoke(directory, configs, tokenizer, resumed)
     result = {
         "status": "pass",
+        "mid_training": mid_training_result,
         "sft": sft_result,
         "resume": "exact_parameter_parity",
         "steps": 4,
@@ -188,6 +191,71 @@ def run_smoke(directory):
     }
     atomic_json(directory / "summary.json", result)
     return result
+
+
+def run_mid_training_smoke(directory, configs, tokenizer, parent):
+    """Branch the base parent onto best-fit-packed chat rows with assistant-only loss masks."""
+
+    def record(index):
+        messages = [
+            {"role": "user", "content": f"{index}"},
+            {"role": "assistant", "content": f"{index * 3}"},
+        ]
+        return {"content": json.dumps({"messages": messages}), "metadata": {}}
+
+    length = configs["train"]["sequence_length"]
+    data = {
+        **configs["data"],
+        "sources": [
+            {
+                **configs["data"]["sources"][0],
+                "packing": {"row_tokens": length, "open_rows": 4},
+                "record_format": "messages",
+            }
+        ],
+        "mixture": {"phases": [{"end_tokens": 256, "weights": {"fixture": 100}}]},
+        "requested_train_tokens": 256,
+        "validation_tokens_per_source": 2 * length,
+        "output_dir": str(directory / "mid-training-data"),
+    }
+    chat = ChatTokenizer(tokenizer)
+    prepare_dataset(
+        **data,
+        tokenizer=chat,
+        check_disk=False,
+        document_iterators={"fixture": (record(index) for index in range(400))},
+    )
+    experiment = directory / "mid-training-experiment"
+    experiment.mkdir()
+    mid_configs = {
+        **configs,
+        "data": data,
+        "tokenizer": {**configs["tokenizer"], "chat_format_version": 2},
+        "train": {
+            **configs["train"],
+            "training_phase": "data_continuation",
+            "train_tokens": 128,
+            "checkpoint_tokens": [],
+        },
+    }
+    for name, value in mid_configs.items():
+        atomic_json(experiment / f"{name}.json", value)
+    common = [str(experiment), "--device", "cpu", "--no-compile", "--branch-kind", "data"]
+    branch = ["--branch-from", str(parent), "--branch-step", "2"]
+    first, second = directory / "mid-training", directory / "mid-training-repeat"
+    with (directory / "mid-training.log").open("w") as log, contextlib.redirect_stdout(log):
+        train(mid_configs, arguments(common + branch + ["--output-dir", str(first)]))
+        train(mid_configs, arguments(common + branch + ["--output-dir", str(second)]))
+    expected, actual = load_model(first, 2, "cpu"), load_model(second, 2, "cpu")
+    for name in expected:
+        torch.testing.assert_close(actual[name], expected[name], rtol=0, atol=0)
+    return {
+        "steps": 2,
+        "parent": "base_checkpoint_step_2",
+        "packing": "best_fit_rows",
+        "masks": "assistant",
+        "repeat": "exact_parameter_parity",
+    }
 
 
 def run_sft_smoke(directory, configs, tokenizer, parent):

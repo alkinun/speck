@@ -4,7 +4,6 @@ import json
 import os
 import shutil
 from collections import Counter
-from contextlib import nullcontext
 from pathlib import Path
 
 import numpy as np
@@ -17,9 +16,8 @@ from speck.data.loader import manifest_fingerprint
 from speck.operations.runtime import base_dir, dist_info
 from speck.provenance.io import atomic_json as _write_json
 from speck.provenance.io import file_sha256 as _file_hash
-from speck.tokenization.chat import ChatFormatError, decode_chat_record
-from speck.tokenization.tools import adapt_conversation
-from speck.training.step import assert_finite, set_optimizer_lr
+from speck.tokenization.chat import ChatFormatError
+from speck.tokenization.tools import encode_conversation
 
 FORMAT_VERSION = 3
 default_sft_data_dir = Path(base_dir()) / "data" / f"SpeckChat1-v{FORMAT_VERSION}"
@@ -246,16 +244,10 @@ def prepare_sft_dataset(
                     )
                     stats[split]["input_samples"] += 1
                     try:
-                        if not completion_format:
-                            row = decode_chat_record(row)
-                            if row.get("tools") or any(
-                                message.get("tool_calls") for message in row["messages"]
-                            ):
-                                row = adapt_conversation(row)
                         if completion_format:
                             tokens, mask = encode_completion(row, tokenizer)
                         else:
-                            tokens, mask = tokenizer.encode_messages(row["messages"])
+                            tokens, mask = encode_conversation(tokenizer, row)
                         if (local or config.get("long_sequences") == "reject") and len(
                             tokens
                         ) > sequence_lengths[-1] + 1:
@@ -603,57 +595,6 @@ def sft_loader(
             targets = targets.to(device)
         yield inputs, targets, state
         consumed += 1
-
-
-def sft_optimization_step(
-    train_model,
-    parameters,
-    optimizer,
-    loader,
-    batch,
-    accumulation,
-    grad_clip,
-    lr,
-    distributed=False,
-):
-    """Optimize one globally assistant-token-normalized SFT batch."""
-
-    batches = [batch]
-    for _ in range(accumulation - 1):
-        batches.append(next(loader))
-    next_batch = next(loader)
-    device = batch[0].device
-    supervised = sum(
-        ((current[1] != -100).sum() for current in batches),
-        start=torch.zeros((), device=device, dtype=torch.long),
-    )
-    if distributed:
-        dist.all_reduce(supervised, op=dist.ReduceOp.SUM)
-    if device.type == "cuda":
-        torch._assert_async(supervised > 0, "SFT optimizer batch has no supervised tokens")
-    elif not supervised.item():
-        raise ValueError("SFT optimizer batch has no supervised tokens")
-
-    optimizer.zero_grad(set_to_none=True)
-    local_loss = torch.zeros((), device=device)
-    world_size = dist.get_world_size() if distributed else 1
-    scale = world_size / supervised
-    for index, current in enumerate(batches):
-        context = (
-            train_model.no_sync() if distributed and index + 1 < accumulation else nullcontext()
-        )
-        with context:
-            loss = train_model(current[0], current[1], loss_reduction="sum")
-            (loss * scale).backward()
-        local_loss += loss.detach()
-    if distributed:
-        dist.all_reduce(local_loss, op=dist.ReduceOp.SUM)
-    assert_finite(local_loss, "non-finite SFT training loss")
-    set_optimizer_lr(optimizer, lr)
-    grad_norm = torch.nn.utils.clip_grad_norm_(parameters, grad_clip)
-    assert_finite(grad_norm, "non-finite SFT training gradients")
-    optimizer.step()
-    return local_loss / supervised, grad_norm, next_batch, supervised
 
 
 @torch.no_grad()

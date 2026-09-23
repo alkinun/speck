@@ -126,8 +126,17 @@ state. `--branch-kind context` allows a changed manifest and context configurati
 requires the same architecture, sequence length, optimizer semantics, schedule and world-size
 contract as the parent, resets only the data cursor, and retains the parent optimizer state. Data
 branches require `--branch-schedule inherit`; context branches remain the only path that changes
-sequence capacity. Qualify 4K, 16K and 32K workloads separately. Any output/action-only trajectory
-loss or masked repair objective also requires a validated adapter, mask fingerprint and resume test.
+sequence capacity. Qualify 4K, 16K and 32K workloads separately.
+
+A data source can be row-packed with `packing: {row_tokens, open_rows}`. Preparation places whole
+records best-fit into rows of exactly the training sequence length, never truncates (over-long and
+invalid records are counted in `rejected_records`), and writes a parallel loss mask hashed with the
+shards. `record_format: messages` encodes chat and tool trajectories so that only assistant
+content is supervised. Records sharing a row are not isolated from one another. The loader reads a
+row-packed source only at its row length, and every optimizer step is normalized by its supervised
+tokens. `scripts.smoke` branches a base checkpoint onto masked chat rows and repeats it with exact
+parameter parity. Still to qualify: 16K/32K memory and throughput on GH200, and supervised counts
+per real trajectory source.
 
 Before executing any mid-training stage, freeze parent identity, objective, data, schedule, optimizer
 policy and cost, and qualify resume. Capability, repository and agentic continuation use the combined
