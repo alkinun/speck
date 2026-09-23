@@ -444,7 +444,7 @@ def run(args):
 
     started = time.perf_counter()
     for _ in range(args.warmup_steps):
-        _, _, batch = step()
+        _, _, batch, _ = step()
     synchronize(device)
     warmup_seconds = time.perf_counter() - started
 
@@ -468,7 +468,7 @@ def run(args):
         if cuda:
             torch.cuda.reset_peak_memory_stats(device)
         started = time.perf_counter()
-        loss, _, batch = step(probe=record_backward_peak)
+        loss, _, batch, _ = step(probe=record_backward_peak)
         synchronize(device)
         durations.append(time.perf_counter() - started)
         losses.append(float(loss))
@@ -489,7 +489,7 @@ def run(args):
             record_shapes=True,
         ) as profiler:
             for _ in range(args.profile_steps):
-                _, _, batch = step()
+                _, _, batch, _ = step()
             synchronize(device)
         path = Path(args.profile)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -499,7 +499,7 @@ def run(args):
     if args.memory_snapshot and device.type == "cuda":
         torch.cuda.memory._record_memory_history()
         for _ in range(2):
-            _, _, batch = step()
+            _, _, batch, _ = step()
         synchronize(device)
         snapshot = Path(args.memory_snapshot)
         snapshot.parent.mkdir(parents=True, exist_ok=True)

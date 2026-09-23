@@ -22,11 +22,11 @@ from speck.training.sft_data import (
     prepare_sft_dataset,
     resolve_sft_data_dir,
     sft_loader,
-    sft_optimization_step,
     sft_plan,
     validate_sft,
     verify_sft_dataset,
 )
+from speck.training.step import optimization_step
 
 
 class BaseTokenizer:
@@ -458,7 +458,7 @@ def test_sft_optimization_counts_supervised_tokens():
     second = (inputs, second_targets, {"batch": 1})
     third = (inputs, second_targets, {"batch": 2})
 
-    loss, grad_norm, next_batch, supervised = sft_optimization_step(
+    loss, grad_norm, next_batch, supervised = optimization_step(
         model,
         tuple(model.parameters()),
         optimizer,

@@ -367,15 +367,16 @@ def test_validation_reports_aggregate_and_source_losses():
             super().__init__()
             self.anchor = torch.nn.Parameter(torch.zeros(()))
 
-        def forward(self, inputs, targets):
-            return inputs.float().mean() + 0 * self.anchor
+        def forward(self, inputs, targets, loss_reduction="mean"):
+            assert loss_reduction == "sum"
+            return inputs.float().sum() + 0 * self.anchor
 
     model = MeanInput()
     loader = iter(
         [
-            (torch.tensor([[1.0]]), None, {"selected_source": "web"}),
-            (torch.tensor([[4.0]]), None, {"selected_source": "math"}),
-            (torch.tensor([[3.0]]), None, {"selected_source": "web"}),
+            (torch.tensor([[1.0]]), torch.tensor([[0]]), {"selected_source": "web"}),
+            (torch.tensor([[4.0]]), torch.tensor([[0]]), {"selected_source": "math"}),
+            (torch.tensor([[3.0]]), torch.tensor([[0]]), {"selected_source": "web"}),
         ]
     )
 
@@ -431,7 +432,7 @@ def test_optimization_step_advances_the_loader():
     second = (torch.randint(0, 16, (1, 4)), torch.randint(0, 16, (1, 4)), {"batch": 1})
     loader = iter([second])
 
-    loss, grad_norm, next_batch = optimization_step(
+    loss, grad_norm, next_batch, _ = optimization_step(
         model,
         tuple(model.parameters()),
         optimizer,
@@ -477,7 +478,7 @@ def test_optimization_step_averages_accumulated_losses():
             [model(inputs, targets) for inputs, targets, _ in batches[:2]]
         ).mean()
 
-    loss, grad_norm, next_batch = optimization_step(
+    loss, grad_norm, next_batch, _ = optimization_step(
         model,
         tuple(model.parameters()),
         optimizer,
