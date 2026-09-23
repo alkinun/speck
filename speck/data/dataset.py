@@ -113,6 +113,7 @@ from speck.data.configuration import (
     validate_data_settings as validate_data_settings,
 )
 from speck.data.packing import TokenShardWriter as TokenShardWriter
+from speck.data.validation import fingerprint, slice_sha256
 from speck.provenance.io import file_sha256 as _file_hash
 from speck.provenance.io import lines_sha256 as _line_hash
 from speck.tokenization.tokenizer import get_tokenizer
@@ -135,11 +136,6 @@ def _fsync_directory(path):
         os.fsync(descriptor)
     finally:
         os.close(descriptor)
-
-
-def _fingerprint(value):
-    payload = json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
-    return hashlib.sha256(payload).hexdigest()
 
 
 def normalize_for_dedup(content):
@@ -166,20 +162,6 @@ def _prefixed_shards(shards, source_id):
 def _sync_file(handle):
     handle.flush()
     os.fsync(handle.fileno())
-
-
-def _slice_hash(path, start, end):
-    hasher = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        handle.seek(start)
-        remaining = end - start
-        while remaining:
-            chunk = handle.read(min(8 * 1024 * 1024, remaining))
-            if not chunk:
-                raise ValueError(f"file ended before integrity boundary: {path}")
-            hasher.update(chunk)
-            remaining -= len(chunk)
-    return hasher.hexdigest()
 
 
 def _truncate(path, size):
@@ -567,7 +549,7 @@ def _recover_source_progress(directory, progress, resolved, dedup_path, dedup_st
         raise ValueError("staged dedup journal is shorter than committed progress")
     if dedup_path.stat().st_size > journal["end_byte"]:
         _truncate(dedup_path, journal["end_byte"])
-    if _slice_hash(dedup_path, dedup_start, journal["end_byte"]) != journal["sha256"]:
+    if slice_sha256(dedup_path, dedup_start, journal["end_byte"]) != journal["sha256"]:
         raise ValueError("staged source dedup slice checksum mismatch")
 
     index = progress["document_index"]
@@ -609,7 +591,7 @@ def _verify_source_integrity(
     size = dedup_path.stat().st_size
     if size < journal["end_byte"] or (require_journal_end and size != journal["end_byte"]):
         raise ValueError(f"source {summary['id']} dedup journal boundary is invalid")
-    if _slice_hash(dedup_path, expected_start, journal["end_byte"]) != journal["sha256"]:
+    if slice_sha256(dedup_path, expected_start, journal["end_byte"]) != journal["sha256"]:
         raise ValueError(f"source {summary['id']} dedup journal checksum mismatch")
     if journal["hashes"] != summary["documents"]:
         raise ValueError(f"source {summary['id']} dedup count is invalid")
@@ -708,7 +690,7 @@ class _DatasetBuild:
             "seed": self.seed,
             "tokenizer": self.tokenizer_manifest,
         }
-        contract_hash = _fingerprint(contract)
+        contract_hash = fingerprint(contract)
         if not self.staging.exists():
             self.staging.mkdir(parents=True)
             (self.staging / "sources").mkdir()
@@ -1184,5 +1166,8 @@ def verify_shards(data_dir=None, manifest=None):
     _verify_file(dedup_path, manifest["dedup"]["sha256"])
     for source in manifest["sources"]:
         journal = source["dedup_journal"]
-        if _slice_hash(dedup_path, journal["start_byte"], journal["end_byte"]) != journal["sha256"]:
+        if (
+            slice_sha256(dedup_path, journal["start_byte"], journal["end_byte"])
+            != journal["sha256"]
+        ):
             raise ValueError(f"packed dedup slice checksum mismatch: {source['id']}")

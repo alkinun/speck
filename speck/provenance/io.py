@@ -6,6 +6,8 @@ import os
 import tempfile
 from pathlib import Path
 
+REPOSITORY = Path(__file__).resolve().parents[2]
+
 
 def file_sha256(path):
     digest = hashlib.sha256()
@@ -13,6 +15,24 @@ def file_sha256(path):
         for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def check_reference(entry, root=REPOSITORY):
+    """Resolve one record reference and verify it.
+
+    Repository files are referenced by path alone: Git already versions them, and a copied
+    digest or status goes stale on the next edit. Files outside the repository carry a digest.
+    """
+    path = Path(entry["path"])
+    resolved = path if path.is_absolute() else root / path
+    if resolved.resolve().is_relative_to(Path(root).resolve()):
+        if {"sha256", "status", "format"} & entry.keys():
+            raise ValueError(f"repository reference must be path-only: {path}")
+        if not resolved.is_file():
+            raise ValueError(f"missing referenced file: {path}")
+    elif file_sha256(resolved) != entry.get("sha256"):
+        raise ValueError(f"artifact checksum mismatch: {resolved}")
+    return resolved
 
 
 def lines_sha256(values):

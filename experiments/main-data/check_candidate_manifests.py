@@ -1,9 +1,10 @@
 """Validate design-only candidate manifests without admitting any source.
 
 This check catches drift between the shared stage-conditioned contract and the
-four source-specific candidate manifests.  It verifies local receipt hashes and
-the explicit non-admission boundary; it does not infer rights, correctness,
-eligible supply, or training authority.
+four source-specific candidate manifests.  Per-source identity, inventory, gates
+and blockers belong to the source-readiness matrix; a manifest names the source
+and adds only its domain evidence.  The check does not infer rights,
+correctness, eligible supply, or training authority.
 
 Run from the repository root::
 
@@ -16,7 +17,7 @@ import argparse
 import json
 from pathlib import Path
 
-from speck.provenance.io import file_sha256
+from speck.provenance.io import check_reference
 
 ROOT = Path(__file__).resolve().parents[2]
 REQUIRED_FIELDS = {
@@ -32,6 +33,18 @@ REQUIRED_FIELDS = {
     "exposure_tokens",
     "repetition_count",
 }
+READINESS = "experiments/main-data/source-readiness.json"
+# Fields the readiness matrix owns; a manifest copy would drift from it.
+READINESS_FIELDS = {
+    "role",
+    "roles",
+    "identity",
+    "inventory",
+    "gate_status",
+    "gates",
+    "admitted",
+    "blockers",
+}
 MANIFESTS = (
     "experiments/main-data/natural-web-candidate-manifest.json",
     "experiments/main-data/natural-code-candidate-manifest.json",
@@ -40,29 +53,16 @@ MANIFESTS = (
 )
 
 
-def _path(value: str) -> Path:
-    path = Path(value)
-    return path if path.is_absolute() else ROOT / path
-
-
 def _verify_receipts(manifest: dict, manifest_path: Path) -> int:
     receipts = manifest.get("source_of_truth")
     if not isinstance(receipts, dict) or not receipts:
         raise ValueError(f"{manifest_path}: missing source_of_truth receipts")
-    checked = 0
-    for name, receipt in receipts.items():
-        if not isinstance(receipt, dict) or not receipt.get("path") or not receipt.get("sha256"):
-            raise ValueError(f"{manifest_path}: incomplete receipt {name}")
-        path = _path(receipt["path"])
-        if not path.is_file():
-            raise ValueError(f"{manifest_path}: missing receipt target {path}")
-        if file_sha256(path) != receipt["sha256"]:
-            raise ValueError(f"{manifest_path}: receipt checksum mismatch {path}")
-        checked += 1
-    return checked
+    for receipt in receipts.values():
+        check_reference(receipt)
+    return len(receipts)
 
 
-def _validate_manifest(path: Path) -> tuple[int, int]:
+def _validate_manifest(path: Path, source_ids: set[str]) -> tuple[int, int]:
     manifest = json.loads(path.read_text())
     if not manifest.get("format", "").startswith("speck_"):
         raise ValueError(f"{path}: unsupported format")
@@ -97,45 +97,29 @@ def _validate_manifest(path: Path) -> tuple[int, int]:
     seen = set()
     for candidate in candidates:
         candidate_count += 1
-        if not candidate.get("id") or candidate.get("admitted") is not False:
-            raise ValueError(f"{path}: candidate must have an id and admitted=false")
+        if candidate.get("id") not in source_ids:
+            raise ValueError(
+                f"{path}: candidate is not in the readiness matrix: {candidate.get('id')}"
+            )
         if candidate["id"] in seen:
             raise ValueError(f"{path}: duplicate candidate id")
         seen.add(candidate["id"])
-        gates = candidate.get("gate_status")
-        if not isinstance(gates, dict) or set(gates) != {
-            "source_use",
-            "family_partition",
-            "correctness",
-            "finite_supply",
-            "runtime",
-        }:
-            raise ValueError(f"{path}: incomplete gate set for {candidate.get('id')}")
-        if not candidate.get("blockers"):
-            raise ValueError(f"{path}: candidate has no blockers: {candidate['id']}")
+        if READINESS_FIELDS & candidate.keys():
+            raise ValueError(f"{path}: {candidate['id']} copies readiness-owned fields")
 
     return candidate_count, _verify_receipts(manifest, path)
 
 
 def validate(paths: tuple[str, ...] = MANIFESTS) -> dict:
+    readiness = json.loads((ROOT / READINESS).read_text())
+    source_ids = {source["id"] for source in readiness["sources"]}
     checked_candidates = 0
     checked_receipts = 0
     for name in paths:
-        path = _path(name)
-        candidates, receipts = _validate_manifest(path)
+        candidates, receipts = _validate_manifest(ROOT / name, source_ids)
         checked_candidates += candidates
         checked_receipts += receipts
-    preflight = _path("experiments/main-data/candidate-manifest-preflight.json")
-    preflight_value = json.loads(preflight.read_text())
-    summary = preflight_value["summary"]
-    if summary["admitted_count"] != 0 or summary["complete_required_manifest_count"] != 0:
-        raise ValueError("candidate preflight must remain non-admitting and incomplete")
-    if (
-        type(summary["eligible_unique_tokens_established"]) is not int
-        or summary["eligible_unique_tokens_established"] != 0
-    ):
-        raise ValueError("candidate preflight cannot claim eligible tokens")
-    contract = json.loads(_path("experiments/main-data/data-design-contract.json").read_text())
+    contract = json.loads((ROOT / "experiments/main-data/data-design-contract.json").read_text())
     fields = set(contract["manifest_schema"]["required_fields"])
     # The prose candidate contracts enumerate strata; the record schema names
     # the individual stratum. Keep that spelling mapping explicit.
@@ -147,8 +131,6 @@ def validate(paths: tuple[str, ...] = MANIFESTS) -> dict:
         "manifests": len(paths),
         "candidates": checked_candidates,
         "receipts_checked": checked_receipts,
-        "admitted_candidates": 0,
-        "eligible_unique_tokens_established": summary["eligible_unique_tokens_established"],
     }
 
 

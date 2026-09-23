@@ -217,10 +217,7 @@ The closeout must state separately:
 - memory and storage observations;
 - inference/export parity status;
 - all-in allocated GPU-hours and non-GPU costs;
-- **the stage 5/6 spend decision**: commit or release the 200 conditional RL hours, against measured
-  throughput and the then-current supply position. This closeout is the last point at which that can
-  be done with real numbers. It is only the spend half: whether to *build* the RL trainer, rollout
-  engine and verifiers costs no grant hours and is due before access, so record here the build
-  decision already taken rather than taking it now. If no trainer exists and none is planned, say so
-  and report stages 5 and 6 as not covered with the reason recorded;
+- **the stage 5/6 spend decision**: commit or release the 200 conditional RL hours against measured
+  throughput and supply, citing the build decision already recorded before access
+  ([PLAN.md](../PLAN.md#stage-5-and-6-coverage-is-unclaimed));
 - unresolved limitations and the exact next qualification action.

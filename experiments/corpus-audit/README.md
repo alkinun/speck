@@ -420,8 +420,9 @@ The [code section of the data guide](../../docs/data.md#code-priority-and-qualif
 No source ranking or eligible-yield estimate follows from these restricted batches.
 
 The [stylesheet closeout](stylesheet-cohort-review.json) adds the final three readings / 70,475 tokens.
-All 174 currently unheld records are now read. Cumulative coverage is 176 files / 412,974 tokens,
-including two earlier reads now held; all 44 family holds remain intact. Page, template and component
+All 174 then-unheld records were read. Cumulative coverage is 176 files / 412,974 tokens,
+including two earlier reads then held; all 44 family holds of that date were preserved. The
+[qualification packet](../main-data/QUALIFICATION.md) owns the current hold count. Page, template and component
 roles, unresolved template attribution and a file notice referring to missing NOTICE context are
 recorded. No browser, compiler, asset fetch or corpus code ran; no new or reused verified origins
 are available for this batch. Disjoint per-cohort counts reconcile all 218 original records and

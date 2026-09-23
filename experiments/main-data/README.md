@@ -1,6 +1,6 @@
 # Main data mixture and scale — working plan
 
-2026-09-22. [plan.json](plan.json) records preparation targets and reproducible cost arithmetic.
+2026-09-23. [plan.json](plan.json) records preparation targets and reproducible cost arithmetic.
 This is not a launch configuration or a claim that the required corpus is already qualified.
 The frozen H100 pilot, development evaluation and backups are complete. This working plan does
 not change their configurations or historical result receipts.
@@ -27,9 +27,9 @@ the architecture search.
 
 The [data preparation closeout](data-closeout.json) freezes the current evidence-only corpus pass.
 The supplied frontier-data research is recorded in
-[frontier-data-research.json](frontier-data-research.json); source-specific gate updates are next.
-No source is admitted and no study packet authorizes acquisition or training until the closeout gates
-are updated with pinned evidence.
+[frontier-data-research.json](frontier-data-research.json). No source is admitted and no study
+packet authorizes acquisition or training; per-source gates live in the
+[source-readiness matrix](source-readiness.json).
 
 ## Scale
 
@@ -58,7 +58,7 @@ one common baseline, code-bank, natural-web and AI-generation/provenance-filter 
 three-way decay comparison. It fixes the tokenizer, 4K context, objective,
 serialization, exposure accounting and evaluation boundaries while leaving source admission open.
 
-Validate the packet and its source-of-truth hashes offline:
+Validate the packet and its source-of-truth references offline:
 
 ```bash
 PYTHONPATH=. python experiments/main-data/check_data_study.py \
@@ -68,11 +68,12 @@ PYTHONPATH=. python experiments/main-data/check_data_study.py \
 The command checks design arithmetic and launch boundaries only. It does not acquire sources,
 execute corpus content or authorize training.
 
-The packet is deliberately design-only. Before any arm can run, every selected source needs named
-source-use decisions, family and near-duplicate partitions, independent correctness checks where
+The packet is deliberately design-only. Before any arm can run, every selected source needs its
+source-use conditions met, family and near-duplicate partitions, independent correctness checks where
 claimed, finite accepted-token counts, a disjoint evaluation pack and measured GH200 cost. The
-first of those is done: the [acceptance record](source-rights-acceptance.json) closed source use
-over the nine selected sources on 2026-09-22, subject to per-source conditions. It admits nothing. A future
+[acceptance record](source-rights-acceptance.json) decided source use for the nine selected sources
+on 2026-09-22: closed on six, and conditional on three pending origin/notice recovery for both code
+routes and peS2o v3 licence documentation. It admits nothing. A future
 launch request must bind the qualified manifests and the existing rights/operations/firewall records.
 The packet does not authorize acquisition, training or a main-run mixture.
 
@@ -102,16 +103,18 @@ PYTHONPATH=. python experiments/main-data/check_post_training_study.py \
 The packet reserves 80 GPU-hours for SFT comparison, 40 for RL feasibility, 30 for the final self-SFT pilot and 20 for support. Existing 500K-row stock remains format and context evidence until source, family, correctness and held-out gates close.
 
 Run `make plan-check` from the repository root to validate the cross-stage compute ledger, all
-packet budgets and every recorded input receipt together. A passing check is necessary bookkeeping,
+packet budgets and every recorded input reference together. A passing check is necessary bookkeeping,
 not training authority.
 
-The ledger checker validates direct plan receipt hashes; the stage validators check their own
-declared dependencies. This is not a recursive audit of every historical receipt or evidence of
+The ledger checker confirms the plan's input records exist; the stage validators check their own
+declared references. This is not a recursive audit of every historical receipt or evidence of
 source eligibility. Study packets own arm counts and per-arm ceilings; mirrored plan fields must
 match them. Match training exposure for data comparisons and report actual GPU-hours separately;
 equal exposure and equal elapsed cost are not generally achievable together.
 
-The [source-readiness matrix](source-readiness.json) is the companion evidence index. It records the retained inventory, source-of-truth receipts, open gates and blocked arm status for each candidate bank. Validate it offline:
+The [source-readiness matrix](source-readiness.json) is the one record of per-source identity,
+inventory, gates, blockers and manifest-field completeness. It currently finds zero complete manifests
+and zero eligible tokens. Validate it offline:
 
 ```bash
 PYTHONPATH=. python experiments/main-data/check_source_readiness.py \
@@ -129,37 +132,24 @@ The [frontier-data source mapping](frontier-data-source-mapping.json) is its com
 it ties each finding to pinned local evidence, names the gate implications and records remaining
 measurement gaps. It is an evidence index, not a source-admission decision.
 
-The [candidate manifest preflight](candidate-manifest-preflight.json) normalizes those requirements
-across all 12 candidates. It currently finds zero complete manifests and zero eligible tokens; this is
-the checklist for source-specific qualification, not a launch manifest.
+The candidate manifests name readiness sources and add only domain evidence and comparison contracts:
 
-The [natural-web candidate manifest](natural-web-candidate-manifest.json) is the first source-specific
-application. It binds the FineWeb-Edu control and Ultra-FineWeb HQ candidate, preserves the measured
-overlap. Source use closed for both on 2026-09-22; family, contamination, eligible-supply and
-runtime gates remain open.
+- The [natural-web manifest](natural-web-candidate-manifest.json) binds the FineWeb-Edu control and
+  the Ultra-FineWeb HQ candidate and preserves their measured overlap.
+- The [natural-code manifest](natural-code-candidate-manifest.json) binds Stack-Edu and Stack v3; the
+  checked-code route it also describes is unbanked.
+- The [math manifest](math-candidate-manifest.json) binds FineMath 4+ and InfiWebMath 4+ beside the
+  not-selected UltraData-Math and Nemotron and the review-only OpenMath/L3 candidates; arithmetic
+  triage is a quality lead, not a correctness certificate.
+- The [post-training manifest](post-training-candidate-manifest.json) binds the 500K-row assistant
+  census and the 44,369-row reward-prompt inventory, keeping structural, outcome, tool-trajectory and
+  RL-feasibility gates separate.
+- The [post-training audit protocol](post-training-audit-protocol.json) fixes the next bounded
+  review and its stop rules, measuring efficiency only after correctness.
 
-The [natural-code candidate manifest](natural-code-candidate-manifest.json) now binds Stack-Edu,
-Stack v3 and the separate checked-code substitution route, which is no longer a declared bank. It preserves the finite-stock and cohort
-limits, with zero eligible code tokens established and all provenance/correctness gates open.
-
-The [math candidate manifest](math-candidate-manifest.json) now separates FineMath, UltraData-Math,
-InfiWebMath, Nemotron and review-only OpenMath/L3 candidates. It preserves arithmetic triage as a
-quality lead rather than a correctness certificate and leaves all math sources outside training arms.
-
-The [post-training candidate manifest](post-training-candidate-manifest.json) now binds the 500K-row
-assistant census and the 44,369-row reward-prompt inventory. It keeps structural serialization,
-verified outcomes, tool trajectories and fixed-policy RL feasibility separate; no downstream rows are
-admitted.
-
-The [post-training audit protocol](post-training-audit-protocol.json) fixes the next bounded review:
-deterministic SFT structure, stratified independent outcomes, tool-trajectory checks, reasoning-mode
-measurement, and fixed-policy verifier feasibility with explicit stop rules. It measures efficiency
-only after correctness, using task-conditioned length curves rather than a global shortness reward.
-Its horizon accounting records the 80B/100B working target separately from the current one-pass bounds: retained code evidence bounds the 35% natural-code share at 1.36B total tokens before exclusions, and HQ tokens distinct from retained FineWeb-Edu bound the 25% selected-web share at 1.405B. These are constraints, not qualified supply.
-The HQ comparison retains FineWeb-Edu as the control, keeps the pinned L1/HQ route as a candidate, and adopts no score cutoff or automatic repair rule; its sampled panels establish review evidence, not eligible yield.
-The natural-code route is similarly bounded: the retained Stack-Edu census has 0 eligible tokens established, the fixed Stack-Edu/Stack v3 cohorts retain all 44 family holds, and unresolved origins/404s remain outside any arm. Checked-code substitution stays separate until provenance and correctness gates close.
-The math route keeps FineMath 4+, UltraData-Math L2 and filtered InfiWebMath 4+ as separate candidates: the reversible FineMath directory view removes 1.67% of its stock as a conservative candidate, while all L2 rows still lack host metadata. The InfiWebMath sample has a conservative arithmetic triage and a hashed manual classification; it is not a correctness certificate. A single normalized cross-source link is recorded without automatic removal; Nemotron-CC-Math remains unavailable because its listed LFS hashes are unusable and no shards were acquired.
-The external Cagliostro v3 review identifies OpenMathInstruct-2, FineMath's InfiWebMath 3+ subset and SmolTalk as additional candidates. The [candidate review](../corpus-audit/recipe-review.json) links bounded viewer diagnostics for OpenMath and FineMath/InfiWebMath, and the source-readiness matrix now records the separately qualified InfiWebMath 4+ candidate. OpenMath and SmolTalk remain outside that matrix; every candidate remains outside retained inventory and study arms until source-use, family/contamination, correctness, finite-supply and runtime evidence closes. A late math reweighting is a schedule hypothesis, not an additional arm.
+OpenMathInstruct-2 and SmolTalk remain outside the readiness matrix
+([candidate review](../corpus-audit/recipe-review.json)). A late math reweighting is a schedule
+hypothesis, not an additional arm.
 
 ## Research before the main run
 
@@ -187,9 +177,10 @@ candidate compares a qualified FineWeb-Edu control with selected Ultra-FineWeb H
 do not simultaneously tune the score threshold or serialization. DCLM/math alternatives enter only
 through a recorded replacement before launch, not an expanding sweep.
 
-A shared screening baseline is valid only if both candidates have the same unchanged settings.
-If both candidates meet their frozen screening criteria, prioritize code for confirmation; raw loss
-deltas from different domains are not directly comparable. If neither passes, keep the eligible
+A shared screening baseline is valid only if every candidate has the same unchanged settings.
+If several candidates meet their frozen screening criteria, confirm the code candidate when it is
+among them; otherwise choose among the passing candidates by a rule declared before screening. Raw
+loss deltas from different domains are not directly comparable. If none passes, keep the eligible
 baseline or record a redesign within the remaining cap. Do not combine two individually favorable
 changes without testing that combined recipe. Confirmation
 uses fresh runs and seeds, not extensions of selected screening checkpoints. It may reuse qualified
@@ -308,22 +299,26 @@ remaining ledger before each job. These design notes do not replace the existing
 These are explicit starting hypotheses chosen for the code/math/agent target, not measured optimal
 weights. The table extrapolates the initial mixture across the base horizon. Freeze capability
 mid-training weights separately and update aggregate bank exposures if a staged mixture is adopted.
-The source names below are production hypotheses; the experimental baseline deliberately substitutes
-its declared control source in the bank under study. Update the production source choices after
+The sources below are the [registry's](source-registry.json) selection; the experimental baseline
+deliberately substitutes its declared control source in the bank under study. Update the production source choices after
 confirmation rather than assuming every preferred candidate wins.
 
 This is the one prose copy of the mixture; [plan.json](plan.json) owns the numbers it renders, and
 `make plan-check` fails if the two disagree.
 
-| Bank | Share | 80B exposure | Eligible unique preparation | Candidate sources / admission condition |
+| Bank | Share | 80B exposure | Eligible unique preparation | Selected sources |
 | --- | ---: | ---: | ---: | --- |
-| `selected_web` — selected broad natural web | 25% | 20B | 25B | Natural Ultra-FineWeb English; bind scored/HQ path and threshold after the bounded audit |
-| `independent_web` — independent web coverage | 5% | 4B | 5B | FineWeb-Edu and/or DCLM; select allocation after overlap and coverage measurements |
-| `natural_code` — natural code, tests and documentation | 35% | 28B | 35B | Stack-Edu, source-resolved UltraData-Code L2, and Stack v3 under qualification; preserve practical and multilingual coverage. Carries the whole declared code share |
-| `natural_math` — selected natural math / worked solutions | 25% | 20B | 25B | UltraData-Math L2, FineMath 4+, Nemotron-CC-Math `4plus`; source allocation follows comparative audit. Carries the whole declared math share |
-| `reference_science` — reference / science / technical documents | 5% | 4B | 5B | FineWiki, peS2o and qualified English FinePDFs-Edu |
-| `refined_web` — refined educational web | 5% | 4B | 5B | Qualified Ultra-FineWeb-L3; Cosmopedia remains a comparison source |
+| `selected_web` — selected broad natural web | 25% | 20B | 25B | Ultra-FineWeb English HQ (L1 route) |
+| `independent_web` — independent web coverage | 5% | 4B | 5B | FineWeb-Edu |
+| `natural_code` — natural code, tests and documentation | 35% | 28B | 35B | Stack-Edu and Stack v3; carries the whole declared code share |
+| `natural_math` — selected natural math / worked solutions | 25% | 20B | 25B | FineMath 4+ and InfiWebMath 4+; carries the whole declared math share |
+| `reference_science` — reference / science / technical documents | 5% | 4B | 5B | peS2o v3 and FineWiki |
+| `refined_web` — refined educational web | 5% | 4B | 5B | Cosmopedia v2 |
 | **Total** | **100%** | **80B** | **100B** | **35% code, 25% math, 40% supporting material** |
+
+Checked code, Nemotron-CC-Math `4plus` and the UltraData-Math L2 preview were not selected on
+2026-09-22. DCLM, UltraData-Code L2, Ultra-FineWeb-L3 and English FinePDFs-Edu are unbanked
+alternatives; each enters only through a recorded replacement and a revised freeze.
 
 The mixture was re-frozen over these six banks on 2026-09-22. `checked_code` (5%) and `refined_math`
 (5%) were removed: each held zero retained candidate stock of any kind, so each capped a one-pass run
@@ -341,9 +336,7 @@ Deduplicate across banks and original/derived families before counting supply. C
 are not interchangeable licenses or evidence that content is already downloaded.
 
 Use existing released content first; this plan does not assume we can afford generating billions
-of new teacher tokens ourselves. The former 5B checked-code preparation slot was re-frozen into
-natural code on 2026-09-22 rather than left standing against zero stock. All inspected
-UltraData-Code L3 rows remain held. If a refined source fails
+of new teacher tokens ourselves. All inspected UltraData-Code L3 rows remain held. If a refined source fails
 qualification or is too small, explicitly re-freeze its share into eligible natural material in the
 same domain, or shorten the horizon. Never silently repeat a small set to fill the target.
 
@@ -357,7 +350,7 @@ and harder derivations, rather than exclusively competition problems or lengthy 
 ## Acquisition and storage
 
 The current pilot-source stocks total **6.799B tokens before joint eligibility**, including only
-**0.477B code tokens**. The separate natural UltraData-Math preview adds 0.385B before joint checks.
+**0.477B code tokens**. The not-selected UltraData-Math L2 preview's 0.385B is not counted.
 These figures do not establish qualified supply for the new recipe. Prepare a **100B eligible unique
 token bank** as a 25% selection margin over 80B exposure: each bank's target is 1.25 times its
 exposure in the table. Default to one pass through the selected training documents; the unused
@@ -365,12 +358,12 @@ margin is not a requirement to train everything. Holdouts and rejected raw recor
 
 Code acquisition is a critical feasibility gate. The [Stack-Edu card](https://huggingface.co/datasets/HuggingFaceTB/stack-edu)
 provides content locators rather than the actual files, so fetching and qualifying source bytes must
-be included. [UltraData-Code](https://huggingface.co/datasets/openbmb/UltraData-Code) is an additional
-candidate, subject to the existing lineage hold. Publisher corpus sizes and tokenizer counts do
+be included. [UltraData-Code](https://huggingface.co/datasets/openbmb/UltraData-Code) is an unbanked
+alternative, subject to the existing lineage hold. Publisher corpus sizes and tokenizer counts do
 not establish our eligible supply. The retained 0.477B natural-code tokens bound a one-pass
 baseline at 1.36B total tokens with a 35% natural-code share, before exclusions, validation and other
 banks. Even the proposed short studies need additional qualified baseline supply or shorter common
-horizons; their hour caps do not imply that 1.85B/4.17B-token arms are available.
+horizons; their hour caps do not imply that 1.39B–2.78B-token arms are available.
 
 At uint16, 80B training token IDs occupy **160GB decimal**; the 100B preparation bank occupies
 200GB. These are alternative inventories, not automatically two distinct copies to sum.
@@ -473,34 +466,19 @@ extra experiment, 128K stage or RL campaign is implicitly funded beyond the decl
 ## Preparation workstreams
 
 The ordered next task is in [PLAN.md](../../PLAN.md#immediate-order-of-work); the items below are
-preparation coverage, not five simultaneous studies. The [readiness summary](../../PLAN.md#readiness-for-experiment-design)
+preparation coverage, not simultaneous studies. The [readiness summary](../../PLAN.md#readiness-for-experiment-design)
 separates inputs available for detailed design from the requirements for launching experiments.
 
-1. Audit the pinned natural Ultra-FineWeb candidate and its chosen threshold against retained
-   FineWeb-Edu using the existing sampler; report content coverage, overlap and eligible tokens.
-2. Use the [completed practical checks](../corpus-audit/practical-code-checks.json) and
-   [qualification packet](QUALIFICATION.md) to finish broader exclusions and family separation.
-   The [reading closeout](../corpus-audit/stylesheet-cohort-review.json) completes all 174 currently
-   unheld records in the fixed 138-file Stack-Edu and 80-file Stack v3 cohorts. The cumulative 176
-   full reads include two now-held records; all 44 family holds remain intact. Page, template and
-   component stylesheets retain their original labels, weights and document boundaries. The
-   [notice follow-up](../corpus-audit/code-notice-provenance.json) adds seven verified host origins and
-   reconfirms one. The [pinned-origin follow-up](../corpus-audit/pinned-code-origins.json) adds 42 more:
-   the [retained-origin recovery](../corpus-audit/retained-code-origins.json) adds ten exact-match
-   Stack-Edu origins. Coverage is now 28/104 unheld Stack-Edu and 68/70 unheld Stack v3. GitHub quota
-   exhaustion blocks 75 records; one earlier Stack-Edu failure and two Stack v3 404s remain separate.
-   Resume quota-blocked work only after access changes; continue independent web/math work meanwhile.
-   Host-origin recovery and notice availability do not establish source-use approval or admission.
-   Complete broader lineage and remaining notice/revision checks. The controlled syntax diagnostic
-   confirms one redaction failure; semantic preservation and source-use/family gates remain unresolved.
-   Qualify finite experiment arms from eligible supply before bulk packing. No examples are admitted.
-3. Use the [retained-data closeout](../corpus-audit/data-readiness.json) for exact overlap, math
+1. Finish broader exclusions, family separation and origin/notice recovery for the code cohorts;
+   the [qualification packet](QUALIFICATION.md) owns the current holds and origin counts. Qualify
+   finite experiment arms from eligible supply before bulk packing. No examples are admitted.
+2. Use the [retained-data closeout](../corpus-audit/data-readiness.json) for exact overlap, math
    normalization links and complete-document length inventory. Check solution correctness and
    source families before selecting math/refined candidates; well-formed text is not a checked answer.
-4. Use full SFT format checks, sampled serialized lengths and RL prompt links to prepare stage packs.
+3. Use full SFT format checks, sampled serialized lengths and RL prompt links to prepare stage packs.
    Resolve adapter/completeness issues and verify outcomes; recover missing long tails separately.
    Do not assume all existing 500K will survive qualification or count RL tasks as SFT trajectories.
-5. Freeze actual admitted source manifests, weights, repetitions, exclusions and hardware cost
+4. Freeze actual admitted source manifests, weights, repetitions, exclusions and hardware cost
    before launch. Learning-rate schedule, batch geometry and checkpoint cadence belong to that
    run's contract. This plan starts preparation, not a new GPU run or bulk download.
 

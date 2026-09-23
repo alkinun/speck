@@ -84,8 +84,8 @@ longer synthetic timings establish cost only, not learned long-context ability.
 Before results, declare the acceptable quality regression and which deployment costs matter.
 Choose a qualified, affordable design that passes those gates; if trade-offs are inconclusive and
 the reference passes, retain it. If neither passes, stop and document a scope revision. One seed
-supports a bounded design decision, not general architectural superiority. Remeasure the selected
-backbone for data-study costing; preserve the original H100 configurations and receipts. The
+supports a bounded design decision, not general architectural superiority. Preserve the original
+H100 configurations and receipts. The
 [numeric plan](../experiments/main-data/plan.json) owns the proposed geometry/caps, and the
 [research design](../experiments/main-data/README.md#measurements-and-selection) defines common
 measurement, failure and claim rules.

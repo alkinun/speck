@@ -2,7 +2,7 @@
 
 The gap is the release's real constraint, so a stale copy of it is worse than
 none: it would understate how far acquisition has to go. This rebuilds the
-report from the pinned receipts and rejects any divergence.
+report from its inputs and rejects any divergence.
 """
 
 from __future__ import annotations

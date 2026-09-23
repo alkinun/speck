@@ -10,6 +10,14 @@ from collections import Counter
 from pathlib import Path
 
 from speck.data.sources.stack_v3_refine import _sample_partition
+from speck.data.validation import (
+    config_path,
+    dump_line,
+    exact_keys,
+    fingerprint,
+    integer,
+    sha256_digest,
+)
 from speck.provenance.io import durable_json as _write_json
 from speck.provenance.io import file_sha256 as _sha256
 
@@ -18,45 +26,11 @@ FORMAT_VERSION = 1
 REPORT_FORMAT = "speck_code_cross_source_duplicates_result"
 
 
-def _fingerprint(value):
-    return hashlib.sha256(
-        json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
-    ).hexdigest()
-
-
-def _exact_keys(value, keys, name):
-    if not isinstance(value, dict) or set(value) != set(keys):
-        raise ValueError(f"{name} must contain exactly: {', '.join(sorted(keys))}")
-
-
-def _path(value, name, config_dir):
-    if not isinstance(value, str) or not value:
-        raise ValueError(f"{name} must be a non-empty path")
-    path = Path(value).expanduser()
-    return str((config_dir / path).resolve() if not path.is_absolute() else path.resolve())
-
-
-def _digest(value, name):
-    if (
-        not isinstance(value, str)
-        or len(value) != 64
-        or any(character not in "0123456789abcdef" for character in value)
-    ):
-        raise ValueError(f"{name} must be lowercase SHA-256")
-    return value
-
-
-def _integer(value, name, minimum=0):
-    if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
-        raise ValueError(f"{name} must be an integer >= {minimum}")
-    return value
-
-
 def validate_duplicate_config(config, *, config_dir=None):
     """Validate a frozen cross-source code duplicate plan."""
 
     config_dir = Path(config_dir or ".").resolve()
-    _exact_keys(
+    exact_keys(
         config,
         {"format", "format_version", "status", "sources", "policy", "output_directory"},
         "code duplicate plan",
@@ -72,7 +46,7 @@ def validate_duplicate_config(config, *, config_dir=None):
     source_ids = []
     precedences = []
     for index, source in enumerate(sources):
-        _exact_keys(
+        exact_keys(
             source,
             {
                 "id",
@@ -92,7 +66,7 @@ def validate_duplicate_config(config, *, config_dir=None):
         if not isinstance(source_id, str) or not source_id or Path(source_id).name != source_id:
             raise ValueError(f"source {index} id must be a path component")
         source_ids.append(source_id)
-        precedence = _integer(source["precedence"], f"source {source_id} precedence", 1)
+        precedence = integer(source["precedence"], f"source {source_id} precedence", 1)
         precedences.append(precedence)
         for key in ("parent_format", "parent_status"):
             if not isinstance(source[key], str) or not source[key]:
@@ -101,19 +75,19 @@ def validate_duplicate_config(config, *, config_dir=None):
             {
                 **source,
                 "precedence": precedence,
-                "path": _path(source["path"], f"source {source_id} path", config_dir),
-                "sha256": _digest(source["sha256"], f"source {source_id} sha256"),
-                "parent_report": _path(
+                "path": config_path(source["path"], f"source {source_id} path", config_dir),
+                "sha256": sha256_digest(source["sha256"], f"source {source_id} sha256"),
+                "parent_report": config_path(
                     source["parent_report"], f"source {source_id} parent report", config_dir
                 ),
-                "parent_report_sha256": _digest(
+                "parent_report_sha256": sha256_digest(
                     source["parent_report_sha256"],
                     f"source {source_id} parent report sha256",
                 ),
-                "training_bytes": _integer(
+                "training_bytes": integer(
                     source["training_bytes"], f"source {source_id} training bytes"
                 ),
-                "evaluation_bytes": _integer(
+                "evaluation_bytes": integer(
                     source["evaluation_bytes"], f"source {source_id} evaluation bytes"
                 ),
             }
@@ -123,7 +97,7 @@ def validate_duplicate_config(config, *, config_dir=None):
     normalized_sources.sort(key=lambda source: source["precedence"])
 
     policy = config["policy"]
-    _exact_keys(
+    exact_keys(
         policy,
         {
             "normalization",
@@ -159,7 +133,7 @@ def validate_duplicate_config(config, *, config_dir=None):
         ("partition_seed", 0),
         ("partition_modulus", 2),
     ):
-        normalized_policy[key] = _integer(policy[key], f"policy.{key}", minimum)
+        normalized_policy[key] = integer(policy[key], f"policy.{key}", minimum)
     if normalized_policy["minimum_document_tokens"] > normalized_policy["maximum_document_tokens"]:
         raise ValueError("minimum document tokens cannot exceed maximum")
     for key in ("lsh_threshold", "verified_jaccard_threshold"):
@@ -189,9 +163,9 @@ def validate_duplicate_config(config, *, config_dir=None):
         "status": config["status"],
         "sources": normalized_sources,
         "policy": normalized_policy,
-        "output_directory": _path(config["output_directory"], "output_directory", config_dir),
+        "output_directory": config_path(config["output_directory"], "output_directory", config_dir),
     }
-    normalized["plan_fingerprint"] = _fingerprint(normalized)
+    normalized["plan_fingerprint"] = fingerprint(normalized)
     return normalized
 
 
@@ -199,7 +173,7 @@ def _validated_config(config):
     if "plan_fingerprint" not in config:
         return validate_duplicate_config(config)
     payload = {key: value for key, value in config.items() if key != "plan_fingerprint"}
-    if config["plan_fingerprint"] != _fingerprint(payload):
+    if config["plan_fingerprint"] != fingerprint(payload):
         raise ValueError("normalized duplicate plan fingerprint mismatch")
     return config
 
@@ -249,12 +223,6 @@ def _signature(shingles, num_perm, seed):
 def _jaccard(left, right):
     union = len(left | right)
     return len(left & right) / union if union else 1.0
-
-
-def _dump_line(handle, value):
-    handle.write(
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
-    )
 
 
 def analyze_cross_source_duplicates(config, *, restart=False):
@@ -379,8 +347,8 @@ def analyze_cross_source_duplicates(config, *, restart=False):
                 )
                 partitions[f"{partition}_records"] += 1
                 partitions[f"{partition}_bytes"] += size
-                _dump_line(cleaned, record)
-                _dump_line(
+                dump_line(cleaned, record)
+                dump_line(
                     attribution,
                     {key: value for key, value in record.items() if key != "text"},
                 )

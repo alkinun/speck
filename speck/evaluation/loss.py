@@ -15,10 +15,15 @@ from speck.data.loader import manifest_fingerprint, packed_loader
 from speck.evaluation.inference import load_checkpoint_model
 from speck.operations.runtime import base_dir
 from speck.provenance.io import atomic_json
-from speck.provenance.validation import positive_integer as _positive_integer
 from speck.tokenization.tokenizer import get_tokenizer
 from speck.training.base import validate
 from speck.training.checkpoint import checkpoint_identity, latest
+
+
+def _positive_integer(value, name):
+    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+        raise ValueError(f"{name} must be a positive integer")
+    return value
 
 
 def arguments(argv=None):

@@ -7,19 +7,12 @@ design-only study packets. It never acquires data, selects sources, or launches 
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 from pathlib import Path
 
+from speck.provenance.io import check_reference
+
 ROOT = Path(__file__).resolve().parents[2]
-
-
-def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def _load(path: str) -> dict:
@@ -135,6 +128,10 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
             "checked_code and refined_math were re-frozen out of the mixture on 2026-09-22; "
             "restoring either one requires a revised freeze and its own exposure ledger"
         )
+    # The source registry owns which sources fill each bank; the plan owns only the banks.
+    registry = _load("experiments/main-data/source-registry.json")
+    if {source["bank"] for source in registry["sources"]} != set(by_id):
+        raise ValueError("source registry banks differ from the working mixture")
     natural_code = by_id["natural_code"]
     if (
         natural_code["weight_percent"] != plan["main_pretraining"]["code_percent"]
@@ -239,15 +236,8 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
             raise ValueError(f"{stage} must hold its own production line")
 
     receipts = plan["input_receipts"]
-    checked = 0
-    for relative, expected in receipts.items():
-        path = ROOT / relative
-        # A missing receipt is a failure, not permission to validate fewer inputs.
-        if not path.is_file():
-            raise ValueError(f"missing input receipt: {relative}")
-        if _sha256(path) != expected:
-            raise ValueError(f"input receipt checksum mismatch: {relative}")
-        checked += 1
+    for relative in receipts:
+        check_reference({"path": relative})
 
     return {
         "requested_gpu_hours": compute["requested_total_gpu_hours"],
@@ -257,7 +247,7 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
         "mid_research_gpu_hours": breakdown["mid_training"],
         "mid_production_gpu_hours": mid["production_sequence"]["production_gpu_hours"],
         "post_research_gpu_hours": breakdown["post_training"],
-        "input_receipts_checked": checked,
+        "input_receipts_checked": len(receipts),
         "training_authority": False,
     }
 

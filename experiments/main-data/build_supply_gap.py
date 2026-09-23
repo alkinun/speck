@@ -1,4 +1,4 @@
-"""Derive the per-bank supply gap from pinned receipts.
+"""Derive the per-bank supply gap from the plan and retained-stock receipts.
 
 Compute is not what bounds this release; eligible tokens are. This regenerates
 `supply-gap.json` from the working mixture and the retained-stock receipts so the
@@ -9,7 +9,6 @@ typed into a document. It admits nothing and acquires nothing.
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 from pathlib import Path
 
@@ -25,14 +24,6 @@ BANK_STOCK = {
     "reference_science": ("pes2o_v3", "finewiki_en"),
     "refined_web": ("cosmopedia_v2",),
 }
-
-
-def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def _load(relative: str) -> dict:
@@ -105,20 +96,17 @@ def build() -> dict:
     return {
         "format": "speck_supply_gap",
         "format_version": 1,
-        "status": "derived_from_pinned_receipts_no_admission",
+        "status": "derived_from_receipts_no_admission",
         "purpose": (
             "State the distance between the declared mixture and measured retained stock, so "
             "acquisition is planned against a number rather than an impression."
         ),
         "generated_by": "experiments/main-data/build_supply_gap.py",
-        "source_of_truth": {
-            relative: _sha256(ROOT / relative)
-            for relative in (
-                "experiments/main-data/plan.json",
-                "experiments/pilot/supply.json",
-                "experiments/main-data/source-readiness.json",
-            )
-        },
+        "source_of_truth": [
+            "experiments/main-data/plan.json",
+            "experiments/pilot/supply.json",
+            "experiments/main-data/source-readiness.json",
+        ],
         "banks": banks,
         "totals": {
             "eligible_unique_token_preparation_target": target_total,

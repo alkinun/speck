@@ -12,16 +12,7 @@ import argparse
 import json
 from pathlib import Path
 
-from speck.provenance.io import file_sha256
-
-ROOT = Path(__file__).resolve().parents[2]
-
-
-def _artifact(path, expected):
-    resolved = (ROOT / path).resolve() if not Path(path).is_absolute() else Path(path)
-    if file_sha256(resolved) != expected:
-        raise ValueError(f"artifact checksum mismatch: {resolved}")
-    return resolved
+from speck.provenance.io import check_reference
 
 
 def validate(packet_path):
@@ -36,7 +27,7 @@ def validate(packet_path):
 
     sources = packet["source_of_truth"]
     for entry in sources.values():
-        _artifact(entry["path"], entry["sha256"]) if "sha256" in entry else None
+        check_reference(entry)
 
     screening = packet["screening"]
     confirmation = packet["confirmation"]

@@ -1,22 +1,19 @@
 {
   "format": "speck_frontier_data_source_mapping",
   "format_version": 1,
-  "date": "2026-09-20",
+  "date": "2026-09-23",
   "status": "review_only_no_gate_closure",
   "purpose": "Map the reviewed frontier-data hypotheses to existing pinned Speck evidence before source-specific manifest work.",
   "evidence_boundary": "This mapping identifies what current local evidence supports and what remains unresolved. It does not establish source rights, correctness, eligible supply, transfer, source admission or training authority.",
   "source_of_truth": {
     "frontier_research": {
-      "path": "experiments/main-data/frontier-data-research.json",
-      "sha256": "22e2fb4808368a03c0da78374c435d746417a1b7d85d0452c9214f2c4ee705c5"
+      "path": "experiments/main-data/frontier-data-research.json"
     },
     "source_readiness": {
-      "path": "experiments/main-data/source-readiness.json",
-      "sha256": "2b3a25dfb1cb509932089bee9775875ed372b31ce136c205cc4a637f059e07dd"
+      "path": "experiments/main-data/source-readiness.json"
     },
     "design_contract": {
-      "path": "experiments/main-data/data-design-contract.json",
-      "sha256": "fba43b9fe7c5678f4f43253473cf3d28a4fdf0bd7c801739142dad2ea8d35a58"
+      "path": "experiments/main-data/data-design-contract.json"
     }
   },
   "mappings": [
@@ -284,13 +281,6 @@
       },
       "status": "policy_supported_clearance_open"
     }
-  ],
-  "next_actions": [
-    "Add the contract fields to each candidate manifest during the source-specific mapping pass; preserve raw, retained, eligible and exposed counts separately.",
-    "Close source-use, family, correctness, finite-supply and runtime gates only with pinned evidence; do not infer closure from this mapping.",
-    "Add a bounded dependency-distance annotation/evaluation diagnostic before context recipe selection.",
-    "Select at most one code and one web contrast after their manifests qualify; protect confirmation before screening.",
-    "Keep the working mixture, arm counts and GPU reservations unchanged until qualified supply and runtime receipts support a revision."
   ],
   "admission_boundary": "This mapping is review evidence only. It does not admit a source, authorize acquisition or training, change the 5,000-GPU-hour allocation or establish a positive data-efficiency claim."
 }

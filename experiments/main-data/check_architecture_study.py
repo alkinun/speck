@@ -6,15 +6,7 @@ import argparse
 import json
 from pathlib import Path
 
-from speck.provenance.io import file_sha256
-
-ROOT = Path(__file__).resolve().parents[2]
-
-
-def _artifact(path: str, expected: str) -> None:
-    resolved = (ROOT / path).resolve() if not Path(path).is_absolute() else Path(path)
-    if file_sha256(resolved) != expected:
-        raise ValueError(f"artifact checksum mismatch: {resolved}")
+from speck.provenance.io import check_reference
 
 
 def validate(packet_path: str | Path) -> dict[str, object]:
@@ -27,7 +19,7 @@ def validate(packet_path: str | Path) -> dict[str, object]:
         raise ValueError("architecture study packet must remain deferred")
 
     for entry in packet["source_of_truth"].values():
-        _artifact(entry["path"], entry["sha256"])
+        check_reference(entry)
 
     # The comparison is deferred, so the packet must draw nothing on this
     # allocation. The released hours stay recorded here so the deferral is

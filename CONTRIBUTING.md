@@ -21,7 +21,7 @@ make smoke
 
 `make quality` checks formatting, lint, portable behavior tests, and historical snapshot integrity.
 `make plan-check` is offline design arithmetic: it reconciles the reservation table, the study
-packets, the receipt chain, and the GPU-hour figures written in prose against
+packets, record references, and the GPU-hour figures written in prose against
 [`plan.json`](experiments/main-data/plan.json). Both run in CI. If a budget moves, change the plan
 and the documents in one commit; `check_documents.py` fails the build when a prose figure is left
 behind. `make evidence-test` additionally verifies frozen historical inputs. Accelerator-specific
@@ -46,8 +46,17 @@ data, tokenizer, and training settings with the experiment. Keep a small result 
 Git revision, input identities, metrics, costs, failures, and external output locations. Do not create
 another catalog, claim registry, or chain of successor documents for routine engineering changes.
 When a decision changes, update the overview, status and affected numeric fields together. Recheck
-mixture/budget sums, receipt identities and local links; distinguish selected choices, proposed
-recipes and measured outcomes. Historical result receipts retain their original bytes.
+mixture/budget sums and local links; distinguish selected choices, proposed recipes and measured
+outcomes. Historical result receipts retain their original bytes.
+
+Each fact has one owning record; others reference it rather than copy it. Per-source identity,
+inventory, gates and blockers live in
+[`source-readiness.json`](experiments/main-data/source-readiness.json), bank-to-source assignment in
+the [source registry](experiments/main-data/source-registry.json), and numeric targets in
+`plan.json`. A design record refers to another repository file by `path` alone, because Git already
+versions it and a copied digest or status goes stale on the next edit. Files outside Git carry a
+`sha256`. Result receipts and signed records keep the digests they were written with.
+`speck.provenance.io.check_reference` enforces this in `make plan-check`.
 
 Large corpora, checkpoints, caches, and logs stay outside Git. Preserve historical result bytes and
 expensive artifacts. The [archive guide](archive/README.md) restores old workflows at their original

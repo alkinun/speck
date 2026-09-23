@@ -58,3 +58,36 @@ def test_an_inventory_that_drifts_from_its_cited_closeout_is_rejected(tmp_path):
 
     with pytest.raises(ValueError, match="drifts from the closeout"):
         checker.validate(drifted)
+
+
+def _drifted(tmp_path, matrix):
+    path = tmp_path / "source-readiness.json"
+    path.write_text(json.dumps(matrix))
+    return path
+
+
+def test_a_selection_that_differs_from_the_signed_acceptance_is_rejected(tmp_path):
+    matrix = json.loads(MATRIX.read_text())
+    next(s for s in matrix["sources"] if s["id"] == "checked_code")["selected"] = True
+
+    with pytest.raises(ValueError, match="signed source-use acceptance"):
+        checker.validate(_drifted(tmp_path, matrix))
+
+
+@pytest.mark.parametrize("value", ["bound_value", "complete"])
+def test_a_manifest_field_outside_the_vocabulary_is_rejected(tmp_path, value):
+    matrix = json.loads(MATRIX.read_text())
+    matrix["sources"][0]["manifest_fields"]["stage"] = value
+
+    with pytest.raises(ValueError, match="manifest fields drift"):
+        checker.validate(_drifted(tmp_path, matrix))
+
+
+@pytest.mark.parametrize("value", [1, -1, True, "0"])
+def test_a_source_cannot_claim_eligible_tokens(tmp_path, value):
+    matrix = json.loads(MATRIX.read_text())
+    stack_edu = next(s for s in matrix["sources"] if s["id"] == "stack_edu")
+    stack_edu["inventory"]["eligible_unique_tokens_established"] = value
+
+    with pytest.raises(ValueError, match="cannot claim eligible tokens"):
+        checker.validate(_drifted(tmp_path, matrix))
