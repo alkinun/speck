@@ -117,7 +117,9 @@ from speck.data.packing import TokenShardWriter as TokenShardWriter
 from speck.data.validation import fingerprint, slice_sha256
 from speck.provenance.io import file_sha256 as _file_hash
 from speck.provenance.io import lines_sha256 as _line_hash
+from speck.tokenization.chat import ChatFormatError
 from speck.tokenization.tokenizer import get_tokenizer
+from speck.tokenization.tools import encode_conversation
 
 
 def _atomic_json(path, value):
@@ -169,6 +171,18 @@ def _truncate(path, size):
     with Path(path).open("r+b") as handle:
         handle.truncate(size)
         _sync_file(handle)
+
+
+def _encode_messages(tokenizer, content):
+    """Encode one JSON chat record with its assistant mask, or None if it is unusable."""
+
+    try:
+        tokens, mask = encode_conversation(tokenizer, json.loads(content))
+    except (ChatFormatError, ValueError, TypeError, KeyError):
+        return None, None
+    if not any(mask):
+        return None, None
+    return tokens, [int(value) for value in mask]
 
 
 class SourceBuilder:
@@ -226,8 +240,11 @@ class SourceBuilder:
         self.packing = source.get("packing")
         self.masks = {}
         self.packers = {}
-        self.rejected_long_records = {
-            split: restored_splits.get(split, {}).get("rejected_long_records", 0)
+        self.record_format = source.get("record_format", "text")
+        self.rejected = {
+            split: restored_splits.get(split, {}).get(
+                "rejected_records", {"too_long": 0, "invalid": 0}
+            )
             for split in ("train", "val")
         }
         if self.packing is not None:
@@ -303,15 +320,23 @@ class SourceBuilder:
             rows.append((document, digest, digest_integer, preferred))
         if not rows:
             return
-        token_rows = self.tokenizer.encode_batch(
-            [row[0]["content"] for row in rows], bos=True, eos=True
-        )
-        if len(token_rows) != len(rows):
-            raise ValueError("tokenizer returned the wrong number of encoded documents")
-        for (document, digest, digest_integer, split), token_ids in zip(rows, token_rows):
+        if self.record_format == "messages":
+            encoded = [_encode_messages(self.tokenizer, row[0]["content"]) for row in rows]
+        else:
+            token_rows = self.tokenizer.encode_batch(
+                [row[0]["content"] for row in rows], bos=True, eos=True
+            )
+            if len(token_rows) != len(rows):
+                raise ValueError("tokenizer returned the wrong number of encoded documents")
+            # The record's BOS is context, never a target.
+            encoded = [(tokens, [0] + [1] * (len(tokens) - 1)) for tokens in token_rows]
+        for (document, digest, digest_integer, split), (token_ids, mask) in zip(rows, encoded):
             if self.complete:
                 break
             if self._tokens(split) >= self.targets[split]:
+                continue
+            if token_ids is None:
+                self.rejected[split]["invalid"] += 1
                 continue
             minimum_tokens = self.source["filters"].get("min_tokens", 1)
             maximum_tokens = self.source["filters"].get("max_tokens", math.inf)
@@ -319,7 +344,7 @@ class SourceBuilder:
                 continue
             if self.packing is not None and len(token_ids) > self.packing["row_tokens"]:
                 # Whole records only: an over-long record is counted and left out, never cut.
-                self.rejected_long_records[split] += 1
+                self.rejected[split]["too_long"] += 1
                 continue
             self.accepted_hashes.add(digest_integer)
             self.dedup_file.write(digest)
@@ -349,8 +374,6 @@ class SourceBuilder:
                 start_token = self.writers[split].total_tokens
                 self._index(record, start_token, self.writers[split].write(token_ids))
             else:
-                # The record's BOS is context, never a target.
-                mask = [0] + [1] * (len(token_ids) - 1)
                 self._write_rows(split, self.packers[split].add(token_ids, mask, record))
 
     def _index(self, record, start_token, tokens):
@@ -441,7 +464,7 @@ class SourceBuilder:
                     **(
                         {
                             "mask_shards": list(self.masks[split].shards),
-                            "rejected_long_records": self.rejected_long_records[split],
+                            "rejected_records": dict(self.rejected[split]),
                         }
                         if self.packing is not None
                         else {}
@@ -498,7 +521,7 @@ class SourceBuilder:
                 split_summaries[split]["mask_shards"] = _prefixed_shards(
                     self.masks[split].shards, self.source_id
                 )
-                split_summaries[split]["rejected_long_records"] = self.rejected_long_records[split]
+                split_summaries[split]["rejected_records"] = dict(self.rejected[split])
         summary = {
             "id": self.source_id,
             "repo": self.source["repo"],
@@ -533,6 +556,7 @@ class SourceBuilder:
             summary["language_detector"] = self.source["language_detector"]
         if self.packing is not None:
             summary["packing"] = {**self.packing, "kind": "best_fit_rows"}
+            summary["record_format"] = self.record_format
         _atomic_json(self.directory / "source.json", summary)
         return summary
 

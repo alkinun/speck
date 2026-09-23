@@ -29,6 +29,7 @@ _SOURCE_FIELDS = {
     "metadata_columns",
     "filters",
     "packing",
+    "record_format",
 }
 
 
@@ -242,6 +243,11 @@ def _validate_source(source):
             raise ValueError(f"source {source_id} packing needs exactly row_tokens and open_rows")
         for key in ("row_tokens", "open_rows"):
             _integer(packing[key], f"source {source_id} packing {key}", minimum=1)
+    record_format = source.get("record_format", "text")
+    if record_format not in {"text", "messages"}:
+        raise ValueError(f"source {source_id} record_format must be text or messages")
+    if record_format == "messages" and packing is None:
+        raise ValueError(f"source {source_id} messages records need row packing for their masks")
     return {
         **source,
         "revision": source.get("revision"),

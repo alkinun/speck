@@ -16,8 +16,8 @@ from speck.data.loader import manifest_fingerprint
 from speck.operations.runtime import base_dir, dist_info
 from speck.provenance.io import atomic_json as _write_json
 from speck.provenance.io import file_sha256 as _file_hash
-from speck.tokenization.chat import ChatFormatError, decode_chat_record
-from speck.tokenization.tools import adapt_conversation
+from speck.tokenization.chat import ChatFormatError
+from speck.tokenization.tools import encode_conversation
 
 FORMAT_VERSION = 3
 default_sft_data_dir = Path(base_dir()) / "data" / f"SpeckChat1-v{FORMAT_VERSION}"
@@ -244,16 +244,10 @@ def prepare_sft_dataset(
                     )
                     stats[split]["input_samples"] += 1
                     try:
-                        if not completion_format:
-                            row = decode_chat_record(row)
-                            if row.get("tools") or any(
-                                message.get("tool_calls") for message in row["messages"]
-                            ):
-                                row = adapt_conversation(row)
                         if completion_format:
                             tokens, mask = encode_completion(row, tokenizer)
                         else:
-                            tokens, mask = tokenizer.encode_messages(row["messages"])
+                            tokens, mask = encode_conversation(tokenizer, row)
                         if (local or config.get("long_sequences") == "reject") and len(
                             tokens
                         ) > sequence_lengths[-1] + 1:

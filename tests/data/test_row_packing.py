@@ -9,7 +9,9 @@ import torch
 from speck.data import dataset
 from speck.data.loader import packed_loader
 from speck.data.packing import BestFitRows
+from speck.tokenization.chat import ChatTokenizer
 from tests.data.test_dataset import FakeTokenizer, single_source_settings
+from tests.training.test_sft import BaseTokenizer
 
 ROW = 64
 
@@ -56,7 +58,8 @@ def test_prepared_rows_hold_whole_records_under_a_record_mask(rows_dataset):
     source = manifest["sources"][0]
     assert source["packing"] == {"row_tokens": ROW, "open_rows": 3, "kind": "best_fit_rows"}
     train = source["splits"]["train"]
-    assert train["tokens"] % ROW == 1 and train["rejected_long_records"] == 1
+    assert train["tokens"] % ROW == 1
+    assert train["rejected_records"] == {"too_long": 1, "invalid": 0}
     tokens = np.concatenate([np.fromfile(path / s["path"], "<u2") for s in train["shards"]])
     mask = np.concatenate([np.fromfile(path / s["path"], "u1") for s in train["mask_shards"]])
     records = [
@@ -85,3 +88,60 @@ def test_loader_masks_row_targets_and_requires_the_row_length(rows_dataset):
     assert (targets[:, -1] == -100).all()
     with pytest.raises(ValueError, match="packed in 64-token rows"):
         next(packed_loader(tokenizer, 1, ROW // 2, device="cpu", data_dir=path))
+
+
+def test_messages_records_supervise_only_assistant_content(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        dataset, "_is_validation_document", lambda content, seed, fraction: "val" in content
+    )
+    config = single_source_settings(train_tokens=2 * ROW, validation_tokens=ROW)
+    config["sources"][0].update(
+        packing={"row_tokens": ROW, "open_rows": 2}, record_format="messages"
+    )
+
+    def chat(user, assistant):
+        messages = [{"role": "user", "content": user}, {"role": "assistant", "content": assistant}]
+        return {"content": json.dumps({"messages": messages})}
+
+    records = [
+        chat("val", "ok"),
+        {"content": "not json"},
+        {"content": json.dumps({"messages": []})},
+    ]
+    records += [chat(f"q{index}", f"a{index}") for index in range(12)]
+    tokenizer = ChatTokenizer(BaseTokenizer(tmp_path / "tokenizer.model"))
+    (tmp_path / "tokenizer.model").write_bytes(b"fixture")
+    path = tmp_path / "chat-rows"
+    manifest = dataset.prepare_dataset(
+        **config,
+        output_dir=path,
+        tokenizer=tokenizer,
+        check_disk=False,
+        document_iterators={"a": records},
+    )
+    train = manifest["sources"][0]["splits"]["train"]
+    assert manifest["sources"][0]["record_format"] == "messages"
+    assert train["rejected_records"] == {"too_long": 0, "invalid": 2}
+    inputs, targets, _ = next(packed_loader(tokenizer, 1, ROW, device="cpu", data_dir=path))
+    supervised = targets[targets != -100].tolist()
+    # Assistant text "a0" (bytes + 3) and its EOS are targets; user text and role tokens are not.
+    assert supervised[:3] == [ord("a") + 3, ord("0") + 3, tokenizer.eos_id]
+    assert ord("q") + 3 not in supervised and not set(tokenizer.role_ids.values()) & set(supervised)
+
+
+@pytest.mark.parametrize(
+    "extra,message",
+    [
+        ({"record_format": "messages"}, "need row packing"),
+        ({"record_format": "html"}, "record_format must be"),
+        ({"packing": {"row_tokens": 64}}, "exactly row_tokens and open_rows"),
+        ({"packing": {"row_tokens": 0, "open_rows": 1}}, "row_tokens"),
+    ],
+)
+def test_row_packing_configuration_is_validated(tmp_path, extra, message):
+    config = single_source_settings()
+    config["sources"][0].update(extra)
+    with pytest.raises(ValueError, match=message):
+        dataset.prepare_dataset(
+            **config, output_dir=tmp_path / "x", tokenizer=FakeTokenizer(), check_disk=False
+        )

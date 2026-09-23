@@ -4,7 +4,7 @@ import argparse
 
 from speck.config import load_experiment
 from speck.data.dataset import prepare_dataset
-from speck.tokenization.tokenizer import get_tokenizer
+from speck.tokenization.chat import get_experiment_tokenizer
 
 
 def parse_args(argv=None):
@@ -26,7 +26,7 @@ def main(argv=None):
     configs = load_experiment(args.experiment, "data", "tokenizer")
     prepare_dataset(
         **configs["data"],
-        tokenizer=get_tokenizer(**configs["tokenizer"]),
+        tokenizer=get_experiment_tokenizer(configs["tokenizer"]),
         restart=args.restart,
     )
 

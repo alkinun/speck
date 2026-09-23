@@ -177,3 +177,12 @@ def adapt_conversation(raw):
     if converted[-1]["role"] != "assistant":
         raise ChatFormatError("training conversation must end with an assistant answer")
     return {**row, "messages": converted, "tools": []}
+
+
+def encode_conversation(tokenizer, raw):
+    """Decode one chat record, adapt its tool calls and return tokens with the assistant mask."""
+
+    row = decode_chat_record(raw)
+    if row.get("tools") or any(message.get("tool_calls") for message in row["messages"]):
+        row = adapt_conversation(row)
+    return tokenizer.encode_messages(row["messages"])

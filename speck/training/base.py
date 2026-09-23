@@ -37,7 +37,7 @@ from speck.operations.runtime import (
     verify_distributed_identity,
 )
 from speck.provenance.repository import repository_root as find_repository_root
-from speck.tokenization.tokenizer import get_tokenizer
+from speck.tokenization.chat import get_experiment_tokenizer
 from speck.training.checkpoint import (
     checkpoint_identity,
     latest,
@@ -420,7 +420,7 @@ class BaseTrainer:
             self.branch_schedule = self.cli.branch_schedule
 
     def _load_and_verify_data(self):
-        self.tokenizer = get_tokenizer(**self.configs["tokenizer"])
+        self.tokenizer = get_experiment_tokenizer(self.configs["tokenizer"])
         self.manifest = load_manifest(self.args.data_dir)
         self.manifest_hash = manifest_fingerprint(self.manifest)
         self.source_ids = tuple(source["id"] for source in self.manifest["sources"])
