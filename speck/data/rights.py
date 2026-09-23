@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+from speck.data.validation import exact_keys
 from speck.provenance.io import durable_json as _write_json
 from speck.provenance.io import file_sha256 as _sha256
 
@@ -20,11 +21,6 @@ SCOPE_FIELDS = (
 )
 
 
-def _exact_keys(value, expected, name):
-    if not isinstance(value, dict) or set(value) != set(expected):
-        raise ValueError(f"{name} must contain exactly: {', '.join(sorted(expected))}")
-
-
 def _resolve(value, config_dir, name):
     if not isinstance(value, str) or not value:
         raise ValueError(f"{name} must be a non-empty path")
@@ -36,7 +32,7 @@ def validate_rights_template(template, *, config_dir=None, verify_evidence=False
     """Validate complete source coverage while permitting only explicit pending decisions."""
 
     config_dir = Path(config_dir or ".").resolve()
-    _exact_keys(
+    exact_keys(
         template,
         {
             "format",
@@ -82,7 +78,7 @@ def validate_rights_template(template, *, config_dir=None, verify_evidence=False
         raise ValueError("evidence packets must cover categories in frozen order")
     normalized_packets = []
     for packet in packets:
-        _exact_keys(packet, {"category", "path", "sha256", "linear_issue"}, "evidence packet")
+        exact_keys(packet, {"category", "path", "sha256", "linear_issue"}, "evidence packet")
         path = _resolve(packet["path"], config_dir, f"{packet['category']} evidence packet")
         if verify_evidence and (not path.is_file() or _sha256(path) != packet["sha256"]):
             raise ValueError(f"{packet['category']} evidence packet identity mismatch")
@@ -90,11 +86,11 @@ def validate_rights_template(template, *, config_dir=None, verify_evidence=False
             raise ValueError("evidence packet must name its human review issue")
         normalized_packets.append({**packet, "path": str(path)})
     scope = template["intended_scope"]
-    _exact_keys(scope, set(SCOPE_FIELDS), "intended_scope")
+    exact_keys(scope, set(SCOPE_FIELDS), "intended_scope")
     if any(value is not None and not isinstance(value, bool) for value in scope.values()):
         raise ValueError("scope fields must be null or boolean")
     authority = template["authority"]
-    _exact_keys(authority, {"authority_type", "name", "role", "organization"}, "authority")
+    exact_keys(authority, {"authority_type", "name", "role", "organization"}, "authority")
     if any(value is not None and not isinstance(value, str) for value in authority.values()):
         raise ValueError("authority fields must be null or strings")
     decisions = template["source_decisions"]
@@ -105,7 +101,7 @@ def validate_rights_template(template, *, config_dir=None, verify_evidence=False
         raise ValueError("source decisions must exactly follow tokenizer allocation order")
     normalized_decisions = []
     for decision in decisions:
-        _exact_keys(
+        exact_keys(
             decision,
             {
                 "source_id",

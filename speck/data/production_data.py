@@ -20,6 +20,14 @@ from speck.data.sqlite_settings import (
     validate_sqlite_settings,
     verify_sqlite_runtime,
 )
+from speck.data.validation import (
+    config_path,
+    exact_keys,
+    fingerprint,
+    integer,
+    sha256_digest,
+    slice_sha256,
+)
 from speck.provenance.io import durable_json as _write_json
 from speck.provenance.io import file_sha256 as _sha256
 
@@ -28,7 +36,6 @@ FORMAT_VERSION = 1
 MANIFEST_FORMAT = "speck_production_text_preprocess_result"
 LEDGER_FORMAT = "speck_removal_deny_ledger"
 STATE_FORMAT = "speck_production_text_preprocess_state"
-_SHA256 = re.compile(r"[0-9a-f]{64}")
 
 
 def _batched_signature(shingles, num_perm, seed):
@@ -39,40 +46,10 @@ def _batched_signature(shingles, num_perm, seed):
     return value
 
 
-def _fingerprint(value):
-    return hashlib.sha256(
-        json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
-    ).hexdigest()
-
-
-def _exact_keys(value, expected, name):
-    if not isinstance(value, dict) or set(value) != set(expected):
-        raise ValueError(f"{name} must contain exactly: {', '.join(sorted(expected))}")
-
-
-def _integer(value, name, minimum=0):
-    if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
-        raise ValueError(f"{name} must be an integer >= {minimum}")
-    return value
-
-
 def _identifier(value, name):
     if not isinstance(value, str) or not value or Path(value).name != value:
         raise ValueError(f"{name} must be a non-empty path component")
     return value
-
-
-def _digest(value, name):
-    if not isinstance(value, str) or not _SHA256.fullmatch(value):
-        raise ValueError(f"{name} must be lowercase SHA-256")
-    return value
-
-
-def _path(value, name, config_dir):
-    if not isinstance(value, str) or not value:
-        raise ValueError(f"{name} must be a non-empty path")
-    path = Path(value).expanduser()
-    return str((config_dir / path).resolve() if not path.is_absolute() else path.resolve())
 
 
 def validate_preprocess_config(config, *, config_dir=None):
@@ -80,7 +57,7 @@ def validate_preprocess_config(config, *, config_dir=None):
 
     config_dir = Path(config_dir or ".").resolve()
     version = config.get("format_version") if isinstance(config, dict) else None
-    _exact_keys(
+    exact_keys(
         config,
         {
             "format",
@@ -106,7 +83,7 @@ def validate_preprocess_config(config, *, config_dir=None):
     normalized_sources = []
     source_ids = []
     for index, source in enumerate(sources):
-        _exact_keys(
+        exact_keys(
             source,
             {
                 "id",
@@ -134,9 +111,9 @@ def validate_preprocess_config(config, *, config_dir=None):
         normalized_sources.append(
             {
                 **source,
-                "precedence": _integer(source["precedence"], f"source {source_id} precedence", 1),
-                "path": _path(source["path"], f"source {source_id} path", config_dir),
-                "sha256": _digest(source["sha256"], f"source {source_id} sha256"),
+                "precedence": integer(source["precedence"], f"source {source_id} precedence", 1),
+                "path": config_path(source["path"], f"source {source_id} path", config_dir),
+                "sha256": sha256_digest(source["sha256"], f"source {source_id} sha256"),
             }
         )
     if len(source_ids) != len(set(source_ids)):
@@ -144,13 +121,13 @@ def validate_preprocess_config(config, *, config_dir=None):
     if [source["precedence"] for source in normalized_sources] != list(range(1, len(sources) + 1)):
         raise ValueError("source precedence must be contiguous and ordered")
     ledger = config["deny_ledger"]
-    _exact_keys(ledger, {"path", "sha256"}, "deny ledger")
+    exact_keys(ledger, {"path", "sha256"}, "deny ledger")
     normalized_ledger = {
-        "path": _path(ledger["path"], "deny ledger path", config_dir),
-        "sha256": _digest(ledger["sha256"], "deny ledger sha256"),
+        "path": config_path(ledger["path"], "deny ledger path", config_dir),
+        "sha256": sha256_digest(ledger["sha256"], "deny ledger sha256"),
     }
     policy = config["policy"]
-    _exact_keys(
+    exact_keys(
         policy,
         {
             "normalization",
@@ -183,7 +160,7 @@ def validate_preprocess_config(config, *, config_dir=None):
         ("minhash_seed", 0),
         ("bands", 1),
     ):
-        normalized_policy[key] = _integer(policy[key], f"policy.{key}", minimum)
+        normalized_policy[key] = integer(policy[key], f"policy.{key}", minimum)
     if normalized_policy["num_perm"] % normalized_policy["bands"]:
         raise ValueError("num_perm must divide evenly into bands")
     threshold = policy["verified_jaccard_threshold"]
@@ -199,11 +176,11 @@ def validate_preprocess_config(config, *, config_dir=None):
         raise ValueError("cleanup_files must be a list")
     normalized_cleanup = []
     for index, item in enumerate(cleanup):
-        _exact_keys(item, {"path", "sha256"}, f"cleanup file {index}")
+        exact_keys(item, {"path", "sha256"}, f"cleanup file {index}")
         normalized_cleanup.append(
             {
-                "path": _path(item["path"], f"cleanup file {index} path", config_dir),
-                "sha256": _digest(item["sha256"], f"cleanup file {index} sha256"),
+                "path": config_path(item["path"], f"cleanup file {index} path", config_dir),
+                "sha256": sha256_digest(item["sha256"], f"cleanup file {index} sha256"),
             }
         )
     protected = {
@@ -212,7 +189,7 @@ def validate_preprocess_config(config, *, config_dir=None):
     }
     if any(item["path"] in protected for item in normalized_cleanup):
         raise ValueError("cleanup files cannot include source or deny-ledger inputs")
-    output_directory = _path(config["output_directory"], "output directory", config_dir)
+    output_directory = config_path(config["output_directory"], "output directory", config_dir)
     output_path = Path(output_directory)
     staging_path = output_path.with_name(output_path.name + ".building")
     if any(
@@ -228,13 +205,13 @@ def validate_preprocess_config(config, *, config_dir=None):
         "sources": normalized_sources,
         "deny_ledger": normalized_ledger,
         "policy": normalized_policy,
-        "checkpoint_records": _integer(config["checkpoint_records"], "checkpoint_records", 1),
+        "checkpoint_records": integer(config["checkpoint_records"], "checkpoint_records", 1),
         "cleanup_files": normalized_cleanup,
         "output_directory": output_directory,
     }
     if version == 2:
         normalized["sqlite"] = validate_sqlite_settings(config["sqlite"])
-    normalized["plan_fingerprint"] = _fingerprint(normalized)
+    normalized["plan_fingerprint"] = fingerprint(normalized)
     return normalized
 
 
@@ -248,7 +225,7 @@ def _load_ledger(config):
     if not path.is_file() or _sha256(path) != config["deny_ledger"]["sha256"]:
         raise ValueError("deny ledger identity mismatch")
     ledger = json.loads(path.read_text())
-    _exact_keys(ledger, {"format", "format_version", "status", "entries"}, "deny ledger")
+    exact_keys(ledger, {"format", "format_version", "status", "entries"}, "deny ledger")
     if (
         ledger["format"] != LEDGER_FORMAT
         or ledger["format_version"] != FORMAT_VERSION
@@ -258,7 +235,7 @@ def _load_ledger(config):
         raise ValueError("invalid deny ledger")
     values = {kind: set() for kind in ("content_sha256", "url", "domain", "blob_id")}
     for index, entry in enumerate(ledger["entries"]):
-        _exact_keys(
+        exact_keys(
             entry, {"kind", "value", "reason", "authority", "recorded_at"}, f"deny entry {index}"
         )
         kind = entry["kind"]
@@ -268,7 +245,7 @@ def _load_ledger(config):
         ):
             raise ValueError(f"invalid deny entry {index}")
         if kind == "content_sha256":
-            _digest(entry["value"], f"deny entry {index} content hash")
+            sha256_digest(entry["value"], f"deny entry {index} content hash")
         values[kind].add(entry["value"].lower() if kind == "domain" else entry["value"])
     return ledger, values
 
@@ -358,26 +335,12 @@ def _candidate_text(connection, sources, doc_seq, handles):
     return record[sources[source_index]["text_field"]]
 
 
-def _slice_sha256(path, start, end):
-    hasher = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        handle.seek(start)
-        remaining = end - start
-        while remaining:
-            chunk = handle.read(min(8 * 1024 * 1024, remaining))
-            if not chunk:
-                raise ValueError(f"checkpoint slice ended early: {path}")
-            hasher.update(chunk)
-            remaining -= len(chunk)
-    return hasher.hexdigest()
-
-
 def _verify_slices(path, slices, expected_size, description):
     boundary = 0
     for item in slices:
         if item["start"] != boundary or item["end"] < item["start"]:
             raise ValueError(f"{description} checkpoint slices are not contiguous")
-        if _slice_sha256(path, item["start"], item["end"]) != item["sha256"]:
+        if slice_sha256(path, item["start"], item["end"]) != item["sha256"]:
             raise ValueError(f"{description} checkpoint slice checksum mismatch")
         boundary = item["end"]
     if boundary != expected_size:
@@ -414,7 +377,7 @@ def _checkpoint(connection, handles, removal, state_path, state, *, timing=None)
         end = handle.tell()
         if end > start:
             state["output_slices"].setdefault(key, []).append(
-                {"start": start, "end": end, "sha256": _slice_sha256(handle.name, start, end)}
+                {"start": start, "end": end, "sha256": slice_sha256(handle.name, start, end)}
             )
         state["output_sizes"][key] = end
     removal_start = state["removal_size"]
@@ -424,7 +387,7 @@ def _checkpoint(connection, handles, removal, state_path, state, *, timing=None)
             {
                 "start": removal_start,
                 "end": removal_end,
-                "sha256": _slice_sha256(removal.name, removal_start, removal_end),
+                "sha256": slice_sha256(removal.name, removal_start, removal_end),
             }
         )
     state["removal_size"] = removal_end
@@ -558,7 +521,7 @@ def preprocess_sources(
         config = validate_preprocess_config(config)
     else:
         payload = {key: value for key, value in config.items() if key != "plan_fingerprint"}
-        if config["plan_fingerprint"] != _fingerprint(payload):
+        if config["plan_fingerprint"] != fingerprint(payload):
             raise ValueError("normalized production preprocess fingerprint mismatch")
     output = Path(config["output_directory"])
     if output.exists():

@@ -13,7 +13,7 @@ from collections import Counter
 from functools import lru_cache
 from pathlib import Path
 
-from speck.data.validation import _exact_keys, _fingerprint, _integer, _path
+from speck.data.validation import config_path, dump_line, exact_keys, fingerprint, integer
 from speck.provenance.io import durable_json as _write_json
 from speck.provenance.io import file_sha256 as _sha256
 
@@ -29,7 +29,7 @@ def validate_refinement_config(config, *, config_dir=None):
     """Validate and normalize a Stack v3 refinement plan."""
 
     config_dir = Path(config_dir or ".").resolve()
-    _exact_keys(
+    exact_keys(
         config,
         {
             "format",
@@ -50,7 +50,7 @@ def validate_refinement_config(config, *, config_dir=None):
         raise ValueError("Stack v3 refinement must remain non-authoritative")
 
     source = config["input"]
-    _exact_keys(
+    exact_keys(
         source,
         {
             "tokenizer_jsonl",
@@ -64,14 +64,14 @@ def validate_refinement_config(config, *, config_dir=None):
     )
     normalized_input = {}
     for key in ("tokenizer_jsonl", "repository_jsonl", "attribution_jsonl"):
-        normalized_input[key] = _path(source[key], f"input.{key}", config_dir)
+        normalized_input[key] = config_path(source[key], f"input.{key}", config_dir)
         digest = source[f"{key}_sha256"]
         if not isinstance(digest, str) or not _SHA256.fullmatch(digest):
             raise ValueError(f"input.{key}_sha256 must be lowercase hexadecimal")
         normalized_input[f"{key}_sha256"] = digest
 
     scanner = config["scanner"]
-    _exact_keys(
+    exact_keys(
         scanner,
         {
             "name",
@@ -94,7 +94,7 @@ def validate_refinement_config(config, *, config_dir=None):
         raise ValueError("scanner official URL must reference Gitleaks upstream")
     normalized_scanner = dict(scanner)
     for key in ("binary", "report"):
-        normalized_scanner[key] = _path(scanner[key], f"scanner.{key}", config_dir)
+        normalized_scanner[key] = config_path(scanner[key], f"scanner.{key}", config_dir)
     for key in ("binary_sha256", "release_archive_sha256", "report_sha256"):
         if not isinstance(scanner[key], str) or not _SHA256.fullmatch(scanner[key]):
             raise ValueError(f"scanner.{key} must be lowercase hexadecimal")
@@ -102,7 +102,7 @@ def validate_refinement_config(config, *, config_dir=None):
         raise ValueError("Gitleaks reports must use 100 percent redaction")
 
     policy = config["license_policy"]
-    _exact_keys(
+    exact_keys(
         policy,
         {"name", "accepted_detected_licenses", "manual_legal_acceptance"},
         "license_policy",
@@ -121,7 +121,7 @@ def validate_refinement_config(config, *, config_dir=None):
         raise ValueError("engineering license filtering cannot assert legal acceptance")
 
     english = config["English_prose"]
-    _exact_keys(
+    exact_keys(
         english,
         {"detector", "languages", "minimum_alphabetic_characters", "minimum_probability"},
         "English_prose",
@@ -136,7 +136,7 @@ def validate_refinement_config(config, *, config_dir=None):
         or len(languages) != len(set(languages))
     ):
         raise ValueError("English prose languages must be unique non-empty strings")
-    minimum_letters = _integer(
+    minimum_letters = integer(
         english["minimum_alphabetic_characters"], "minimum_alphabetic_characters", 1
     )
     probability = english["minimum_probability"]
@@ -148,7 +148,7 @@ def validate_refinement_config(config, *, config_dir=None):
         raise ValueError("minimum_probability must be in (0, 1]")
 
     partition = config["downstream_partition"]
-    _exact_keys(
+    exact_keys(
         partition,
         {
             "seed",
@@ -160,10 +160,10 @@ def validate_refinement_config(config, *, config_dir=None):
         },
         "downstream_partition",
     )
-    seed = _integer(partition["seed"], "downstream seed")
+    seed = integer(partition["seed"], "downstream seed")
     if partition["category"] != "code":
         raise ValueError("Stack v3 downstream category must be code")
-    modulus = _integer(partition["modulus"], "downstream modulus", 2)
+    modulus = integer(partition["modulus"], "downstream modulus", 2)
     remainders = partition["evaluation_remainders"]
     if (
         not isinstance(remainders, list)
@@ -176,8 +176,8 @@ def validate_refinement_config(config, *, config_dir=None):
         or len(remainders) == modulus
     ):
         raise ValueError("invalid downstream evaluation remainders")
-    training_bytes = _integer(partition["training_bytes"], "downstream training bytes")
-    evaluation_bytes = _integer(partition["evaluation_bytes"], "downstream evaluation bytes")
+    training_bytes = integer(partition["training_bytes"], "downstream training bytes")
+    evaluation_bytes = integer(partition["evaluation_bytes"], "downstream evaluation bytes")
     if training_bytes + evaluation_bytes < 1:
         raise ValueError("downstream partition must request at least one byte")
 
@@ -205,9 +205,9 @@ def validate_refinement_config(config, *, config_dir=None):
             "training_bytes": training_bytes,
             "evaluation_bytes": evaluation_bytes,
         },
-        "output_directory": _path(config["output_directory"], "output_directory", config_dir),
+        "output_directory": config_path(config["output_directory"], "output_directory", config_dir),
     }
-    normalized["plan_fingerprint"] = _fingerprint(normalized)
+    normalized["plan_fingerprint"] = fingerprint(normalized)
     return normalized
 
 
@@ -215,7 +215,7 @@ def _validated_config(config):
     if "plan_fingerprint" not in config:
         return validate_refinement_config(config)
     payload = {key: value for key, value in config.items() if key != "plan_fingerprint"}
-    if config["plan_fingerprint"] != _fingerprint(payload):
+    if config["plan_fingerprint"] != fingerprint(payload):
         raise ValueError("normalized Stack v3 refinement fingerprint mismatch")
     return config
 
@@ -299,7 +299,7 @@ def _load_security_blocklist(config):
             raise ValueError("Gitleaks report is not fully redacted")
         if Path(finding.get("File", "")).resolve() != input_path.resolve():
             raise ValueError("Gitleaks report targets an unexpected file")
-        line = _integer(finding.get("StartLine"), "Gitleaks StartLine", 1)
+        line = integer(finding.get("StartLine"), "Gitleaks StartLine", 1)
         lines.add(line)
         rule = finding.get("RuleID")
         if not isinstance(rule, str) or not rule:
@@ -344,12 +344,6 @@ def _sample_partition(record, settings):
     return "eval" if value % settings["modulus"] in settings["evaluation_remainders"] else "train"
 
 
-def _dump_line(handle, value):
-    handle.write(
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
-    )
-
-
 def refine_stack_v3(config, *, restart=False):
     """Produce a non-authoritative v2 sample with scanner/license/language filtering."""
 
@@ -384,7 +378,7 @@ def refine_stack_v3(config, *, restart=False):
 
     def flush_repository(handle):
         if current_repo is not None and current_files:
-            _dump_line(
+            dump_line(
                 handle,
                 {
                     "repo_path": current_repo,
@@ -450,8 +444,8 @@ def refine_stack_v3(config, *, restart=False):
                     "commit_id": record.get("commit_id"),
                 }
             repositories.add(repo_path)
-            _dump_line(tokenizer_output, record)
-            _dump_line(
+            dump_line(tokenizer_output, record)
+            dump_line(
                 attribution_output,
                 {key: value for key, value in record.items() if key != "text"},
             )

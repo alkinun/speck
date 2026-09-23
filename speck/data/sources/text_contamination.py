@@ -13,6 +13,14 @@ from pathlib import Path
 import pyarrow.parquet as pq
 
 from speck.data.sources.stack_v3_refine import _sample_partition
+from speck.data.validation import (
+    config_path,
+    dump_line,
+    exact_keys,
+    fingerprint,
+    integer,
+    sha256_digest,
+)
 from speck.provenance.io import durable_json as _write_json
 from speck.provenance.io import file_sha256 as _sha256
 
@@ -22,57 +30,17 @@ REPORT_FORMAT = "speck_text_contamination_result"
 TEXT_CATEGORIES = {"web", "math", "synthetic", "science", "reference"}
 
 
-def _fingerprint(value):
-    return hashlib.sha256(
-        json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
-    ).hexdigest()
-
-
-def _dump_line(handle, value):
-    handle.write(
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
-    )
-
-
-def _exact_keys(value, expected, name):
-    if not isinstance(value, dict) or set(value) != set(expected):
-        raise ValueError(f"{name} must contain exactly: {', '.join(sorted(expected))}")
-
-
-def _integer(value, name, minimum=0):
-    if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
-        raise ValueError(f"{name} must be an integer >= {minimum}")
-    return value
-
-
 def _identifier(value, name):
     if not isinstance(value, str) or not value or Path(value).name != value:
         raise ValueError(f"{name} must be a non-empty path component")
     return value
 
 
-def _digest(value, name):
-    if (
-        not isinstance(value, str)
-        or len(value) != 64
-        or any(character not in "0123456789abcdef" for character in value)
-    ):
-        raise ValueError(f"{name} must be lowercase SHA-256")
-    return value
-
-
-def _path(value, name, config_dir):
-    if not isinstance(value, str) or not value:
-        raise ValueError(f"{name} must be a non-empty path")
-    path = Path(value).expanduser()
-    return str((config_dir / path).resolve() if not path.is_absolute() else path.resolve())
-
-
 def validate_text_contamination_config(config, *, config_dir=None):
     """Validate and normalize a frozen multi-source text-contamination plan."""
 
     config_dir = Path(config_dir or ".").resolve()
-    _exact_keys(
+    exact_keys(
         config,
         {
             "format",
@@ -97,7 +65,7 @@ def validate_text_contamination_config(config, *, config_dir=None):
     source_ids = []
     categories = set()
     for index, source in enumerate(sources):
-        _exact_keys(
+        exact_keys(
             source,
             {
                 "id",
@@ -123,7 +91,7 @@ def validate_text_contamination_config(config, *, config_dir=None):
             if not isinstance(source[key], str) or not source[key]:
                 raise ValueError(f"source {source_id} {key} must be non-empty")
         partition = source["partition"]
-        _exact_keys(
+        exact_keys(
             partition,
             {
                 "seed",
@@ -134,7 +102,7 @@ def validate_text_contamination_config(config, *, config_dir=None):
             },
             f"source {source_id} partition",
         )
-        modulus = _integer(partition["modulus"], f"source {source_id} modulus", 2)
+        modulus = integer(partition["modulus"], f"source {source_id} modulus", 2)
         remainders = partition["evaluation_remainders"]
         if (
             not isinstance(remainders, list)
@@ -150,23 +118,23 @@ def validate_text_contamination_config(config, *, config_dir=None):
         normalized_sources.append(
             {
                 **source,
-                "path": _path(source["path"], f"source {source_id} path", config_dir),
-                "sha256": _digest(source["sha256"], f"source {source_id} sha256"),
-                "parent_report": _path(
+                "path": config_path(source["path"], f"source {source_id} path", config_dir),
+                "sha256": sha256_digest(source["sha256"], f"source {source_id} sha256"),
+                "parent_report": config_path(
                     source["parent_report"], f"source {source_id} parent report", config_dir
                 ),
-                "parent_report_sha256": _digest(
+                "parent_report_sha256": sha256_digest(
                     source["parent_report_sha256"],
                     f"source {source_id} parent report sha256",
                 ),
                 "partition": {
-                    "seed": _integer(partition["seed"], f"source {source_id} seed"),
+                    "seed": integer(partition["seed"], f"source {source_id} seed"),
                     "modulus": modulus,
                     "evaluation_remainders": sorted(remainders),
-                    "training_bytes": _integer(
+                    "training_bytes": integer(
                         partition["training_bytes"], f"source {source_id} training bytes", 1
                     ),
-                    "evaluation_bytes": _integer(
+                    "evaluation_bytes": integer(
                         partition["evaluation_bytes"], f"source {source_id} evaluation bytes", 1
                     ),
                 },
@@ -183,7 +151,7 @@ def validate_text_contamination_config(config, *, config_dir=None):
     normalized_benchmarks = []
     benchmark_ids = []
     for index, benchmark in enumerate(benchmarks):
-        _exact_keys(
+        exact_keys(
             benchmark,
             {
                 "id",
@@ -221,10 +189,12 @@ def validate_text_contamination_config(config, *, config_dir=None):
         normalized_benchmarks.append(
             {
                 **benchmark,
-                "path": _path(benchmark["path"], f"benchmark {benchmark_id} path", config_dir),
-                "sha256": _digest(benchmark["sha256"], f"benchmark {benchmark_id} sha256"),
+                "path": config_path(
+                    benchmark["path"], f"benchmark {benchmark_id} path", config_dir
+                ),
+                "sha256": sha256_digest(benchmark["sha256"], f"benchmark {benchmark_id} sha256"),
                 "text_fields": list(fields),
-                "expected_tasks": _integer(
+                "expected_tasks": integer(
                     benchmark["expected_tasks"], f"benchmark {benchmark_id} expected tasks", 1
                 ),
             }
@@ -233,7 +203,7 @@ def validate_text_contamination_config(config, *, config_dir=None):
         raise ValueError("benchmark IDs must be unique")
 
     policy = config["policy"]
-    _exact_keys(
+    exact_keys(
         policy,
         {
             "normalization",
@@ -272,7 +242,7 @@ def validate_text_contamination_config(config, *, config_dir=None):
         ("minimum_exact_field_tokens", 1),
         ("exact_anchor_tokens", 1),
     ):
-        normalized_policy[key] = _integer(policy[key], f"policy.{key}", minimum)
+        normalized_policy[key] = integer(policy[key], f"policy.{key}", minimum)
     if normalized_policy["maximum_tasks_per_ngram"] != 1:
         raise ValueError("text contamination requires task-unique n-grams")
     if normalized_policy["sensitivity_ngram"] > normalized_policy["primary_ngram"]:
@@ -287,9 +257,9 @@ def validate_text_contamination_config(config, *, config_dir=None):
         "sources": normalized_sources,
         "benchmarks": normalized_benchmarks,
         "policy": normalized_policy,
-        "output_directory": _path(config["output_directory"], "output directory", config_dir),
+        "output_directory": config_path(config["output_directory"], "output directory", config_dir),
     }
-    normalized["plan_fingerprint"] = _fingerprint(normalized)
+    normalized["plan_fingerprint"] = fingerprint(normalized)
     return normalized
 
 
@@ -304,7 +274,7 @@ def _validated_config(config):
     if "plan_fingerprint" not in config:
         return validate_text_contamination_config(config)
     payload = {key: value for key, value in config.items() if key != "plan_fingerprint"}
-    if config["plan_fingerprint"] != _fingerprint(payload):
+    if config["plan_fingerprint"] != fingerprint(payload):
         raise ValueError("normalized text contamination plan fingerprint mismatch")
     return config
 
@@ -632,8 +602,8 @@ def scan_text_contamination(config, *, restart=False):
                 )
                 partitions[f"{partition}_bytes"] += size
                 partitions[f"{partition}_records"] += 1
-                _dump_line(cleaned, record)
-                _dump_line(
+                dump_line(cleaned, record)
+                dump_line(
                     attribution, {key: value for key, value in record.items() if key != "text"}
                 )
             for output_handle in (cleaned, attribution):

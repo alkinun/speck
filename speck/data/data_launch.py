@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from speck.data.loader import manifest_fingerprint
+from speck.data.validation import exact_keys
 from speck.provenance.io import file_sha256 as _sha256
 
 FORMAT = "speck_flagship_data_launch_request"
@@ -15,11 +16,6 @@ FORMAT_VERSION = 1
 RECEIPT_FORMAT = "speck_flagship_data_launch_receipt"
 _SHA256 = re.compile(r"[0-9a-f]{64}")
 _COMMIT = re.compile(r"[0-9a-f]{40}")
-
-
-def _exact_keys(value, expected, name):
-    if not isinstance(value, dict) or set(value) != set(expected):
-        raise ValueError(f"{name} must contain exactly: {', '.join(sorted(expected))}")
 
 
 def _path(value, config_dir, name):
@@ -30,7 +26,7 @@ def _path(value, config_dir, name):
 
 
 def _identity(value, config_dir, name):
-    _exact_keys(value, {"path", "sha256"}, name)
+    exact_keys(value, {"path", "sha256"}, name)
     if not isinstance(value["sha256"], str) or not _SHA256.fullmatch(value["sha256"]):
         raise ValueError(f"{name} sha256 must be lowercase SHA-256")
     return {"path": str(_path(value["path"], config_dir, name)), "sha256": value["sha256"]}
@@ -40,7 +36,7 @@ def validate_launch_request(request, *, config_dir=None):
     """Validate one exact launch request without treating it as authority."""
 
     config_dir = Path(config_dir or ".").resolve()
-    _exact_keys(
+    exact_keys(
         request,
         {
             "format",

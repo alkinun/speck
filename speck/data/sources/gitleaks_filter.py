@@ -8,6 +8,14 @@ from collections import Counter
 from pathlib import Path
 
 from speck.data.sources.stack_v3_refine import _sample_partition
+from speck.data.validation import (
+    config_path,
+    dump_line,
+    exact_keys,
+    fingerprint,
+    integer,
+    sha256_digest,
+)
 from speck.provenance.io import durable_json as _write_json
 from speck.provenance.io import file_sha256 as _sha256
 
@@ -16,45 +24,11 @@ FORMAT_VERSION = 1
 REPORT_FORMAT = "speck_gitleaks_filter_result"
 
 
-def _fingerprint(value):
-    return hashlib.sha256(
-        json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
-    ).hexdigest()
-
-
-def _exact_keys(value, keys, name):
-    if not isinstance(value, dict) or set(value) != set(keys):
-        raise ValueError(f"{name} must contain exactly: {', '.join(sorted(keys))}")
-
-
-def _path(value, name, config_dir):
-    if not isinstance(value, str) or not value:
-        raise ValueError(f"{name} must be a non-empty path")
-    path = Path(value).expanduser()
-    return str((config_dir / path).resolve() if not path.is_absolute() else path.resolve())
-
-
-def _digest(value, name):
-    if (
-        not isinstance(value, str)
-        or len(value) != 64
-        or any(character not in "0123456789abcdef" for character in value)
-    ):
-        raise ValueError(f"{name} must be lowercase SHA-256")
-    return value
-
-
-def _integer(value, name, minimum=0):
-    if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
-        raise ValueError(f"{name} must be an integer >= {minimum}")
-    return value
-
-
 def validate_gitleaks_filter_config(config, *, config_dir=None):
     """Validate a generic immutable Gitleaks exclusion plan."""
 
     config_dir = Path(config_dir or ".").resolve()
-    _exact_keys(
+    exact_keys(
         config,
         {
             "format",
@@ -72,7 +46,7 @@ def validate_gitleaks_filter_config(config, *, config_dir=None):
     if config["status"] != "exclusion_authorized_not_training_authority":
         raise ValueError("Gitleaks exclusion must remain non-authoritative")
     source = config["input"]
-    _exact_keys(
+    exact_keys(
         source,
         {
             "path",
@@ -86,10 +60,10 @@ def validate_gitleaks_filter_config(config, *, config_dir=None):
     )
     normalized_input = {
         **source,
-        "path": _path(source["path"], "input.path", config_dir),
-        "sha256": _digest(source["sha256"], "input.sha256"),
-        "parent_report": _path(source["parent_report"], "input.parent_report", config_dir),
-        "parent_report_sha256": _digest(
+        "path": config_path(source["path"], "input.path", config_dir),
+        "sha256": sha256_digest(source["sha256"], "input.sha256"),
+        "parent_report": config_path(source["parent_report"], "input.parent_report", config_dir),
+        "parent_report_sha256": sha256_digest(
             source["parent_report_sha256"], "input.parent_report_sha256"
         ),
     }
@@ -97,7 +71,7 @@ def validate_gitleaks_filter_config(config, *, config_dir=None):
         if not isinstance(source[key], str) or not source[key]:
             raise ValueError(f"input.{key} must be non-empty")
     scanner = config["scanner"]
-    _exact_keys(
+    exact_keys(
         scanner,
         {
             "name",
@@ -116,16 +90,16 @@ def validate_gitleaks_filter_config(config, *, config_dir=None):
         raise ValueError("scanner must be Gitleaks with full redaction")
     normalized_scanner = {
         **scanner,
-        "binary": _path(scanner["binary"], "scanner.binary", config_dir),
-        "report": _path(scanner["report"], "scanner.report", config_dir),
+        "binary": config_path(scanner["binary"], "scanner.binary", config_dir),
+        "report": config_path(scanner["report"], "scanner.report", config_dir),
     }
     for key in ("binary_sha256", "release_archive_sha256", "report_sha256"):
-        normalized_scanner[key] = _digest(scanner[key], f"scanner.{key}")
+        normalized_scanner[key] = sha256_digest(scanner[key], f"scanner.{key}")
     if not isinstance(scanner["version"], str) or not isinstance(scanner["official_url"], str):
         raise ValueError("scanner version and official URL must be strings")
 
     partition = config["downstream_partition"]
-    _exact_keys(
+    exact_keys(
         partition,
         {
             "seed",
@@ -137,7 +111,7 @@ def validate_gitleaks_filter_config(config, *, config_dir=None):
         },
         "downstream_partition",
     )
-    modulus = _integer(partition["modulus"], "partition.modulus", 2)
+    modulus = integer(partition["modulus"], "partition.modulus", 2)
     remainders = partition["evaluation_remainders"]
     if (
         partition["category"] != "code"
@@ -153,11 +127,11 @@ def validate_gitleaks_filter_config(config, *, config_dir=None):
         raise ValueError("invalid downstream partition")
     normalized_partition = {
         **partition,
-        "seed": _integer(partition["seed"], "partition.seed"),
+        "seed": integer(partition["seed"], "partition.seed"),
         "modulus": modulus,
         "evaluation_remainders": sorted(remainders),
-        "training_bytes": _integer(partition["training_bytes"], "partition.training_bytes"),
-        "evaluation_bytes": _integer(partition["evaluation_bytes"], "partition.evaluation_bytes"),
+        "training_bytes": integer(partition["training_bytes"], "partition.training_bytes"),
+        "evaluation_bytes": integer(partition["evaluation_bytes"], "partition.evaluation_bytes"),
     }
     normalized = {
         "format": FORMAT,
@@ -166,9 +140,9 @@ def validate_gitleaks_filter_config(config, *, config_dir=None):
         "input": normalized_input,
         "scanner": normalized_scanner,
         "downstream_partition": normalized_partition,
-        "output_directory": _path(config["output_directory"], "output_directory", config_dir),
+        "output_directory": config_path(config["output_directory"], "output_directory", config_dir),
     }
-    normalized["plan_fingerprint"] = _fingerprint(normalized)
+    normalized["plan_fingerprint"] = fingerprint(normalized)
     return normalized
 
 
@@ -176,7 +150,7 @@ def _validated_config(config):
     if "plan_fingerprint" not in config:
         return validate_gitleaks_filter_config(config)
     payload = {key: value for key, value in config.items() if key != "plan_fingerprint"}
-    if config["plan_fingerprint"] != _fingerprint(payload):
+    if config["plan_fingerprint"] != fingerprint(payload):
         raise ValueError("normalized Gitleaks filter fingerprint mismatch")
     return config
 
@@ -205,7 +179,7 @@ def _blocked_records(config, input_path):
             or Path(finding.get("File", "")).resolve() != input_path.resolve()
         ):
             raise ValueError("Gitleaks report is not fully redacted or targets another input")
-        lines.add(_integer(finding.get("StartLine"), "Gitleaks StartLine", 1))
+        lines.add(integer(finding.get("StartLine"), "Gitleaks StartLine", 1))
         rule = finding.get("RuleID")
         if not isinstance(rule, str) or not rule:
             raise ValueError("Gitleaks finding has no rule ID")
@@ -219,12 +193,6 @@ def _blocked_records(config, input_path):
     if len(blocked) != len(lines):
         raise ValueError("Gitleaks report lines did not map to unique records")
     return blocked, findings, rules
-
-
-def _dump_line(handle, value):
-    handle.write(
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
-    )
 
 
 def apply_gitleaks_filter(config, *, restart=False):
@@ -283,8 +251,8 @@ def apply_gitleaks_filter(config, *, restart=False):
             partition = _sample_partition(record, config["downstream_partition"])
             partitions[f"{partition}_records"] += 1
             partitions[f"{partition}_bytes"] += size
-            _dump_line(cleaned, record)
-            _dump_line(attribution, {key: value for key, value in record.items() if key != "text"})
+            dump_line(cleaned, record)
+            dump_line(attribution, {key: value for key, value in record.items() if key != "text"})
         for handle in (cleaned, attribution):
             handle.flush()
             os.fsync(handle.fileno())
