@@ -11,7 +11,7 @@ from pathlib import Path
 import torch
 
 from speck.evaluation.diagnostics import command_output, maximum_error, parse_lengths
-from speck.model import torch_kimi_delta_rule
+from speck.model.layers import torch_kimi_delta_rule
 from speck.provenance.io import atomic_json
 
 PINNED_FLA_VERSION = "0.5.0"

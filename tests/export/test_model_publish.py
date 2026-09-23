@@ -161,7 +161,7 @@ def test_current_release_code_vendors_the_native_architecture(tmp_path):
     prepare_current_release_code(tmp_path)
     native = (tmp_path / "native_speck.py").read_text()
     assert "from .architecture_speck import (" in native
-    assert "class GatedDeltaNet" in native
+    assert "class KimiDeltaAttention" in native
     assert (tmp_path / "architecture_speck.py").is_file()
     assert (tmp_path / "configuration_speck.py").is_file()
     assert (tmp_path / "modeling_speck.py").is_file()
@@ -256,51 +256,6 @@ def test_current_transformers_parity_writes_attestation(tmp_path, cache_fault):
     assert report["format_version"] == 2
     assert 0 < report["generation_smoke_new_tokens"] <= 2
     assert json.loads((tmp_path / "speck_parity.json").read_text()) == report
-
-
-def test_current_transformers_wrapper_exports_gated_deltanet(tmp_path):
-    values = metadata()
-    values["config"]["blocks"] = [
-        {
-            "block": {
-                "hidden_size": 4,
-                "stages": [
-                    {
-                        "branches": [
-                            {
-                                "kind": "gated_deltanet",
-                                "key_head_dim": 2,
-                                "value_head_dim": 2,
-                                "num_key_heads": 1,
-                                "num_value_heads": 2,
-                                "conv_kernel_size": 3,
-                            }
-                        ]
-                    },
-                    {"branches": [{"kind": "swiglu", "intermediate_size": 8}]},
-                ],
-            }
-        },
-        {
-            "block": {
-                "hidden_size": 4,
-                "stages": [
-                    {
-                        "branches": [
-                            {
-                                "kind": "attention",
-                                "head_dim": 2,
-                                "num_key_value_heads": 1,
-                                "rope_dim": 0,
-                            }
-                        ]
-                    },
-                    {"branches": [{"kind": "swiglu", "intermediate_size": 8}]},
-                ],
-            }
-        },
-    ]
-    assert_current_transformers_parity(tmp_path, values)
 
 
 @pytest.mark.parametrize("activation", (None, "sigmoid", "silu"))

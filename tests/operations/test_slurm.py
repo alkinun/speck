@@ -8,7 +8,6 @@ from types import SimpleNamespace
 import pytest
 import torch
 
-from speck.model import CausalLMTrainingOutput
 from speck.operations import trainer as slurm_base_train
 from speck.operations.slurm import (
     MANDATORY_GPU_HOURS,
@@ -473,7 +472,6 @@ def test_slurm_trainer_requires_job_and_resolves_latest_only_on_retry(tmp_path, 
 def test_slurm_trainer_checkpoints_usr1_at_optimizer_boundary(monkeypatch):
     trainer = object.__new__(slurm_base_train.SlurmBaseTrainer)
     trainer.args = SimpleNamespace(
-        diagnostics_every=100,
         log_every=100,
         eval_every=0,
         save_every=0,
@@ -483,8 +481,6 @@ def test_slurm_trainer_checkpoints_usr1_at_optimizer_boundary(monkeypatch):
         decay_fraction=None,
         grad_clip=1.0,
         lr=1e-3,
-        load_balance_coefficient=0.0,
-        router_z_loss_coefficient=0.0,
         batch_tokens=8,
     )
     trainer.start_step = 0
@@ -515,8 +511,7 @@ def test_slurm_trainer_checkpoints_usr1_at_optimizer_boundary(monkeypatch):
     def optimization(*args, **kwargs):
         trainer._signal_requested = True
         zero = torch.tensor(0.0)
-        output = CausalLMTrainingOutput(zero, zero, zero, zero, ())
-        return output, zero, (object(), object(), object())
+        return zero, zero, (object(), object(), object())
 
     monkeypatch.setattr(slurm_base_train.base_train, "optimization_step", optimization)
     trainer._run_steps()

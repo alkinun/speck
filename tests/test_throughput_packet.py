@@ -62,21 +62,6 @@ def test_boolean_profile_flag_is_rejected_because_the_flag_takes_a_path(tmp_path
         validate(broken)
 
 
-@pytest.mark.parametrize("packet", PACKETS, ids=lambda path: path.stem)
-@pytest.mark.parametrize("scope", ["common", "override"])
-def test_production_training_output_cannot_be_disabled(packet, scope, tmp_path):
-    value = json.loads(packet.read_text())
-    config = value["common"] if scope == "common" else value["runs"][0]["overrides"]
-    config["training_output"] = False
-    for run in value["runs"]:
-        run.pop("argv")
-    broken = tmp_path / packet.name
-    broken.write_text(json.dumps(value))
-
-    with pytest.raises(ValueError, match="training_output must match the production trainer"):
-        validate(broken)
-
-
 def test_print_commands_validates_before_emitting_commands(tmp_path, monkeypatch, capsys):
     value = json.loads(PACKETS[0].read_text())
     value["runs"][0]["argv"] = ["stale"]

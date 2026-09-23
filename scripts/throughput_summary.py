@@ -62,7 +62,6 @@ def summarize(paths: list[str | Path]) -> dict:
                         "loss_backend",
                         "activation_checkpointing",
                         "deterministic",
-                        "training_output",
                         "optimizer",
                         "optimizer_step_compiled",
                         "seed",

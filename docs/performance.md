@@ -79,8 +79,8 @@ training work and compilation; it is not pure compile time.
    automatically faster. Microbatch changes alter loader scheduling and cannot be silently resumed.
 2. **Compare compilation at the same geometry.** Keep Liger and deterministic execution as the
    candidates selected by the proxy. Measure both compiled forward/backward and optimizer cost;
-   the current compile toggle changes both. Both rental packets require `--training-output` to
-   match the production trainer's typed loss diagnostics; preflight checks every run.
+   the current compile toggle changes both. The benchmark calls the same loss path as the
+   production trainer; preflight checks every run.
 3. **Follow the flagship trace.** Investigate KDA graph boundaries if host gaps dominate; investigate
    normalization, gates, weight casts and layout copies if those dominate. Batched Muon already
    groups matrices and compiles its update; optimize it only when its measured time or memory

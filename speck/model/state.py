@@ -1,4 +1,4 @@
-"""Persistent attention, convolution, and recurrent decoding state."""
+"""Persistent attention and recurrent decoding state."""
 
 from collections import defaultdict
 
@@ -139,16 +139,6 @@ class AttentionState:
         )
 
 
-class ConvolutionState:
-    """Hold causal convolution history for incremental decoding."""
-
-    def __init__(self, batch_size, inner_size, history, device, dtype):
-        self.values = torch.zeros(batch_size, inner_size, history, device=device, dtype=dtype)
-
-    def allocated_bytes(self):
-        return self.values.numel() * self.values.element_size()
-
-
 class DeltaNetState:
     """Hold fixed-size recurrent and local-convolution delta-rule state."""
 
@@ -162,7 +152,7 @@ class DeltaNetState:
         conv_history,
         device,
         dtype,
-        kind="gated_deltanet",
+        kind="kimi_delta_attention",
     ):
         self.kind = kind
         self.recurrent = torch.zeros(
@@ -215,11 +205,6 @@ class SequenceState:
     def memory_report(self):
         by_kind = defaultdict(int)
         for entry in self.entries.values():
-            if isinstance(entry, AttentionState):
-                kind = "attention_kv"
-            elif isinstance(entry, DeltaNetState):
-                kind = entry.kind
-            else:
-                kind = "convolution"
+            kind = "attention_kv" if isinstance(entry, AttentionState) else entry.kind
             by_kind[kind] += entry.allocated_bytes()
         return {"total_bytes": sum(by_kind.values()), "by_kind": dict(sorted(by_kind.items()))}

@@ -126,11 +126,6 @@ def arguments(argv=None):
         help="select reproducible kernels, matching production recipes (default: %(default)s)",
     )
     parser.add_argument(
-        "--training-output",
-        action="store_true",
-        help="request the typed training output, matching the production trainer call",
-    )
-    parser.add_argument(
         "--explain",
         action="store_true",
         help="record torch._dynamo.explain graph and graph-break counts",
@@ -422,7 +417,6 @@ def run(args):
         explanation = torch._dynamo.explain(train_model)(
             batch[0],
             batch[1],
-            return_training_output=args.training_output,
         )
         explain = {
             "graph_count": explanation.graph_count,
@@ -445,7 +439,6 @@ def run(args):
             train["grad_clip"],
             train["lr"],
             cudagraphs=cudagraphs,
-            return_training_output=args.training_output,
             step_probe=probe,
         )
 
@@ -478,7 +471,7 @@ def run(args):
         loss, _, batch = step(probe=record_backward_peak)
         synchronize(device)
         durations.append(time.perf_counter() - started)
-        losses.append(float(loss.total_loss if args.training_output else loss))
+        losses.append(float(loss))
         if cuda:
             peak_after_step = max(peak_after_step, torch.cuda.max_memory_allocated(device))
             peak_reserved = max(peak_reserved, torch.cuda.max_memory_reserved(device))
@@ -541,7 +534,6 @@ def run(args):
             "loss_backend": args.loss_backend,
             "activation_checkpointing": activation_checkpointing,
             "deterministic": args.deterministic,
-            "training_output": args.training_output,
             "optimizer": train["optimizer"],
             "optimizer_step_compiled": optimizer_step_compiled,
             "seed": args.seed,

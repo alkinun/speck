@@ -1,11 +1,10 @@
 import json
 import random
-from dataclasses import replace
 
 import numpy as np
 import torch
 
-from speck.model import CausalLMTrainingOutput, SpeckForCausalLM
+from speck.model import SpeckForCausalLM
 from speck.training.smoke import run_smoke
 
 
@@ -16,8 +15,6 @@ def test_actual_base_and_sft_resume_restore_stochastic_training(tmp_path, monkey
         output = original(self, *args, **kwargs)
         if self.training:
             scale = 1 + 0.02 * (random.random() + np.random.random() + torch.rand(()).item())
-            if isinstance(output, CausalLMTrainingOutput):
-                return replace(output, total_loss=output.total_loss * scale)
             if isinstance(output, torch.Tensor) and output.ndim == 0:
                 return output * scale
         return output
