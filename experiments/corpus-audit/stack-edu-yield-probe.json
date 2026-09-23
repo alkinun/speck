@@ -1,0 +1,511 @@
+{
+  "benchmarks": {
+    "path": "/mnt/speck-data/speck/h100-pilot-relocation-20260918/preview/prepared.json",
+    "sha256": "fff8fa58389d1854798e14b7a4cbb26767cbcc62fe20289078b6b8c44c8181d5"
+  },
+  "boundary": "Hash-ranked rows per stratum, not a census. The screen is restored from the retained acquisition, with the current frozen five-benchmark scanner in place of its historical contamination plan; comparing tiers under one screen is what makes the ratio meaningful. Origin, notice, family and near-duplicate gates are not applied, so eligible tokens stay zero.",
+  "by_language": {
+    "C": {
+      "3": {
+        "declared_bytes": 2036551,
+        "kept_rows": 353,
+        "rejections": {
+          "benchmark_contamination": 3,
+          "code_character_envelope": 6,
+          "code_non_English_prose": 22,
+          "content_length_metadata_mismatch": 113,
+          "duplicate_lines": 13,
+          "raw_email_or_ipv4": 2
+        },
+        "rows": 512,
+        "tokens": 419764,
+        "tokens_per_declared_byte": 0.2061151427094141
+      },
+      "4+": {
+        "declared_bytes": 954414,
+        "kept_rows": 368,
+        "rejections": {
+          "benchmark_contamination": 4,
+          "code_character_envelope": 2,
+          "code_non_English_prose": 72,
+          "content_length_metadata_mismatch": 60,
+          "duplicate_lines": 5,
+          "raw_email_or_ipv4": 1
+        },
+        "rows": 512,
+        "tokens": 217821,
+        "tokens_per_declared_byte": 0.22822485839478465
+      },
+      "yield_ratio_3_to_4plus": 0.9031231048147917
+    },
+    "C#": {
+      "3": {
+        "declared_bytes": 1549595,
+        "kept_rows": 426,
+        "rejections": {
+          "benchmark_contamination": 2,
+          "code_non_English_prose": 31,
+          "content_length_metadata_mismatch": 24,
+          "duplicate_lines": 29
+        },
+        "rows": 512,
+        "tokens": 310041,
+        "tokens_per_declared_byte": 0.2000787302488715
+      },
+      "4+": {
+        "declared_bytes": 933083,
+        "kept_rows": 459,
+        "rejections": {
+          "benchmark_contamination": 4,
+          "code_non_English_prose": 17,
+          "content_length_metadata_mismatch": 16,
+          "duplicate_lines": 16
+        },
+        "rows": 512,
+        "tokens": 207136,
+        "tokens_per_declared_byte": 0.22199096972080726
+      },
+      "yield_ratio_3_to_4plus": 0.901292203464428
+    },
+    "C++": {
+      "3": {
+        "declared_bytes": 1774936,
+        "kept_rows": 393,
+        "rejections": {
+          "code_character_envelope": 3,
+          "code_non_English_prose": 20,
+          "content_length_metadata_mismatch": 87,
+          "duplicate_lines": 9
+        },
+        "rows": 512,
+        "tokens": 369204,
+        "tokens_per_declared_byte": 0.2080097535911154
+      },
+      "4+": {
+        "declared_bytes": 1141706,
+        "kept_rows": 371,
+        "rejections": {
+          "benchmark_contamination": 11,
+          "code_character_envelope": 1,
+          "code_non_English_prose": 60,
+          "content_length_metadata_mismatch": 62,
+          "duplicate_lines": 7
+        },
+        "rows": 512,
+        "tokens": 264811,
+        "tokens_per_declared_byte": 0.23194324983839973
+      },
+      "yield_ratio_3_to_4plus": 0.8968131374206434
+    },
+    "Go": {
+      "3": {
+        "declared_bytes": 1507423,
+        "kept_rows": 409,
+        "rejections": {
+          "benchmark_contamination": 3,
+          "code_character_envelope": 5,
+          "code_non_English_prose": 37,
+          "content_length_metadata_mismatch": 36,
+          "duplicate_lines": 20,
+          "raw_email_or_ipv4": 2
+        },
+        "rows": 512,
+        "tokens": 388767,
+        "tokens_per_declared_byte": 0.25790173030396907
+      },
+      "4+": {
+        "declared_bytes": 814511,
+        "kept_rows": 404,
+        "rejections": {
+          "benchmark_contamination": 13,
+          "code_character_envelope": 2,
+          "code_non_English_prose": 68,
+          "content_length_metadata_mismatch": 19,
+          "duplicate_lines": 6
+        },
+        "rows": 512,
+        "tokens": 236592,
+        "tokens_per_declared_byte": 0.2904712152444841
+      },
+      "yield_ratio_3_to_4plus": 0.8878736231639961
+    },
+    "Java": {
+      "3": {
+        "declared_bytes": 1471907,
+        "kept_rows": 368,
+        "rejections": {
+          "benchmark_contamination": 2,
+          "code_character_envelope": 2,
+          "code_non_English_prose": 41,
+          "content_length_metadata_mismatch": 91,
+          "duplicate_lines": 7,
+          "raw_email_or_ipv4": 1
+        },
+        "rows": 512,
+        "tokens": 278898,
+        "tokens_per_declared_byte": 0.18948072126839535
+      },
+      "4+": {
+        "declared_bytes": 1084569,
+        "kept_rows": 324,
+        "rejections": {
+          "benchmark_contamination": 6,
+          "code_non_English_prose": 106,
+          "content_length_metadata_mismatch": 73,
+          "duplicate_lines": 3
+        },
+        "rows": 512,
+        "tokens": 194602,
+        "tokens_per_declared_byte": 0.1794279570963212
+      },
+      "yield_ratio_3_to_4plus": 1.056026743740261
+    },
+    "JavaScript": {
+      "3": {
+        "declared_bytes": 1749484,
+        "kept_rows": 392,
+        "rejections": {
+          "benchmark_contamination": 6,
+          "code_character_envelope": 2,
+          "code_non_English_prose": 50,
+          "content_length_metadata_mismatch": 46,
+          "duplicate_lines": 16
+        },
+        "rows": 512,
+        "tokens": 359003,
+        "tokens_per_declared_byte": 0.20520507761145573
+      },
+      "4+": {
+        "declared_bytes": 932972,
+        "kept_rows": 355,
+        "rejections": {
+          "benchmark_contamination": 17,
+          "code_character_envelope": 7,
+          "code_non_English_prose": 87,
+          "content_length_metadata_mismatch": 38,
+          "duplicate_lines": 8
+        },
+        "rows": 512,
+        "tokens": 198357,
+        "tokens_per_declared_byte": 0.21260766668238704
+      },
+      "yield_ratio_3_to_4plus": 0.9651819278841436
+    },
+    "Markdown": {
+      "3": {
+        "declared_bytes": 2507111,
+        "kept_rows": 256,
+        "rejections": {
+          "benchmark_contamination": 6,
+          "code_non_English_prose": 103,
+          "content_length_metadata_mismatch": 137,
+          "raw_email_or_ipv4": 10
+        },
+        "rows": 512,
+        "tokens": 271230,
+        "tokens_per_declared_byte": 0.10818428063216985
+      },
+      "4+": {
+        "declared_bytes": 2283881,
+        "kept_rows": 252,
+        "rejections": {
+          "benchmark_contamination": 14,
+          "code_non_English_prose": 184,
+          "content_length_metadata_mismatch": 53,
+          "duplicate_lines": 6,
+          "raw_email_or_ipv4": 3
+        },
+        "rows": 512,
+        "tokens": 255884,
+        "tokens_per_declared_byte": 0.11203911237056571
+      },
+      "yield_ratio_3_to_4plus": 0.965593874702915
+    },
+    "PHP": {
+      "3": {
+        "declared_bytes": 1668462,
+        "kept_rows": 282,
+        "rejections": {
+          "benchmark_contamination": 1,
+          "code_character_envelope": 3,
+          "code_non_English_prose": 78,
+          "content_length_metadata_mismatch": 133,
+          "duplicate_lines": 14,
+          "raw_email_or_ipv4": 1
+        },
+        "rows": 512,
+        "tokens": 203091,
+        "tokens_per_declared_byte": 0.12172347946791716
+      },
+      "4+": {
+        "declared_bytes": 903272,
+        "kept_rows": 320,
+        "rejections": {
+          "benchmark_contamination": 12,
+          "code_character_envelope": 8,
+          "code_non_English_prose": 99,
+          "content_length_metadata_mismatch": 56,
+          "duplicate_lines": 17
+        },
+        "rows": 512,
+        "tokens": 153320,
+        "tokens_per_declared_byte": 0.16973846194723183
+      },
+      "yield_ratio_3_to_4plus": 0.7171237330155523
+    },
+    "Python": {
+      "3": {
+        "declared_bytes": 2060548,
+        "kept_rows": 388,
+        "rejections": {
+          "benchmark_contamination": 11,
+          "code_character_envelope": 6,
+          "code_non_English_prose": 33,
+          "content_length_metadata_mismatch": 70,
+          "duplicate_lines": 3,
+          "raw_email_or_ipv4": 1
+        },
+        "rows": 512,
+        "tokens": 403865,
+        "tokens_per_declared_byte": 0.19599883137883709
+      },
+      "4+": {
+        "declared_bytes": 834658,
+        "kept_rows": 324,
+        "rejections": {
+          "benchmark_contamination": 38,
+          "code_character_envelope": 23,
+          "code_non_English_prose": 67,
+          "content_length_metadata_mismatch": 58,
+          "duplicate_lines": 2
+        },
+        "rows": 512,
+        "tokens": 165630,
+        "tokens_per_declared_byte": 0.1984405588875923
+      },
+      "yield_ratio_3_to_4plus": 0.9876954211253842
+    },
+    "Ruby": {
+      "3": {
+        "declared_bytes": 1318961,
+        "kept_rows": 437,
+        "rejections": {
+          "benchmark_contamination": 5,
+          "code_character_envelope": 9,
+          "code_non_English_prose": 5,
+          "content_length_metadata_mismatch": 45,
+          "duplicate_lines": 9,
+          "raw_email_or_ipv4": 2
+        },
+        "rows": 512,
+        "tokens": 326264,
+        "tokens_per_declared_byte": 0.24736440273821592
+      },
+      "4+": {
+        "declared_bytes": 1005266,
+        "kept_rows": 440,
+        "rejections": {
+          "benchmark_contamination": 16,
+          "code_character_envelope": 6,
+          "code_non_English_prose": 1,
+          "content_length_metadata_mismatch": 44,
+          "duplicate_lines": 4,
+          "raw_email_or_ipv4": 1
+        },
+        "rows": 512,
+        "tokens": 274569,
+        "tokens_per_declared_byte": 0.27313069376662497
+      },
+      "yield_ratio_3_to_4plus": 0.9056631436288706
+    },
+    "Rust": {
+      "3": {
+        "declared_bytes": 2875870,
+        "kept_rows": 457,
+        "rejections": {
+          "benchmark_contamination": 3,
+          "code_character_envelope": 3,
+          "code_non_English_prose": 9,
+          "content_length_metadata_mismatch": 18,
+          "duplicate_lines": 20,
+          "raw_email_or_ipv4": 2
+        },
+        "rows": 512,
+        "tokens": 667005,
+        "tokens_per_declared_byte": 0.23193155462520906
+      },
+      "4+": {
+        "declared_bytes": 2280531,
+        "kept_rows": 448,
+        "rejections": {
+          "benchmark_contamination": 15,
+          "code_non_English_prose": 19,
+          "content_length_metadata_mismatch": 13,
+          "duplicate_lines": 17
+        },
+        "rows": 512,
+        "tokens": 624695,
+        "tokens_per_declared_byte": 0.2739252393411885
+      },
+      "yield_ratio_3_to_4plus": 0.8466965482371119
+    },
+    "SQL": {
+      "3": {
+        "declared_bytes": 4418930,
+        "kept_rows": 284,
+        "rejections": {
+          "code_character_envelope": 25,
+          "code_non_English_prose": 49,
+          "content_length_metadata_mismatch": 143,
+          "duplicate_lines": 5,
+          "raw_email_or_ipv4": 6
+        },
+        "rows": 512,
+        "tokens": 216126,
+        "tokens_per_declared_byte": 0.04890912505968639
+      },
+      "4+": {
+        "declared_bytes": 1510124,
+        "kept_rows": 396,
+        "rejections": {
+          "benchmark_contamination": 4,
+          "code_character_envelope": 4,
+          "code_non_English_prose": 38,
+          "content_length_metadata_mismatch": 62,
+          "duplicate_lines": 8
+        },
+        "rows": 512,
+        "tokens": 301307,
+        "tokens_per_declared_byte": 0.1995246747949175
+      },
+      "yield_ratio_3_to_4plus": 0.24512820336611446
+    },
+    "Shell": {
+      "3": {
+        "declared_bytes": 1017840,
+        "kept_rows": 399,
+        "rejections": {
+          "code_character_envelope": 28,
+          "code_non_English_prose": 18,
+          "content_length_metadata_mismatch": 57,
+          "duplicate_lines": 1,
+          "raw_email_or_ipv4": 9
+        },
+        "rows": 512,
+        "tokens": 182314,
+        "tokens_per_declared_byte": 0.17911852550499097
+      },
+      "4+": {
+        "declared_bytes": 1446037,
+        "kept_rows": 392,
+        "rejections": {
+          "benchmark_contamination": 1,
+          "code_character_envelope": 2,
+          "code_non_English_prose": 12,
+          "content_length_metadata_mismatch": 91,
+          "duplicate_lines": 2,
+          "raw_email_or_ipv4": 12
+        },
+        "rows": 512,
+        "tokens": 304167,
+        "tokens_per_declared_byte": 0.2103452401287104
+      },
+      "yield_ratio_3_to_4plus": 0.8515454183578779
+    },
+    "Swift": {
+      "3": {
+        "declared_bytes": 1505497,
+        "kept_rows": 154,
+        "rejections": {
+          "benchmark_contamination": 1,
+          "code_character_envelope": 3,
+          "code_non_English_prose": 33,
+          "content_length_metadata_mismatch": 314,
+          "duplicate_lines": 7
+        },
+        "rows": 512,
+        "tokens": 115163,
+        "tokens_per_declared_byte": 0.07649500463966384
+      },
+      "4+": {
+        "declared_bytes": 1247613,
+        "kept_rows": 257,
+        "rejections": {
+          "benchmark_contamination": 9,
+          "code_character_envelope": 2,
+          "code_non_English_prose": 126,
+          "content_length_metadata_mismatch": 115,
+          "duplicate_lines": 2,
+          "raw_email_or_ipv4": 1
+        },
+        "rows": 512,
+        "tokens": 151811,
+        "tokens_per_declared_byte": 0.12168116234761901
+      },
+      "yield_ratio_3_to_4plus": 0.628651166407605
+    },
+    "TypeScript": {
+      "3": {
+        "declared_bytes": 1328682,
+        "kept_rows": 440,
+        "rejections": {
+          "benchmark_contamination": 4,
+          "code_character_envelope": 5,
+          "code_non_English_prose": 23,
+          "content_length_metadata_mismatch": 25,
+          "duplicate_lines": 15
+        },
+        "rows": 512,
+        "tokens": 290800,
+        "tokens_per_declared_byte": 0.21886350533837293
+      },
+      "4+": {
+        "declared_bytes": 1333642,
+        "kept_rows": 407,
+        "rejections": {
+          "benchmark_contamination": 6,
+          "code_character_envelope": 1,
+          "code_non_English_prose": 60,
+          "content_length_metadata_mismatch": 27,
+          "duplicate_lines": 10,
+          "raw_email_or_ipv4": 1
+        },
+        "rows": 512,
+        "tokens": 285021,
+        "tokens_per_declared_byte": 0.21371627468241103
+      },
+      "yield_ratio_3_to_4plus": 1.024084411276637
+    }
+  },
+  "corpus_code_executed": false,
+  "eligible_tokens_established": 0,
+  "fetch_seconds": 735.5537511099828,
+  "format": "speck_stack_edu_yield_probe",
+  "format_version": 1,
+  "gitleaks": {
+    "path": "/mnt/speck-data/speck/tools/gitleaks/8.30.1/gitleaks",
+    "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+  },
+  "gpu_hours": 0,
+  "listing": {
+    "path": "/mnt/speck-data/speck/stack-edu-census-20260923/census-listing.json",
+    "sha256": "beba71740e03bd2173b5721979849cda24e35bfb52e7dcda3eaaddd7cb493671"
+  },
+  "pooled_tokens_per_declared_byte": {
+    "3": 0.16676746505263287,
+    "4+": 0.205050026250544
+  },
+  "pooled_yield_ratio_3_to_4plus": 0.8133013591954633,
+  "rows_per_language_and_tier": 512,
+  "seed": "speck-stack-edu-yield-v1",
+  "selection": {
+    "path": "/mnt/speck-data/speck/stack-edu-yield-probe-20260923/selection.json",
+    "sha256": "8074f94c3034ed498c5f91e5a850b082be1f28e8f7a6a57e706f2f311e853c1a"
+  },
+  "status": "bounded_content_probe_not_training_admission",
+  "tokenizer": {
+    "path": "/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model",
+    "sha256": "dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055"
+  },
+  "training_admitted": false
+}

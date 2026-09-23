@@ -38,9 +38,9 @@ Four facts govern the order of work:
 4. **Shard choice cannot close the code gap; the score floor decides it.** The
    [full metadata census](experiments/corpus-audit/stack-edu-metadata-census.json) covers all 42
    Stack-Edu files. Under the signed licence rule, the whole release projects to about 1.2B tokens at
-   the historical `int_score` 4 floor and about 17.7B at floor 3. Every score tier together, adding
-   Java at 2, stays near 20.5B, below the 35B target. Nearly four fifths of rows carry no licence
-   and stay excluded.
+   the historical `int_score` 4 floor and about 16.2B at floor 3 with its measured yield. Adding Java
+   at 2 stays near 19B, below the 35B target. Nearly four fifths of rows carry no licence and stay
+   excluded.
 
 **Source use is decided and admits nothing.** The signed
 [acceptance record](experiments/main-data/source-rights-acceptance.json) covers the nine
@@ -72,6 +72,7 @@ detail.
 | Stack v3 preflight | All 16 frozen groups acquired; 29,347 repository rows / 379,942 entries; fixed 44-repository / 80-file cohort screened | [Receipt](experiments/corpus-audit/stack-v3-broader.json); four content flags, eight known-family holds; source use, quality and eligible yield unresolved; exact offline replay, no admission |
 | Common code review | 176 complete texts / 412,974 tokens reviewed; 45 of 218 records now held; all 173 unheld records read (plus three held records) | [Reading closeout](experiments/corpus-audit/stylesheet-cohort-review.json), [current holds](experiments/main-data/family-partition.json); page/template/component roles and notice questions recorded; all holds preserved; no yield estimate or admission |
 | Upstream supply census | All 42 Stack-Edu metadata files / 167,063,359 rows under the historical predicate by `int_score`; all 6,000 pinned Ultra-FineWeb HQ shards / 478 GB listed by crawl | [Code census](experiments/corpus-audit/stack-edu-metadata-census.json), [HQ listing](experiments/corpus-audit/ultrafineweb-hq-listing.json); metadata and listings only. Token figures are projections from retained yields; the `int_score` 3 yield is assumed until probed |
+| Stack-Edu yield probe | 15 languages x 2 tiers x 512 hash-ranked rows fetched and screened; restored screen reproduces the historical 4+ yield; `int_score` 3 at 0.81 of 4+ pooled | [Receipt](experiments/corpus-audit/stack-edu-yield-probe.json); bounded sample, current five-benchmark scanner, no origin, notice, family or near-duplicate gates; no admission |
 | Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
 | Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions; later full token census below |
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
@@ -119,20 +120,22 @@ primary research evidence is added.
    reassignment of derived-data shares. Use the measured assistant lengths and RL prompt links
    before selecting downstream packs; adapter compatibility does not establish tool-task success.
    Acquisition runs in this order. It spends no GPU-hours and admits nothing:
-   - **Code, `int_score` 3 probe.** Decision recorded 2026-09-23 by the principal investigator:
-     lower the Stack-Edu floor from 4 to 3, measured first. Fetch a fixed hash-ranked 512 rows per
-     language at `int_score` 3 through the unchanged content, prose, benchmark, security and
-     Gitleaks checks, and replace the census's assumed yield with the measured one. The bulk fetch
-     below proceeds only if that yield holds. The ordered fetcher was retired in `fc54dafb`;
-     restore it from Git history rather than rewriting it.
+   - **Code, `int_score` 3 probe: done, the yield holds.** Decision recorded 2026-09-23 by the
+     principal investigator: lower the Stack-Edu floor from 4 to 3, measured first. The
+     [probe](experiments/corpus-audit/stack-edu-yield-probe.json) ran 512 hash-ranked rows per
+     language and tier through the retained acquisition's screen, restored from `fc54dafb^`. The
+     restored screen reproduces the historical `int_score` 4+ yield (0.205 against 0.204 tokens per
+     declared byte). `int_score` 3 yields 0.81 of that pooled, 0.85 to 1.06 in most languages;
+     PHP, Swift and especially SQL are lower. Applying the per-language ratios projects about 15.0B
+     tokens at `int_score` 3, not the assumed 16.5B.
    - **Code, remaining `int_score` 4 and 5.** Take every licence-eligible row not already retained,
      across all 42 files: about 1.35M blobs and 0.7B projected tokens, roughly nine hours at the
      retained acquisition's measured 22.6K tokens/s.
-   - **Code, `int_score` 3 bulk.** About 24.7M blobs and 16.5B projected tokens, roughly eight days
+   - **Code, `int_score` 3 bulk.** About 24.7M blobs and 15.0B projected tokens, roughly a week
      at that rate, in language-balanced tranches that each close with a receipt. Java
      `int_score` 2 (about 2.9B) stays out unless a later decision adds it.
    - **Code horizon.** Even after both fetches, projected unique code is about half the 35B target.
-     Proposed, not decided: reach the 28B code exposure with about 1.6 passes over unique code
+     Proposed, not decided: reach the 28B code exposure with about 1.7 passes over unique code
      rather than re-freezing the 35% share. Stack v3's licence-labelled supply is the other lever
      and still needs sizing. The final eligible count sets the horizon under the rule above.
    - **Selected web.** Download one whole crawl, `CC-MAIN-2025-43`: 1,000 shards, 91.8 GB
