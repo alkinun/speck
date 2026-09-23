@@ -177,7 +177,8 @@ separate hardware checks. Use 25,600 batches for a complete one-worker scan into
 
 ## Closed-out rental execution — 2026-09-19
 
-`scripts.pilot_rental` implements this workflow. Training, export, full development generation,
+`scripts.pilot_rental` implemented this workflow and was removed after closeout; see
+`git log -- speck/operations/pilot_rental.py`. Training, export, full development generation,
 isolated local code grading and backups are complete, and the
 [execution receipt](h100-run.json) preserves the original failures alongside the recovery. Nothing
 below authorizes a new run: it is the operational record, and the durable lessons carry forward to
