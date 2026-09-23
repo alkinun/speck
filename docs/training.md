@@ -154,6 +154,16 @@ clipping; distributed rollout, long-context RL and measured benefit remain to qu
 run checks the plumbing only: its tiny model earns no reward. Data and verifier requirements are in
 [the program](program.md#conditional-rl).
 
+## Final self-distillation
+
+`python -m scripts.self_distill EXPERIMENT` builds the stage-6 dataset from `self_distill.json`:
+the hash-pinned parent samples several completions per prompt, and only completions that end at
+EOS and pass their verifier are kept, deduplicated, up to `keep_per_prompt`. Hash-pinned anchor
+conversations are mixed in unchanged. The output directory holds one train and one validation
+Parquet file, the matching `messages_v1` dataset block and a receipt counting truncated, failed,
+duplicate and accepted samples. Run `scripts.sft_prepare --source-dir` and `scripts.sft_train` on it
+to perform the final self-SFT; there is no separate trainer.
+
 ## Assistant training and generation
 
 SFT requires its own `sft.json`, prepared assistant-masked data, and an explicit parent checkpoint:
