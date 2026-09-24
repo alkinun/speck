@@ -1,0 +1,22 @@
+{
+  "format": "speck_ladder_record",
+  "format_version": 1,
+  "family": "learning_rate",
+  "rung": "50m",
+  "status": "declared_not_run",
+  "question": "Which peak learning rate should every 50m run use?",
+  "arms": [
+    {"id": "lr-1e-3", "lr": 0.001},
+    {"id": "lr-2e-3", "lr": 0.002},
+    {"id": "lr-4e-3", "lr": 0.004},
+    {"id": "lr-8e-3", "lr": 0.008}
+  ],
+  "controls": "One seed, the 50m baseline corpus and experiments/ladder/50m/train.json unchanged except lr and train_tokens. Muon with AdamW-matched update scale, warmup-stable-decay with a 20% linear decay, 131,072-token batches.",
+  "horizon_tokens": 657950850,
+  "horizon_rule": "A quarter of the rung's 50-tokens-per-parameter horizon, so the decay still covers the final 20% of each arm.",
+  "primary_metric": "Mean final held-out loss over the baseline corpus's per-source validation split.",
+  "decision_rule": "Choose the arm with the lowest primary metric. If the best arm is at either end of the grid, extend the grid by one factor of two in that direction before choosing. The chosen rate then trains one full-horizon run, which is P0 seed 1.",
+  "minimum_useful_effect": null,
+  "minimum_useful_effect_basis": "Not applicable: this sets a hyperparameter, it tests no data effect.",
+  "cost": "Local RTX 3090 at about 94,000 tokens per second: about 2 hours per arm, no grant GPU-hours."
+}
