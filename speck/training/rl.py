@@ -3,25 +3,28 @@
 Each step samples a group of completions per prompt from the current policy, scores them with a
 checked verifier, normalizes rewards within the group, and takes one on-policy gradient step on
 the completion tokens. Groups whose completions all score the same carry no signal and are
-reported, not hidden. This is a minimal single-process trainer; it performs no KL penalty,
-reference model or multi-epoch clipping.
+reported, not hidden. Under torchrun each rank samples its share of a step's prompts and the
+summed gradients are all-reduced, so a step is the same at any world size. It performs no KL
+penalty, reference model or multi-epoch clipping.
 """
 
 import argparse
 import hashlib
 import json
+import os
 import random
 import time
 from pathlib import Path
 
 import torch
+import torch.distributed as dist
 
 from speck.config import load_experiment
 from speck.evaluation.verifiers import code_reward, math_reward
 from speck.model import SpeckForCausalLM
 from speck.model.architecture import ArchitectureConfig
 from speck.model.generation import sample_group
-from speck.operations.runtime import configure_determinism, print0
+from speck.operations.runtime import configure_determinism, init_runtime, print0
 from speck.tokenization.chat import get_chat_tokenizer
 from speck.training.checkpoint import latest, load, load_metadata, load_model, save
 from speck.training.step import assert_finite, lr_scale, set_optimizer_lr
@@ -68,6 +71,8 @@ def validate_settings(settings):
         raise ValueError("activation_checkpointing must be boolean")
     if type(settings["deterministic"]) is not bool:
         raise ValueError("deterministic must be boolean")
+    if settings["prompts_per_step"] % (dist.get_world_size() if dist.is_initialized() else 1):
+        raise ValueError("prompts_per_step must divide evenly across ranks")
     if set(settings["parent"]) != {"checkpoint_dir", "step", "model_sha256", "metadata_sha256"}:
         raise ValueError("parent must name a native checkpoint and its sha256 digests")
     return settings
@@ -139,11 +144,19 @@ def load_parent(parent, tokenizer):
     return model
 
 
+def _all_reduce(tensor):
+    if dist.is_initialized():
+        dist.all_reduce(tensor)
+    return tensor
+
+
 class RLTrainer:
     def __init__(self, configs, device="cpu", reward=None):
         self.settings = validate_settings(dict(configs["rl"]))
         configure_determinism(self.settings["deterministic"])
         self.device = torch.device(device)
+        self.rank = dist.get_rank() if dist.is_initialized() else 0
+        self.world_size = dist.get_world_size() if dist.is_initialized() else 1
         self.tokenizer = get_chat_tokenizer(**configs["tokenizer"])
         self.prompts, self.skipped = load_prompts(
             self.settings["prompt_files"], self.tokenizer, self.settings["max_prompt_tokens"]
@@ -171,16 +184,21 @@ class RLTrainer:
             self.start = step
 
     def _batch(self, step):
+        """This rank's (global index, prompt) pairs; ranks take every world_size-th prompt."""
         count = self.settings["prompts_per_step"]
-        return [self.prompts[(step * count + index) % len(self.prompts)] for index in range(count)]
+        indexes = range(step * count + self.rank, (step + 1) * count, self.world_size)
+        return [(index, self.prompts[index % len(self.prompts)]) for index in indexes]
 
     def step(self, step):
         settings = self.settings
-        # Sampling depends only on (seed, step), so a resumed run draws the same completions.
-        generator = torch.Generator(self.device).manual_seed(settings["seed"] * 1_000_003 + step)
         self.model.eval()
         groups = []
-        for prompt in self._batch(step):
+        for index, prompt in self._batch(step):
+            # Each prompt's draws depend only on (seed, global prompt index), so resumed runs and
+            # runs at any world size sample the same completions.
+            generator = torch.Generator(self.device).manual_seed(
+                settings["seed"] * 1_000_003 + index
+            )
             completions = sample_group(
                 self.model,
                 prompt["tokens"],
@@ -197,8 +215,10 @@ class RLTrainer:
             groups.append((prompt, completions, rewards))
         self.model.train()
         self.optimizer.zero_grad(set_to_none=True)
-        tokens = sum(len(completion) for _, completions, _ in groups for completion in completions)
+        local_tokens = sum(len(c) for _, completions, _ in groups for c in completions)
+        tokens = int(_all_reduce(torch.tensor(local_tokens, device=self.device)))
         loss_sum = torch.zeros((), device=self.device)
+        any_update = False
         for prompt, completions, rewards in groups:
             advantages = group_advantages(rewards)
             # One completion per backward bounds activation memory by the longest sequence,
@@ -209,6 +229,16 @@ class RLTrainer:
                 loss, _ = policy_loss(self.model, prompt["tokens"], [completion], advantage[None])
                 (loss / tokens).backward()
                 loss_sum += loss.detach()
+                any_update = True
+        # A step with no signal on any rank leaves every gradient unset, as one process would;
+        # otherwise ranks without signal contribute zeros to the summed gradient.
+        signal = _all_reduce(torch.tensor(float(any_update), device=self.device))
+        if self.world_size > 1 and signal:
+            for parameter in self.model.parameters():
+                if parameter.grad is None:
+                    parameter.grad = torch.zeros_like(parameter)
+                dist.all_reduce(parameter.grad)
+        _all_reduce(loss_sum)
         assert_finite(loss_sum, "non-finite RL loss")
         scale = lr_scale(
             step, settings["steps"], settings["warmup_steps"], settings["min_lr"], "cosine"
@@ -217,18 +247,25 @@ class RLTrainer:
         grad_norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), settings["grad_clip"])
         assert_finite(grad_norm, "non-finite RL gradients")
         self.optimizer.step()
-        rewards = [reward for _, _, group in groups for reward in group]
+        counts = _all_reduce(
+            torch.tensor(
+                [
+                    sum(reward for _, _, group in groups for reward in group),
+                    sum(any(group) for _, _, group in groups),
+                    sum(len(set(group)) == 1 for _, _, group in groups),
+                    sum(c[-1] != self.tokenizer.eos_id for _, cs, _ in groups for c in cs),
+                ],
+                dtype=torch.float64,
+                device=self.device,
+            )
+        ).tolist()
         return {
             "step": step + 1,
-            "reward_mean": sum(rewards) / len(rewards),
-            "solved_prompts": sum(any(group) for _, _, group in groups),
-            "zero_signal_groups": sum(len(set(group)) == 1 for _, _, group in groups),
+            "reward_mean": counts[0] / (settings["prompts_per_step"] * settings["group_size"]),
+            "solved_prompts": int(counts[1]),
+            "zero_signal_groups": int(counts[2]),
             "completion_tokens": tokens,
-            "truncated_completions": sum(
-                completion[-1] != self.tokenizer.eos_id
-                for _, completions, _ in groups
-                for completion in completions
-            ),
+            "truncated_completions": int(counts[3]),
             "loss": float(loss_sum) / tokens,
             "grad_norm": float(grad_norm),
         }
@@ -239,8 +276,9 @@ class RLTrainer:
             for step in range(self.start, self.settings["steps"]):
                 started = time.perf_counter()
                 metrics = {**self.step(step), "seconds": time.perf_counter() - started}
-                log.write(json.dumps(metrics, sort_keys=True) + "\n")
-                log.flush()
+                if self.rank == 0:
+                    log.write(json.dumps(metrics, sort_keys=True) + "\n")
+                    log.flush()
                 print0(json.dumps(metrics, sort_keys=True))
                 completed = step + 1
                 if (
@@ -258,7 +296,10 @@ class RLTrainer:
             "settings": self.settings,
             "resolved": {"tokenizer": self.tokenizer.metadata(), "skipped_prompts": self.skipped},
         }
-        save(self.output, step, self.model.state_dict(), self.optimizer.state_dict(), metadata)
+        if self.rank == 0:
+            save(self.output, step, self.model.state_dict(), self.optimizer.state_dict(), metadata)
+        if dist.is_initialized():
+            dist.barrier()
 
 
 def main():
@@ -267,7 +308,10 @@ def main():
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     args = parser.parse_args()
     configs = load_experiment(args.experiment, "tokenizer", "rl")
-    RLTrainer(configs, args.device).run()
+    device = (
+        init_runtime(args.device)[3] if int(os.environ.get("WORLD_SIZE", 1)) > 1 else args.device
+    )
+    RLTrainer(configs, device).run()
 
 
 if __name__ == "__main__":

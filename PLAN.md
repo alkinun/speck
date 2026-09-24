@@ -157,8 +157,9 @@ primary research evidence is added.
    [RTX 3090 RL pilot](experiments/rl-pilot/README.md) ran from a real math SFT of the pilot base.
    It qualified memory (18.8 GiB), rollout cost, zero-signal accounting and restart, and added the
    required `deterministic` setting. The 105M-token base almost never earns reward, so it measures
-   no benefit, and replay parity through an update still needs a stronger parent. Remaining
-   workstation work is multi-worker rollout. None of it spends grant hours.
+   no benefit, and replay parity through an update still needs a stronger parent. RL rollout is
+   now data-parallel under `torchrun`, matching one process in a two-rank CPU test; multi-GPU NCCL
+   execution is qualified with the rest of the runtime on GH200. None of it spends grant hours.
 4. **Prepare the reference-model GH200 packet before access.** Bind current source and exact inputs,
    checks, workload sizes, measurements and stop conditions, and rebuild the transfer bundle from
    current committed code. No paid run starts from this outline. In the same window, run the
