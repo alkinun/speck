@@ -117,7 +117,7 @@ def prepare(experiment, inputs_path):
         "format": "speck_ladder_data",
         "format_version": 1,
         "experiment": str(experiment),
-        "data_config_sha256": file_sha256(experiment / "data.json"),
+        "data_config": data,
         "inputs": {"path": str(inputs_path), "sha256": file_sha256(inputs_path)},
         "manifest": {
             "path": str(output / "manifest.json"),

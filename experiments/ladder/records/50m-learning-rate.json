@@ -6,17 +6,34 @@
   "status": "declared_not_run",
   "question": "Which peak learning rate should every 50m run use?",
   "arms": [
-    {"id": "lr-1e-3", "lr": 0.001},
-    {"id": "lr-2e-3", "lr": 0.002},
-    {"id": "lr-4e-3", "lr": 0.004},
-    {"id": "lr-8e-3", "lr": 0.008}
+    {
+      "id": "lr-1e-3",
+      "lr": 0.001,
+      "experiment": "experiments/ladder/50m/lr-sweep/lr-1e-3"
+    },
+    {
+      "id": "lr-2e-3",
+      "lr": 0.002,
+      "experiment": "experiments/ladder/50m/lr-sweep/lr-2e-3"
+    },
+    {
+      "id": "lr-4e-3",
+      "lr": 0.004,
+      "experiment": "experiments/ladder/50m/lr-sweep/lr-4e-3"
+    },
+    {
+      "id": "lr-8e-3",
+      "lr": 0.008,
+      "experiment": "experiments/ladder/50m/lr-sweep/lr-8e-3"
+    }
   ],
-  "controls": "One seed, the 50m baseline corpus and experiments/ladder/50m/train.json unchanged except lr and train_tokens. Muon with AdamW-matched update scale, warmup-stable-decay with a 20% linear decay, 131,072-token batches.",
-  "horizon_tokens": 657950850,
-  "horizon_rule": "A quarter of the rung's 50-tokens-per-parameter horizon, so the decay still covers the final 20% of each arm.",
-  "primary_metric": "Mean final held-out loss over the baseline corpus's per-source validation split.",
+  "controls": "One seed and experiments/ladder/50m/train.json unchanged except lr, train_tokens and run name. Muon with AdamW-matched update scale, warmup-stable-decay with a 20% linear decay, 131,072-token batches.",
+  "horizon_tokens": 658636800,
+  "horizon_rule": "A quarter of the rung's 50-tokens-per-parameter horizon, so the decay still covers the final 20% of each arm. Horizons are rounded to a multiple of the 131,072-token batch and of 100, so every source quota is a whole number of tokens.",
+  "primary_metric": "Mean final held-out loss over the sweep corpus's per-source validation split (development-bucket families).",
   "decision_rule": "Choose the arm with the lowest primary metric. If the best arm is at either end of the grid, extend the grid by one factor of two in that direction before choosing. The chosen rate then trains one full-horizon run, which is P0 seed 1.",
   "minimum_useful_effect": null,
   "minimum_useful_effect_basis": "Not applicable: this sets a hyperparameter, it tests no data effect.",
-  "cost": "Local RTX 3090 at about 94,000 tokens per second: about 2 hours per arm, no grant GPU-hours."
+  "cost": "Local RTX 3090 at about 94,000 tokens per second: about 2 hours per arm, no grant GPU-hours.",
+  "corpus": "experiments/ladder/50m/lr-sweep: the parent's starting mixture at the sweep horizon, packed by scripts.ladder_prepare from the inputs its inputs.json binds. Its web share comes from the retained twelve-shard Ultra-FineWeb HQ sample, not the CC-MAIN-2025-43 crawl the baseline uses; arms are compared only with each other."
 }

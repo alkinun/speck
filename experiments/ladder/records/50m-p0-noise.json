@@ -28,7 +28,7 @@
     }
   ],
   "controls": "The 50m baseline corpus and training configuration at the learning rate the 50m learning-rate record selects, full 50-tokens-per-parameter horizon. Only the model-initialization seed changes; data order is fixed by the corpus seed.",
-  "horizon_tokens": 2631803400,
+  "horizon_tokens": 2631270400,
   "primary_metric": "Standard deviation across seeds of final held-out loss, per source and averaged over sources.",
   "secondary_metrics": "The same spread for the pinned early-signal suite (scripts.open_slm_eval: HellaSwag, ARC-Easy, ARC-Challenge, PIQA, ArithMark) on each seed's final export, and for held-out loss at each quarter of the horizon.",
   "decision_rule": "No decision. The per-metric standard deviation sets the rung's minimum detectable effect: a later 50m contrast reports an effect on a metric only when the difference between arms exceeds 2.83 times that standard deviation, two standard deviations of a difference between two independent runs. Arms that share initial tensors can only be less noisy, so the rule is conservative.",

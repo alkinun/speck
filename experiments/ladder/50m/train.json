@@ -21,7 +21,7 @@
   "save_every": 2000,
   "seed": 42,
   "sequence_length": 4096,
-  "train_tokens": 2631803400,
+  "train_tokens": 2631270400,
   "wandb_project": null,
   "warmup_steps": 200,
   "weight_decay": 0.1
