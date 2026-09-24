@@ -168,5 +168,5 @@
     "rl_feasibility_launch": "Requires selected SFT parent, eligible prompt/reference manifest, valid verifier controls, deterministic environment and budget receipt.",
     "negative_result": "Report baseline-only or inconclusive outcomes; do not replace unresolved rows with undisclosed samples."
   },
-  "admission_boundary": "This is an audit protocol only. It does not admit downstream data, authorize corpus execution, start SFT/RL, or change the 170-GPU-hour research reservation."
+  "admission_boundary": "This is an audit protocol only. It does not admit downstream data, authorize corpus execution, start SFT/RL, or reserve GPU-hours; post-training research belongs to a later release."
 }

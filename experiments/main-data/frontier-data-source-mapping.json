@@ -209,8 +209,8 @@
       "supports": "The program design defines predeclared contrasts, matched controls, seed-noise calibration, scale transfer and per-token and per-GPU-hour accounting.",
       "does_not_support": "Design arithmetic is not a result; no study arm is launch-ready until source, runtime and parent gates close.",
       "gate_implications": {
-        "source_use": "required before screening",
-        "family_partition": "required before screening",
+        "source_use": "required before a ladder arm uses it",
+        "family_partition": "required before a ladder arm uses it",
         "correctness": "required for claimed transformations/outcomes",
         "finite_supply": "required for common horizon",
         "runtime": "required for costed launch"

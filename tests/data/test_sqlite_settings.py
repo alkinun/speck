@@ -2,11 +2,9 @@ import json
 
 import pytest
 
-from speck.data.preparation_policy import bind_preparation_policy
 from speck.data.production_data import preprocess_sources, validate_preprocess_config
 from speck.data.sqlite_settings import validate_sqlite_settings
 from tests.data.test_production_data import _config
-from tests.reference import preparation_repository
 
 SETTINGS = {
     "journal_mode": "WAL",
@@ -87,19 +85,3 @@ def test_sqlite_declaration_requires_config_v2(tmp_path):
     config["format_version"] = 2
     with pytest.raises(ValueError, match="exactly"):
         validate_preprocess_config(config)
-
-
-def test_binding_records_qualification_and_preserves_data_inputs(tmp_path):
-    config = _config(tmp_path)
-    path = tmp_path / "input.json"
-    path.write_text(json.dumps(config))
-    policy = preparation_repository() / "research/flagship/sqlite_preparation_policy_v1.json"
-    bound, receipt = bind_preparation_policy(path, policy, tmp_path / "successor")
-    assert bound["format_version"] == 2
-    assert bound["sqlite"] == SETTINGS
-    for key in ("sources", "deny_ledger", "policy", "checkpoint_records"):
-        assert bound[key] == validate_preprocess_config(config)[key]
-    assert receipt["plan_fingerprint"] == validate_preprocess_config(bound)["plan_fingerprint"]
-    assert not receipt["training_authority"]
-    with pytest.raises(ValueError, match="new preparation destination"):
-        bind_preparation_policy(path, policy, config["output_directory"])

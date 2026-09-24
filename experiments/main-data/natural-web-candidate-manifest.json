@@ -105,9 +105,9 @@
       "using retained counts as eligible supply",
       "starting before runtime/common-horizon qualification"
     ],
-    "study_slot": "pretraining screening web_bank_candidate; one of at most three screening interventions"
+    "study_slot": "ladder families P1 (web HQ floor) and P5 (FineWeb-Edu versus Ultra-FineWeb HQ)"
   },
-  "required_before_screening": [
+  "required_before_use": [
     "Pinned FineWeb-Edu release/configuration and complete joint family/benchmark graph.",
     "Source-aware quality and extraction decision with coverage strata and accepted/rejected accounting.",
     "Benchmark contamination firewall and held-out evaluation families.",
