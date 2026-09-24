@@ -52,8 +52,9 @@ whole-document overshoot, plus 799,536 validation tokens; both loader geometries
 
 ## Reproduce the preparation
 
-`inputs.json` binds the existing stock manifests; large artifacts stay outside Git. Set
-`speck_base_dir` before starting Python so packing and training resolve the same volume.
+`inputs.json` binds the existing stock manifests; large artifacts stay outside Git. The pilot was
+prepared at revision `87ddab4d` with the commands below; its preparation code has since been removed,
+so rerun them from a checkout of that revision.
 
 ```bash
 export speck_base_dir=/mnt/speck-data/speck

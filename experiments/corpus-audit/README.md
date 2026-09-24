@@ -207,7 +207,7 @@ deduplication rule. Conversion-related text matching the diagnostic markers tota
 / 5,193,431 tokens; that is a role hint, not a low-quality classification.
 
 **Prepare a narrow directory exclusion for the next corpus candidate.** The exact host/path/text
-predicate in `scripts.corpus_templates.role_hint` matches 8,563 topic-directory pages containing
+predicate (`scripts.corpus_templates.role_hint`, removed after this audit and kept in Git history) matches 8,563 topic-directory pages containing
 18,775,504 tokens: **1.6702% of this FineMath stock**, or roughly 0.25% of total exposure if the
 current 15% math share were retained. Twelve matched excerpts and six same-host unmatched excerpts
 were inspected. All twelve matched excerpts are activity directories; five of the six unmatched

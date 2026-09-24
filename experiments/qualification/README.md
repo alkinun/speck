@@ -44,8 +44,8 @@ model quality, sustained throughput, hard-crash recovery or scheduler behavior.
 
 [timing.json](timing.json), [microbatch-timing.json](microbatch-timing.json),
 [sft-timing.json](sft-timing.json) and [evaluation-timing.json](evaluation-timing.json) hold the
-probe configurations. `scripts.training_timing` observes the real trainer; it is not a
-deadline supervisor or GPU-hour ledger. The SFT rate depends on its 23% supervised density, so
+probe configurations, measured with `scripts.training_timing`, which observed the real trainer and
+is now kept only in Git history. The SFT rate depends on its 23% supervised density, so
 final SFT cost needs actual corpus lengths.
 
 ## What is open

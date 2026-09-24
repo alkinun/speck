@@ -290,7 +290,7 @@
     "Independent code/math/tool outcome checks and explicit unresolved/invalid handling.",
     "Tool schemas, turn order, observations, outcomes, failure/recovery cases and environment identity for agent rows.",
     "Pinned RL references/tests/verifiers with deliberately wrong controls and fixed-policy cost measurement.",
-    "Useful parent checkpoint and measured downstream runtime within the 170-hour research reservation."
+    "A useful parent checkpoint and measured downstream runtime, in the later release that funds post-training research."
   ],
   "admission_boundary": "This is a launch-blocked downstream candidate manifest. It does not admit SFT rows, trajectories or reward prompts, authorize policy updates or change the post-training budget."
 }
