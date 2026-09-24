@@ -2,8 +2,9 @@
 
 Export only a completed, identified checkpoint. Keep the base and assistant artifacts distinct.
 What is released is set by the [program](program.md#release); release notes and model cards follow
-the [paper outline](paper.md). Identify each model's branch lineage (parent checkpoint, decay,
-mid-training and post-training branches), actual data/exposure, cost and measured capabilities.
+the [paper outline](paper.md). The released base is the chosen decay branch and the assistant is
+its SFT probe. Identify each model's branch lineage (parent checkpoint, decay and mid-training
+branches, SFT probe), actual data/exposure, cost and measured capabilities.
 The architecture is fixed by declaration and was not compared with alternatives, so **no
 architecture comparison result exists to cite**. Scope claims to the experiments actually run.
 The maintained path bundles native model code behind a Transformers wrapper and checks logit parity.

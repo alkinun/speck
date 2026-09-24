@@ -46,7 +46,7 @@ mirror whole upstream datasets.
 | [family-partition.json](family-partition.json) | Whole-family train, development and final buckets and holds |
 | [QUALIFICATION.md](QUALIFICATION.md) | Qualification state, holds and origin recovery |
 | [frontier-data-research.json](frontier-data-research.json), [mapping](frontier-data-source-mapping.json) | External research findings and the local evidence behind them |
-| Candidate manifests ([web](natural-web-candidate-manifest.json), [code](natural-code-candidate-manifest.json), [math](math-candidate-manifest.json), [post-training](post-training-candidate-manifest.json)) | Domain evidence per candidate source |
-| [post-training-audit-protocol.json](post-training-audit-protocol.json) | The bounded post-training data audit and its stop rules |
+| Candidate manifests ([web](natural-web-candidate-manifest.json), [code](natural-code-candidate-manifest.json), [math](math-candidate-manifest.json)) | Domain evidence per candidate source |
+| [post-training-candidate-manifest.json](post-training-candidate-manifest.json), [post-training-research.json](post-training-research.json), [post-training-audit-protocol.json](post-training-audit-protocol.json) | Post-training candidates, research and audit protocol, kept for a later step |
 
 `make plan-check` validates the plan, the records' references and the tables that render them.

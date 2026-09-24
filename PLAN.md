@@ -4,10 +4,11 @@ Updated 2026-09-24. This is the status and the one work order. The [program desi
 owns the goal, method, experiments and budget; [plan.json](experiments/main-data/plan.json) owns
 the numbers; receipts own results.
 
-This release is SpeckLabs' first scaling step, and it targets data: its deliverable is
-[measured, transferable findings](docs/program.md#goal-the-data-step) about the data pipeline of
-every training stage, produced by a model ladder (50m, 130m, 410m) and one 1.2B parent whose
-branches carry the decay, mid-training and post-training experiments. 5,000 GH200 GPU-hours are
+This release is SpeckLabs' first scaling step, and it targets the data of pretraining and
+mid-training: its deliverable is [measured, transferable findings](docs/program.md#goal-the-data-step)
+about those pipelines, produced by a model ladder (50m, 130m, 410m) and one 1.2B parent whose branches
+carry the decay and mid-training experiments. A fixed SFT recipe probes every branch and yields a
+light assistant; post-training research waits for a later step. 5,000 GH200 GPU-hours are
 confirmed; access timing and GH200 throughput are not.
 
 ## Supply
@@ -35,7 +36,7 @@ are established. Two acquisitions are running and will move this table:
   language tranches.
 
 **Math becomes the binding bank** once those land: 1.1B tokens of stock against a 25% share. The
-P3 mixture and P4 repetition experiments decide how much math the parent actually needs.
+P3 mixture and P4 repetition families decide how much math the parent actually needs.
 
 ## Completed evidence
 
@@ -48,27 +49,25 @@ P3 mixture and P4 repetition experiments decide how much math the parent actuall
 | Code supply: census of all 42 Stack-Edu files, `int_score` 4+ acquisition (680M tokens), `int_score` 3 yield probe | [Census](experiments/corpus-audit/stack-edu-metadata-census.json), [acquisition](experiments/corpus-audit/stack-edu-acquisition.json), [probe](experiments/corpus-audit/stack-edu-yield-probe.json) |
 | Web supply: HQ listing by crawl, stratified audit, extraction follow-up | [Listing](experiments/corpus-audit/ultrafineweb-hq-listing.json), [audit](experiments/corpus-audit/web-hq-stratified.json) |
 | Family partitions: six text stocks and the code review cohort, 45 code holds | [Partition](experiments/main-data/family-partition.json), [qualification](experiments/main-data/QUALIFICATION.md) |
-| Stage 5 and 6 software: minimal GRPO trainer with checked verifiers, self-distillation builder, RTX 3090 RL pilot | [Training guide](docs/training.md#reward-training), [pilot](experiments/rl-pilot/README.md) |
+| Post-training software, kept for a later step: minimal GRPO trainer with checked verifiers, self-distillation builder, RTX 3090 RL pilot | [Training guide](docs/training.md#reward-training), [pilot](experiments/rl-pilot/README.md) |
 
 ## Work order
 
 1. **Now, on the workstation (no grant hours).**
-   - Finish both acquisitions, point the supply gap at the crawl census and the code receipt, then
-     preprocess all code and extend the code family partition.
-   - Start the 50m rung on the RTX 3090: build a baseline corpus from stock through the full
-     pipeline, fix family-disjoint validation packs, train the P0 seed set and choose the metrics
-     that move at this scale.
+   - Run the 50m learning-rate sweep (running), then the P0 seed set on the baseline corpus, and
+     choose the metrics that move at this scale.
+   - Finish both acquisitions: census the crawl and point the supply gap at it; summarize the code
+     fetch, preprocess all code and rebuild the family partition over every source.
    - Write the predeclared records for P1 to P7 and prepare their data variants on CPU.
-   - Pin the external control base and the early-signal evaluation suite.
+   - Freeze the SFT probe recipe and dataset from the retained assistant stock.
    - Add per-rung throughput runs to the [GH200 packet](experiments/qualification/throughput-gh200.json).
 2. **On access,** qualify one worker then four, measure every rung, and convert each budget line
    into run counts.
-3. **Pretraining ladder:** P0 at every rung, then P1 to P7 and their transfer re-runs; record the
-   predicted parent loss and the parent mixture.
-4. **Parent** stable run, then the decay families.
-5. **Mid-training** families from the selected decayed parent.
-6. **Post-training** families on the parent and the external control base.
-7. **Final evaluation, paper and release.** Final test partitions are scored once, at the end.
+3. **Pretraining ladder:** LR and P0 at every rung, P1 to P7 and C at 50m, the T transfer re-runs
+   and DR; record the predicted parent loss and the parent mixture.
+4. **Parent** stable run, then D1 to D3, each probed with the SFT recipe.
+5. **Mid-training** M1 to M4 from the selected decayed parent, each probed.
+6. **Final evaluation, paper and release.** Final test partitions are scored once, at the end.
 
 ## Open decisions
 

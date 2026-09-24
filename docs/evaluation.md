@@ -3,19 +3,18 @@
 The [method](program.md#method) sets what is measured at each scale. Ladder runs are scored
 mainly by held-out loss per source and domain on fixed family-disjoint validation packs, plus
 benchmarks that show signal early (cloze and log-likelihood multiple choice, code pass@k at large
-k). Generative math, coding, tool and reliability benchmarks become primary only for the parent and
-its post-trained branches; post-training families are scored on the parent and the external
-control base under the same protocol. Each rung's seed-to-seed spread sets the smallest effect it
-can report.
-Stage-to-stage changes describe progression; attributing a gain to data requires a predeclared
-contrast with the model, training exposure and other recipe settings held fixed. Keep cost
+k). Generative math, coding, tool and reliability benchmarks become primary only for parent
+branches, which are scored after the fixed [SFT probe](program.md#sft-probe-100-gpu-hours); the
+probe also scores each 410m transfer and seed run. Each rung's seed-to-seed spread sets the smallest
+effect it can report. Stage-to-stage changes describe progression; attributing a gain to data
+requires a predeclared contrast with the model, training exposure and other recipe settings held fixed. Keep cost
 alongside quality.
 
-The final assistant target always uses the thinking protocol for coding, math and agent tasks.
-Evaluate brief/deep reasoning budgets within that protocol, including cap exhaustion, correctness,
-tool loops and end-to-end task completion. A concise final answer does not mean reasoning is off.
-This future assistant contract does not change the frozen base pilot or external reference-model
-protocols below. A thinking tag alone is not evidence of useful reasoning.
+The released assistant always uses the thinking protocol for coding, math and agent tasks.
+Evaluate correctness, cap exhaustion, tool loops and end-to-end task completion within that
+protocol. A concise final answer does not mean reasoning is off, and a thinking tag alone is not
+evidence of useful reasoning. This contract does not change the frozen base pilot or external
+reference-model protocols below.
 
 Coding is a first-release priority. The coding evaluation roadmap in [Data](data.md) adds Python
 breadth, multilingual checks, and practical repair to prepare after the engineering pilot. Those
@@ -52,7 +51,7 @@ recomputation. Separate model FLOP estimates from hardware time and measured ker
 For inference, separate prefill and decode, count reasoning and final-answer tokens, and disclose
 context length, tool access, output caps and stopping policy. Agent cost per success includes failed
 attempts and environment costs alongside success rate. SFT supervised tokens, processed context,
-padding and RL rollout tokens are distinct quantities. Report teacher/verification costs separately.
+padding and generated tokens are distinct quantities. Report teacher/verification costs separately.
 The backbone is fixed by declaration, so efficiency numbers profile that one design and support no
 architecture comparison.
 
