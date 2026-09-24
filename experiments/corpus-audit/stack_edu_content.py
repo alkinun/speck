@@ -29,6 +29,7 @@ import re
 import subprocess
 import sys
 import tarfile
+import tempfile
 import time
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -156,19 +157,18 @@ def screen(row, raw, prose_policy, exclusion):
     return None, text
 
 
-def gitleaks(texts, output):
-    """Indexes of texts with Gitleaks findings, scanning them as one JSONL file."""
-    source, report = output / "screened.jsonl", output / "gitleaks.json"
-    source.write_text("".join(json.dumps({"text": text}) + "\n" for text in texts))
-    subprocess.run(
-        [str(GITLEAKS), "detect", "--no-git", "--source", str(source), "--report-format", "json"]
-        + ["--report-path", str(report), "--redact=100", "--exit-code", "0", "--no-banner"]
-        + ["--log-level", "error"],
-        check=True,
-    )
-    findings = {finding["StartLine"] - 1 for finding in json.loads(report.read_text())}
-    source.unlink()
-    return findings
+def gitleaks(texts):
+    """Indexes of texts with Gitleaks findings, scanning them as one JSONL file in TMPDIR."""
+    with tempfile.TemporaryDirectory() as scratch:
+        source, report = Path(scratch, "screened.jsonl"), Path(scratch, "gitleaks.json")
+        source.write_text("".join(json.dumps({"text": text}) + "\n" for text in texts))
+        subprocess.run(
+            [str(GITLEAKS), "detect", "--no-git", "--source", str(source)]
+            + ["--report-format", "json", "--report-path", str(report), "--redact=100"]
+            + ["--exit-code", "0", "--no-banner", "--log-level", "error"],
+            check=True,
+        )
+        return {finding["StartLine"] - 1 for finding in json.loads(report.read_text())}
 
 
 class Screen:
@@ -180,7 +180,7 @@ class Screen:
         self.exclusion = BenchmarkExclusion(json.loads(BENCHMARKS.read_text()))
         self.tokenizer = Tokenizer(str(TOKENIZER))
 
-    def run(self, rows, workdir):
+    def run(self, rows):
         """Return (reason, text, tokens) per row in order; rejected rows carry no text."""
         with ThreadPoolExecutor(self.workers) as pool:
             blobs = list(pool.map(lambda row: fetch(row["blob_id"]), rows))
@@ -189,7 +189,7 @@ class Screen:
             for row, raw in zip(rows, blobs, strict=True)
         ]
         kept = [index for index, (reason, _) in enumerate(results) if reason is None]
-        flagged = gitleaks([results[index][1] for index in kept], workdir)
+        flagged = gitleaks([results[index][1] for index in kept])
         outcomes = [(reason, None, 0) for reason, _ in results]
         for position, index in enumerate(kept):
             text = results[index][1]
@@ -214,7 +214,7 @@ def probe(listing_path, output, receipt):
     ]
     atomic_json(output / "selection.json", targets)
     started = time.perf_counter()
-    outcomes = Screen(32).run(targets, output)
+    outcomes = Screen(32).run(targets)
     seconds = time.perf_counter() - started
     strata, reasons = defaultdict(Counter), defaultdict(Counter)
     for row, (reason, _, tokens) in zip(targets, outcomes, strict=True):
@@ -327,7 +327,7 @@ def acquire(listing_path, census_path, language, name, output, workers=128):
             screen_ = screen_ or Screen(workers)
             unit = rows.slice(start, UNIT_ROWS).to_pylist()
             started = time.perf_counter()
-            outcomes = screen_.run(unit, directory)
+            outcomes = screen_.run(unit)
             records = directory / manifest.name.replace(".json", ".jsonl.gz")
             reasons, tokens = Counter(), 0
             with gzip.open(records, "wt") as handle:

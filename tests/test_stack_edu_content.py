@@ -108,7 +108,7 @@ def test_acquire_skips_retained_rows_and_resumes(tmp_path, monkeypatch):
         def __init__(self, workers):
             pass
 
-        def run(self, unit, workdir):
+        def run(self, unit):
             calls.append([row["blob_id"] for row in unit])
             return [(None, "text", 7) for _ in unit]
 
