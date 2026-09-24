@@ -1,7 +1,7 @@
 {
   "format": "speck_frontier_data_source_mapping",
   "format_version": 1,
-  "date": "2026-09-23",
+  "date": "2026-09-24",
   "status": "review_only_no_gate_closure",
   "purpose": "Map the reviewed frontier-data hypotheses to existing pinned Speck evidence before source-specific manifest work.",
   "evidence_boundary": "This mapping identifies what current local evidence supports and what remains unresolved. It does not establish source rights, correctness, eligible supply, transfer, source admission or training authority.",
@@ -280,6 +280,34 @@
         "runtime": "unchanged"
       },
       "status": "policy_supported_clearance_open"
+    },
+    {
+      "finding_id": "late_enrichment_and_supply_bound_architecture",
+      "evidence_kind": "external_report_2026_09_24",
+      "pinned_evidence": [
+        {
+          "path": "experiments/main-data/data-study-packet.json",
+          "field": "decay_study"
+        },
+        {
+          "path": "experiments/main-data/supply-gap.json",
+          "field": "binding_constraint"
+        },
+        {
+          "path": "experiments/main-data/plan.json",
+          "field": "main_pretraining.target_tokens"
+        }
+      ],
+      "supports": "Rigel's staged recipe matches the decay study Speck already specifies, and its token scale shows that its capability per FLOP rests on data volume Speck's supply gap does not yet provide.",
+      "does_not_support": "It reports figures rather than scores, no token counts or cost, and a different architecture; it establishes no transfer to Speck's backbone, mixture or horizon.",
+      "gate_implications": {
+        "source_use": "unchanged",
+        "family_partition": "unchanged",
+        "correctness": "unchanged",
+        "finite_supply": "unchanged; the binding lever remains unique eligible supply",
+        "runtime": "unchanged"
+      },
+      "status": "external_evidence_only"
     }
   ],
   "admission_boundary": "This mapping is review evidence only. It does not admit a source, authorize acquisition or training, change the 5,000-GPU-hour allocation or establish a positive data-efficiency claim."
