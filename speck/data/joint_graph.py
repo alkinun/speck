@@ -15,8 +15,8 @@ import os
 import re
 import shutil
 import sqlite3
+import tempfile
 import unicodedata
-from array import array
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -126,7 +126,7 @@ def _code_scan(entry, policy):
     path = Path(entry["path"])
     if file_sha256(path) != entry["sha256"]:
         raise ValueError("code cohort checksum mismatch")
-    documents, bands, keys, seqs = {}, [], [], []
+    seqs, dedups, contents, offsets, bands, keys, band_seqs = [], [], [], [], [], [], []
     pattern = re.compile(policy["token_pattern"])
     with path.open("rb") as handle:
         while True:
@@ -140,8 +140,11 @@ def _code_scan(entry, policy):
             if content != row["released_content_sha256"]:
                 raise ValueError("code cohort text identity mismatch")
             normalized = " ".join(unicodedata.normalize("NFKC", text).lower().split())
-            seq = len(documents)
-            documents[seq] = (hashlib.sha256(normalized.encode()).hexdigest(), content, offset)
+            seq = len(seqs)
+            seqs.append(seq)
+            dedups.append(hashlib.sha256(normalized.encode()).digest())
+            contents.append(bytes.fromhex(content))
+            offsets.append(offset)
             tokens = _tokens(text, pattern, policy["maximum_document_tokens"])
             if len(tokens) >= max(policy["minimum_document_tokens"], policy["shingle_tokens"]):
                 signature = _batched_signature(
@@ -152,12 +155,19 @@ def _code_scan(entry, policy):
                 for band, value in enumerate(_band_values(signature, policy["bands"])):
                     bands.append(band)
                     keys.append(int.from_bytes(value[:8], "little"))
-                    seqs.append(seq)
-    return documents, (
-        np.array(bands, dtype=np.uint16),
-        np.array(keys, dtype=np.uint64),
+                    band_seqs.append(seq)
+    scan = _Scan(
         np.array(seqs, dtype=np.int64),
+        _digests(dedups),
+        _digests(contents),
+        np.array(offsets, dtype=np.int64),
     )
+    bands = np.array(bands, dtype=np.uint16)
+    keys, band_seqs = np.array(keys, dtype=np.uint64), np.array(band_seqs, dtype=np.int64)
+    for band in range(policy["bands"]):
+        chosen = bands == band
+        scan.bands[band] = (keys[chosen], band_seqs[chosen])
+    return scan
 
 
 def _connect(path):
@@ -165,68 +175,141 @@ def _connect(path):
     return sqlite3.connect(f"file:{path}?immutable=1", uri=True)
 
 
-def _scan(connection, name):
+def _digests(values):
+    """Pack 32-byte digests into an (n, 32) byte array; numpy byte strings would drop NULs."""
+    return np.frombuffer(b"".join(values), dtype=np.uint8).reshape(-1, 32)
+
+
+class _Scan:
+    """One source's documents as seq-sorted arrays, and its band rows grouped by band.
+
+    Corpus-scale sources hold tens of millions of documents and sixteen band rows each, so
+    documents are kept as compact arrays and band rows are spilled to one scratch file per
+    band; candidate pairs are then found one band at a time.
+    """
+
+    def __init__(self, seqs, dedups, contents, offsets):
+        order = np.argsort(seqs, kind="stable")
+        self.seqs = seqs[order]
+        self.dedups, self.contents, self.offsets = dedups[order], contents[order], offsets[order]
+        self.bands = {}
+
+    def _position(self, seq):
+        position = int(np.searchsorted(self.seqs, seq))
+        if position == len(self.seqs) or self.seqs[position] != seq:
+            raise KeyError(seq)
+        return position
+
+    def content(self, seq):
+        return self.contents[self._position(seq)].tobytes().hex()
+
+    def dedup(self, seq):
+        return self.dedups[self._position(seq)].tobytes().hex()
+
+    def offset(self, seq):
+        return int(self.offsets[self._position(seq)])
+
+    def band(self, band):
+        rows = self.bands.get(band)
+        if rows is None:
+            return np.empty(0, dtype=np.uint64), np.empty(0, dtype=np.int64)
+        if isinstance(rows, tuple):
+            return rows
+        return np.fromfile(rows["keys"], dtype=np.uint64), np.fromfile(rows["seqs"], dtype=np.int64)
+
+
+def _scan(connection, name, scratch, chunk=1_000_000):
     """Read one source's documents and band rows in storage order.
 
     Pass databases live on spinning disks. Index-ordered reads with a document lookup per
     row cost one seek each, days at corpus scale; two table scans read each file once.
     """
 
-    documents = {
-        seq: (dedup, content, offset)
-        for seq, dedup, content, offset in connection.execute(
-            "SELECT doc_seq, dedup_sha256, content_sha256, byte_offset FROM docs WHERE source_id=?",
-            (name,),
-        )
-    }
-    bands, keys, seqs = array("H"), array("Q"), array("q")
-    for band, value, seq in connection.execute("SELECT band, band_hash, doc_seq FROM bands"):
-        if seq in documents:
-            bands.append(band)
-            # An eight-byte prefix can only add candidates; each is verified by Jaccard.
-            keys.append(int.from_bytes(value[:8], "little"))
-            seqs.append(seq)
-    rows = (
-        np.frombuffer(bands, dtype=np.uint16),
-        np.frombuffer(keys, dtype=np.uint64),
-        np.frombuffer(seqs, dtype=np.int64),
+    parts = {"seq": [], "dedup": [], "content": [], "offset": []}
+    cursor = connection.execute(
+        "SELECT doc_seq, dedup_sha256, content_sha256, byte_offset FROM docs WHERE source_id=?",
+        (name,),
     )
-    return documents, rows
+    while rows := cursor.fetchmany(chunk):
+        parts["seq"].append(np.fromiter((row[0] for row in rows), np.int64, len(rows)))
+        parts["dedup"].append(_digests([bytes.fromhex(row[1]) for row in rows]))
+        parts["content"].append(_digests([bytes.fromhex(row[2]) for row in rows]))
+        parts["offset"].append(np.fromiter((row[3] for row in rows), np.int64, len(rows)))
+    if not parts["seq"]:
+        raise ValueError(f"the pass database has no documents for {name}")
+    scan = _Scan(*(np.concatenate(parts[key]) for key in ("seq", "dedup", "content", "offset")))
+    scratch = Path(scratch)
+    scratch.mkdir(parents=True, exist_ok=True)
+    handles = {}
+    try:
+        cursor = connection.execute("SELECT band, band_hash, doc_seq FROM bands")
+        while rows := cursor.fetchmany(chunk):
+            seqs = np.fromiter((row[2] for row in rows), np.int64, len(rows))
+            positions = np.minimum(np.searchsorted(scan.seqs, seqs), len(scan.seqs) - 1)
+            kept = scan.seqs[positions] == seqs
+            if not kept.any():
+                continue
+            bands = np.fromiter((row[0] for row in rows), np.uint16, len(rows))[kept]
+            # An eight-byte prefix can only add candidates; each is verified by Jaccard.
+            keys = np.frombuffer(b"".join(row[1][:8] for row in rows), dtype="<u8")[kept]
+            seqs = seqs[kept]
+            for band in np.unique(bands).tolist():
+                if band not in handles:
+                    paths = {kind: scratch / f"{band}.{kind}" for kind in ("keys", "seqs")}
+                    scan.bands[band] = paths
+                    handles[band] = {kind: open(path, "wb") for kind, path in paths.items()}
+                chosen = bands == band
+                keys[chosen].astype(np.uint64).tofile(handles[band]["keys"])
+                seqs[chosen].tofile(handles[band]["seqs"])
+    finally:
+        for pair in handles.values():
+            for handle in pair.values():
+                handle.close()
+    return scan
 
 
 def _exact_pairs(scans, within_sources=()):
-    owners = {}
-    for index, (documents, _) in enumerate(scans):
-        for seq, (dedup, _, _) in documents.items():
-            owners.setdefault(dedup, []).append((index, seq))
-    for members in owners.values():
-        if len(members) > 1:
-            yield from _cross_pairs(members, within_sources)
+    digests = np.concatenate([scan.dedups for scan in scans])
+    source = np.concatenate(
+        [np.full(len(scan.seqs), index, dtype=np.uint16) for index, scan in enumerate(scans)]
+    )
+    seq = np.concatenate([scan.seqs for scan in scans])
+    words = digests.view(">u8").reshape(-1, 4)
+    order = np.lexsort((seq, source, words[:, 3], words[:, 2], words[:, 1], words[:, 0]))
+    words, source, seq = words[order], source[order], seq[order]
+    if not len(seq):
+        return
+    starts = np.flatnonzero(np.concatenate(([True], (words[1:] != words[:-1]).any(axis=1))))
+    ends = np.append(starts[1:], len(seq))
+    for first, last in zip(starts, ends):
+        if last - first > 1:
+            yield from _cross_pairs(
+                zip(source[first:last].tolist(), seq[first:last].tolist()), within_sources
+            )
 
 
-def _band_pairs(scans, within_sources=()):
+def _band_pairs(scans, bands, within_sources=()):
     """Yield cross-source pairs and undeduplicated cohort pairs sharing a whole band."""
 
-    band = np.concatenate([rows[0] for _, rows in scans])
-    key = np.concatenate([rows[1] for _, rows in scans])
-    seq = np.concatenate([rows[2] for _, rows in scans])
-    source = np.concatenate(
-        [np.full(len(rows[0]), index, dtype=np.uint16) for index, (_, rows) in enumerate(scans)]
-    )
-    order = np.lexsort((seq, source, key, band))
-    band, key, seq, source = band[order], key[order], seq[order], source[order]
-    if not len(band):
-        return
-    starts = np.flatnonzero(
-        np.concatenate(([True], (band[1:] != band[:-1]) | (key[1:] != key[:-1])))
-    )
-    mixed = np.minimum.reduceat(source, starts) != np.maximum.reduceat(source, starts)
-    mixed |= np.isin(source[starts], list(within_sources))
-    ends = np.append(starts[1:], len(band))
-    for first, last in zip(starts[mixed], ends[mixed]):
-        yield from _cross_pairs(
-            zip(source[first:last].tolist(), seq[first:last].tolist()), within_sources
+    for band_index in range(bands):
+        rows = [scan.band(band_index) for scan in scans]
+        key = np.concatenate([keys for keys, _ in rows])
+        seq = np.concatenate([seqs for _, seqs in rows])
+        source = np.concatenate(
+            [np.full(len(keys), index, dtype=np.uint16) for index, (keys, _) in enumerate(rows)]
         )
+        if not len(key):
+            continue
+        order = np.lexsort((seq, source, key))
+        key, seq, source = key[order], seq[order], source[order]
+        starts = np.flatnonzero(np.concatenate(([True], key[1:] != key[:-1])))
+        mixed = np.minimum.reduceat(source, starts) != np.maximum.reduceat(source, starts)
+        mixed |= np.isin(source[starts], list(within_sources))
+        ends = np.append(starts[1:], len(key))
+        for first, last in zip(starts[mixed], ends[mixed]):
+            yield from _cross_pairs(
+                zip(source[first:last].tolist(), seq[first:last].tolist()), within_sources
+            )
 
 
 def _cross_pairs(members, within_sources=()):
@@ -251,7 +334,7 @@ class _Texts:
             handle = self.handles.get(index)
             if handle is None:
                 handle = self.handles[index] = open(self.sources[index]["input"]["path"], "rb")
-            handle.seek(self.scans[index][0][seq][2])
+            handle.seek(self.scans[index].offset(seq))
             text = json.loads(handle.readline())[self.sources[index]["input"]["text_field"]]
             tokens = _tokens(text, self.pattern, self.policy["maximum_document_tokens"])
             self.cache[(index, seq)] = _shingles(tokens, self.policy["shingle_tokens"])
@@ -287,13 +370,15 @@ def _code_firewall_matches(sources, scans, texts, policy):
     if not references:
         return []
     index = len(sources) - 1
-    documents, (_, _, seqs) = scans[index]
+    scan = scans[index]
+    seqs = np.concatenate([scan.band(band)[1] for band in range(policy["bands"])])
     candidates = defaultdict(set)
     connection = _connect(sources[0]["database"])
     handles = {}
     matches = []
     try:
-        for seq, (dedup, _, _) in documents.items():
+        for seq in scan.seqs.tolist():
+            dedup = scan.dedup(seq)
             candidates[seq].update(
                 row[0]
                 for row in connection.execute(
@@ -322,7 +407,7 @@ def _code_firewall_matches(sources, scans, texts, policy):
                 if name not in references:
                     continue
                 similarity = 1.0
-                if dedup != documents[seq][0]:
+                if dedup != scan.dedup(seq):
                     if name not in handles:
                         handles[name] = open(references[name]["path"], "rb")
                     handle = handles[name]
@@ -337,7 +422,7 @@ def _code_firewall_matches(sources, scans, texts, policy):
                 if similarity >= policy["verified_jaccard_threshold"]:
                     matches.append(
                         {
-                            "content_sha256": documents[seq][1],
+                            "content_sha256": scan.content(seq),
                             "reference": name,
                             "reference_content_sha256": content,
                             "similarity": similarity,
@@ -369,46 +454,49 @@ def build(plan, output_directory, *, verify_inputs=True):
     if output.exists():
         raise ValueError(f"output directory already exists: {output}")
     sources, policy = _resolve(plan, verify_inputs)
-    scans = []
-    for source in sources:
-        connection = _connect(source["database"])
-        try:
-            scans.append(_scan(connection, source["name"]))
-        finally:
-            connection.close()
-    if "code_cohort" in plan:
-        entry = plan["code_cohort"]["documents"]
-        if any(source["id"] == "code_cohort" for source in sources):
-            raise ValueError("code_cohort is a reserved source id")
-        scans.append(_code_scan(entry, policy))
-        sources.append(
-            {
-                "id": "code_cohort",
-                "input": {**entry, "text_field": "text"},
-                "documents": Path(entry["path"]),
-            }
-        )
-    within = (len(sources) - 1,) if "code_cohort" in plan else ()
-    exact = dict.fromkeys(_exact_pairs(scans, within), 1.0)
-    candidates = {pair for pair in _band_pairs(scans, within) if pair not in exact}
-    texts = _Texts(sources, scans, policy)
-    near = {}
-    rejected = 0
-    firewall_matches = []
-    try:
-        for first, second in sorted(candidates):
-            similarity = _jaccard(texts.shingles(*first), texts.shingles(*second))
-            if similarity >= policy["verified_jaccard_threshold"]:
-                near[(first, second)] = similarity
-            else:
-                rejected += 1
+    with tempfile.TemporaryDirectory(prefix="joint-graph-") as scratch:
+        scans = []
+        for index, source in enumerate(sources):
+            connection = _connect(source["database"])
+            try:
+                scans.append(_scan(connection, source["name"], Path(scratch) / str(index)))
+            finally:
+                connection.close()
         if "code_cohort" in plan:
-            firewall_matches = _code_firewall_matches(sources, scans, texts, policy)
-    finally:
-        texts.close()
+            entry = plan["code_cohort"]["documents"]
+            if any(source["id"] == "code_cohort" for source in sources):
+                raise ValueError("code_cohort is a reserved source id")
+            scans.append(_code_scan(entry, policy))
+            sources.append(
+                {
+                    "id": "code_cohort",
+                    "input": {**entry, "text_field": "text"},
+                    "documents": Path(entry["path"]),
+                }
+            )
+        within = (len(sources) - 1,) if "code_cohort" in plan else ()
+        exact = dict.fromkeys(_exact_pairs(scans, within), 1.0)
+        candidates = {
+            pair for pair in _band_pairs(scans, policy["bands"], within) if pair not in exact
+        }
+        texts = _Texts(sources, scans, policy)
+        near = {}
+        rejected = 0
+        firewall_matches = []
+        try:
+            for first, second in sorted(candidates):
+                similarity = _jaccard(texts.shingles(*first), texts.shingles(*second))
+                if similarity >= policy["verified_jaccard_threshold"]:
+                    near[(first, second)] = similarity
+                else:
+                    rejected += 1
+            if "code_cohort" in plan:
+                firewall_matches = _code_firewall_matches(sources, scans, texts, policy)
+        finally:
+            texts.close()
 
     def identity(index, seq):
-        return sources[index]["id"], scans[index][0][seq][1]
+        return sources[index]["id"], scans[index].content(seq)
 
     edges = sorted(
         (identity(*first), identity(*second), kind, similarity)
