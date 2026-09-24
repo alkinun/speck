@@ -1,10 +1,10 @@
 """Validate the program plan and the tables that restate it, without authorizing any run.
 
 `plan.json` owns the numbers. This check verifies its arithmetic, that the ladder configurations
-follow the shape rule and match the declared sizes, that projected costs fit their budget lines,
-that the supply gap is current, that the scheduler enforces the same total and reserve, and that
-the ladder and budget tables in docs/program.md and the supply table in PLAN.md render the same
-numbers. Those three tables are the only prose copies of these figures.
+follow the shape rule and match the declared sizes, that every experiment family's projected cost
+fits its stage's budget line, that the supply gap is current, that the scheduler enforces the same
+total and reserve, and that the tables in docs/program.md and the supply table in PLAN.md render
+the same numbers. Those tables are the only prose copies of these figures.
 """
 
 from __future__ import annotations
@@ -32,7 +32,7 @@ BUDGET_LABELS = {
     "Parent stable run": "parent_stable_run",
     "Decay experiments": "decay_experiments",
     "Mid-training experiments": "mid_training_experiments",
-    "Post-training experiments": "post_training_experiments",
+    "SFT probe": "sft_probe",
     "Evaluation": "evaluation",
     "Reserve": "reserve",
 }
@@ -116,12 +116,39 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
         raise ValueError("the shape rule no longer reproduces the parent configuration")
     if parent_config["expected_parameters"] != parent["parameters"]:
         raise ValueError("parent size differs from its configuration")
-    ladder_hours = sum(run["grant_runs"] * hours for run, _, hours in rungs.values())
-    if ladder_hours > budget["pretraining_ladder"]:
-        raise ValueError("projected grant runs exceed the pretraining ladder budget")
     parent_hours = projected_gpu_hours(plan, parent["parameters"], parent["target_tokens"])
     if parent_hours > budget["parent_stable_run"]:
         raise ValueError("the projected parent run exceeds its budget line")
+    families = {}
+    for family in ladder["families"]:
+        families[family["id"]] = sum(
+            run["count"] * run["horizon"] * rungs[run["rung"]][2] for run in family["runs"]
+        )
+    stages = {"pretraining_ladder": sum(families.values())}
+    factors = compute["projection"]["context_cost_factor"]
+    for stage, line in (
+        ("decay", "decay_experiments"),
+        ("mid_training", "mid_training_experiments"),
+    ):
+        hours = 0.0
+        for family in plan[stage]["families"]:
+            tokens = (
+                family["arms"] * family["tokens_per_arm"] * factors[str(family["context_tokens"])]
+            )
+            families[family["id"]] = projected_gpu_hours(plan, parent["parameters"], tokens)
+            hours += families[family["id"]]
+        stages[line] = hours
+    probe = plan["sft_probe"]
+    sizes = {"parent": parent["parameters"]} | {
+        rung_id: run["parameters"] for rung_id, (run, _, _) in rungs.items()
+    }
+    stages["sft_probe"] = sum(
+        run["count"] * projected_gpu_hours(plan, sizes[run["model"]], probe["tokens_per_run"])
+        for run in probe["runs"]
+    )
+    for line, hours in stages.items():
+        if hours > budget[line]:
+            raise ValueError(f"projected {line} runs exceed their budget line")
 
     mixture = parent["starting_mixture"]
     if sum(bank["weight_percent"] for bank in mixture) != 100:
@@ -146,20 +173,23 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
         mismatches.append("program budget total differs from plan")
     table = _rows(PROGRAM, set(rungs) | {"Parent"})
     expected = {
-        rung_id: (run["parameters"], tokens, hours, run["grant_runs"])
+        rung_id: (run["parameters"], tokens, hours)
         for rung_id, (run, tokens, hours) in rungs.items()
     }
-    expected["Parent"] = (parent["parameters"], parent["target_tokens"], parent_hours, 1)
-    for label, (parameters, tokens, hours, runs) in expected.items():
+    expected["Parent"] = (parent["parameters"], parent["target_tokens"], parent_hours)
+    for label, (parameters, tokens, hours) in expected.items():
         cells = table.get(label)
         if (
             cells is None
             or _number(cells[2]) != parameters
             or cells[3] != f"{tokens / 1e9:.{1 if label != 'Parent' else 0}f}B"
             or cells[4] != f"{hours:.1f}"
-            or _number(cells[5]) != runs
         ):
             mismatches.append(f"program ladder row {label!r} differs from plan")
+    table = _rows(PROGRAM, set(families))
+    for family, hours in families.items():
+        if family not in table or table[family][-1] != f"{hours:,.1f}":
+            mismatches.append(f"program family row {family!r} differs from plan")
     table = _rows(STATUS, {bank["id"] for bank in supply["banks"]})
     for bank in supply["banks"]:
         cells = table.get(bank["id"])
@@ -179,8 +209,8 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
         "format": plan["format"],
         "status": plan["status"],
         "total_gpu_hours": compute["total_gpu_hours"],
-        "projected_ladder_gpu_hours": round(ladder_hours, 1),
-        "projected_parent_gpu_hours": round(parent_hours, 1),
+        "projected_gpu_hours": {line: round(hours, 1) for line, hours in stages.items()}
+        | {"parent_stable_run": round(parent_hours, 1)},
         "binding_bank": supply["binding_bank"]["id"],
         "training_authority": False,
     }

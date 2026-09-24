@@ -120,7 +120,7 @@ Open code items:
   validate behavior, redacted assertions or contamination. Do not restore redacted source text.
 
 Remaining data-side comparisons among the [selected sources](source-registry.json); the training
-contrasts are ladder families P1 and P5 in the [program design](../../docs/program.md#pretraining-the-ladder):
+contrasts are ladder families P1 and P5 in the [program design](../../docs/program.md#pretraining-the-ladder-1900-gpu-hours):
 
 | Lane | Candidates | Required comparison |
 | --- | --- | --- |

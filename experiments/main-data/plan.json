@@ -3,7 +3,7 @@
   "format_version": 3,
   "date": "2026-09-24",
   "status": "working_plan_not_launch_authority",
-  "goal": "Measured, transferable findings about the data pipeline of every training stage, carried into much larger later releases. The released models are the best branches of the experiments, not a separate production track.",
+  "goal": "Measured, transferable findings about the pretraining and mid-training data pipeline, carried into much larger later releases. A fixed, light SFT recipe is a measuring instrument, not a subject of study. The released models are the best branches of the experiments, not a separate production track.",
   "model_family": {
     "architecture": "KDA/NoPE-GQA hybrid, three KDA layers per global GQA layer, dense SwiGLU, tied embeddings",
     "tokenizer": "frozen Mistral 32K, 32,003 embedding rows",
@@ -18,25 +18,199 @@
         "id": "50m",
         "parameters": 52636068,
         "shape": "width 512, 12 layers",
-        "configuration": "experiments/ladder/50m/model.json",
-        "grant_runs": 120
+        "configuration": "experiments/ladder/50m/model.json"
       },
       {
         "id": "130m",
         "parameters": 131699272,
         "shape": "width 768, 16 layers",
-        "configuration": "experiments/ladder/130m/model.json",
-        "grant_runs": 100
+        "configuration": "experiments/ladder/130m/model.json"
       },
       {
         "id": "410m",
         "parameters": 410024470,
         "shape": "width 1280, 20 layers",
-        "configuration": "experiments/ladder/410m/model.json",
-        "grant_runs": 14
+        "configuration": "experiments/ladder/410m/model.json"
       }
     ],
-    "local_runs": "The 50m rung also runs on the workstation RTX 3090 before grant access: seed-noise calibration and metric selection. Local runs spend no grant GPU-hours."
+    "horizon_meaning": "A run's horizon is a multiple of its rung's default token budget; its cost scales with it.",
+    "families": [
+      {
+        "id": "LR",
+        "runs": [
+          {
+            "rung": "50m",
+            "count": 4,
+            "horizon": 0.25
+          },
+          {
+            "rung": "130m",
+            "count": 4,
+            "horizon": 0.25
+          },
+          {
+            "rung": "410m",
+            "count": 3,
+            "horizon": 0.25
+          }
+        ]
+      },
+      {
+        "id": "P0",
+        "runs": [
+          {
+            "rung": "50m",
+            "count": 5,
+            "horizon": 1
+          },
+          {
+            "rung": "130m",
+            "count": 3,
+            "horizon": 1
+          },
+          {
+            "rung": "410m",
+            "count": 3,
+            "horizon": 1
+          }
+        ]
+      },
+      {
+        "id": "P1",
+        "runs": [
+          {
+            "rung": "50m",
+            "count": 4,
+            "horizon": 1
+          }
+        ]
+      },
+      {
+        "id": "P2",
+        "runs": [
+          {
+            "rung": "50m",
+            "count": 2,
+            "horizon": 1
+          }
+        ]
+      },
+      {
+        "id": "P3",
+        "runs": [
+          {
+            "rung": "50m",
+            "count": 6,
+            "horizon": 1
+          }
+        ]
+      },
+      {
+        "id": "P4",
+        "runs": [
+          {
+            "rung": "50m",
+            "count": 4,
+            "horizon": 1
+          }
+        ]
+      },
+      {
+        "id": "P5",
+        "runs": [
+          {
+            "rung": "50m",
+            "count": 2,
+            "horizon": 1
+          }
+        ]
+      },
+      {
+        "id": "P6",
+        "runs": [
+          {
+            "rung": "50m",
+            "count": 3,
+            "horizon": 1
+          }
+        ]
+      },
+      {
+        "id": "P7",
+        "runs": [
+          {
+            "rung": "50m",
+            "count": 2,
+            "horizon": 0.25
+          },
+          {
+            "rung": "50m",
+            "count": 2,
+            "horizon": 4
+          },
+          {
+            "rung": "130m",
+            "count": 2,
+            "horizon": 0.25
+          },
+          {
+            "rung": "130m",
+            "count": 2,
+            "horizon": 4
+          }
+        ]
+      },
+      {
+        "id": "C",
+        "runs": [
+          {
+            "rung": "50m",
+            "count": 10,
+            "horizon": 1
+          }
+        ]
+      },
+      {
+        "id": "T",
+        "runs": [
+          {
+            "rung": "130m",
+            "count": 12,
+            "horizon": 1
+          },
+          {
+            "rung": "410m",
+            "count": 24,
+            "horizon": 1
+          }
+        ]
+      },
+      {
+        "id": "DR",
+        "runs": [
+          {
+            "rung": "130m",
+            "count": 1,
+            "horizon": 0.8
+          },
+          {
+            "rung": "130m",
+            "count": 3,
+            "horizon": 0.2
+          },
+          {
+            "rung": "410m",
+            "count": 1,
+            "horizon": 0.8
+          },
+          {
+            "rung": "410m",
+            "count": 3,
+            "horizon": 0.2
+          }
+        ]
+      }
+    ]
   },
   "parent": {
     "parameters": 1195884576,
@@ -78,26 +252,82 @@
     ],
     "mixture_rule": "The starting mixture is a hypothesis. Ladder results set the parent mixture, repetition and horizon before launch; the final horizon is the smallest of supply, measured cost within the parent budget and the ladder's repetition evidence."
   },
-  "post_training": {
-    "sft_conversation_inventory_target": 1500000,
-    "sft_task_shares_percent": {
-      "code_reasoning": 40,
-      "math_reasoning": 25,
-      "agent_and_tool_trajectories": 25,
-      "general_instruction_with_reasoning": 10
-    },
-    "external_control_base": "An open base of similar size (candidate: OLMo 2 1B, open data and intermediate checkpoints) receives the same post-training experiments as a control. It is never released as a Speck model."
+  "decay": {
+    "families": [
+      {
+        "id": "D1",
+        "arms": 3,
+        "tokens_per_arm": 6000000000,
+        "context_tokens": 4096
+      },
+      {
+        "id": "D2",
+        "arms": 1,
+        "tokens_per_arm": 12000000000,
+        "context_tokens": 4096
+      },
+      {
+        "id": "D3",
+        "arms": 2,
+        "tokens_per_arm": 3000000000,
+        "context_tokens": 4096
+      }
+    ]
+  },
+  "mid_training": {
+    "families": [
+      {
+        "id": "M1",
+        "arms": 6,
+        "tokens_per_arm": 5000000000,
+        "context_tokens": 4096
+      },
+      {
+        "id": "M2",
+        "arms": 1,
+        "tokens_per_arm": 5000000000,
+        "context_tokens": 4096
+      },
+      {
+        "id": "M3",
+        "arms": 6,
+        "tokens_per_arm": 5000000000,
+        "context_tokens": 16384
+      },
+      {
+        "id": "M4",
+        "arms": 1,
+        "tokens_per_arm": 3000000000,
+        "context_tokens": 32768
+      }
+    ]
+  },
+  "sft_probe": {
+    "conversations": 75000,
+    "tokens_per_run": 150000000,
+    "runs": [
+      {
+        "model": "parent",
+        "count": 40
+      },
+      {
+        "model": "410m",
+        "count": 27
+      }
+    ],
+    "recipe": "One frozen recipe and dataset drawn from the retained assistant stock, applied unchanged to every probed checkpoint with two data-order seeds on parent branches.",
+    "use": "Turns decay, mid-training and 410m transfer arms into comparable downstream scores, and yields the light released assistant."
   },
   "compute": {
     "gpus": 4,
     "total_gpu_hours": 5000,
     "budget_gpu_hours": {
       "runtime_qualification": 120,
-      "pretraining_ladder": 1600,
+      "pretraining_ladder": 1900,
       "parent_stable_run": 700,
-      "decay_experiments": 200,
-      "mid_training_experiments": 500,
-      "post_training_experiments": 800,
+      "decay_experiments": 300,
+      "mid_training_experiments": 800,
+      "sft_probe": 100,
       "evaluation": 500,
       "reserve": 580
     },
@@ -105,7 +335,12 @@
       "peak_dense_bf16_flops_per_gpu": 989500000000000,
       "planning_model_flops_utilization": 0.25,
       "flops_per_token": "6 x parameters",
-      "boundary": "Projections for sizing only. The GH200 qualification replaces the utilization with measured rates per rung, after the overhead derate; run counts then follow from the budget lines, never the reverse."
+      "boundary": "Projections for sizing only. Context cost factors are unmeasured planning assumptions for the six global-attention layers. The GH200 qualification replaces the utilization and factors with measured rates; run counts then follow from the budget lines, never the reverse.",
+      "context_cost_factor": {
+        "4096": 1.0,
+        "16384": 1.3,
+        "32768": 1.7
+      }
     },
     "measured_anchor": {
       "h100_full_trainer_tokens_per_second_1_2b": 12859.198189903878,
@@ -116,7 +351,7 @@
     "rules": [
       "A budget line is a ceiling. Unused hours return to the reserve; lines never borrow from each other without a recorded revision.",
       "A measured rate above the projection buys more experiment runs, not a longer parent run.",
-      "A measured rate below the projection shortens the parent horizon and trims 410m runs first; seed-noise runs and the evaluation line are never cut.",
+      "A measured rate below the projection shortens the parent horizon and trims 410m transfer seeds first; seed-noise runs and the evaluation line are never cut.",
       "Count every allocated GPU, including idle devices, and charge each operation to exactly one line."
     ]
   }

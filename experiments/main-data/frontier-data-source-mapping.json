@@ -30,10 +30,10 @@
         },
         {
           "path": "experiments/main-data/plan.json",
-          "field": "post_training"
+          "field": "sft_probe"
         }
       ],
-      "supports": "Speck represents pretraining, decay, mid-training and post-training as distinct data stages with separate parents, experiments and budget lines.",
+      "supports": "Speck represents pretraining, decay and mid-training as distinct data stages with separate parents, experiments and budget lines, and probes each branch with one fixed SFT recipe.",
       "does_not_support": "It does not select stage weights, establish a schedule, or prove that a staged recipe beats a flat mixture.",
       "gate_implications": {
         "source_use": "unchanged",

@@ -1,13 +1,13 @@
 # Speck
 
 SpeckLabs scales in steps, each much larger than the last. This first release is the **data step**:
-its product is **measured, transferable findings about the data pipeline of every training stage**
-(pretraining, decay, mid-training, SFT, RL and self-distillation), published as openly as the
-licences allow, so later and much larger releases can start from them. A model ladder (50m, 130m and
-410m) carries most experiments, and one **1.2B parent** trained from scratch carries the later
-stages; the released base and always-thinking assistant for **agentic coding, coding, math and
-tools** are the best branches of those experiments. The KDA/GQA architecture is fixed by
-declaration, so the release makes no architecture claim.
+its product is **measured, transferable findings about the pretraining and mid-training data
+pipeline**, published as openly as the licences allow, so later and much larger releases can start
+from them. A model ladder (50m, 130m and 410m) carries most experiments, and one **1.2B parent**
+trained from scratch carries decay and mid-training; a fixed SFT recipe probes every branch. The
+released base and light always-thinking assistant for **coding, math and tools** are the best
+branches of those experiments. The KDA/GQA architecture is fixed by declaration, so the release
+makes no architecture claim, and post-training research belongs to later releases.
 
 [PLAN.md](PLAN.md) gives status and the next work. The [program design](docs/program.md) owns the
 goal, method, experiments and compute budget, and the [paper outline](docs/paper.md) what the report

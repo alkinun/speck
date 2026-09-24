@@ -53,7 +53,7 @@
     {
       "id": "stage_conditioned_distribution",
       "finding": "The disclosed recipes change data composition and context length across training stages; a single static mixture percentage is an incomplete description.",
-      "speck_implication": "Represent source exposure as a schedule over pretraining, capability mid-training, context extension and post-training. Keep all stage tokens and repetition counts explicit.",
+      "speck_implication": "Represent source exposure as a schedule over pretraining, decay, capability mid-training and context extension. Keep all stage tokens and repetition counts explicit.",
       "evidence_types": ["DeepSeek V4", "GLM 4.5/5", "MiMo 7B", "Kimi K2.5"]
     },
     {
@@ -104,16 +104,16 @@
     "Separate natural core, source-grounded transformation, synthetic reasoning, repository-event and agent-trajectory banks.",
     "Use quality weighting with coverage constraints rather than a universal hard cutoff.",
     "Measure token utility as held-out loss, capability gain, retention, preparation cost and allocated GPU-hours per exposed and unique token.",
-    "Add long-range dependency distance and position-stratified checks to the context packet.",
+    "Add long-range dependency distance and position-stratified checks to context evaluation (M3, M4).",
     "Require independent correctness or outcome checks for rephrasing, learning notes, generated solutions, code repairs and trajectories."
   ],
   "defer_or_bound": [
     "Do not copy frontier mixture percentages; their model sizes, token definitions, repeated exposure and teacher pipelines differ.",
-    "Do not add a fourth pretraining arm. Transformations and stage schedules must fit the existing bounded study or replace a declared factor.",
+    "Add transformations and stage schedules only as predeclared ladder, decay or mid-training arms within their budget lines.",
     "Do not introduce multimodal data into the first text-only release; retain native multimodal and rendered-code ideas for a later allocation.",
     "Do not make broad AI-text removal a production rule until a source-aware detector has false-positive controls for math, code, OCR and long-tail knowledge.",
     "Do not treat proxy-model rankings as final-model proof; confirm selected recipes at matched exposure with held-out families.",
-    "Do not adopt a sparse MoE backbone on this allocation. Rigel's 360M-active hybrid spent 5.4e21 non-embedding FLOPs, about 3.5T tokens by 6ND; Speck is bound by unique eligible supply near 100B tokens, and fewer active parameters raise the tokens needed per FLOP. Record fine-grained MoE on a linear-attention hybrid as the next program's architecture candidate."
+    "Do not adopt a sparse MoE backbone on this allocation. Rigel's 360M-active hybrid spent 5.4e21 non-embedding FLOPs, about 3.5T tokens by 6ND; Speck's parent is bound by unique eligible supply of tens of billions of tokens, and fewer active parameters raise the tokens needed per FLOP. Record fine-grained MoE on a linear-attention hybrid as the next program's architecture candidate."
   ],
   "recipe_hypotheses_for_the_existing_plan": [
     {
@@ -124,7 +124,7 @@
     {
       "stage": "mid_training",
       "hypothesis": "Grounded code/math transformations and repository-event sequences improve capability and downstream optimization efficiency when they preserve lineage and correctness.",
-      "measurement": "Capability per continuation token/GPU-hour, SFT convergence, early RL adaptation and source-family transfer."
+      "measurement": "Capability per continuation token and GPU-hour, SFT-probe scores and source-family transfer (M1, M2)."
     },
     {
       "stage": "context",
@@ -134,17 +134,17 @@
     {
       "stage": "post_training",
       "hypothesis": "Verified outcome data and on-policy/agent trajectories should be selected by task validity and reward reliability, not by length or reasoning verbosity.",
-      "measurement": "Independent task outcomes, supervised-token efficiency, reward agreement, failure recovery and held-out transfer."
+      "measurement": "Deferred to a later step with a stronger base: independent task outcomes, supervised-token efficiency, reward agreement, failure recovery and held-out transfer."
     },
     {
       "stage": "pretraining",
       "hypothesis": "A late phase that shifts exposure toward higher-quality web, math and code (Rigel reports 35% math and 35% code in its fourth of six phases) improves capability per token over ordinary decay at the same unique supply. Rigel's late quality phases rest on Nemotron-CC-v2 and FinePDFs, neither decided for Speck, so its recipe does not show what the selected sources alone achieve.",
-      "measurement": "The existing decay study: paired-seed late-enrichment and ordinary-decay arms from one stable parent, compared on held-out source loss, development capability and unique-supply retention."
+      "measurement": "D1: late-enrichment and ordinary-decay arms from one stable parent, compared on held-out source loss, development capability and unique-supply retention."
     },
     {
       "stage": "context",
       "hypothesis": "Long chain-of-thought QA is useful context-extension data: Rigel's final phase extends 4,096 to 294,912 tokens over about 118B tokens in which long-CoT reasoning QA displaces nearly everything else.",
-      "measurement": "Against dependency-aware long documents at matched exposure from one parent: retrieval across positions, cross-document reasoning, short-task retention and development reasoning scores."
+      "measurement": "M3: against dependency-aware long documents at matched exposure from one parent: retrieval across positions, cross-document reasoning, short-task retention and development reasoning scores."
     }
   ],
   "admission_boundary": "This synthesis updates hypotheses and experiment design only. It does not admit any external source, establish source rights, change the working mixture percentages, authorize acquisition or alter the 5,000-GPU-hour allocation."

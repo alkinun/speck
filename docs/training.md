@@ -1,7 +1,7 @@
 # Training and inference
 
-The [program design](program.md#experiments-by-stage) defines the ladder, the parent and its
-decay, mid-training and post-training branches. This guide describes implemented training paths;
+The [program design](program.md#experiments) defines the ladder, the parent, its decay and
+mid-training branches and the SFT probe. This guide describes implemented training paths;
 it contains no launch configurations.
 
 Set `deterministic: true` in base or SFT settings when qualifying reproducible CUDA restart.
@@ -94,8 +94,8 @@ A changed recipe requires an explicitly supported new run, not an edited resume.
 
 Ladder experiments are separate fresh runs. Arms within a comparison share initial model tensors;
 verify their hashes before training, and freeze manifests, schedules and evaluation inputs per arm.
-Decay, mid-training and post-training experiments are branches of preserved parent checkpoints,
-as the [method](program.md#method) describes.
+Decay and mid-training experiments are branches of preserved parent checkpoints, and the SFT probe
+runs on each branch, as the [method](program.md#method) describes.
 
 ## Mid-training readiness
 
@@ -128,7 +128,8 @@ optimizer policy and cost, and qualify resume.
 
 ## Reward training
 
-`python -m scripts.rl_train EXPERIMENT` trains stage 5 from a hash-pinned SFT or RL checkpoint named
+RL is out of scope for this release; the trainer is kept, tested, for a later step.
+`python -m scripts.rl_train EXPERIMENT` trains from a hash-pinned SFT or RL checkpoint named
 in `rl.json`. For each prompt it samples a group of completions from the current policy over the
 full vocabulary, scores them with the checked-math or sandboxed stdin/stdout verifier in
 `speck/evaluation/verifiers.py`, normalizes rewards within the group, and takes one on-policy
@@ -146,22 +147,24 @@ gradients and step counts, and rank 0 writes metrics and checkpoints; a two-rank
 same steps as one process. There is no KL penalty, reference model or clipping. Multi-GPU NCCL
 execution, long-context RL and measured benefit remain to qualify. The
 [RTX 3090 pilot](../experiments/rl-pilot/README.md) runs it from a real SFT parent. The smoke
-run checks the plumbing only: its tiny model earns no reward. Data and verifier requirements are in
-[the program](program.md#post-training).
+run checks the plumbing only: its tiny model earns no reward. Reward-data inventories are in
+[assistant data](assistant.md#reward-data-kept-for-a-later-step).
 
 ## Final self-distillation
 
-`python -m scripts.self_distill EXPERIMENT` builds the stage-6 dataset from `self_distill.json`:
+Self-distillation is out of scope for this release; the builder is kept, tested, for a later step.
+`python -m scripts.self_distill EXPERIMENT` builds a dataset from `self_distill.json`:
 the hash-pinned parent samples several completions per prompt, and only completions that end at
 EOS and pass their verifier are kept, deduplicated, up to `keep_per_prompt`. Hash-pinned anchor
 conversations are mixed in unchanged. The output directory holds one train and one validation
 Parquet file, the matching `messages_v1` dataset block and a receipt counting truncated, failed,
 duplicate and accepted samples. Run `scripts.sft_prepare --source-dir` and `scripts.sft_train` on it
-to perform the final self-SFT; there is no separate trainer.
+to perform the self-SFT; there is no separate trainer.
 
 ## Assistant training and generation
 
-SFT requires its own `sft.json`, prepared assistant-masked data, and an explicit parent checkpoint:
+SFT, including the [SFT probe](program.md#sft-probe-100-gpu-hours), requires its own `sft.json`,
+prepared assistant-masked data, and an explicit parent checkpoint:
 
 ```bash
 uv run --no-sync python -m scripts.sft_prepare PATH_TO_SFT_EXPERIMENT
@@ -184,7 +187,7 @@ The chat tokenizer itself rejects raw tool fields and separate `reasoning_conten
 dropping them. Apply the existing `speck_tools_v1` adapter first for supported structured records;
 see the assistant contract for loss masks, accepted fields and rejection rules.
 
-Audit local post-training stock before selecting a recipe:
+Audit local assistant stock before freezing the probe recipe:
 
 ```bash
 uv run --no-sync python -m scripts.sft_audit /external/cache/generator-train-*.arrow \
@@ -217,9 +220,8 @@ uv run --no-sync python -m scripts.sft_verify /external/cache/sft-train.parquet 
 
 The [post-training audit protocol](../experiments/main-data/post-training-audit-protocol.json) extends
 this structural audit with fixed outcome strata, tool-trajectory checks, deterministic environment
-controls, a reasoning-mode measurement panel and a bounded fixed-policy RL panel. The RL panel records
-correctness-first length-efficiency curves and truncation/shortcut controls before any policy update.
-It must close before a post-training family runs.
+controls, a reasoning-mode measurement panel and a bounded fixed-policy RL panel; it is kept for a
+later step.
 
 SFT can initialize directly from a completed native base checkpoint. Bind its model and metadata
 hashes with `speck.export.pretrained.native_pretrained_source(directory, step)` and use the returned

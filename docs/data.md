@@ -33,10 +33,8 @@ must never be indistinguishable from source text in a manifest.
 **Where derived text may enter.** The parent's starting mixture is natural and source-traceable.
 Pretraining admits derived text only as a declared experiment arm (P6 synthetic share on the ladder,
 D1 decay data on the parent), separately identified by lineage, teacher/generator, verification
-result and cost. Synthetic material is most acceptable in post-training, where it is generated
-inside pinned, testable environments or used for self-distillation; it remains separately attributed
-and earns its place on held-out transfer, not training reward. Derived data never compensates for
-missing natural supply.
+result and cost. Derived data never compensates for missing natural supply. Post-training
+synthesis (generated SFT traces, self-distillation) belongs to a later step.
 
 **Admission gates.** Before compute is committed, each stage must have a pinned manifest, a
 family-disjoint evaluation split, a contamination report, accepted-token or example accounting,
@@ -46,7 +44,7 @@ reproducible checksums, measured throughput, a retry/recovery policy and a decla
 separate counts, and count accepted tokens only after family, overlap and extraction review.
 Candidate flags stay review-only until a rule is adopted. Count overlapping banks once. Repetition
 is never silent: every repeated pass is declared and counted as exposure, and how much a scarce bank
-tolerates is measured by [P4](program.md#pretraining-the-ladder). Include complete assistant
+tolerates is measured by [P4](program.md#pretraining-the-ladder-1900-gpu-hours). Include complete assistant
 examples in each length band (<=4K, 4–16K, 16–32K and 32–128K), and keep training stock,
 supervised tokens and exposure separate.
 
@@ -140,8 +138,8 @@ SFT. Prioritize these forms in the parent corpus:
 - Checked code explanations, algorithm derivations, debugging/repair examples and exercises with
   independent tests. Preserve mistakes only when clearly identified and followed by valid correction.
 - Coherent repository/document bundles for context extension. Complete observed tool trajectories
-  belong in the separately serialized reasoning/agent training stage; planning prose alone does
-  not establish an agent's ability to inspect, edit, test and recover.
+  are assistant data, serialized separately; planning prose alone does not establish an agent's
+  ability to inspect, edit, test and recover.
 
 Selected natural web and reference material provide language, knowledge and task diversity.
 Preserve everyday, nontechnical topics and varied prose as well as difficult educational material.
@@ -165,8 +163,8 @@ Web and math review rules carried from the audits in the
 
 The [source registry](../experiments/main-data/source-registry.json) fixes the selected sources;
 [recipe-review.json](../experiments/corpus-audit/recipe-review.json) keeps the reviewed public
-cards for later revised freezes. The assistant stock and its gaps are in the
-[assistant recipe](assistant.md#main-assistant-data-direction--2026-09-19).
+cards for later revised freezes. The assistant stock behind the SFT probe is in
+[assistant data](assistant.md#assistant-stock).
 
 Design records for this evidence:
 
@@ -177,24 +175,21 @@ Design records for this evidence:
   which audits support each reviewed hypothesis; it closes no gate.
 - The [natural-web](../experiments/main-data/natural-web-candidate-manifest.json),
   [natural-code](../experiments/main-data/natural-code-candidate-manifest.json),
-  [math](../experiments/main-data/math-candidate-manifest.json) and
-  [post-training](../experiments/main-data/post-training-candidate-manifest.json) candidate
-  manifests add domain evidence and comparison contracts for the readiness sources.
-- The [post-training research synthesis](../experiments/main-data/post-training-research.json)
-  keeps general SFT, reasoning SFT, agent trajectories, RL prompts, preference/critique data and
-  on-policy teacher feedback as separate banks. Correctness remains primary in RL; any efficiency
-  preference is delayed, soft and task-conditioned.
+  [math](../experiments/main-data/math-candidate-manifest.json) candidate manifests add domain
+  evidence and comparison contracts for the readiness sources. The
+  [post-training](../experiments/main-data/post-training-candidate-manifest.json) manifest and the
+  [post-training research synthesis](../experiments/main-data/post-training-research.json) are kept
+  for a later step.
 
-Preserve source-family identity and exclusions across every stage, including derived exercises,
-teacher traces and RL prompts. Long-context qualification must measure retrieval across positions,
+Preserve source-family identity and exclusions across every stage, including derived exercises
+and teacher traces. Long-context qualification must measure retrieval across positions,
 cross-document reasoning, sustained generation and short-task retention, alongside memory/runtime;
 a configured maximum alone does not establish usable context.
 
 ## Code priority and qualification
 
-Code quality is a pretraining requirement, not only a post-training concern: natural code, tests,
-documentation and correct worked explanations should establish useful foundations before
-reasoning-SFT. Preserve practical API use, debugging and repository relationships alongside
+Code quality is a pretraining requirement: natural code, tests, documentation and correct worked
+explanations should establish useful foundations before any SFT. Preserve practical API use, debugging and repository relationships alongside
 algorithmic exercises. Long-context preparation retains coherent repository units and dependencies
 for 16K/32K qualification; an arbitrary concatenation of unrelated files is not repository-level
 supervision. Split original repositories and derived tasks together to protect held-out repair and
@@ -219,7 +214,7 @@ figures and [PLAN.md](../PLAN.md#supply) the current position. The
 origin/notice recovery.
 
 **First comparison to prepare.** The code contrast is P5 source choice on the
-[ladder](program.md#pretraining-the-ladder): Stack-Edu versus Stack v3. Keep total code share,
+[ladder](program.md#pretraining-the-ladder-1900-gpu-hours): Stack-Edu versus Stack v3. Keep total code share,
 non-intervened language coverage, non-code banks and serialization fixed. Checked code is not a
 declared bank, so do not add it back as an extra arm.
 

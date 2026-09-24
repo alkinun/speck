@@ -49,9 +49,16 @@ def test_moving_a_line_without_the_program_table_is_rejected(tmp_path, plan):
         validate(tmp_path, plan)
 
 
-def test_more_grant_runs_than_the_ladder_budget_affords_are_rejected(tmp_path, plan):
-    plan["ladder"]["rungs"][2]["grant_runs"] = 40
-    with pytest.raises(ValueError, match="exceed the pretraining ladder budget"):
+def test_family_runs_beyond_a_stage_line_are_rejected(tmp_path, plan):
+    transfer = next(family for family in plan["ladder"]["families"] if family["id"] == "T")
+    transfer["runs"][1]["count"] = 40
+    with pytest.raises(ValueError, match="pretraining_ladder runs exceed"):
+        validate(tmp_path, plan)
+
+
+def test_a_family_row_must_match_the_plan(tmp_path, plan):
+    plan["decay"]["families"][0]["tokens_per_arm"] = 5_000_000_000
+    with pytest.raises(ValueError, match="program family row 'D1'"):
         validate(tmp_path, plan)
 
 

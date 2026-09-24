@@ -185,7 +185,7 @@ joint deduplication, benchmark exclusion, and tokenizer pipeline rather than a p
 3. Extend the bounded English refined-web inspection into source/answer consistency checks and
    inspect source-eligible code candidates. Establish domain coverage and overlap with current
    stocks before assigning parent mixture weights.
-4. Source and filter contrasts now train on the [model ladder](../../docs/program.md#pretraining-the-ladder)
+4. Source and filter contrasts now train on the [model ladder](../../docs/program.md#pretraining-the-ladder-1900-gpu-hours)
    (P1 quality floor, P5 source choice); a combined recipe comparison cannot attribute improvement
    to an individual changed source.
 
