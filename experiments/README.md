@@ -8,6 +8,7 @@ architecture studies belong to later programs; no architecture search is active 
 | --- | --- | --- |
 | [qualification](qualification/README.md) | Exact selected 1.2B model and finite hardware checks | Single-H100 rehearsal/timing complete; GH200 and four-worker qualification ahead |
 | [pilot](pilot/README.md) | Frozen 104,857,600-token engineering run | Training, export, 2,619 development scores and backups complete; weak base capability |
+| [rl-pilot](rl-pilot/README.md) | Stage-5 RL from a math SFT of the pilot base, on the RTX 3090 | Engineering pilot; no grant hours, no data admission |
 | [corpus-audit](corpus-audit/README.md) | Source-quality, provenance and eligibility evidence | Bounded audits complete; larger qualified supply and independent code checks still needed |
 | [main-data](main-data/README.md) | Working mixture, scale and compute targets | Preparation plan, not a runnable training launch or admitted corpus |
 

@@ -1,0 +1,161 @@
+{
+  "format": "speck_rl_pilot_result",
+  "format_version": 1,
+  "date": "2026-09-24",
+  "status": "engineering_pilot_complete_no_capability_claim",
+  "training_admitted": false,
+  "grant_gpu_hours": 0,
+  "hardware": "one RTX 3090 (24 GiB), sm_86",
+  "source": "codex/rl-pilot; the deterministic setting was added between the first and the deterministic run",
+  "inputs": {
+    "base_parent": {
+      "checkpoint": "h100-pilot-execution-20260918 step 800",
+      "model_sha256": "2647161d45e6a9ff444e2668c2ce3b59dcf0d942c632f53d7e259db06d52b935"
+    },
+    "sft_selection": {
+      "path": "/mnt/speck-data/speck/rl-pilot-20260923/sft-data/receipt.json",
+      "sha256": "40b277acdb32bfa6cacb21fa4082bcea9d8ba64bb2966e9dd8f11d8cf86c6ad1"
+    },
+    "rl_prompts": {
+      "path": "/mnt/speck-data/speck/rl-pilot-20260923/rl-prompts/receipt.json",
+      "sha256": "e0d6847710b51ef47658451b42ec03f13cdc552f2abb90852baf3970d85011f8"
+    },
+    "arithmetic_prompts": {
+      "path": "/mnt/speck-data/speck/rl-pilot-20260923/arithmetic-prompts/receipt.json",
+      "sha256": "53c40243b87a0de52f7d82f0e0ae9daa971bfc105ac487d7f516a941329cebb5"
+    },
+    "sft_log": {
+      "path": "/mnt/speck-data/speck/rl-pilot-20260923/sft.log",
+      "sha256": "fc0d886375dfa9ea6c3cdbfb5a6b23648dab371127eedf6b052d7e4792a48693"
+    }
+  },
+  "sft": {
+    "steps": 375,
+    "validation_loss_step_100": 2.04801,
+    "validation_loss_final": 1.69698,
+    "trained_supervised_tokens": 9266834,
+    "training_hours": 1.699,
+    "logged_positions_per_second": 3914,
+    "checkpoint": {
+      "path": "/mnt/speck-data/speck/rl-pilot-20260923/sft",
+      "step": 375,
+      "model_sha256": "3dae02a5ea2f24723cb805c6cb28043d3de984e0b816549e21d220eafae07920"
+    }
+  },
+  "memory_probe": {
+    "script": {
+      "path": "/mnt/speck-data/speck/rl-pilot-20260923/memory_probe.py",
+      "sha256": "a0a226709d77d2e2d5166e1790ef0c1f5f6f849f3ae8fbc93bc897babbe3fa5e"
+    },
+    "group": 8,
+    "optimizer": "muon",
+    "activation_checkpointing": true,
+    "peak_allocated_gib": {
+      "512_new_tokens": 18.76,
+      "1536_new_tokens": 18.76
+    },
+    "sampling_tokens_per_second": {
+      "512_new_tokens": 389,
+      "1536_new_tokens": 446
+    }
+  },
+  "rl_math_first": {
+    "steps": 40,
+    "seconds_per_step_mean": 103.4,
+    "completions": 1280,
+    "completion_tokens": 1555133,
+    "truncated_completions": 683,
+    "solved_prompts": 2,
+    "prompt_groups": 160,
+    "zero_signal_groups": 158,
+    "update_steps": [
+      {
+        "step": 27,
+        "reward_mean": 0.03125,
+        "grad_norm": 0.30121
+      },
+      {
+        "step": 28,
+        "reward_mean": 0.03125,
+        "grad_norm": 0.35576
+      }
+    ],
+    "metrics": {
+      "path": "/mnt/speck-data/speck/rl-pilot-20260923/rl/metrics.jsonl",
+      "sha256": "e65f0613c1b6beb71ce7177b0e215a6377725d608849251eefeedd4d72b44a90"
+    }
+  },
+  "rl_math_deterministic": {
+    "steps": 40,
+    "seconds_per_step_mean": 131.9,
+    "completions": 1280,
+    "completion_tokens": 1596828,
+    "truncated_completions": 721,
+    "solved_prompts": 0,
+    "prompt_groups": 160,
+    "zero_signal_groups": 160,
+    "update_steps": [],
+    "metrics": {
+      "path": "/mnt/speck-data/speck/rl-pilot-20260923/rl-deterministic/metrics.jsonl",
+      "sha256": "b1c391ca215c71d37d51169065ec98e61a88f95c8e7608fa2e9983e198c9388a"
+    }
+  },
+  "rl_arithmetic": {
+    "steps": 30,
+    "seconds_per_step_mean": 36.4,
+    "completions": 960,
+    "completion_tokens": 442888,
+    "truncated_completions": 616,
+    "solved_prompts": 0,
+    "prompt_groups": 120,
+    "zero_signal_groups": 120,
+    "update_steps": [],
+    "metrics": {
+      "path": "/mnt/speck-data/speck/rl-pilot-20260923/rl-arithmetic/metrics.jsonl",
+      "sha256": "bdb6b1c1ed5b8d80952884ed0a5d279ccd09459fd5860b1709d53216e03e1e9b"
+    }
+  },
+  "restart": {
+    "first_run_replay_from_20": {
+      "identical_through_step": 26,
+      "first_difference": "step 27: identical rollouts, grad_norm 0.30121 against 0.30114; later rollouts diverge",
+      "metrics": {
+        "path": "/mnt/speck-data/speck/rl-pilot-20260923/rl-resumed/metrics.jsonl",
+        "sha256": "0c6d2f6b801864ac8c18e6d641c1530c056018f5a823dc6a3e1ffea9bebf33b7"
+      }
+    },
+    "determinism_probe": {
+      "script": {
+        "path": "/mnt/speck-data/speck/rl-pilot-20260923/determinism_probe.py",
+        "sha256": "14f1745d00097b69c2606ed131f5ddc38c3b2155bf8820e7f3c75c0a525fc4a2"
+      },
+      "max_abs_gradient_difference_between_identical_backward_passes": {
+        "deterministic_false": 1.78125,
+        "deterministic_true": 0.0
+      }
+    },
+    "deterministic_replay_from_20": {
+      "metrics_identical": true,
+      "model_tensors_bitwise_equal": 321,
+      "optimizer_state_tensors": 0,
+      "metrics": {
+        "path": "/mnt/speck-data/speck/rl-pilot-20260923/rl-deterministic-resumed/metrics.jsonl",
+        "sha256": "6add0fa03c9d1e5912e1e79e54a5da88021be6424ca5a5ff16ce6e23af33501c"
+      }
+    },
+    "arithmetic_replay_from_10": {
+      "metrics_identical": true,
+      "metrics": {
+        "path": "/mnt/speck-data/speck/rl-pilot-20260923/rl-arithmetic-resumed/metrics.jsonl",
+        "sha256": "a60d3c822af0176ee00a5dbdb6f98c6083e64492a3fdf49b478a519fad2ad716"
+      }
+    }
+  },
+  "findings": [
+    "A 1.2B policy with Muon, activation checkpointing and per-completion backward peaks at 18.8 GiB for a group of 8, flat from 512 to 1,536 new tokens.",
+    "The math SFT parent solved 2 of 160 UltraData-RL prompt groups (one of eight completions each) in the first run and none in the deterministic rerun; most completions reached the 1,536-token cap.",
+    "Synthetic two-operand arithmetic earned no reward in 30 steps; its reasoning traces rarely closed within 512 tokens.",
+    "Resume restores rollouts and state exactly. Without deterministic kernels, the first update after resume differs slightly and the run diverges. The deterministic setting makes backward passes bitwise reproducible, and the deterministic replay matched bitwise, but it contained no update."
+  ],
+  "limits": "Engineering evidence on a 105M-token base, so no RL benefit is measurable. Replay parity is shown for rollouts, state and backward passes separately; an end-to-end replay that contains updates still needs a stronger parent. Single process only."
+}

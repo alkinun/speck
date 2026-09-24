@@ -358,6 +358,7 @@ def run_rl_smoke(directory, configs, parent):
         "prompt_files": [str(prompts)],
         "group_size": 4,
         "activation_checkpointing": False,
+        "deterministic": False,
         "prompts_per_step": 2,
         "max_prompt_tokens": 48,
         "max_new_tokens": 8,
