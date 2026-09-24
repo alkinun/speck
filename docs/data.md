@@ -87,6 +87,44 @@ outputs, packed data and recovery checkpoints separately. Choose the main horizo
 all-in throughput and eligible supply, then run the same joint-exclusion, partition, pack and
 full-loader checks at that scale.
 
+## Acquiring candidate stock
+
+Two resumable runs grow the selected-web and natural-code stock. Each step publishes a receipt,
+reruns resume from the last completed unit, and nothing is admitted. `D` is the runtime store; run
+from the repository root with `PYTHONPATH=.` and `TMPDIR` on local flash. Keep the SQLite index
+on flash with `--index-directory` and run one heavy writer per spinning disk (see
+[artifact discipline](#artifact-discipline)).
+
+**One Ultra-FineWeb HQ crawl.** The base plan is the 2026-09-22 HQ pass, so the crawl inherits
+its firewall references and deduplication policy.
+
+```bash
+A=experiments/corpus-audit/audit_ultrafineweb_listing.py
+python $A acquire experiments/corpus-audit/ultrafineweb-hq-listing.json CRAWL $D/hq-CRAWL
+python $A convert $D/hq-CRAWL $D/joint-family-partition-20260922/hq-preprocess-plan.json $D/hq-CRAWL-preprocess
+python -m scripts.production_data_preprocess $D/hq-CRAWL-preprocess/preprocess-plan.json --index-directory FLASH_DIR
+python $A census $D/hq-CRAWL-preprocess/excluded $D/hq-CRAWL-census $D/hq-CRAWL-census.json
+```
+
+The census receipt's `distinct_from_fineweb_edu_tokens` is the quantity the supply gap uses. On the
+workstation, `CC-MAIN-2025-43` converted to 27.5M documents; the preprocessor ran at about 700
+documents/s, and its index grows by about 2 KB per document.
+
+**Stack-Edu code.** Fetch each language of a tier, record completed tranches, then convert the
+retained stock and every tranche into one preprocessor input.
+
+```bash
+S=experiments/corpus-audit/stack_edu_content.py
+python $S acquire $D/stack-edu-census-20260923/census-listing.json experiments/corpus-audit/stack-edu-metadata-census.json LANGUAGE TIER $D/stack-edu-content-v1
+python $S summarize $D/stack-edu-content-v1 experiments/corpus-audit/stack-edu-acquisition.json
+python $S convert $D/data-qualification-20260919/code-supply/acquisition.json $D/stack-edu-content-v1 $D/joint-family-partition-20260922/hq-preprocess-plan.json $D/stack-edu-code-preprocess
+python -m scripts.production_data_preprocess $D/stack-edu-code-preprocess/preprocess-plan.json --index-directory FLASH_DIR
+```
+
+`summarize` omits a tranche until its `tranche.json` exists, so rerun it after each language
+finishes. A 4,096-row unit takes about one minute at the default 128 fetch workers; tier 3 is
+6,045 units across 15 languages.
+
 ## Recipe direction — 2026-09-19
 
 The flagship target is always-thinking agentic coding, general coding, math reasoning and tool
