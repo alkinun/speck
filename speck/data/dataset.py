@@ -309,11 +309,15 @@ class SourceBuilder:
             digest_integer = int.from_bytes(digest, "big")
             if digest_integer in self.accepted_hashes or digest_integer in pending:
                 continue
-            preferred = (
+            # A caller that knows document families assigns the split itself, so validation
+            # families stay disjoint from training; otherwise the content hash decides.
+            preferred = document.get("split") or (
                 "val"
                 if _is_validation_document(normalized, self.seed, self.validation_fraction)
                 else "train"
             )
+            if preferred not in self.targets:
+                raise ValueError(f"unknown document split: {preferred!r}")
             if self._tokens(preferred) >= self.targets[preferred]:
                 continue
             pending.add(digest_integer)

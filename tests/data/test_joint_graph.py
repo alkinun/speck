@@ -35,7 +35,7 @@ def _entry(path):
     return {"path": str(path), "sha256": _sha256(path)}
 
 
-def _stock(tmp_path, name, texts, policy=POLICY, reference=None):
+def _stock(tmp_path, name, texts, policy=POLICY, reference=None, repositories=None):
     """Run one real single-source preprocess pass and index its output as a token stock."""
 
     directory = tmp_path / name
@@ -51,9 +51,10 @@ def _stock(tmp_path, name, texts, policy=POLICY, reference=None):
                     "host": None,
                     "content_id": None,
                 }
+                | ({"repository": repositories[index]} if repositories else {})
             )
             + "\n"
-            for text in texts
+            for index, text in enumerate(texts)
         )
     )
     ledger = directory / "deny.json"
@@ -386,3 +387,41 @@ def test_near_duplicates_within_code_join_different_repositories(tmp_path):
     )
     assert report["edges"]["near"] == 1
     assert report["partition"]["documents"]["code_cohort"] == {"quarantine": 2}
+
+
+def test_a_repository_field_joins_bulk_code_to_its_repository_family(tmp_path):
+    """Every file of a held repository is held; a file without a repository is held too."""
+    first = _stock(tmp_path, "first", [SHARED])
+    texts = [
+        "def held_one(): return a first distinct function body for this repository",
+        "def held_two(): return a second distinct function body for this repository",
+        "def free(): return an unrelated library function with its own repository",
+        "def orphan(): return a file whose repository identity was never recorded",
+    ]
+    code = _stock(
+        tmp_path,
+        "code",
+        texts,
+        repositories=["Owner/Code", "owner/code", "other/lib", "not a repository"],
+    )
+    plan = {
+        **_plan(first, {**code, "repository_field": "repository"}),
+        "code_cohort": _code_cohort(tmp_path),
+        "partition": RULE,
+    }
+    build(plan, tmp_path / "graph")
+    rows = {
+        row["released_content_sha256"]: row
+        for row in map(json.loads, (tmp_path / "graph" / "partitions.jsonl").open())
+        if row["source"] == "code"
+    }
+    held_one, held_two, free, orphan = (
+        rows[hashlib.sha256(text.encode()).hexdigest()] for text in texts
+    )
+    assert held_one["candidate_partition"] == held_two["candidate_partition"] == "quarantine"
+    assert held_one["family_component_sha256"] == held_two["family_component_sha256"]
+    assert "benchmark_family_or_content_overlap" in held_one["hold_reasons"]
+    assert orphan["hold_reasons"] == ["unresolved_origin_or_parent"]
+    assert free["hold_reasons"] == [] and free["candidate_partition"] != "quarantine"
+    unlinked = hashlib.sha256(("sha256:" + free["released_content_sha256"]).encode()).hexdigest()
+    assert free["family_component_sha256"] != unlinked
