@@ -6,7 +6,7 @@ runnable work and completed evidence from preparation plans.
 
 | Directory | Role | Current status |
 | --- | --- | --- |
-| [ladder](ladder/README.md) | 50m/130m/410m rung configurations generated from one shape rule | 50m learning-rate sweep running |
+| [ladder](ladder/README.md) | 50m/130m/410m rung configurations generated from one shape rule | Configurations written; 50m sweep stopped pending hardware verification |
 | [qualification](qualification/README.md) | Exact selected 1.2B model and finite hardware checks | Single-H100 rehearsal/timing complete; GH200 and four-worker qualification ahead |
 | [pilot](pilot/README.md) | Frozen engineering run of the 1.2B reference | Training, export, 2,619 development scores and backups complete; weak base capability |
 | [rl-pilot](rl-pilot/README.md) | RL from a math SFT of the pilot base, on the RTX 3090 | Engineering pilot kept for a later step; not part of this release |
