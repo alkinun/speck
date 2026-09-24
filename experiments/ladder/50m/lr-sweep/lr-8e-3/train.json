@@ -1,0 +1,6 @@
+{
+  "extends": "../../train.json",
+  "lr": 0.008,
+  "run": "ladder-50m-lr-8e-3",
+  "train_tokens": 658636800
+}

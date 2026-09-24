@@ -1,0 +1,60 @@
+{
+  "format": "speck_ladder_inputs",
+  "format_version": 1,
+  "note": "The learning-rate sweep's inputs: the 2026-09-24 dry-run family partition over the six retained text stocks, the retained and int_score 4+ Stack-Edu code grouped by repository, and the code review cohort. The web share comes from the retained twelve-shard Ultra-FineWeb HQ sample because the CC-MAIN-2025-43 crawl was still in preprocessing; the baseline corpus uses the crawl.",
+  "partitions": {
+    "path": "/home/alkin/.cache/speck-ladder/graph-dry-run/partitions.jsonl",
+    "sha256": "92949a4184a17a0cef859f5deca659cec83fc524b7b0c24f4432cf561edefb7c"
+  },
+  "sources": [
+    {
+      "id": "fineweb_edu",
+      "text": {
+        "path": "/mnt/speck-data/speck/fineweb-edu-e1s-stock-v2/work/excluded/acquired_train__web.jsonl",
+        "sha256": "1db86e7516e76240f179fbb8b2198b59c74d185d6b42cb05cfd189ed87124eae"
+      }
+    },
+    {
+      "id": "cosmopedia_v2",
+      "text": {
+        "path": "/mnt/speck-data/speck/cosmopedia-stock-preparation-v1/work/excluded/acquired_train__synthetic.jsonl",
+        "sha256": "7e5693c5761ce8ebe33349522cc3f15b559317c3a9dde1dfb06a74904c7d548e"
+      }
+    },
+    {
+      "id": "finemath_4plus",
+      "text": {
+        "path": "/mnt/speck-data/speck/finemath-stock-preparation-v2/work/excluded/acquired_train__math.jsonl",
+        "sha256": "3fdc698daad3725c5eb12ad3c81283933dacf500ad3bfae890704cf041adc1cf"
+      }
+    },
+    {
+      "id": "finewiki_en",
+      "text": {
+        "path": "/mnt/speck-data/speck/finewiki-stock-preparation-v1/work/excluded/acquired_train__reference.jsonl",
+        "sha256": "960f7be2a725f30ca2186ecea7b76e2374be03cefc842dbdcb67582a1c926222"
+      }
+    },
+    {
+      "id": "pes2o_v3",
+      "text": {
+        "path": "/mnt/speck-data/speck/pes2o-stock-preparation-v2/work/excluded/acquired_train__science.jsonl",
+        "sha256": "e130b55657ad084b761fe4ef175cc73c4b50df0d865d6840bdd336ea36effcac"
+      }
+    },
+    {
+      "id": "ultrafineweb_hq",
+      "text": {
+        "path": "/mnt/speck-data/speck/joint-family-partition-20260922/hq-excluded/acquired_train__web.jsonl",
+        "sha256": "a55afc3ed2da2745e09faa687baa2843edf740c3fc42350a3381e8a2f8b1338a"
+      }
+    },
+    {
+      "id": "stack_edu",
+      "text": {
+        "path": "/home/alkin/.cache/speck-ladder/code-4plus-preprocess/excluded/acquired_train__code.jsonl",
+        "sha256": "942cc5acdc67964b9d895f14f9afe2d4d6dc79155ee76326a8a3401d3dddf598"
+      }
+    }
+  ]
+}
