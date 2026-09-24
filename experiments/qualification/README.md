@@ -1,8 +1,8 @@
 # First hardware qualification
 
 The exact 1.2B KDA/GQA reference at 4K is in [model.json](model.json); [plan.json](plan.json) holds
-the finite settings of the synthetic R0 recovery diagnostic, which keeps its own 70-GPU-hour
-ceiling inside the program's runtime-qualification line. The
+the finite settings of the synthetic R0 recovery diagnostic, including its GPU-hour ceiling inside
+the program's runtime-qualification line. The
 [GH200 access qualification runbook](../../docs/compute-qualification.md) owns the full access
 sequence. The model has 32,003 embedding rows; synthetic inputs use the original 32,000-token
 vocabulary. Deterministic algorithms, including attention backward, and a reproducible cuBLAS
@@ -15,7 +15,7 @@ uv run --no-sync python -m scripts.r0_execute experiments/qualification/plan.jso
   --workers 1 --allocated-gpus 1
 uv run --no-sync python -m scripts.r0_execute experiments/qualification/plan.json \
   --workers 1 --allocated-gpus 1 --run \
-  --ledger /shared/speck/qualification-ledger --prior-r0-gpu-hours ACCOUNTED_HOURS
+  --ledger /shared/speck/qualification-ledger/r0 --prior-r0-gpu-hours ACCOUNTED_HOURS
 ```
 
 Declare every allocated GPU. Inspect the one-worker result before `--workers 4`. The command
@@ -45,7 +45,7 @@ model quality, sustained throughput, hard-crash recovery or scheduler behavior.
 [timing.json](timing.json), [microbatch-timing.json](microbatch-timing.json),
 [sft-timing.json](sft-timing.json) and [evaluation-timing.json](evaluation-timing.json) hold the
 probe configurations, measured with `scripts.training_timing`, which observed the real trainer and
-is now kept only in Git history. The SFT rate depends on its 23% supervised density, so
+is kept only in Git history. The SFT rate depends on its 23% supervised density, so
 final SFT cost needs actual corpus lengths.
 
 ## What is open

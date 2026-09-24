@@ -1,25 +1,14 @@
 # Evaluation
 
 The [method](program.md#method) sets what is measured at each scale. Ladder runs are scored
-mainly by held-out loss per source and domain on fixed family-disjoint validation packs, plus
-benchmarks that show signal early (cloze and log-likelihood multiple choice, code pass@k at large
-k). Generative math, coding, tool and reliability benchmarks become primary only for parent
-branches, which are scored after the fixed [SFT probe](program.md#sft-probe-100-gpu-hours); the
-probe also scores each 410m transfer and seed run. Each rung's seed-to-seed spread sets the smallest
-effect it can report. Stage-to-stage changes describe progression; attributing a gain to data
-requires a predeclared contrast with the model, training exposure and other recipe settings held fixed. Keep cost
+mainly by held-out loss per source and domain on fixed family-disjoint validation packs, plus an
+early-signal suite of log-likelihood multiple choice and arithmetic (`scripts.open_slm_eval`:
+HellaSwag, ARC-Easy, ARC-Challenge, PIQA and ArithMark). Parent branches add generative benchmarks
+after the [SFT probe](program.md#sft-probe-100-gpu-hours), whose assistant is scored as a probe of
+its base checkpoint. Each rung's seed-to-seed spread sets the smallest effect it can report.
+Stage-to-stage changes describe progression; attributing a gain to data requires a predeclared
+contrast with the model, training exposure and other recipe settings held fixed. Keep cost
 alongside quality.
-
-The released assistant always uses the thinking protocol for coding, math and agent tasks.
-Evaluate correctness, cap exhaustion, tool loops and end-to-end task completion within that
-protocol. A concise final answer does not mean reasoning is off, and a thinking tag alone is not
-evidence of useful reasoning. This contract does not change the frozen base pilot or external
-reference-model protocols below.
-
-Coding is a first-release priority. The coding evaluation roadmap in [Data](data.md) adds Python
-breadth, multilingual checks, and practical repair to prepare after the engineering pilot. Those
-additions need their own frozen protocol and training exclusions; they are not yet
-implemented, and the pilot's 33 development code tasks do not establish broad coding strength.
 
 ## Available checks
 
@@ -49,99 +38,45 @@ does not fully account for global attention, recurrent/chunk work, vocabulary pr
 recomputation. Separate model FLOP estimates from hardware time and measured kernel work.
 
 For inference, separate prefill and decode, count reasoning and final-answer tokens, and disclose
-context length, tool access, output caps and stopping policy. Agent cost per success includes failed
-attempts and environment costs alongside success rate. SFT supervised tokens, processed context,
-padding and generated tokens are distinct quantities. Report teacher/verification costs separately.
-The backbone is fixed by declaration, so efficiency numbers profile that one design and support no
-architecture comparison.
+context length, output caps and stopping policy. SFT supervised tokens, processed context, padding
+and generated tokens are distinct quantities. Report teacher/verification costs separately.
 
 Each family's [predeclared record](program.md#method) fixes its primary metric, validation packs,
-minimum useful effect and decision rule. Family-level uncertainty and fixed-suffix context scoring need qualified retained outputs;
-the current aggregate loss evaluator does not supply those analyses automatically.
+minimum useful effect and decision rule. Family-level uncertainty and fixed-suffix context scoring
+need qualified retained outputs; the aggregate loss evaluator does not supply those analyses.
 
-## Frozen pilot protocol and future evaluations
+## Benchmark protocol
 
-The pilot development evaluation and isolated code grading are complete: [results](../experiments/pilot/development-result.json)
-cover 2,619 tasks; final tests remain untouched. The preparation commands below describe the frozen
-protocol, not unfinished pilot work. For each experiment family, pin evaluation inputs and graders
-before training. Keep development and final-test data
-separate from training and from each other. Verify final math answers, execute code in an isolated
-resource-limited runner, and evaluate tools in a deterministic environment. Include missing
-information, malformed calls, tool failures, corrections, and cases where no tool should be called.
+For each experiment family, pin evaluation inputs and graders before training. Keep development and
+final-test data separate from training and from each other. Verify final math answers and execute
+code in an isolated resource-limited runner. Report correctness and failures with denominators,
+output budgets, latency and cost. Compare base with base and assistant with assistant. Re-run public
+baselines under the same declared protocol; published leaderboard numbers are context, not directly
+comparable measurements.
 
-Report correctness and failures with denominators, output budgets, latency, and cost. Compare base
-with base and assistant with assistant. Re-run public baselines under the same declared protocol;
-published leaderboard numbers are context, not directly comparable measurements.
+The benchmark dashboard is the early-signal suite on every run plus generative math and coding
+benchmarks on parent branches after the probe; this document owns its contents.
 
-The broader math/code/tool/reliability dashboard remains work to do. Candidate references and the reasons
-for them are in [research notes](research.md). Historical retrieval/long-context experiments are in
-[Git](../archive/README.md), outside the current experiment path.
+## Coding evaluations
 
-The first pilot pins GSM8K, IFEval, HumanEval+, ARC-Challenge, and HellaSwag in
-[its protocol](../experiments/pilot/evaluation.json), including dataset revisions and file hashes.
-Prepare the exact inputs with:
+The pilot's compiled HumanEval+ metric is a continuity check; 33 development tasks cannot establish
+broad coding strength. These are candidate generative evaluations for parent branches after the
+probe; none is implemented or scored:
 
-```bash
-uv run --no-sync python -m scripts.evaluation_prepare experiments/pilot/evaluation.json \
-  --output /external/pilot/evaluation.json
-```
+| Dimension | Candidate evidence |
+| --- | --- |
+| Python generation | HumanEval+ continuity plus MBPP+ through a declared [EvalPlus](https://github.com/evalplus/evalplus) protocol |
+| Language coverage | Selected [MultiPL-E](https://github.com/nuprl/MultiPL-E) languages, reporting each separately |
+| Harder generation | A fixed release/date window of [LiveCodeBench](https://github.com/LiveCodeBench/LiveCodeBench), with explicit test variant and output limits |
+| Practical use | Bounded held-out tasks for library use and debugging, scored against independent hidden tests |
 
-This command verifies task counts and assigns approximately 20% to development and 80% to final
-by a seeded hash of the normalized prompt. Identical prompts share a partition. It produces task
-identities, not evaluation scores. These are custom subsets; full-benchmark leaderboard scores are
-not directly comparable. Near-duplicate task families across the two partitions remain a limitation.
-All benchmark inputs, including both partitions, are excluded from the pilot candidates using the
-existing exact-field and informative n-gram scanner. Sensitivity matches are also removed.
-The protocol pins lm-evaluation-harness and EvalPlus source revisions. The `capability` dependency
-group installs those exact commits plus IFEval's optional dependencies. Keep this environment separate
-from training (`UV_PROJECT_ENVIRONMENT=.venv-capability uv sync --extra gpu --group capability`).
-IFEval requires NLTK's `punkt_tab` resource; acquire it before an offline run. Bubblewrap (`bwrap`) and
-working Linux user namespaces and a non-root grading account are required for code execution.
-The process-count limit does not apply to root, so root execution is rejected. There is no
-unsandboxed fallback.
+Freeze task-family partitions and exclusion identities before data selection, fit prompts and output
+within the context budget, pin Python/library versions, and re-run reference models under the same
+protocol. Report denominators, uncertainty, execution failures, output tokens and runtime; do not
+tune against the final partition or equate the compiled metric with the official leaderboard.
 
-```bash
-python -m scripts.capability_eval experiments/pilot/evaluation.json /external/pilot/evaluation.json \
-  --qualify --output /external/grader-check
-python -m scripts.capability_eval experiments/pilot/evaluation.json /external/pilot/evaluation.json \
-  --model Qwen/Qwen3-0.6B --revision c1899de289a04d12100db370d81485cdf75e47ca \
-  --chat --limit 8 --output /external/reference-smoke
-python -m scripts.capability_eval experiments/pilot/evaluation.json /external/pilot/evaluation.json \
-  --local-export /external/pilot/base-export --limit 8 --output /external/pilot-base-smoke
-```
+## Pilot protocol
 
-`--local-export` replaces the Hub reference, requires a passing native/Transformers parity receipt,
-hashes the complete export, and loads its explicitly selected local model/tokenizer code offline.
-Use only an export whose code you intend to execute. Add `--chat` for an assistant export. The same
-frozen tasks, output caps, non-root code sandbox, and partition rules apply to local checkpoints.
-Local likelihood scoring disables the model's default generation cache so all continuation logits
-are returned; HFLM explicitly enables caching for generation. The runner rejects an empty decoded
-EOS stop string. Re-export older checkpoints with the current tokenizer: control tokens must retain
-their spelling when special-token skipping is disabled. Base generation suppresses the model's
-reserved assistant rows, which have no base-tokenizer pieces; assistant exports retain their roles.
-
-Qualification checks the pinned GSM8K strict/flexible extraction, IFEval constraints, both
-multiple-choice scorers, all 33 development code tasks' canonical solutions, deliberate wrong
-answers, timeout/early-exit handling, and filesystem/network isolation. Five scripted
-[tool episodes](assistant.md) check the deterministic tool environment separately.
-
-The model runner reuses pinned task prompts, filters, scoring, aggregation, and continuation
-log-likelihoods. It verifies frozen input hashes, selects only the declared partition, records raw
-responses and task IDs, and rejects prompts that exceed the 4K context plus output budget.
-Greedy output caps are 1,024 tokens for GSM8K/code and 512 for IFEval. `--chat` applies the model's
-chat template with `enable_thinking=False`; omit it for a base comparator. Scores from chat and
-plain completion protocols must be labeled separately. The frozen `enable_thinking=False` chat
-path is not the future always-thinking assistant evaluation protocol. Prepare and qualify an explicit
-thinking/tool-aware evaluator before assistant comparisons; preserve this historical base/reference
-protocol and its results. `--limit 0` runs the full selected partition;
-the default eight examples per benchmark is only an integration check. `--partition final` is an
-explicit held-out evaluation action, not part of development qualification.
-
-The frozen Hugging Face HumanEval+ file contains compiled `check(candidate)` programs, rather
-than EvalPlus's `base_input`/`plus_input` representation. The runner uses the pinned EvalPlus code
-sanitizer and executes those exact compiled tests with a 15-second wall deadline, 10-second CPU
-limit, 4 GiB address-space limit, read-only Python/runtime mounts, no host home/corpus mounts, and
-no network namespace access. It reports `compiled_plus_pass@1`, retaining execution failures in
-the denominator. This is not the adaptive per-test timing protocol of the standard EvalPlus CLI;
-do not compare it directly with published leaderboard scores. OS isolation reduces the consequences
-of faulty generated programs; these are correctness benchmarks, not an adversarial grading system.
+The engineering pilot's frozen protocol pins GSM8K, IFEval, HumanEval+, ARC-Challenge and HellaSwag
+subsets with a seeded development/final split and a sandboxed code grader. Its preparation,
+qualification and runner commands are in the [pilot record](../experiments/pilot/README.md#evaluation-protocol).

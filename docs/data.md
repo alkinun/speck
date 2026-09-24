@@ -3,8 +3,8 @@
 This document owns the data methods: the shared pipeline, where natural, derived and synthetic
 records may enter, counting rules and the code route. The [program design](program.md) owns the
 stages, experiments and budget, [PLAN.md](../PLAN.md) the work order, the
-[source-readiness matrix](../experiments/main-data/source-readiness.json) per-source gates, and the
-[main data plan](../experiments/main-data/README.md#base-mixture) the mixture. No document here
+[source-readiness matrix](../experiments/main-data/source-readiness.json) per-source gates, and and
+[plan.json](../experiments/main-data/plan.json) (`parent.starting_mixture`) the mixture. No document here
 authorizes a training run.
 
 ## Pipeline
@@ -44,9 +44,7 @@ reproducible checksums, measured throughput, a retry/recovery policy and a decla
 separate counts, and count accepted tokens only after family, overlap and extraction review.
 Candidate flags stay review-only until a rule is adopted. Count overlapping banks once. Repetition
 is never silent: every repeated pass is declared and counted as exposure, and how much a scarce bank
-tolerates is measured by [P4](program.md#pretraining-the-ladder-1900-gpu-hours). Include complete assistant
-examples in each length band (<=4K, 4–16K, 16–32K and 32–128K), and keep training stock,
-supervised tokens and exposure separate.
+tolerates is measured by [P4](program.md#pretraining-the-ladder-1900-gpu-hours).
 
 | Responsibility | Code / command |
 | --- | --- |
@@ -95,8 +93,8 @@ from the repository root with `PYTHONPATH=.` and `TMPDIR` on local flash. Keep t
 on flash with `--index-directory` and run one heavy writer per spinning disk (see
 [artifact discipline](#artifact-discipline)).
 
-**One Ultra-FineWeb HQ crawl.** The base plan is the 2026-09-22 HQ pass, so the crawl inherits
-its firewall references and deduplication policy.
+**One Ultra-FineWeb HQ crawl.** The crawl reuses the 2026-09-22 HQ preprocess plan, so it
+inherits its firewall references and deduplication policy.
 
 ```bash
 A=experiments/corpus-audit/audit_ultrafineweb_listing.py
@@ -107,8 +105,8 @@ python $A census $D/hq-CRAWL-preprocess/excluded $D/hq-CRAWL-census $D/hq-CRAWL-
 ```
 
 The census receipt's `distinct_from_fineweb_edu_tokens` is the quantity the supply gap uses. On the
-workstation, `CC-MAIN-2025-43` converted to 27.5M documents; the preprocessor ran at about 700
-documents/s, and its index grows by about 2 KB per document.
+workstation the preprocessor ran at about 700 documents/s, and its index grows by about 2 KB per
+document.
 
 **Stack-Edu code.** Fetch each language of a tier, record completed tranches, then convert the
 retained stock and every tranche into one preprocessor input.
@@ -125,11 +123,10 @@ python -m scripts.production_data_preprocess $D/stack-edu-code-preprocess/prepro
 finishes. A 4,096-row unit takes about one minute at the default 128 fetch workers; tier 3 is
 6,045 units across 15 languages.
 
-## Recipe direction — 2026-09-19
+## Source quality
 
-The capability target is always-thinking agentic coding, general coding, math reasoning and tool
-use. High-quality code and reasoning must be present during pretraining, not deferred entirely to
-SFT. Prioritize these forms in the parent corpus:
+High-quality code and reasoning must be present during pretraining, not deferred entirely to SFT.
+Prioritize these forms in the parent corpus:
 
 - Natural implementation code with useful tests, documentation, API usage and project context;
   preserve Python and other target languages, including JavaScript/TypeScript.
@@ -137,9 +134,7 @@ SFT. Prioritize these forms in the parent corpus:
   through harder problems; inspect intermediate reasoning as well as final answers.
 - Checked code explanations, algorithm derivations, debugging/repair examples and exercises with
   independent tests. Preserve mistakes only when clearly identified and followed by valid correction.
-- Coherent repository/document bundles for context extension. Complete observed tool trajectories
-  are assistant data, serialized separately; planning prose alone does not establish an agent's
-  ability to inspect, edit, test and recover.
+- Coherent repository/document bundles for context extension.
 
 Selected natural web and reference material provide language, knowledge and task diversity.
 Preserve everyday, nontechnical topics and varied prose as well as difficult educational material.
@@ -182,18 +177,17 @@ Design records for this evidence:
   for a later step.
 
 Preserve source-family identity and exclusions across every stage, including derived exercises
-and teacher traces. Long-context qualification must measure retrieval across positions,
-cross-document reasoning, sustained generation and short-task retention, alongside memory/runtime;
-a configured maximum alone does not establish usable context.
+and teacher traces. Useful context is measured as the
+[mid-training design](program.md#mid-training-800-gpu-hours) states, never by a configured maximum.
 
 ## Code priority and qualification
 
 Code quality is a pretraining requirement: natural code, tests, documentation and correct worked
-explanations should establish useful foundations before any SFT. Preserve practical API use, debugging and repository relationships alongside
-algorithmic exercises. Long-context preparation retains coherent repository units and dependencies
-for 16K/32K qualification; an arbitrary concatenation of unrelated files is not repository-level
-supervision. Split original repositories and derived tasks together to protect held-out repair and
-agent evaluations.
+explanations should establish useful foundations before any SFT. Preserve practical API use,
+debugging and repository relationships alongside algorithmic exercises. Long-context preparation
+retains coherent repository units and dependencies for context extension; an arbitrary
+concatenation of unrelated files is not repository-level supervision. Split original repositories
+and derived tasks together to protect held-out evaluations.
 
 **Qualification rules.** Natural source code needs immutable identity, applicable source-use
 evidence, intact useful content, family/benchmark exclusions and joint deduplication. It does *not*
@@ -209,57 +203,25 @@ exclusion/partition family. A clean bounded screen or a publisher licence label 
 nothing; notice text governs, not a scanner label.
 
 **Supply position.** The [supply gap](../experiments/main-data/supply-gap.json) owns the per-bank
-figures and [PLAN.md](../PLAN.md#supply) the current position. The
+figures and [PLAN.md](../PLAN.md#supply) the supply position. The
 [qualification record](../experiments/main-data/QUALIFICATION.md) owns cohort holds and
 origin/notice recovery.
 
-**First comparison to prepare.** The code contrast is P5 source choice on the
+**Code comparison.** The code contrast is P5 source choice on the
 [ladder](program.md#pretraining-the-ladder-1900-gpu-hours): Stack-Edu versus Stack v3. Keep total code share,
 non-intervened language coverage, non-code banks and serialization fixed. Checked code is not a
-declared bank, so do not add it back as an extra arm.
-
-**Evidence for a coding claim.** Keep the pilot's compiled HumanEval+ metric as a continuity check;
-33 development tasks cannot establish broad coding strength. Prepare a separate pinned protocol
-before admitting new data:
-
-| Dimension | Next evidence |
-| --- | --- |
-| Python generation | HumanEval+ continuity plus MBPP+ through a declared [EvalPlus](https://github.com/evalplus/evalplus) protocol |
-| Language coverage | Selected [MultiPL-E](https://github.com/nuprl/MultiPL-E) languages, reporting each separately |
-| Harder generation and repair | A fixed release/date window of [LiveCodeBench](https://github.com/LiveCodeBench/LiveCodeBench), with explicit test variant and output limits |
-| Practical use | Bounded held-out tasks for library use, debugging and repair, scored against independent hidden tests |
-| General usefulness | Existing math, instruction following, knowledge/reasoning checks, and per-source held-out loss |
-
-These are planned, not implemented or scored. Freeze task-family partitions and exclusion identities
-before data selection, fit prompts and output within the context budget, pin Python/library
-versions, and re-run reference models under the same protocol. Report denominators, uncertainty,
-execution failures, output tokens and runtime; do not tune against the final partition or equate our
-compiled metric with the official leaderboard.
-
-**Repository change data.** Qualify 8–16 repository repair cases before any bulk route. Retain
-origin, licence evidence, immutable parent/fix commits, issue specification, changed files, patch
-and environment/dependency identities. Exclude benchmark/task families before acquisition,
-deduplicate commits that also occur in pull requests, and group related files by repository for
-partitioning. Prevent post-fix state or hidden-test answers from leaking into task inputs. Run
-checks only in the existing sandbox: at least one relevant test must fail before the fix and pass
-after it, while declared regression tests keep passing. Verify empty-patch failure and
-reference-patch success repeatedly; reject flaky or underspecified cases, and record
-environment/setup failures separately from incorrect solutions. Before training on change examples,
-specify how pre-change context is loss-masked and patches are supervised — the current plain
-pretraining pack does not implement that objective.
+declared bank, so do not add it back as an extra arm. Candidate coding evaluations are in
+[Evaluation](evaluation.md#coding-evaluations).
 
 ## Artifact discipline
 
 Keep source revisions, filters, counts, hashes, tokenizer identity, data order and output locations
 in each run's manifests. Keep runtime data/checkpoints/logs outside Git, and back up irreplaceable
-checkpoints before dependent work. Preserve failed attempts. Corpus text and packed shards are not
-redistributed as model-release artifacts.
+checkpoints before dependent work. Preserve failed attempts. Whether corpus text or packed shards are released is an
+[open decision](../PLAN.md#open-decisions).
 
 Match storage to the access pattern. Bulk corpora and outputs are large sequential writes and suit
 a large disk; the SQLite deduplication index, many small unit files and scanner scratch are random,
-synced writes and belong on local flash. On 2026-09-24 the workstation's shingled (SMR) data disk
-stalled for over 30 seconds under several such writers at once, the kernel timed the commands out,
-and ext4 remounted read-only; the drive itself reported no media errors. Run one heavy writer per
-spinning disk, raise its command timeout, and publish receipts only after their data is on disk:
-fsync a unit's records before the manifest that marks it complete. Two unit manifests published
-without that fsync were found empty after the crash and were refetched.
+synced writes and belong on local flash. Run one heavy writer per spinning disk, and publish
+receipts only after their data is on disk: fsync a unit's records before the manifest that marks it
+complete.

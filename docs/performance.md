@@ -1,9 +1,10 @@
 # Performance and optimization plan
 
 The fixed 1.2B KDA/GQA reference is the [program's parent](program.md#model); its costs are
-revised only from a measured speedup. [The rental runbook](throughput-rental.md) owns the H100
-procedure; [GH200 qualification](compute-qualification.md) owns grant hardware, per-rung rates and
-distributed checks. The JSON packets own run settings. This document owns measurement definitions and the optimization priorities, not another copy of those procedures.
+revised only from a measured speedup. [GH200 qualification](compute-qualification.md) owns grant
+hardware, per-rung rates and distributed checks; the optional [H100 rental](throughput-rental.md)
+owns its own procedure; the JSON packets own run settings. This document owns the throughput
+evidence, measurement definitions and optimization priorities.
 
 ## Evidence and limits
 
@@ -15,8 +16,9 @@ The optimized 1.2B model did not fit the 24 GiB card. The proxy's 52.2% estimate
 neither a 1.2B ceiling nor a transferable speedup.
 
 The [H100 pilot](../experiments/pilot/h100-run.json) measured 13,595 steady optimizer tokens/s and
-12,859 full-trainer tokens/s. With the current 7.513 GFLOP/token estimate and the packet's 989.5
-TFLOP/s denominator, these correspond to about 10.3% and 9.8% estimated MFU respectively. A lower
+12,859 full-trainer tokens/s. MFU uses the exact model estimate, 7.513 GFLOP/token, while
+[planning](program.md#the-ladder) uses 6 × parameters; with the packet's 989.5 TFLOP/s denominator
+these rates correspond to about 10.3% and 9.8% estimated MFU respectively. A lower
 MFU on a different GPU does not identify the bottleneck: launch latency, memory traffic, kernel
 selection, optimizer amortization and different timing boundaries must be measured separately.
 
@@ -31,14 +33,14 @@ The [local compiled recovery screen](../experiments/qualification/compiled-recov
 failed on the 318M proxy: both full-trainer processes completed, but 286 of 321 saved model
 tensors exceeded the existing restart tolerance. Loader/RNG state and counters matched exactly.
 One cause is a cache change between eager FLA warmup and lazy Inductor initialization: identical
-KDA inputs selected different cached kernels. Runtime setup now fixes the Triton cache before
+KDA inputs selected different cached kernels. Runtime setup fixes the Triton cache before
 either path starts, but the [follow-up screen](../experiments/qualification/compiled-recovery-cache-3090.json)
 still failed. The [isolation receipt](../experiments/qualification/compiled-recovery-descent-3090.json)
 locates the remaining cause in Inductor's coordinate-descent tuning, which re-times reduction
 configurations in every process. With fixed weights and batch, each process was bitwise
 repeatable, but two fresh processes disagreed. Eager, plain compile and `max_autotune` alone agreed
 bitwise across processes, even from independent cold Inductor caches. Coordinate descent alone
-did not. Every compiled training path now uses the shared `COMPILE_OPTIONS`, which exclude it. The
+did not. Every compiled training path uses the shared `COMPILE_OPTIONS`, which exclude it. The
 training replay then passed at the unchanged tolerance, including optimizer state. Paired proxy
 repeats measured the change at about 0.5% slower. The sweep's 2.084x includes coordinate descent,
 so it slightly overstates the current recipe. A [compiled SFT replay](../experiments/qualification/compiled-sft-recovery-3090.json)
@@ -102,5 +104,5 @@ MFU/peak convention, memory peaks and warmup time. Keep loader-inclusive and ful
 separate. Attach the selected trace and parity/restart results. Mark unmeasured cells as unmeasured.
 
 Apply the [numeric plan](../experiments/main-data/plan.json)'s `compute.rules` only once GH200
-costs and distributed overhead are measured. The H100 rental supplies implementation evidence; it
-does not lengthen the parent run or establish architecture superiority.
+costs and distributed overhead are measured. The optional H100 rental supplies implementation
+evidence; it does not lengthen the parent run or establish architecture superiority.

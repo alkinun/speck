@@ -28,7 +28,7 @@ A finding is only useful to the next step if it can be carried to a larger run. 
 - the scales at which it was measured, and whether it held across them;
 - the limits that stop it transferring, such as supply, licence or the fixed architecture.
 
-Rigel's six-phase recipe shows why this matters: it publishes the mixture of each phase, but no
+[Rigel's](../experiments/main-data/frontier-data-research.json) six-phase recipe shows why this matters: it publishes the mixture of each phase, but no
 experiment attributes any gain to a phase or source, so none of it can be scaled with confidence.
 
 ## Method
@@ -64,8 +64,8 @@ varies tokens per parameter as well as parameters.
 **No gate relaxed for small runs.** Every run trains only on data that passed the same pipeline:
 source use, deduplication, benchmark firewall and family holds, as [Data](data.md) describes.
 
-**One parent, many branches.** The 1.2B parent trains once at a constant learning rate, with its
-stable checkpoints preserved. Decay branches start from them, mid-training branches from the chosen
+**One parent, many branches.** The 1.2B parent trains once through the stable phase of a
+warmup-stable-decay schedule, with its stable checkpoints preserved. Decay branches start from them, mid-training branches from the chosen
 decay, and the SFT probe from each branch. The released base and assistant are the best branches,
 so there is no separate production track.
 

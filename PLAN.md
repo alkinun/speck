@@ -75,3 +75,5 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
   from which the corpora can be rebuilt.
 - Use of FinePDFs-Edu (ODC-By over Common Crawl).
 - Use of Nemotron-CC-v2 (NVIDIA agreement restricted to internal training).
+- Whether to run the optional external [H100 throughput rental](docs/throughput-rental.md) before
+  access. It costs no grant hours and would measure the 1.2B speedup before GH200 qualification.

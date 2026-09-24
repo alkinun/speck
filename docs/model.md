@@ -18,7 +18,7 @@ preserve this reference configuration.
 - Three KDA recurrent blocks followed by one global NoPE GQA block, repeated six times.
 - Dense SwiGLU feed-forward layers throughout, intermediate width 5120; no expert routing.
 - Tied embeddings and the frozen Mistral tokenizer, with 32,003 embedding rows including role IDs.
-- Start at 4K; qualify 16K, and 32K only if 16K helps. Longer contexts are later work.
+- Start at 4K; context extension follows the [mid-training design](program.md#mid-training-800-gpu-hours).
 
 Dense here describes the all-active feed-forward computation. The KDA/GQA token-mixing hybrid is
 not an MoE mechanism. KDA is inherited from [Kimi Linear](https://arxiv.org/abs/2510.26692v2);
@@ -40,6 +40,5 @@ data claims. Keep the full geometry and runtime settings reproducible, with kern
 in an appendix. The [evaluation guide](evaluation.md) defines efficiency evidence; the
 [compute plan](program.md#compute) owns runtime qualification and budget.
 
-Existing runtime variants serve historical checkpoint/export compatibility and behavioral fixtures;
-they are not a research roadmap. A measured blocker requiring a structural change must be recorded
+The runtime implements only KDA, global attention with optional RoPE, and SwiGLU. A measured blocker requiring a structural change must be recorded
 as a change to the selected model, with its effect on the data experiments addressed explicitly.

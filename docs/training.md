@@ -14,12 +14,8 @@ hardware, distributed geometry, and compiled path.
 ## Throughput settings
 
 The [performance plan](performance.md) defines timing boundaries, MFU accounting and optimization
-priorities. The RTX 3090 proxy selected checkpointing off, compiled execution with
-`max-autotune-no-cudagraphs`, deterministic kernels and Liger loss. These are candidates for the
-ladder and parent; their optimized rates and memory headroom remain unmeasured. Training and the benchmark
-compile with `COMPILE_OPTIONS` from `speck/operations/runtime.py`. Unlike Torch's mode of the same
-name, the benchmark's `max-autotune-no-cudagraphs` omits coordinate-descent tuning, which broke
-compiled restart parity.
+priorities, and records the selected compile settings and their evidence. Training and the
+benchmark compile with `COMPILE_OPTIONS` from `speck/operations/runtime.py`.
 
 Freeze microbatch, activation checkpointing and determinism per rung on GH200 before grant runs;
 these settings are immutable on resume. Microbatch affects loader scheduling even at constant global
@@ -128,38 +124,12 @@ optimizer policy and cost, and qualify resume.
 
 ## Reward training
 
-RL is out of scope for this release; the trainer is kept, tested, for a later step.
-`python -m scripts.rl_train EXPERIMENT` trains from a hash-pinned SFT or RL checkpoint named
-in `rl.json`. For each prompt it samples a group of completions from the current policy over the
-full vocabulary, scores them with the checked-math or sandboxed stdin/stdout verifier in
-`speck/evaluation/verifiers.py`, normalizes rewards within the group, and takes one on-policy
-step on completion tokens. Groups whose rewards are all equal carry no signal and are counted;
-unverifiable domains and over-long prompts are counted and skipped. Each prompt's sampling is
-seeded by its global position in the run, so rollouts resume exactly and do not depend on world
-size. `deterministic` and `activation_checkpointing` are required and
-immutable on resume. Without deterministic kernels a resumed run matches until its first update,
-then diverges, because the backward pass is not reproducible; with them, updates are too. Each
-completion is backpropagated separately, so memory is bounded by the longest sequence rather than
-the group. `python -m scripts.rl_prompts` builds the prompt file: exact normalized-prompt
-deduplication, conflicting references dropped, the frozen benchmark scanner, and no prompt shared
-with named SFT files. Under `torchrun`, ranks split each step's prompts, all-reduce the summed
-gradients and step counts, and rank 0 writes metrics and checkpoints; a two-rank CPU test takes the
-same steps as one process. There is no KL penalty, reference model or clipping. Multi-GPU NCCL
-execution, long-context RL and measured benefit remain to qualify. The
-[RTX 3090 pilot](../experiments/rl-pilot/README.md) runs it from a real SFT parent. The smoke
-run checks the plumbing only: its tiny model earns no reward. Reward-data inventories are in
-[assistant data](assistant.md#reward-data-kept-for-a-later-step).
-
-## Final self-distillation
-
-Self-distillation is out of scope for this release; the builder is kept, tested, for a later step.
-`python -m scripts.self_distill EXPERIMENT` builds a dataset from `self_distill.json`:
-the hash-pinned parent samples several completions per prompt, and only completions that end at
-EOS and pass their verifier are kept, deduplicated, up to `keep_per_prompt`. Hash-pinned anchor
-conversations are mixed in unchanged. The output directory holds one train and one validation
-Parquet file, the matching `messages_v1` dataset block and a receipt counting truncated, failed,
-duplicate and accepted samples. Run `scripts.sft_prepare --source-dir` and `scripts.sft_train` on it
-to perform the self-SFT; there is no separate trainer.
+RL and self-distillation are kept, tested, for a later release. `python -m scripts.rl_train
+EXPERIMENT` runs a minimal on-policy GRPO trainer from a hash-pinned SFT or RL checkpoint named in
+`rl.json`, scored by the verifiers in `speck/evaluation/verifiers.py`; the
+[RTX 3090 pilot](../experiments/rl-pilot/README.md) runs it from a real SFT parent.
+`python -m scripts.self_distill EXPERIMENT` builds a verified self-SFT dataset from
+`self_distill.json` for `scripts.sft_prepare --source-dir` and `scripts.sft_train`.
 
 ## Assistant training and generation
 
@@ -173,7 +143,7 @@ uv run --no-sync python -m scripts.infer "Explain this result:" \
   --experiment PATH_TO_EXPERIMENT --checkpoint-dir CHECKPOINT_DIRECTORY --max-tokens 128
 ```
 
-The [assistant rehearsal contract](assistant.md) now defines tool envelopes, reasoning serialization,
+The [assistant rehearsal contract](assistant.md) defines tool envelopes, reasoning serialization,
 loss masks, and a deterministic tool environment. Actual learned tool/reasoning capability remains
 unmeasured. Keep base and assistant checkpoints separately identifiable. SFT supports explicit
 `activation_checkpointing` and `loss_backend` settings; its defaults preserve historical behavior,
@@ -218,11 +188,6 @@ uv run --no-sync python -m scripts.sft_verify /external/cache/sft-train.parquet 
   --output /external/reports/sft-outcomes.json
 ```
 
-The [post-training audit protocol](../experiments/main-data/post-training-audit-protocol.json) extends
-this structural audit with fixed outcome strata, tool-trajectory checks, deterministic environment
-controls, a reasoning-mode measurement panel and a bounded fixed-policy RL panel; it is kept for a
-later step.
-
 SFT can initialize directly from a completed native base checkpoint. Bind its model and metadata
 hashes with `speck.export.pretrained.native_pretrained_source(directory, step)` and use the returned
 object as `sft.json`'s `pretrained` setting. This reads local weights without exporting or uploading
@@ -236,6 +201,6 @@ truncated. For a Hub dataset, set `long_sequences: "reject"` explicitly for the 
 the absent-field default remains the historical truncation behavior. Rejected counts stay in the
 manifest, and an empty accepted split is an error.
 
-The offline smoke now also prepares weighted local SFT examples, initializes from its native base
+The offline smoke also prepares weighted local SFT examples, initializes from its native base
 checkpoint, trains two assistant steps, and verifies exact parameter equality after SFT resume.
 This exercises the reserved-vocabulary path used by the parent. It remains a tiny CPU fixture.

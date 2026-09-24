@@ -1,6 +1,6 @@
 # Research informing data and training
 
-Reviewed through 2026-09-20 using primary papers and official releases. These are lessons and
+Reviewed through 2026-09-24 using primary papers and official releases. These are lessons and
 comparisons, not a promise to reproduce another lab's scores or compute budget. **The design lives
 in [the program design](program.md); this file records what each source actually showed and what it
 changed here.** A reviewed paper does not create another experiment arm, admit a source, or expand
@@ -8,8 +8,8 @@ the [compute budget](program.md#compute). The architecture is [fixed by declarat
 so no review here motivates a backbone change.
 
 OpenBMB is a primary ongoing reference for our data work. The
-[data guide](data.md#code-priority-and-qualification) records the specific UltraData-Code evidence,
-the bounded local inspection and the first comparison to prepare. At each data-recipe freeze, review
+[corpus-audit record](../experiments/corpus-audit/README.md#coding-priority-and-bounded-preview--2026-09-18)
+holds the UltraData-Code evidence and its bounded local inspection. At each data-recipe freeze, review
 the [MiniCPM releases](https://github.com/OpenBMB/MiniCPM), the
 [UltraData framework](https://arxiv.org/abs/2602.09003), source cards and released classifiers,
 recording exact revisions, matched ablations, verification methods, token definitions, source
@@ -19,52 +19,24 @@ coverage and processing cost. That is a review practice, not a background monito
 
 | Source | What it supports | Implication for Speck |
 | --- | --- | --- |
-| [Qwen3 report](https://arxiv.org/abs/2505.09388), §3, §4.5–4.7 | Broad pretraining precedes capability data and post-training; small models use response and on-policy distillation. Its 8B comparison favours distillation over direct RL. | Preserve general coverage while improving math/code. For the later post-training step: start with supervised behaviour and verified teacher examples; the reported cost advantage is not assumed to transfer to 1.2B or our teachers. |
-| [Qwen3.5-0.8B card](https://huggingface.co/Qwen/Qwen3.5-0.8B) | A compact model uses a repeating three-Gated-DeltaNet/one-attention layout, plus a vision encoder. | Hybrid layouts are a relevant comparison, but GDN is not KDA. Similar ratios establish no quality, kernel parity or equivalent training cost. |
-| [MiniCPM paper](https://arxiv.org/abs/2404.06395), §4 | Warmup-stable-decay separates continued learning from endpoint decay and supports reusing pre-decay checkpoints. | Retain continuation checkpoints and cost short pilot runs before a long horizon. Its numerical learning rates use its own parameterization. |
-| [MiniCPM5-1B](https://huggingface.co/openbmb/MiniCPM5-1B) / [MiniCPM5-2B](https://github.com/OpenBMB/MiniCPM) | Staged base/mid/post-training with SFT, RL teachers and on-policy distillation; 200B deep-thinking plus 200B hybrid-thinking SFT tokens, and 400B SFT tokens at 2B. | The closest near-size capability reference. Its post-training scale warns against treating published quality as attainable with a fraction of that training. Measure our own recipe and count teacher work. |
-| [DeepSeek-V3](https://arxiv.org/abs/2412.19437) | Broad pretraining plus systems work, SFT and RL; 14.8T tokens and 2.788M H800 GPU-hours. | Learn staged capability development and cost accounting. Its MoE/MLA/FP8 stack and totals are not a drop-in recipe at our scale. |
-| [DeepSeek-R1](https://arxiv.org/abs/2501.12948), §2.3–2.4, §4 | Cold-start examples fix readability/language problems; verified rewards improve reasoning; distilled small models use curated teacher samples. | For the later post-training step, measure an SFT/distillation baseline before RL. Better math scores establish no reliable tool use or general quality. |
+| [Qwen3 report](https://arxiv.org/abs/2505.09388), §3 | Broad pretraining precedes capability data. | Preserve general coverage while improving math and code. |
+| [MiniCPM paper](https://arxiv.org/abs/2404.06395), §4 | Warmup-stable-decay separates continued learning from endpoint decay and supports reusing pre-decay checkpoints. | Branch decay and mid-training from preserved stable checkpoints. Its numerical learning rates use its own parameterization. |
+| [MiniCPM5-1B](https://huggingface.co/openbmb/MiniCPM5-1B) / [MiniCPM5-2B](https://github.com/OpenBMB/MiniCPM) | Staged base and mid-training at near-size scale. | The closest near-size staged-data reference; its published quality rests on far more training than ours. |
+| [DeepSeek-V3](https://arxiv.org/abs/2412.19437) | Staged capability development with explicit cost accounting; 14.8T tokens and 2.788M H800 GPU-hours. | Learn staging and cost accounting; its totals are not a recipe at our scale. |
 
-## Post-training research synthesis — 2026-09-20
+Post-training research is input for a later release; this one uses SFT only as a fixed
+[probe](program.md#sft-probe-100-gpu-hours). The review of post-training recipes is in
+[post-training-research.json](../experiments/main-data/post-training-research.json).
 
-This release does no post-training research (its only SFT is the fixed
-[probe](program.md#sft-probe-100-gpu-hours)); this synthesis is input for a later step. Full review: [post-training-research.json](../experiments/main-data/post-training-research.json),
-covering MiniCPM5, Qwen3, GLM-4.5, Kimi K1.5/K2, DeepSeek-R1, Phi-4-reasoning, OLMo 3, SmolLM3,
-Nemotron Nano 2, on-policy distillation and DAPO. The common pattern is a staged pipeline: a
-capability prior, small high-quality cold-start SFT, reasoning or agent distillation, specialist
-verified-reward or preference training, then general repair or on-policy distillation. **The data
-banks and their evidence requirements matter here more than published ratios or headline scores.**
-GLM-4.5 and Kimi show why agent trajectories, verifiable rewards and non-verifiable rubric feedback
-need separate inventories. DeepSeek-R1 and Phi-4-reasoning support the cheaper small-model sequence:
-teach useful reasoning with curated SFT or distillation, then use outcome-based RL as a finisher.
-OLMo 3 and SmolLM3 show the value of releasing intermediate stage data and checkpoints.
-
-None of this justifies copying their teacher sizes, token counts, reward models or compute. The
-[audit protocol](../experiments/main-data/post-training-audit-protocol.json) kept for that step
-orders structural SFT audit, independent outcome checks, tool replay, then fixed-policy verifier
-feasibility. Teacher generation, rejected rows, verifier work, rollouts and
-policy updates stay in separate ledgers.
-
-**On reasoning budgets:** the evidence supports *studying* reasoning control, not shipping a
-low/medium/high interface. Qwen3 exposes think/no-think and a budget; MiniCPM5 exposes a think
-switch; Kimi K1.5 warms up its length penalty; DAPO uses a soft overlong region; Kimi K2.5 reports
-length overfitting under rigid budgets. A requested cap is an inference control; a learned budget
-policy needs explicit training examples and held-out mode-following tests. This release keeps the
-always-thinking baseline. A later study on a stronger parent could compare always-thinking, a
-trained hybrid mode and task-matched budget buckets; promotion would require a quality/token and
-quality/latency frontier with no mode, format, truncation or long-task regression.
-In RL, correctness stays primary and any efficiency preference is delayed, soft and task-conditioned:
-a global reward for shorter chains can reward guessing and incomplete tool work.
-
-## Frontier data engineering synthesis — 2026-09-20
+## Frontier data engineering synthesis — 2026-09-24
 
 Structured review: [frontier-data-research.json](../experiments/main-data/frontier-data-research.json);
 its mapping to pinned local audits is
 [frontier-data-source-mapping.json](../experiments/main-data/frontier-data-source-mapping.json), an
 evidence index that closes no gate by itself. Primary sources are
 [GLM-4.5](https://arxiv.org/abs/2508.06471), [MiMo-7B](https://arxiv.org/abs/2505.07608),
-[Kimi K2](https://arxiv.org/abs/2507.20534) and [DeepSeek-V4](https://arxiv.org/abs/2606.19348).
+[Kimi K2](https://arxiv.org/abs/2507.20534), [DeepSeek-V4](https://arxiv.org/abs/2606.19348) and
+[Rigel](https://open-lm-engine.github.io/blog/rigel/).
 
 The consistent shift is from a static corpus to a stage-conditioned data curriculum: GLM-4.5 runs
 general pretraining then repository, synthetic reasoning and long-context/agent mid-training; MiMo-7B
@@ -73,20 +45,13 @@ rephrasing with fidelity checks and at most two rephrasings per corpus; DeepSeek
 progressively over a 32T/33T-token base. **These are evidence for experimental axes, not portable
 mixture settings** — their token counts, scales, teachers and source permissions differ too much.
 
-The practical implications, now centralized in the
-[stage-conditioned data-design contract](../experiments/main-data/data-design-contract.json):
+The [stage-conditioned data-design contract](../experiments/main-data/data-design-contract.json)
+records the implications.
 
-- Keep a mostly natural, quality-weighted core; separate source-grounded rewrites, generated
-  reasoning, repository-event sequences and agent trajectories by lineage and stage.
-- Make extraction fidelity a first-class math/code gate. Generic HTML/PDF cleaning removes the
-  equations, code blocks and forum structure that carry the intended signal.
-- Represent repository training as linked files, issues, reviews, pull requests, commits, diffs and
-  tests, with loss masks and family boundaries separating context from targets.
-- Measure useful dependency distance for context stages; long documents alone establish no
-  long-range learning signal.
-- Use cheap proxy or bounded recipe experiments to choose quality weights, then confirm at matched
-  exposure with held-out families.
-- Keep benchmark decontamination separate from exact, fuzzy and semantic deduplication.
+**Rigel.** A six-phase mixture, published phase by phase, with no experiment attributing any gain
+to a phase or source. Its late quality phases rest on Nemotron-CC-v2 and FinePDFs, neither decided
+here, and its final phase extends context on data dominated by long chain-of-thought QA. D1 and M3
+test those two ideas.
 
 ## MidTool review — 2026-09-20
 
@@ -99,13 +64,13 @@ mid-training, which makes downstream quality per SFT/RL token and per GPU-hour a
 
 It establishes no universal mixture and no intelligence-per-FLOP law for us: 32 H200s, 8 B200s,
 strong teachers, a tool-specific corpus, weak deep-search transfer. We borrow the causal structure,
-validation requirements and efficiency measurements — not the ratios, teachers or compute. Within
-the [mid-training families](program.md#mid-training-800-gpu-hours) this sharpens M1 replay rather than adding an
-arm: compare a replay/source-only control against targeted grounded material and, only where
-environments and validation qualify, executable trajectory data, holding the SFT probe, optimizer
-policy and evaluation identities fixed. Report downstream capability after the probe versus
-mid-training tokens and GPU-hours, probe convergence and held-out transfer, counting source
-preparation, teacher generation, validation, retries and discarded trajectories. Context extension
+validation requirements and efficiency measurements — not the ratios, teachers or compute. M1 in the
+[mid-training families](program.md#mid-training-800-gpu-hours) varies only replay (10, 25 and 50%).
+Grounded-material and trajectory arms are candidate follow-ups, run only where environments and
+validation qualify, holding the SFT probe, optimizer policy and evaluation identities fixed. Report
+downstream capability after the probe versus mid-training tokens and GPU-hours, probe convergence
+and held-out transfer, counting source preparation, teacher generation, validation, retries and
+discarded trajectories. Context extension
 stays separate: a longer sequence is a systems and representation change and cannot carry a
 data-mixture attribution.
 
@@ -161,12 +126,11 @@ PIQA regress. Its Table 7 compares nominal 120B flat versus staged mixtures, 30.
 and 7.25 → 9.70 on code. Its Code-L3 is a Stack-Edu rewrite, not the UltraData-Code preview.
 
 **Decisions:** prioritize natural Ultra-FineWeb qualification for the selected web bank, with
-FineWeb-Edu as the control and DCLM as an independent comparator; published matched evidence set
-this preparation priority, and [P5 source choice](program.md#pretraining-the-ladder-1900-gpu-hours) now tests it
-on the ladder. Prepare a bounded comparable content/coverage audit using the
-[checked release pins](../experiments/corpus-audit/web-candidate-versions.json), binding the English
-scored versus English HQ path explicitly; the archived scored cutoff was 0.8, and a stricter cutoff
-is a changed recipe, not an automatic improvement. Keep synthetic L3 source/answer checks separate,
+FineWeb-Edu as the control; DCLM was not selected. Published matched evidence set this preparation
+priority, and [P5 source choice](program.md#pretraining-the-ladder-1900-gpu-hours) tests it on the
+ladder. The [natural-web inspection](../experiments/corpus-audit/NATURAL_WEB.md) followed, binding
+the English scored versus English HQ path explicitly; the archived scored cutoff was 0.8, and a
+stricter cutoff is a changed recipe, not an automatic improvement. Keep synthetic L3 source/answer checks separate,
 and preserve source-family identity, joint deduplication and benchmark exclusions across candidates.
 
 ## Marin corpus review — 2026-09-19
@@ -180,20 +144,18 @@ Its cooldown comparisons found **lower validation loss from supposedly higher-qu
 accompany worse task performance**, and task-formatted data helped in some mixtures but
 underperformed alone. Those are stage-dependent results, not universal ratios.
 
-**Useful next work:** qualify Stack v3 as a scalable natural-code candidate — Marin's importer pins
-`HuggingFaceCode/stack-v3-train`, retains commit/file/licence metadata and groups files by directory,
-which addresses metadata gaps in retained Stack-Edu without establishing tests, dependency order or
-eligibility. Separate source selection from serialization: compare eligible source alternatives with
-fixed background data, tokenizer, serialization, horizon and settings, testing repository grouping
-separately. Use useful parents for mid-training comparisons; short cooldowns can screen targeted
+**Outcome:** Marin's importer pins `HuggingFaceCode/stack-v3-train`, retains commit/file/licence
+metadata and groups files by directory, addressing metadata gaps in retained Stack-Edu. The
+[feasibility probe](../experiments/corpus-audit/stack-v3-feasibility.json) checked revision and
+schema and selected the corrected release; Stack v3 is the P5 code arm. Separate source selection
+from serialization: compare eligible source alternatives with fixed background data, tokenizer,
+serialization, horizon and settings, testing repository grouping separately. Use useful parents for mid-training comparisons; short cooldowns can screen targeted
 data but do not replace fresh-seed pretraining comparisons, and
 [Delphi](https://openathena.ai/blog/delphi/) illustrates the limits of short-run extrapolation.
 Bind processing changes to consumed artifacts: the
 [32B retrospective](https://github.com/marin-community/marin/blob/d2d97e888ce1a59b0e344bfbaca9cc4871f4148a/docs/reports/marin-32b-retro.md)
 reports cached GSM8K test contamination surviving a preprocessing fix, plus correlated shuffling, so
-check exclusion versions against actual packs and inspect observed source order. The subsequent
-[feasibility probe](../experiments/corpus-audit/stack-v3-feasibility.json) completes the
-revision/schema check and selects the corrected release.
+check exclusion versions against actual packs and inspect observed source order.
 
 ## MAI-Thinking-1 review — 2026-09-19
 
@@ -208,15 +170,12 @@ golden-patch success and repeated checks, filtering ambiguous task statements. A
 repacking the preceding mixture sufficient in its experiments, evaluating fixed-suffix loss and
 positional retrieval.
 
-**Decisions:** keep 35% code / 25% math as the parent's starting hypothesis, which P3 domain
-mixture revises, qualifying useful diversity within each bank and reporting unique tokens, exposure
-and repetition separately — do not copy another model's percentages or treat our 105M-token pilot
-as a mixture-ranking study. Extend code qualification beyond isolated files to source-linked changes
-and executable repair cases as described in [the data guide](data.md#code-priority-and-qualification),
-counting full processed context separately from loss-bearing targets; that needs an explicit
-adapter/objective contract before admission, since pasting raw patches into a pack is not
-equivalent. Add unchanged-domain repacking as the context-extension control (the M3 repacked
-baseline), plus fixed-suffix loss and position-stratified checks.
+**Decisions:** let P3 domain mixture revise the starting shares, reporting unique tokens, exposure
+and repetition separately; do not copy another model's percentages or treat our 105M-token pilot as
+a mixture-ranking study. Source-linked changes count full processed context separately from
+loss-bearing targets and need an explicit objective contract before admission; pasting raw patches
+into a pack is not equivalent. Unchanged-domain repacking is the context-extension control (the M3
+repacked baseline), with fixed-suffix loss and position-stratified checks.
 
 ## ZGCM-1 review — 2026-09-18
 
@@ -244,7 +203,7 @@ also differ from the report's 4,921,933, so bind any future subset to its own im
 
 ## Practical conclusions
 
-1. Quality and coverage of data, optimization, post-training and evaluation all matter. Keep one
+1. Quality and coverage of data, optimization and evaluation all matter. Keep one
    architecture family while establishing the pipeline; do not turn each paper into another sweep.
 2. Distinguish broad pretraining, capability/context mid-training and SFT/RL post-training. Domain
    emphasis must preserve enough broad data and replay to retain ordinary usefulness.
@@ -263,7 +222,6 @@ these alongside checked math answers and a small deterministic tool environment.
 [pilot protocol](../experiments/pilot/evaluation.json) pins five dataset inputs, exclusions, scorer
 revisions and output limits, and [executable golden checks](evaluation.md) pass for all five graders
 plus five scripted tool episodes. Those tiny denominators test the pipeline and do not rank models.
-Start comparisons with MiniCPM5-1B and a pinned small Qwen release, using MiniCPM5-2B only when
-evaluation cost permits; select exact revisions and compatible runtimes before execution. Training
-benchmark answers or adapting recipes to final-test failures invalidates the comparison. Earlier
-surveys and the long-context study remain in [history](../archive/README.md).
+[Evaluation](evaluation.md) owns comparator models. Training benchmark answers or adapting recipes
+to final-test failures invalidates the comparison. Earlier surveys and the long-context study
+remain in [history](../archive/README.md).

@@ -6,7 +6,7 @@ pipeline**, published as openly as the licences allow, so later and much larger 
 from them. A model ladder (50m, 130m and 410m) carries most experiments, and one **1.2B parent**
 trained from scratch carries decay and mid-training; a fixed SFT recipe probes every branch. The
 released base and light always-thinking assistant for **coding, math and tools** are the best
-branches of those experiments. The KDA/GQA architecture is fixed by declaration, so the release
+branches of those experiments. The KDA/NoPE-GQA architecture is fixed by declaration, so the release
 makes no architecture claim, and post-training research belongs to later releases.
 
 [PLAN.md](PLAN.md) gives status and the next work. The [program design](docs/program.md) owns the
@@ -60,6 +60,5 @@ archive/       Pointer to the complete historical Git snapshot
 Earlier plans, papers, results, and retired tools are recoverable through the
 [history guide](archive/README.md). They do not govern current experiments.
 
-Source code is [MIT licensed](LICENSE). Planned model weights use Apache-2.0. Whether corpus text or
-packed shards are released is an [open decision](PLAN.md#open-decisions). See the
-[citation](CITATION.cff).
+Source code is [MIT licensed](LICENSE); [Releasing](docs/releasing.md) covers weights and data. See
+the [citation](CITATION.cff).

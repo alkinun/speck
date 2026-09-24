@@ -1,16 +1,16 @@
 # Corpus and downstream data review
 
-2026-09-18. The first local audit is complete; main-corpus quality selection remains open.
-The frozen 105M engineering pilot is unchanged. No GPU rental, training, corpus replacement,
-or bulk candidate acquisition is needed for this review.
+2026-09-18 to 2026-09-23. These audits are historical evidence: each receipt owns its detail, and
+the current qualification state is in [QUALIFICATION.md](../main-data/QUALIFICATION.md). The frozen
+105M engineering pilot is unchanged, and no audit here admits training data.
 
-## Current data closeout
+## Data closeout — 2026-09-19
 
 [data-readiness.json](data-readiness.json) consolidates the later retained-bank token/overlap work,
 full assistant format census, sampled complete context lengths and bounded RL prompt/reference
-inventory. It preserves the earlier receipts below. The current
-[qualification record](../main-data/QUALIFICATION.md#retained-inventory-closeout--2026-09-19) records
-supply bounds and remaining decisions; [assistant data](../../docs/assistant.md) owns downstream
+inventory. It preserves the earlier receipts below. The
+[qualification record](../main-data/QUALIFICATION.md#retained-inventory-closeout--2026-09-19) links
+its successors; [assistant data](../../docs/assistant.md) owns downstream
 format/length details. No source is admitted by these CPU measurements, and no GPU work ran.
 
 The [cohort similarity receipt](cohort-similarity.json) records an exhaustive full-text lexical
@@ -99,11 +99,11 @@ English v1.4 and L1-derived English HQ directories at the same UltraFineWeb rele
 [qualification record](../main-data/QUALIFICATION.md) keeps their source populations and schemas
 separate for the next comparison; no corpus payload or quality result follows from that metadata.
 The [subsequent natural-web inspection](NATURAL_WEB.md) adds six hash-verified HQ shards and
-bounded default/control samples. HQ is now the priority for further qualification because its
+bounded default/control samples. HQ became the priority for further qualification because its
 records preserve page/WARC origins. High-score extraction failures keep quality gates open;
 no source is admitted and no quality ranking is established.
 The [inventory/DCLM follow-up](WEB_INVENTORY_DCLM.md) completes the HQ listing (6,000 shards,
-477.97 GB compressed) and now records the twelve-shard acquisition/census, 192 stratified samples
+477.97 GB compressed) and records the twelve-shard acquisition/census, 192 stratified samples
 and 24 reviewed texts/excerpts in [web-hq-stratified.json](web-hq-stratified.json). Extraction and
 source-family work remains; no stricter cutoff or source allocation is selected. DCLM previews
 use partial viewer indexes; integer and continuous educational cutoffs differ.
@@ -122,7 +122,7 @@ The [expansion inventory/probe](code-expansion.json) subsequently verifies one n
 shard and retrieves sixteen blobs: thirteen length-matched files / 9,541 tokens, with four content
 flags and no admission. The [origin/test review](code-application-origins.json) resolves all four
 application revisions/notices, but the single direct test link is stale. The
-[stratified preflight](code-yield-result.json) now recovers/screens 138 files across 11 languages
+[stratified preflight](code-yield-result.json) recovers/screens 138 files across 11 languages
 and 72 strata: 30 content flags, 31 sample family holds, no admission. Complete source-use/quality
 gates on this frozen sample before estimating yield. The
 [census receipt](code-supply.json) contains the language/role tables
@@ -131,8 +131,7 @@ and the gap to proposed exposure; no main-code supply is admitted.
 The 105M-token engineering pilot intentionally uses the six retained sources listed in
 [its frozen recipe](../pilot/README.md#recipe). This is not the parent mixture.
 Natural Ultra-FineWeb, DCLM and DCLM-Edu were present in archived experiment configurations;
-their absence from the current pilot does not record a quality rejection. Their qualification
-for the current main-data plan remains open, and they should be explicit candidates here.
+their absence from the pilot does not record a quality rejection. None was selected on 2026-09-22.
 
 [web-candidate-versions.json](web-candidate-versions.json) records a September 19 check against
 the Hugging Face dataset API: all four historical pins below still match their repository heads.
@@ -143,20 +142,19 @@ over another source. The DCLM Parquet release has its own revision, distinct fro
 | Source | Matching revision prefix | Main-data role and next check |
 | --- | --- | --- |
 | [Ultra-FineWeb](https://huggingface.co/datasets/openbmb/Ultra-FineWeb) | `02c85641e3d1` | HQ audit and three archived-capture joins complete; new flags stay review-only. Qualify source-aware repairs, source families and eligible token supply |
-| [DCLM baseline Parquet](https://huggingface.co/datasets/mlfoundations/dclm-baseline-1.0-parquet) | `817d6752765f` | Independent selection approach; URL/ID fields verified in partial-viewer preview. Source-use review and comparable source-file sample remain |
-| [DCLM-Edu](https://huggingface.co/datasets/HuggingFaceTB/dclm-edu) | `dbad8ad71224` | Related filtered candidate; explicitly distinguish `edu_int_score >= 3` from continuous-score cutoff. Do not count parent/filtered overlap as extra supply |
+| [DCLM baseline Parquet](https://huggingface.co/datasets/mlfoundations/dclm-baseline-1.0-parquet) | `817d6752765f` | URL/ID fields verified in partial-viewer preview; not selected |
+| [DCLM-Edu](https://huggingface.co/datasets/HuggingFaceTB/dclm-edu) | `dbad8ad71224` | Filtered DCLM derivative; `edu_int_score >= 3` differs from the continuous-score cutoff; not selected |
 | [Ultra-FineWeb-L3](https://huggingface.co/datasets/openbmb/Ultra-FineWeb-L3) | `bc3b1ba986fc` | Synthetic candidate for the Cosmopedia comparison; continue the source/answer checks below |
 
 The [September 19 paper review](../../docs/research.md#openbmb-web-data-review--2026-09-19)
 prioritizes natural Ultra-FineWeb on matched published evidence: nine of nine English benchmarks
 improve over FineWeb-Edu. The first bounded inspection above does not reproduce that training
 comparison or establish the newer HQ route's quality. Continue against retained FineWeb-Edu,
-retaining DCLM/DCLM-Edu as independent candidates, with declared language, source paths,
-score filters and length/domain coverage. The archived Ultra-FineWeb cutoff of 0.8 differs
+with declared language, source paths, score filters and length/domain coverage. The archived Ultra-FineWeb cutoff of 0.8 differs
 from the paper's 0.5; do not assume stricter filtering preserves its result or coverage.
 Keep the synthetic L3-versus-Cosmopedia question separate. Published results justify this priority;
 eligibility, supply and main weights remain open. No bulk acquisition or additional GPU
-comparison is authorized by this shortlist; the already planned coding comparison stays separate.
+comparison is authorized by this shortlist; the P5 code comparison stays separate.
 
 Pinned metadata and dataset cards are retained locally; full corpora were not downloaded.
 The follow-up below adds a small, revision-checked English L3 content inspection.
@@ -172,26 +170,6 @@ The code card requires complying with individual repository licenses; its Apache
 is insufficient provenance. The web cards also describe source material and redistribution
 conditions. Candidate inspection is not training admission. Use the existing source-use review,
 joint deduplication, benchmark exclusion, and tokenizer pipeline rather than a parallel importer.
-
-## Next experiment, after data preparation
-
-1. Expand the qualitative review into a labeled, stratified audit. Distinguish extraction,
-   completeness, usefulness, correctness (verified/unverified), and template repetition. Calibrate
-   any model-based scorer against reviewed examples; report source and length denominators.
-2. The FineMath numeric-template census, retained-code census and initial expansion probe are
-   complete, along with the four-module origin/test review. The stratified sample is now frozen
-   and screened; complete separate natural-code and checked-exercise gates before estimating yield.
-   Preserve the frozen pilot.
-3. Extend the bounded English refined-web inspection into source/answer consistency checks and
-   inspect source-eligible code candidates. Establish domain coverage and overlap with current
-   stocks before assigning parent mixture weights.
-4. Source and filter contrasts now train on the [model ladder](../../docs/program.md#pretraining-the-ladder-1900-gpu-hours)
-   (P1 quality floor, P5 source choice); a combined recipe comparison cannot attribute improvement
-   to an individual changed source.
-
-The parent run still requires sufficient eligible supply, declared repetition and weights,
-quality evidence, and measured all-in runtime. The present audit completes an initial diagnostic;
-it does not close those requirements.
 
 ## Follow-up decisions — 2026-09-18
 
@@ -209,7 +187,7 @@ deduplication rule. Conversion-related text matching the diagnostic markers tota
 **Prepare a narrow directory exclusion for the next corpus candidate.** The exact host/path/text
 predicate (`scripts.corpus_templates.role_hint`, removed after this audit and kept in Git history) matches 8,563 topic-directory pages containing
 18,775,504 tokens: **1.6702% of this FineMath stock**, or roughly 0.25% of total exposure if the
-current 15% math share were retained. Twelve matched excerpts and six same-host unmatched excerpts
+pilot's 15% math share were retained. Twelve matched excerpts and six same-host unmatched excerpts
 were inspected. All twelve matched excerpts are activity directories; five of the six unmatched
 excerpts show additional directory formats, so this conservative v1 knowingly has incomplete recall.
 These are qualitative checks, not formal precision/recall or downstream-quality estimates.
@@ -248,13 +226,12 @@ inspected serialization, permitting source-to-answer consistency review. This is
 decision, not evidence that Q&A trains a better model. Released structured fields in the inspected
 schema are `uid`, `content`, and `style`; there is no separate original URL/source-document ID.
 Establish lineage/overlap as far as possible, reject editing artifacts and inconsistent answers,
-and measure surviving tokens before proposing a substitution for any of the 10% synthetic share.
+and measure surviving tokens before proposing a substitution for any of the pilot's 10% synthetic share.
 Main mixture weights and new-source admission remain undecided.
 
 ## Coding priority and bounded preview — 2026-09-18
 
-The [data guide](../../docs/data.md#code-priority-and-qualification) kept checked exercises as a candidate for the first
-pretraining data comparison. [code-preview.json](code-preview.json) binds a separate UltraData-Code inspection:
+[code-preview.json](code-preview.json) binds a separate UltraData-Code inspection:
 16 Python rows per tier, two schema probes, and 405,214 response bytes at a checked revision.
 Raw records remain outside Git. Static tokenization and syntax checks identify preparation needs;
 no sampled code was executed, no new source was admitted, and no GPU experiment was launched.
@@ -277,7 +254,7 @@ raw fields are byte-identical despite different UUIDs. The original dataset revi
 no candidate code was executed and the frozen pilot/evaluation were not changed.
 
 The next route was a 16-file practical Python cohort qualified from retained natural-code stock.
-One concrete Stack-Edu candidate now has an exact byte match to an immutable upstream commit
+One concrete Stack-Edu candidate has an exact byte match to an immutable upstream commit
 and a retained license notice; its remaining eligibility, deduplication, exclusion and independent
 test gates are explicit in the [provenance receipt](code-provenance.json).
 The inspected 354-row natural-code unit itself has no populated commits; do not treat it as
@@ -304,7 +281,7 @@ records replay and fault-injection checks. Raw data and source notices remain ou
 audit of 16 practical Python files from that stock. All match immutable upstream bytes; 13 have
 license-file evidence at the matching revision, 14 parse under Python 3.10, and one triggers the
 existing conservative benchmark-exclusion filter. Ten files, totaling 8,702 Mistral tokens including
-BOS/EOS, clear those preliminary checks. None is admitted to the new training intervention.
+BOS/EOS, clear those preliminary checks. None is admitted to training.
 This purposeful cohort is not a source-wide quality or supply estimate.
 
 The [cohort receipt](natural-code-cohort.json) records the
@@ -340,9 +317,9 @@ No code ran and nothing is admitted. Raw files stay outside Git.
 
 ## Stratified code-yield preflight
 
-[Protocol](code-yield-plan.json), [result](code-yield-result.json), and
-[code section of the data guide](../../docs/data.md#code-priority-and-qualification) define the sample,
-separate eligibility gates and next assessment. Replay into a fresh external directory:
+The [protocol](code-yield-plan.json) and [result](code-yield-result.json) define the sample and its
+separate eligibility gates; the [data guide](../../docs/data.md#code-priority-and-qualification)
+states the qualification rules. Replay into a fresh external directory:
 
 ```bash
 PYTHONPATH=. uv run --no-sync python experiments/corpus-audit/audit_code_yield.py \
@@ -353,101 +330,34 @@ The command verifies input identities, original sampling denominators, selected 
 tokens, then screens the sample. Output includes raw code and stays outside Git. It neither runs
 corpus code nor admits training data. Keep incomplete gates unresolved; a clean screen is not yield.
 
+### Cohort review and origin receipts
 
-The separate [Stack v3 preflight](stack-v3-broader.json) completes the
-[frozen broader acquisition](stack-v3-sampling.json): sixteen groups, 29,347 repository rows and
-a fixed 80-file review cohort. Four files trigger content flags and eight have known-family holds.
-Its external manifest binds acquisition, selection and screen artifacts with exact offline replay.
-The [common review](code-cohort-review.json) adds 24 full-text readings and 30 bounded origin
-checks, with 28 Git-verified originals. Nine Stack v3 transformations are explained; one breaks
-Python syntax and one original is unavailable. All original cohorts and weights remain intact.
-The [Python follow-up](python-cohort-validation.json) adds twelve full readings, bringing common
-coverage to 36 files and completing all 16 initially unheld Python records. It verifies eleven
-additional requested originals (one was also checked previously), records two new GoLLIE family
-holds and checks fourteen syntax controls on each of two Python versions. The diagnostic is not
-a bulk eligibility filter.
-The [family/provenance follow-up](code-family-provenance.json) replays known links with the existing
-splitter and brought family-held records to 42, including a vendored Pylint file matching upstream
-bytes. Arcade/stringutils installed identities are verified; the sampled stringutils file matches
-its wheel but is absent from its same-version source archive. Full lineage and remaining notice/revision checks stay open.
-The [Go/Rust review](go-rust-cohort-review.json) adds thirteen complete readings / 28,634 tokens,
-covering all remaining unheld Go/Rust records. It brought common coverage to 49 files / 67,461 tokens;
-at that stage, 129 unheld records remained unread and 42 family holds persisted. Static findings do not replace
-provenance: no new origin checks or corpus execution occurred in this batch.
-The [JS/TSX/Vue review](javascript-cohort-review.json) adds fourteen readings / 29,940 tokens and
-one metadata-only LeetCode-family hold. It brought coverage to 63 files / 97,401 tokens, with 43 held
-and 114 unheld records then unread. A Processing example and two dialect fixtures demonstrate
-why observed language/context must remain separate from original labels and sampling weights.
-The [TypeScript/C#/Kotlin review](typed-language-cohort-review.json) adds fourteen readings / 25,281
-tokens, completing all unheld records with those labels. It brought coverage to 77 files / 122,682 tokens,
-with 43 held and 100 unheld records then unread. Declarations, translated algorithms, tests and
-teaching scaffolds require different context; this batch has no new or reused verified origins.
-The [shell/build/config review](build-config-cohort-review.json) adds 24 readings / 36,832 tokens.
-It brought coverage to 101 files / 159,514 tokens, with 43 held and 76 unheld records then unread.
-Its twelve scripts, eight authored configs, two generated build files and two localization files show
-why observed role must accompany language labels. It reuses one verified origin and one earlier
-unavailable-original outcome, without new acquisition or corpus execution.
-The [C/C++ review](c-cpp-cohort-review.json) adds 22 readings / 54,222 tokens and a metadata-only
-hold for a record under `svcomp`, whose task text was not displayed or semantically reviewed.
-It brought coverage to 123 files / 213,736 tokens, with 44 held and 53 unheld records then unread.
-Test-harness limitations, template instantiation and SDK context remain distinct from validated
-behavior or performance; this batch has no new or reused verified origins.
-The [Java review](java-cohort-review.json) adds fifteen readings / 27,176 tokens, completing all
-nineteen unheld Java records. It brought coverage to 138 files / 240,912 tokens, with 44 held and 38
-unheld records then unread. Caller/test context and a restrictive notice needing applicability review
-remain unresolved; one prior verified original is reused without a recovered notice or new lookup.
-The [SQL-labelled review](sql-cohort-review.json) adds eleven readings / 37,430 tokens, completing
-all unheld records with that label. It brought coverage to 149 files / 278,342 tokens, with 44 held and
-27 unheld records then unread. Schemas, notebooks, dumps and test roles need distinct context; one
-file contains CQL definitions. No new or reused verified origins, family holds or admissions result.
-The [MATLAB/Objective-C/PHP review](application-cohort-review.json) adds six readings / 5,546 tokens,
-completing all unheld records with those labels. It brought coverage to 155 files / 283,888 tokens, with
-44 held and 21 unheld records then unread. Signal-validation assumptions, framework dependencies
-and notice applicability remain unresolved; no new or reused verified origins or holds result.
-The [Markdown review](markdown-cohort-review.json) adds eighteen readings / 58,611 tokens,
-completing all 22 unheld Markdown records. It brought coverage to 173 files / 342,499 tokens, with
-44 held and three unheld CSS/SCSS records then unread. Tutorials, reference/test excerpts and
-personal/project prose retain complete document boundaries; no new origins, holds or admissions result.
-The [code section of the data guide](../../docs/data.md#code-priority-and-qualification) records the policy and remaining gates.
-No source ranking or eligible-yield estimate follows from these restricted batches.
+Later batches over the fixed 218-record cohort (138 retained Stack-Edu, 80 Stack v3). Coverage and
+hold counts are cumulative as of each receipt; the
+[qualification record](../main-data/QUALIFICATION.md#open-qualification-work) owns the current state
+and remaining work.
 
-The [stylesheet closeout](stylesheet-cohort-review.json) adds the final three readings / 70,475 tokens.
-All 174 then-unheld records were read. Cumulative coverage is 176 files / 412,974 tokens,
-including two earlier reads then held; all 44 family holds of that date were preserved. The
-[qualification record](../main-data/QUALIFICATION.md) owns the current hold count. Page, template and component
-roles, unresolved template attribution and a file notice referring to missing NOTICE context are
-recorded. No browser, compiler, asset fetch or corpus code ran; no new or reused verified origins
-are available for this batch. Disjoint per-cohort counts reconcile all 218 original records and
-592,826 observed tokens. Reading completion does not establish source use, eligible supply or a
-source ranking. The [qualification record](../main-data/QUALIFICATION.md#open-qualification-work)
-owns the remaining provenance, family, intended-use and finite-inventory work before admission.
+| Receipt | Result |
+| --- | --- |
+| [Stack v3 preflight](stack-v3-broader.json) over the [frozen acquisition](stack-v3-sampling.json) | 16 groups, 29,347 repository rows, fixed 80-file cohort; 4 content flags, 8 known-family holds; exact offline replay |
+| [Common review](code-cohort-review.json) | 24 readings, 30 origin checks, 28 Git-verified originals; 9 Stack v3 transformations explained, one breaks Python syntax, one original unavailable |
+| [Python follow-up](python-cohort-validation.json) | 12 readings; all 16 unheld Python records read (36 files); 11 more originals; 2 GoLLIE holds; 14 syntax controls on two Python versions |
+| [Family/provenance follow-up](code-family-provenance.json) | Known links replayed with the splitter; 42 family holds, including vendored Pylint |
+| [Go/Rust](go-rust-cohort-review.json) | 13 readings / 28,634 tokens; coverage 49 files / 67,461 tokens |
+| [JS/TSX/Vue](javascript-cohort-review.json) | 14 / 29,940; one metadata-only LeetCode-family hold (43); coverage 63 / 97,401 |
+| [TypeScript/C#/Kotlin](typed-language-cohort-review.json) | 14 / 25,281; coverage 77 / 122,682 |
+| [Shell/build/config](build-config-cohort-review.json) | 24 / 36,832; coverage 101 / 159,514 |
+| [C/C++](c-cpp-cohort-review.json) | 22 / 54,222; metadata-only `svcomp` hold (44); coverage 123 / 213,736 |
+| [Java](java-cohort-review.json) | 15 / 27,176; restrictive notice open; coverage 138 / 240,912 |
+| [SQL-labelled](sql-cohort-review.json) | 11 / 37,430; coverage 149 / 278,342 |
+| [MATLAB/Objective-C/PHP](application-cohort-review.json) | 6 / 5,546; coverage 155 / 283,888 |
+| [Markdown](markdown-cohort-review.json) | 18 / 58,611; coverage 173 / 342,499 |
+| [Stylesheet closeout](stylesheet-cohort-review.json) | 3 / 70,475; all 174 then-unheld records read; 176 files / 412,974 tokens; 218 records / 592,826 observed tokens reconciled |
+| [Notice follow-up](code-notice-provenance.json) | 8 files in 4 repositories; 7 new and 1 reconfirmed origins; 4 ancestor notices; origins 18/104 Stack-Edu, 26/70 Stack v3 |
+| [Pinned origins](pinned-code-origins.json) | 44 unheld Stack v3 records: 42 origins, two 404s; 15 notices for 22 records; origins 18/104, 68/70 |
+| [Retained origins](retained-code-origins.json) | 85 unattempted Stack-Edu records: 10 origins and 10 notices; 75 blocked by GitHub quota; origins 28/104, 68/70 |
+| [2026-09-22 retry](code-origin-recovery-20260922.json) | 30 more origins; 45 still blocked; one later held by an exact firewall match |
+| [2026-09-23 authenticated retry](code-origin-recovery-20260923.json) | Remaining 44: 42 origins, 37 ancestor notices; one 404 and one path without history stay unresolved; none quota-blocked |
 
-The [notice follow-up](code-notice-provenance.json) checks all eight sampled files in four repositories
-with recorded notice questions. Seven host origins are newly verified and one is reconfirmed; four
-complete trees and four distinct ancestor notices are retained. Eclipse's NOTICE explains separate
-code/non-code licenses, while Java restrictive wording and Ororus template attribution remain open.
-It brought linked cohort-origin coverage to 18/104 unheld Stack-Edu and 26/70 unheld Stack v3 records. All reading
-counts, holds and assessment fields remain unchanged. No source-use approval or admission follows.
-
-The [pinned-origin follow-up](pinned-code-origins.json) checks all 44 remaining unheld Stack v3
-records at pinned commits: 42 new verified origins and two source 404s. Four identities use smaller
-path-specific metadata after recursive trees exceed the cap; ancestor-notice searches remain open
-for those files. Fifteen distinct notices are recovered for 22 selected records without deciding
-applicability. It brought linked origin coverage to 18/104 unheld Stack-Edu and 68/70 unheld Stack v3.
-The derived metadata inventory separates held, verified, attempted-unresolved and unattempted records,
-reconciling original counts/tokens. It adds no semantic readings, holds, eligible tokens or admissions.
-
-The [retained-origin recovery](retained-code-origins.json) attempts all 85 previously unattempted
-unheld Stack-Edu records through bounded path histories. Ten C++ origins and ten ancestor notices
-are verified; 74 history requests and one tree check are blocked by GitHub quota exhaustion.
-Linked origin coverage was then 28/104 unheld Stack-Edu and 68/70 unheld Stack v3. The successful
-prefix is quota/order-dependent, not a source-quality estimate. All 218 assessments remain unchanged.
-
-The [2026-09-22 quota retry](code-origin-recovery-20260922.json) re-ran the 75 blocked records with
-one worker and verified 30 more origins before quota ran out again, leaving 45 blocked; the joint
-partition then held one of them by an exact firewall match. The
-[2026-09-23 authenticated retry](code-origin-recovery-20260923.json) ran the remaining 44 with
-authenticated API requests: 42 origins and 37 distinct ancestor notices are verified. One repository
-returns 404 and one path has no commit history, so they stay unresolved with the earlier failure.
-Nothing remains quota-blocked; the [qualification record](../main-data/QUALIFICATION.md) holds the
-current coverage.
+No batch executed corpus code or admitted data. Readings, origins and notices do not establish
+source use, eligible supply or a source ranking.

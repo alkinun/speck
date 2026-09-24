@@ -1,7 +1,7 @@
 # First real-data pilot
 
 A bounded engineering run of the 1.2B KDA/GQA reference at 4K on one H100. **It is closed and is
-not to be repeated**; follow [PLAN.md](../../PLAN.md#work-order) for current work.
+not to be repeated**; follow [PLAN.md](../../PLAN.md#work-order) for the work order.
 The receipts own the detail:
 
 | Result | Receipt |
@@ -82,6 +82,47 @@ uv run --no-sync torchrun --standalone --nproc-per-node=4 -m scripts.loader_chec
 uv run --no-sync torchrun --standalone --nproc-per-node=4 -m scripts.loader_check \
   experiments/pilot --batches 6400 --mode replay --output-dir /external/pilot/loader-four
 ```
+
+## Evaluation protocol
+
+[`evaluation.json`](evaluation.json) pins GSM8K, IFEval, HumanEval+, ARC-Challenge and HellaSwag
+with dataset revisions and file hashes. `scripts.evaluation_prepare` (above) verifies task counts
+and assigns about 20% to development and 80% to final by a seeded hash of the normalized prompt, so
+identical prompts share a partition; near-duplicate task families across partitions remain a
+limitation. These are custom subsets, not comparable with full-benchmark leaderboard scores. All
+benchmark inputs, both partitions, and sensitivity matches are excluded from the pilot candidates.
+
+Grading uses the `capability` dependency group, which pins lm-evaluation-harness and EvalPlus
+revisions, in its own environment (`UV_PROJECT_ENVIRONMENT=.venv-capability uv sync --extra gpu
+--group capability`). IFEval needs NLTK's `punkt_tab` offline. Code execution requires Bubblewrap,
+working user namespaces and a non-root grading account; there is no unsandboxed fallback.
+
+```bash
+python -m scripts.capability_eval experiments/pilot/evaluation.json /external/pilot/evaluation.json \
+  --qualify --output /external/grader-check
+python -m scripts.capability_eval experiments/pilot/evaluation.json /external/pilot/evaluation.json \
+  --model Qwen/Qwen3-0.6B --revision c1899de289a04d12100db370d81485cdf75e47ca \
+  --chat --limit 8 --output /external/reference-smoke
+python -m scripts.capability_eval experiments/pilot/evaluation.json /external/pilot/evaluation.json \
+  --local-export /external/pilot/base-export --limit 8 --output /external/pilot-base-smoke
+```
+
+- `--qualify` checks GSM8K strict/flexible extraction, IFEval constraints, both multiple-choice
+  scorers, all 33 development code tasks' canonical solutions, deliberate wrong answers,
+  timeout/early-exit handling and filesystem/network isolation.
+- `--local-export` requires a passing native/Transformers parity receipt, hashes the export and
+  loads its selected model/tokenizer code offline; run only exports whose code you trust. Re-export
+  older checkpoints with the current tokenizer so control tokens keep their spelling.
+- The runner verifies input hashes, selects only the declared partition, records raw responses and
+  rejects prompts over the 4K context plus output budget. Greedy caps are 1,024 tokens for
+  GSM8K/code and 512 for IFEval. `--chat` applies the chat template with `enable_thinking=False`;
+  chat and plain-completion scores are labeled separately. `--limit 0` runs the full partition (the
+  default eight per benchmark is an integration check); `--partition final` is an explicit held-out
+  action.
+- HumanEval+ runs the pinned file's compiled `check(candidate)` programs after the EvalPlus
+  sanitizer, with a 15-second wall deadline, 10-second CPU limit, 4 GiB address space, read-only
+  runtime mounts and no network. It reports `compiled_plus_pass@1` with execution failures in the
+  denominator; this is not the standard EvalPlus timing protocol.
 
 ## Lessons for later rentals
 
