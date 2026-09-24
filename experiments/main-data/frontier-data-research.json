@@ -1,7 +1,7 @@
 {
   "format": "speck_frontier_data_research_synthesis",
   "format_version": 1,
-  "date": "2026-09-20",
+  "date": "2026-09-24",
   "status": "reviewed_hypotheses_not_source_admission",
   "purpose": "Translate the supplied frontier-data survey and its linked primary reports into testable Speck data-design implications.",
   "evidence_boundary": "The survey is a secondary synthesis supplied for review. Linked primary reports support the directional findings below, but their token counts, mixtures and ablations are not directly comparable to Speck and do not establish source rights or transfer.",
@@ -43,6 +43,10 @@
         "https://arxiv.org/abs/2505.07608",
         "https://arxiv.org/abs/2601.02780"
       ]
+    },
+    {
+      "family": "Rigel (open-lm-engine)",
+      "reports": ["https://open-lm-engine.github.io/blog/rigel/"]
     }
   ],
   "high_confidence_findings": [
@@ -108,7 +112,8 @@
     "Do not add a fourth pretraining arm. Transformations and stage schedules must fit the existing bounded study or replace a declared factor.",
     "Do not introduce multimodal data into the first text-only release; retain native multimodal and rendered-code ideas for a later allocation.",
     "Do not make broad AI-text removal a production rule until a source-aware detector has false-positive controls for math, code, OCR and long-tail knowledge.",
-    "Do not treat proxy-model rankings as final-model proof; confirm selected recipes at matched exposure with held-out families."
+    "Do not treat proxy-model rankings as final-model proof; confirm selected recipes at matched exposure with held-out families.",
+    "Do not adopt a sparse MoE backbone on this allocation. Rigel's 360M-active hybrid spent 5.4e21 non-embedding FLOPs, about 3.5T tokens by 6ND; Speck is bound by unique eligible supply near 100B tokens, and fewer active parameters raise the tokens needed per FLOP. Record fine-grained MoE on a linear-attention hybrid as the next program's architecture candidate."
   ],
   "recipe_hypotheses_for_the_existing_plan": [
     {
@@ -130,6 +135,11 @@
       "stage": "post_training",
       "hypothesis": "Verified outcome data and on-policy/agent trajectories should be selected by task validity and reward reliability, not by length or reasoning verbosity.",
       "measurement": "Independent task outcomes, supervised-token efficiency, reward agreement, failure recovery and held-out transfer."
+    },
+    {
+      "stage": "pretraining",
+      "hypothesis": "A late phase that shifts exposure toward higher-quality web, math and code (Rigel reports 35% math and 35% code in its fourth of six phases) improves capability per token over ordinary decay at the same unique supply.",
+      "measurement": "The existing decay study: paired-seed late-enrichment and ordinary-decay arms from one stable parent, compared on held-out source loss, development capability and unique-supply retention."
     }
   ],
   "admission_boundary": "This synthesis updates hypotheses and experiment design only. It does not admit any external source, establish source rights, change the working mixture percentages, authorize acquisition or alter the 5,000-GPU-hour allocation."
