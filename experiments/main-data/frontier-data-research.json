@@ -138,8 +138,13 @@
     },
     {
       "stage": "pretraining",
-      "hypothesis": "A late phase that shifts exposure toward higher-quality web, math and code (Rigel reports 35% math and 35% code in its fourth of six phases) improves capability per token over ordinary decay at the same unique supply.",
+      "hypothesis": "A late phase that shifts exposure toward higher-quality web, math and code (Rigel reports 35% math and 35% code in its fourth of six phases) improves capability per token over ordinary decay at the same unique supply. Rigel's late quality phases rest on Nemotron-CC-v2 and FinePDFs, neither decided for Speck, so its recipe does not show what the selected sources alone achieve.",
       "measurement": "The existing decay study: paired-seed late-enrichment and ordinary-decay arms from one stable parent, compared on held-out source loss, development capability and unique-supply retention."
+    },
+    {
+      "stage": "context",
+      "hypothesis": "Long chain-of-thought QA is useful context-extension data: Rigel's final phase extends 4,096 to 294,912 tokens over about 118B tokens in which long-CoT reasoning QA displaces nearly everything else.",
+      "measurement": "Against dependency-aware long documents at matched exposure from one parent: retrieval across positions, cross-document reasoning, short-task retention and development reasoning scores."
     }
   ],
   "admission_boundary": "This synthesis updates hypotheses and experiment design only. It does not admit any external source, establish source rights, change the working mixture percentages, authorize acquisition or alter the 5,000-GPU-hour allocation."

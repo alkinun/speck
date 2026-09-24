@@ -1,15 +1,15 @@
 # Speck
 
-SpeckLabs' first model and paper focus on **data and training across pretraining, mid-training,
-and post-training**. We are training a **1.2B all-active model from scratch**, with a base release
-and an always-thinking assistant for **agentic coding, coding, math and tools**. The deliverable is
-an open data pipeline covering all six training stages; the model proves the pipeline runs end to
-end. The KDA/GQA reference is the **fixed substrate for this release, frozen by declaration rather
-than selected over a control**: the bounded architecture/efficiency comparison was deferred on
-2026-09-21 to a later allocation, so no architecture superiority or parity claim is available here.
-The paper measures training and inference cost as reference-only evidence alongside the data
-findings; architecture research, including MoE and attention residuals, belongs to later releases
-with larger allocations.
+SpeckLabs scales in steps, each much larger than the last. This first release is the **data step**:
+the 5,000 GPU-hour grant buys **measured findings about the data pipeline of every training stage**
+(pretraining, decay, mid-training, SFT, RL and self-distillation), stated so they can be carried to
+much larger runs in later releases. A good model is a by-product, not the goal. We train a **1.2B
+all-active model from scratch**, with a base and an always-thinking assistant for **agentic coding,
+coding, math and tools**, because downstream-stage experiments need real parent checkpoints and the
+pipeline must be proven end to end. The KDA/GQA reference is the **fixed substrate for this
+release, frozen by declaration rather than selected over a control**, so no architecture claim is
+available here; architecture research, including MoE and attention residuals, belongs to later
+releases.
 
 Start with the [program overview](docs/program.md) for the training lifecycle, data, compute and
 release, and the [model notes](docs/model.md) for the reference backbone and the deferred
