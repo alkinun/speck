@@ -11,3 +11,6 @@ PYTHONPATH=. python experiments/ladder/shapes.py --check
 
 Rung sizes and run counts live in [plan.json](../main-data/plan.json); `make plan-check` fails if a
 configuration drifts from the rule or from the plan.
+
+[records/](records) holds each family's predeclared record: question, arms, controls, primary
+metric, decision rule and cost, written before the family runs and updated only with its result.
