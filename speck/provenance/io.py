@@ -40,6 +40,15 @@ def lines_sha256(values):
     return hashlib.sha256("\n".join(values).encode()).hexdigest()
 
 
+def fsync_path(path):
+    """Flush a written file to disk, so a later rename or receipt cannot outlive its bytes."""
+    descriptor = os.open(path, os.O_RDONLY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
 def atomic_json(path, value, *, fsync=False):
     """Replace a report only after serialization and writing have succeeded.
 

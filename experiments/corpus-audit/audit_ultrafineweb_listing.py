@@ -32,7 +32,7 @@ import pyarrow.parquet as pq
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from speck.provenance.io import atomic_json, file_sha256  # noqa: E402
+from speck.provenance.io import atomic_json, file_sha256, fsync_path  # noqa: E402
 from speck.tokenization.tokenizer import Tokenizer  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -145,6 +145,7 @@ def fetch(url, path, size, sha256):
     if count != size or digest.hexdigest() != sha256:
         partial.unlink()
         raise ValueError(f"identity mismatch: {url}")
+    fsync_path(partial)
     partial.rename(path)
     return True
 

@@ -453,3 +453,20 @@ def test_flagship_production_plan_keeps_rehearsal_and_authority_pending():
         "must not be issued from fixture evidence"
     )
     assert plan["training_authority"] == "blocked"
+
+
+def test_index_directory_is_a_pure_storage_choice(tmp_path):
+    """Building the index elsewhere, even across an interruption, publishes the same bytes."""
+    elsewhere = validate_preprocess_config(_config(tmp_path, "elsewhere"))
+    index = tmp_path / "flash"
+    index.mkdir()
+    with pytest.raises(RuntimeError, match="injected production preprocess crash"):
+        preprocess_sources(elsewhere, crash_after_records=3, index_directory=index)
+    moved = preprocess_sources(elsewhere, index_directory=index)
+    staged = validate_preprocess_config(_config(tmp_path, "staged"))
+    reference = preprocess_sources(staged)
+    assert moved["manifest"]["index"]["sha256"] == reference["manifest"]["index"]["sha256"]
+    assert moved["manifest"]["counts"] == reference["manifest"]["counts"]
+    for source_id, output in moved["manifest"]["outputs"].items():
+        assert output["sha256"] == reference["manifest"]["outputs"][source_id]["sha256"]
+    assert not list(index.iterdir())
