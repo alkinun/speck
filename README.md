@@ -1,26 +1,17 @@
 # Speck
 
 SpeckLabs scales in steps, each much larger than the last. This first release is the **data step**:
-the 5,000 GPU-hour grant buys **measured findings about the data pipeline of every training stage**
-(pretraining, decay, mid-training, SFT, RL and self-distillation), stated so they can be carried to
-much larger runs in later releases. A good model is a by-product, not the goal. We train a **1.2B
-all-active model from scratch**, with a base and an always-thinking assistant for **agentic coding,
-coding, math and tools**, because downstream-stage experiments need real parent checkpoints and the
-pipeline must be proven end to end. The KDA/GQA reference is the **fixed substrate for this
-release, frozen by declaration rather than selected over a control**, so no architecture claim is
-available here; architecture research, including MoE and attention residuals, belongs to later
-releases.
+its product is **measured, transferable findings about the data pipeline of every training stage**
+(pretraining, decay, mid-training, SFT, RL and self-distillation), published as openly as the
+licences allow, so later and much larger releases can start from them. A model ladder (50m, 130m and
+410m) carries most experiments, and one **1.2B parent** trained from scratch carries the later
+stages; the released base and always-thinking assistant for **agentic coding, coding, math and
+tools** are the best branches of those experiments. The KDA/GQA architecture is fixed by
+declaration, so the release makes no architecture claim.
 
-Start with the [program overview](docs/program.md) for the training lifecycle, data, compute and
-release, and the [model notes](docs/model.md) for the reference backbone and the deferred
-architecture study. [PLAN.md](PLAN.md) gives current status and the next work;
-the [main data plan](experiments/main-data/README.md) records numeric targets and feasibility.
-The [performance and optimization plan](docs/performance.md) separates proxy evidence from flagship
-throughput, defines MFU and rate accounting, and gives the pre-rental profiling order.
-The H100 pilot and backups are complete; GH200/four-worker qualification and flagship training are ahead.
-[Research notes](docs/research.md) distinguish publisher findings from our own evidence. The
-[readiness summary](PLAN.md#readiness-for-experiment-design) identifies what we can design now and
-what still needs qualification before experiments launch.
+[PLAN.md](PLAN.md) gives status and the next work. The [program design](docs/program.md) owns the
+goal, method, experiments and compute budget, and the [paper outline](docs/paper.md) what the report
+must show. [plan.json](experiments/main-data/plan.json) owns the numbers.
 
 ## Get a working baseline
 
@@ -36,10 +27,8 @@ The smoke workflow builds tiny local data, trains a hybrid base model, initializ
 its native checkpoint, and verifies exact resume for both stages. It also evaluates held-out base
 loss. It uses CPU only and downloads no corpus.
 
-The companion [technical report outline](docs/report.md) defines the evidence to collect for release.
-The first GPU configuration is [experiments/qualification](experiments/qualification/README.md).
-It checks the existing 1.2B KDA/GQA model at 4K before any corpus-training commitment.
-GH200 fit, throughput, and cluster operation still need measurement.
+The ladder configurations are in [experiments/ladder](experiments/ladder/README.md); the GH200
+qualification starts from [experiments/qualification](experiments/qualification/README.md).
 The ordered access procedure is the [GH200 qualification runbook](docs/compute-qualification.md).
 
 ## Working with the project
@@ -64,12 +53,13 @@ speck/         Model, data, training, evaluation, export, and runtime code
 scripts/       Maintained command entry points
 tests/         Behavioral and integration checks
 experiments/   Runnable configurations, clearly labeled preparation plans, and result receipts
-docs/          Program outline, operational guides, and research notes
+docs/          Program design, paper outline, operational guides, and research notes
 archive/       Pointer to the complete historical Git snapshot
 ```
 
 Earlier plans, papers, results, and retired tools are recoverable through the
 [history guide](archive/README.md). They do not govern current experiments.
 
-Source code is [MIT licensed](LICENSE). Planned model weights use Apache-2.0. Corpus text and packed
-training shards are not release artifacts. See the [citation](CITATION.cff).
+Source code is [MIT licensed](LICENSE). Planned model weights use Apache-2.0. Whether corpus text or
+packed shards are released is an [open decision](PLAN.md#open-decisions). See the
+[citation](CITATION.cff).

@@ -14,21 +14,20 @@ uv run --no-sync python -m scripts.slurm_ops render /shared/wave.json \
 ```
 
 A wave binds the exact clean Git revision, experiment/data hashes, commands, resources, and retry
-limits. Build it only after pilot settings and cost are chosen. `speck_slurm_wave` v1 is validated in
+limits. Build it only after the recipe and cost are measured. `speck_slurm_wave` v1 is validated in
 [speck/operations/slurm.py](../speck/operations/slurm.py); tests contain minimal complete fixtures.
-The bound execution budget uses 5,000 total hours: 4,550 scheduled and 450 protected for
-evaluation/recovery, matching the [current plan](../experiments/main-data/plan.json). The
-constants live in `speck/operations/slurm.py` and `make plan-check` fails if they drift from the
-plan's reservation table, because the alternative is discovering the mismatch at `sbatch` time. Phase names come from that
-plan; a phase's `conditional` field marks reserve, and zero-hour phases cannot launch compute.
-Historical P1–P8 labels are not required. Old 4,111/889 wave plans must be replayed with their
-original checkout; they cannot authorize current launches. Planning reservations still need a
-frozen execution manifest and per-stage cost checks before submission.
+The execution budget is 5,000 total hours: 4,420 scheduled and a 580-hour reserve, matching the
+[compute budget](program.md#compute). The constants live in `speck/operations/slurm.py`, and
+`make plan-check` fails if they drift from [plan.json](../experiments/main-data/plan.json), so a
+mismatch surfaces before `sbatch` time. A phase's `conditional` field marks reserve, and zero-hour
+phases cannot launch compute. Old wave plans must be replayed with their original checkout; they
+cannot authorize current launches. A wave still needs a frozen execution manifest and a cost check
+against its budget line before submission.
 
 Training jobs use `torchrun -m scripts.slurm_base_train ... --slurm-requeue-resume`. Signals request
 an optimizer-boundary checkpoint; requeue resumes the last complete checkpoint explicitly.
 The rendered script exports a `TORCHINDUCTOR_CACHE_DIR` under `RUNTIME_ROOT/inductor/DIGEST`,
-scoped to the wave so every requeued attempt reuses one compilation. The selected production
+scoped to the wave so every requeued attempt reuses one compilation. The selected training
 recipe compiles with max-autotune; without that cache each preemption pays full autotune again. SFT
 requeue is not supported. Dependencies are restricted to collection/evaluation jobs, so training
 promotion requires an inspected new wave.

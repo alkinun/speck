@@ -1,7 +1,7 @@
 # First real-data pilot
 
 A bounded engineering run of the 1.2B KDA/GQA reference at 4K on one H100. **It is closed and is
-not to be repeated**; follow [PLAN.md](../../PLAN.md#immediate-order-of-work) for current work.
+not to be repeated**; follow [PLAN.md](../../PLAN.md#work-order) for current work.
 The receipts own the detail:
 
 | Result | Receipt |

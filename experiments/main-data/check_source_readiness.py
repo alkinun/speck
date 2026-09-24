@@ -5,7 +5,7 @@ Run from the repository root::
     python experiments/main-data/check_source_readiness.py experiments/main-data/source-readiness.json
 
 The check verifies the matrix's local receipt identities and non-admission boundary. It does not
-acquire sources, execute corpus content, infer rights decisions or select a study arm.
+acquire sources, execute corpus content, or infer rights decisions.
 """
 
 import argparse
@@ -135,41 +135,6 @@ def validate(matrix_path):
                 if recorded != (cited["documents"], cited["tokens"]):
                     raise ValueError(f"retained inventory drifts from the closeout: {source['id']}")
 
-    horizon = matrix["horizon_accounting"]
-    target = horizon["working_target"]
-    if target["minimum_unique_preparation_tokens"] != int(
-        target["total_exposure_tokens"] * target["preparation_factor"]
-    ):
-        raise ValueError("working-horizon preparation arithmetic is inconsistent")
-    # Each bound must name the bank whose weight it divides by, and that weight must be the one
-    # the plan actually declares. Checking only the internal arithmetic is not enough: after the
-    # 2026-09-22 re-freeze the code bound stayed self-consistent at a 30% share the mixture no
-    # longer had, and understated the binding constraint by 17% while passing every check.
-    mixture = json.loads((ROOT / "experiments/main-data/plan.json").read_text())
-    weights = {
-        item["id"]: item["weight_percent"] for item in mixture["main_pretraining"]["mixture"]
-    }
-    for bound in horizon["one_pass_constraints"]:
-        bank = bound.get("bank")
-        if bank not in weights:
-            raise ValueError(f"one-pass bound names no declared bank: {bound['source']}")
-        if bound["declared_share_percent"] != weights[bank]:
-            raise ValueError(
-                f"one-pass bound share drifts from the mixture: {bound['source']} declares "
-                f"{bound['declared_share_percent']}%, bank {bank} carries {weights[bank]}%"
-            )
-        expected = (bound["numerator_tokens"] * 100) // bound["declared_share_percent"]
-        if bound["maximum_total_exposure_tokens_before_exclusions"] != int(expected):
-            raise ValueError(f"one-pass bound arithmetic is inconsistent: {bound['source']}")
-    if horizon["observed_union"]["eligible_tokens_established"] != 0:
-        raise ValueError("retained inventory must not claim eligible tokens")
-
-    arms = matrix["arm_readiness"]
-    expected_arms = {"baseline", "code_bank_candidate", "web_bank_candidate"}
-    if set(arms) != expected_arms or any(
-        value.get("status") != "blocked" for value in arms.values()
-    ):
-        raise ValueError("every packet arm must remain blocked")
     boundary = matrix.get("launch_boundary", "")
     if not boundary.startswith("This matrix records evidence and blockers only"):
         raise ValueError("matrix boundary must keep launch authority outside the artifact")
@@ -178,7 +143,6 @@ def validate(matrix_path):
         "status": matrix["status"],
         "sources": len(sources),
         "admitted_sources": 0,
-        "blocked_arms": len(arms),
     }
 
 

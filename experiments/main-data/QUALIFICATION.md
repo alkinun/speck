@@ -1,4 +1,4 @@
-# Main-data qualification packet
+# Main-data qualification
 
 2026-09-23. CPU preparation only. The model, working mixture, pilot and evaluation remain unchanged.
 [qualification-rules.json](qualification-rules.json) owns version-one eligibility rules;
@@ -80,7 +80,7 @@ by itself. Freeze the complete graph, deduplication configuration and hashes bef
 production inventory. Adding edges can change partitions. The reviewed feasibility cohorts are not
 a fresh blind evaluation set.
 
-## Next bounded data packet
+## Open qualification work
 
 The fixed-cohort reading pass is complete; do not open another reading sample without a concrete
 unresolved coverage question. Current origin evidence, disjoint per cohort in its own frame:
@@ -98,7 +98,7 @@ pooled yield or raw pass-rate comparisons. Each gate needs its own evidence:
 | Identity, origins and notices | Resolve host/upstream revisions, consumed transformations and the applicable notices the signed source-use decision requires; retain explicit unresolved outcomes |
 | Families and exclusions | Extend known links to copied/transformed families and near-duplicates; freeze graph and scoring coverage before partitioning |
 | Intended use | Record document role and contextual limitations; require independent oracles only for claimed verified exercises |
-| Finite supply | Count deduplicated eligible tokens, exclusions and acquisition costs separately per bank; use supply and runtime to bound the shared study horizon |
+| Finite supply | Count deduplicated eligible tokens, exclusions and acquisition costs separately per bank; count retained tokens separately from exposure |
 
 Open code items:
 
@@ -119,7 +119,8 @@ Open code items:
   confirms one redaction-induced syntax failure; it is not a content filter. Parser success cannot
   validate behavior, redacted assertions or contamination. Do not restore redacted source text.
 
-Remaining comparisons among the [selected sources](source-registry.json):
+Remaining data-side comparisons among the [selected sources](source-registry.json); the training
+contrasts are ladder families P1 and P5 in the [program design](../../docs/program.md#pretraining-the-ladder):
 
 | Lane | Candidates | Required comparison |
 | --- | --- | --- |
@@ -140,8 +141,8 @@ The [data-readiness receipt](../corpus-audit/data-readiness.json) owns the full 
 current: all 290,761 retained HQ documents hold 351,718,255 tokens, and after within-HQ and exact
 FineWeb-Edu overlap **351,237,925 HQ tokens** remain distinct from the control, bounding a 25% bank at
 **1,404,951,700 total one-pass tokens** before further exclusions. Natural code bounds its 35% share
-at **1,362,213,848** tokens, the binding constraint. These are stock upper bounds, not an executable
-common horizon; never treat the 30/40/60-hour arm caps as guaranteed token supply. The closeout
+at **1,362,213,848** tokens. These are stock upper bounds from that date; the
+[supply gap](supply-gap.json) owns current per-bank figures. The closeout
 also covers math index reconciliation, context length bands, the 500K SFT structural census
 (424,463 compatible rows) and the bounded RL inventory; the
 [assistant contract](../../docs/assistant.md) owns SFT fit counts.
@@ -152,4 +153,4 @@ weights. Keep correctness checks separate from extraction judgments; assistant r
 independent human annotation. Record raw, unique, eligible and rejected tokens with reasons,
 source-family coverage and CPU/storage/teacher cost separately, using the frozen Mistral tokenizer.
 Overlapping parent/filtered releases count once. The work order is in
-[PLAN.md](../../PLAN.md#immediate-order-of-work).
+[PLAN.md](../../PLAN.md#work-order).

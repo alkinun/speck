@@ -1,8 +1,8 @@
 # Training and inference
 
-The [program lifecycle](program.md#training-lifecycle) defines pretraining, capability/context
-mid-training and post-training on the fixed model. This guide describes implemented training paths;
-working stage plans are not launch configurations.
+The [program design](program.md#experiments-by-stage) defines the ladder, the parent and its
+decay, mid-training and post-training branches. This guide describes implemented training paths;
+it contains no launch configurations.
 
 Set `deterministic: true` in base or SFT settings when qualifying reproducible CUDA restart.
 This enables deterministic PyTorch algorithms and a reproducible cuBLAS workspace before training.
@@ -16,15 +16,15 @@ hardware, distributed geometry, and compiled path.
 The [performance plan](performance.md) defines timing boundaries, MFU accounting and optimization
 priorities. The RTX 3090 proxy selected checkpointing off, compiled execution with
 `max-autotune-no-cudagraphs`, deterministic kernels and Liger loss. These are candidates for the
-flagship; its optimized rate and memory headroom remain unmeasured. Training and the benchmark
+ladder and parent; their optimized rates and memory headroom remain unmeasured. Training and the benchmark
 compile with `COMPILE_OPTIONS` from `speck/operations/runtime.py`. Unlike Torch's mode of the same
 name, the benchmark's `max-autotune-no-cudagraphs` omits coordinate-descent tuning, which broke
 compiled restart parity.
 
-Freeze microbatch, activation checkpointing and determinism on GH200 before production; these
-settings are immutable on resume. Microbatch affects loader scheduling even at constant global
+Freeze microbatch, activation checkpointing and determinism per rung on GH200 before grant runs;
+these settings are immutable on resume. Microbatch affects loader scheduling even at constant global
 batch. Base training compiles both the model and BatchedMuon; the benchmark's compile toggle
-therefore measures their combined gain. The production call also requests typed loss diagnostics.
+therefore measures their combined gain. The trainer's call also requests typed loss diagnostics.
 
 Use the [H100 rental](throughput-rental.md) to measure single-GPU implementation deltas. Then
 qualify compiled four-worker DDP with `scripts.training_replay --compile` on the grant hardware.
@@ -92,25 +92,10 @@ new branch. Resume checks the original model, data cursor, optimizer, tokenizer,
 A changed recipe requires an explicitly supported new run, not an edited resume. See `--help` for branch options and
 [Slurm](slurm.md) for scheduler interruption/requeue.
 
-The pretraining data study uses separate fresh runs with paired initialization seeds; verify initial
-model tensor identities within each pair. It precedes main pretraining and does not use checkpoint
-branching. Freeze manifests, schedules and evaluation inputs for each arm; study tokens and cost
-remain separate from the production run. The [research design](../experiments/main-data/README.md#runtime-and-launch-requirements)
-records proposed run counts, finite-epoch SFT exposure matching and remaining runtime/scoring work.
-These design rules are not executable launch manifests.
-
-The [capability mid-training efficiency packet](../experiments/main-data/mid-training-study-packet.json)
-defines a design-only four-arm proxy screen: replay, source-only repository data, grounded workflows
-and executable trajectories. It also separates selective loss/packing and context-transition studies,
-then confirms at most one candidate at 1.2B. Production mid-training is staged at 4K, 16K and 32K for
-repository reasoning and long-horizon agentic coding. Executable trajectories require pinned
-environments, tool schemas, hidden tests, outcome receipts and recovery labels.
-
-The [post-training data-study packet](../experiments/main-data/post-training-study-packet.json) fixes
-two paired-seed SFT selection arms, a fixed-policy RL prompt/verifier slot, and a bounded final
-self-SFT pilot. It keeps structural format checks, independent outcome verification, environment
-success and self-distillation lineage as separate gates. No policy update or production self-SFT is
-implied by the research packet.
+Ladder experiments are separate fresh runs. Arms within a comparison share initial model tensors;
+verify their hashes before training, and freeze manifests, schedules and evaluation inputs per arm.
+Decay, mid-training and post-training experiments are branches of preserved parent checkpoints,
+as the [method](program.md#method) describes.
 
 ## Mid-training readiness
 
@@ -138,9 +123,9 @@ tokens. `scripts.smoke` branches a base checkpoint onto masked chat rows and rep
 parameter parity. Still to qualify: 16K/32K memory and throughput on GH200, and supervised counts
 per real trajectory source.
 
-Before executing any mid-training stage, freeze parent identity, objective, data, schedule, optimizer
-policy and cost, and qualify resume. Capability, repository and agentic continuation use the combined
-600-hour mid-training production reservation; 16K/32K context changes are part of that reservation.
+Before any decay or mid-training branch, freeze parent identity, objective, data, schedule,
+optimizer policy and cost, and qualify resume.
+
 ## Reward training
 
 `python -m scripts.rl_train EXPERIMENT` trains stage 5 from a hash-pinned SFT or RL checkpoint named
@@ -162,7 +147,7 @@ same steps as one process. There is no KL penalty, reference model or clipping. 
 execution, long-context RL and measured benefit remain to qualify. The
 [RTX 3090 pilot](../experiments/rl-pilot/README.md) runs it from a real SFT parent. The smoke
 run checks the plumbing only: its tiny model earns no reward. Data and verifier requirements are in
-[the program](program.md#conditional-rl).
+[the program](program.md#post-training).
 
 ## Final self-distillation
 
@@ -234,7 +219,7 @@ The [post-training audit protocol](../experiments/main-data/post-training-audit-
 this structural audit with fixed outcome strata, tool-trajectory checks, deterministic environment
 controls, a reasoning-mode measurement panel and a bounded fixed-policy RL panel. The RL panel records
 correctness-first length-efficiency curves and truncation/shortcut controls before any policy update.
-It must close before a post-training study arm is selected.
+It must close before a post-training family runs.
 
 SFT can initialize directly from a completed native base checkpoint. Bind its model and metadata
 hashes with `speck.export.pretrained.native_pretrained_source(directory, step)` and use the returned
@@ -251,4 +236,4 @@ manifest, and an empty accepted split is an error.
 
 The offline smoke now also prepares weighted local SFT examples, initializes from its native base
 checkpoint, trains two assistant steps, and verifies exact parameter equality after SFT resume.
-This exercises the reserved-vocabulary path used by the flagship. It remains a tiny CPU fixture.
+This exercises the reserved-vocabulary path used by the parent. It remains a tiny CPU fixture.

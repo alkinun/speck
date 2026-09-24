@@ -23,34 +23,17 @@
       "pinned_evidence": [
         {
           "path": "experiments/main-data/plan.json",
-          "field": "main_pretraining.horizon_scope"
+          "field": "parent.schedule"
         },
         {
-          "path": "experiments/main-data/plan.json",
-          "field": "mid_training"
-        },
-        {
-          "path": "experiments/main-data/plan.json",
-          "field": "context_extension"
+          "path": "docs/program.md"
         },
         {
           "path": "experiments/main-data/plan.json",
           "field": "post_training"
-        },
-        {
-          "path": "experiments/main-data/data-study-packet.json",
-          "field": "common_contract.exposure"
-        },
-        {
-          "path": "experiments/main-data/mid-training-study-packet.json",
-          "field": "common_contract.exposure"
-        },
-        {
-          "path": "experiments/main-data/post-training-study-packet.json",
-          "field": "common_contract.sft"
         }
       ],
-      "supports": "Speck already represents pretraining, capability continuation, context extension and post-training as distinct data stages with separate parents, exposures and reservations.",
+      "supports": "Speck represents pretraining, decay, mid-training and post-training as distinct data stages with separate parents, experiments and budget lines.",
       "does_not_support": "It does not select stage weights, establish a schedule, or prove that a staged recipe beats a flat mixture.",
       "gate_implications": {
         "source_use": "unchanged",
@@ -142,8 +125,7 @@
           "field": "bank_boundaries"
         },
         {
-          "path": "experiments/main-data/mid-training-study-packet.json",
-          "field": "conditional_branch"
+          "path": "docs/program.md"
         }
       ],
       "supports": "Natural, synthetic-support and executable-trajectory candidates are already represented as separate source families and conditional branches.",
@@ -194,8 +176,7 @@
       "evidence_kind": "context_design_and_length_inventory",
       "pinned_evidence": [
         {
-          "path": "experiments/main-data/plan.json",
-          "field": "context_extension.evaluation_additions"
+          "path": "docs/program.md"
         },
         {
           "path": "experiments/corpus-audit/data-readiness.json",
@@ -206,7 +187,7 @@
           "field": "stage_requirements.context_extension"
         }
       ],
-      "supports": "The plan separates long-document supply from fixed-suffix, related-prefix and multi-file context evaluation.",
+      "supports": "The design separates long-document supply from context-extension data experiments evaluated beyond a configured maximum length.",
       "does_not_support": "Current inventories do not yet provide a measured dependency-distance field or prove useful long-range signal.",
       "gate_implications": {
         "source_use": "unchanged",
@@ -222,23 +203,10 @@
       "evidence_kind": "bounded_study_design",
       "pinned_evidence": [
         {
-          "path": "experiments/main-data/data-study-packet.json",
-          "field": "screening"
-        },
-        {
-          "path": "experiments/main-data/data-study-packet.json",
-          "field": "confirmation"
-        },
-        {
-          "path": "experiments/main-data/mid-training-study-packet.json",
-          "field": "linked_downstream_evaluation"
-        },
-        {
-          "path": "experiments/main-data/post-training-study-packet.json",
-          "field": "sft.efficiency_endpoints"
+          "path": "docs/program.md"
         }
       ],
-      "supports": "The existing packets already define controls, matched exposure, protected confirmation, downstream fixed recipes and utility-per-token/GPU-hour measurements.",
+      "supports": "The program design defines predeclared contrasts, matched controls, seed-noise calibration, scale transfer and per-token and per-GPU-hour accounting.",
       "does_not_support": "Design arithmetic is not a result; no study arm is launch-ready until source, runtime and parent gates close.",
       "gate_implications": {
         "source_use": "required before screening",
@@ -286,16 +254,15 @@
       "evidence_kind": "external_report_2026_09_24",
       "pinned_evidence": [
         {
-          "path": "experiments/main-data/data-study-packet.json",
-          "field": "decay_study"
+          "path": "docs/program.md"
         },
         {
           "path": "experiments/main-data/supply-gap.json",
-          "field": "binding_constraint"
+          "field": "binding_bank"
         },
         {
           "path": "experiments/main-data/plan.json",
-          "field": "main_pretraining.target_tokens"
+          "field": "parent.target_tokens"
         }
       ],
       "supports": "Rigel's staged recipe matches the decay study Speck already specifies, and its token scale shows that its capability per FLOP rests on data volume Speck's supply gap does not yet provide.",

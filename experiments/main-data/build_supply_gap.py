@@ -1,9 +1,8 @@
-"""Derive the per-bank supply gap from the plan and retained-stock receipts.
+"""Derive the per-bank supply gap of the parent run from the plan and stock receipts.
 
-Compute is not what bounds this release; eligible tokens are. This regenerates
-`supply-gap.json` from the working mixture and the retained-stock receipts so the
-gap is a computed quantity that moves as acquisition proceeds, never a number
-typed into a document. It admits nothing and acquires nothing.
+Eligible tokens bound this release more than compute does. This regenerates `supply-gap.json`
+from the parent's starting mixture and the retained-stock receipts, so the gap moves as
+acquisition proceeds and is never typed into a document. It admits nothing.
 """
 
 from __future__ import annotations
@@ -14,8 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 
-# Which retained inventories can even be candidates for each declared bank.
-# Retained stock is not eligible supply; this maps identity, not admission.
+# Which retained inventories can be candidates for each bank. This maps identity, not admission.
 BANK_STOCK = {
     "selected_web": ("ultrafineweb_hq_distinct",),
     "independent_web": ("fineweb_edu",),
@@ -25,158 +23,80 @@ BANK_STOCK = {
     "refined_web": ("cosmopedia_v2",),
 }
 
+SOURCES = [
+    "experiments/main-data/plan.json",
+    "experiments/pilot/supply.json",
+    "experiments/corpus-audit/data-readiness.json",
+    "experiments/corpus-audit/stack-edu-acquisition.json",
+    "experiments/main-data/source-readiness.json",
+]
+
 
 def _load(relative: str) -> dict:
     return json.loads((ROOT / relative).read_text())
 
 
 def build() -> dict:
-    plan = _load("experiments/main-data/plan.json")
-    supply = _load("experiments/pilot/supply.json")
-    readiness = _load("experiments/main-data/source-readiness.json")
-    acquisition = _load("experiments/corpus-audit/stack-edu-acquisition.json")
+    plan, supply, closeout, acquisition, readiness = (_load(path) for path in SOURCES)
+    parent = plan["parent"]
 
     stock = {entry["source"]: entry["tokens"] for entry in supply["sources"]}
     stock["retained_code"] = supply["code"]["tokens_before_full_exclusion"]
     # Tranches fetched since, through the same screen and disjoint from the retained rows.
     stock["acquired_code"] = acquisition["tokens_before_full_exclusion"]
-    # The HQ bank's only measured candidate quantity is the portion distinct from
-    # retained FineWeb-Edu, recorded as a one-pass constraint numerator.
-    constraints = {
-        item["source"]: item for item in readiness["horizon_accounting"]["one_pass_constraints"]
-    }
-    stock["ultrafineweb_hq_distinct"] = constraints[
-        "ultrafineweb_hq_distinct_from_retained_fineweb_edu"
-    ]["numerator_tokens"]
-
-    # Gate counts are only meaningful over sources the mixture actually selects. Counting a
-    # dropped candidate as "open" would overstate the remaining work forever, since a source
-    # nobody intends to use is never going to have its gates closed.
-    selected = [source for source in readiness["sources"] if source.get("selected")]
-    dropped = [source for source in readiness["sources"] if not source.get("selected")]
-    gate_status = {source["id"]: source["gates"] for source in selected}
+    # The HQ bank's measured candidate quantity is the part distinct from retained FineWeb-Edu.
+    stock["ultrafineweb_hq_distinct"] = closeout["pretraining"]["hq"][
+        "distinct_from_retained_fineweb_tokens"
+    ]
 
     banks = []
-    for item in plan["main_pretraining"]["mixture"]:
-        names = BANK_STOCK[item["id"]]
-        retained = sum(stock[name] for name in names)
-        target = item["eligible_unique_token_preparation_target"]
+    for item in parent["starting_mixture"]:
+        share = item["weight_percent"] / 100
+        target = round(parent["target_tokens"] * parent["preparation_factor"] * share)
+        retained = sum(stock[name] for name in BANK_STOCK[item["id"]])
         banks.append(
             {
                 "id": item["id"],
-                "role": item["role"],
                 "weight_percent": item["weight_percent"],
-                "exposure_tokens": item["exposure_tokens"],
-                "eligible_unique_token_preparation_target": target,
+                "preparation_target_tokens": target,
                 "retained_candidate_stock_tokens": retained,
-                "retained_stock_sources": list(names),
-                "eligible_unique_tokens": 0,
-                "shortfall_tokens": target - retained,
-                "retained_coverage_percent": round(100.0 * retained / target, 3),
-                "maximum_one_pass_exposure_from_retained_stock": (
-                    int(retained // (item["weight_percent"] / 100.0))
-                    if item["weight_percent"]
-                    else None
-                ),
+                "retained_stock_sources": list(BANK_STOCK[item["id"]]),
+                "coverage_percent": round(100 * retained / target, 2),
+                "one_pass_exposure_cap_tokens": int(retained / share),
             }
         )
 
-    target_total = plan["main_pretraining"]["target_unique_eligible_tokens"]
+    target_total = sum(bank["preparation_target_tokens"] for bank in banks)
     retained_total = sum(bank["retained_candidate_stock_tokens"] for bank in banks)
-    zero_stock = [bank["id"] for bank in banks if not bank["retained_candidate_stock_tokens"]]
-    # Banks with no stock at all cap a one-pass run at zero, which is true but
-    # uninformative. Report them separately and take the binding constraint among
-    # banks that have something, so the number says which acquisition matters most.
-    binding = min(
-        (
-            bank
-            for bank in banks
-            if bank["weight_percent"] and bank["retained_candidate_stock_tokens"]
-        ),
-        key=lambda bank: bank["maximum_one_pass_exposure_from_retained_stock"],
-    )
+    binding = min(banks, key=lambda bank: bank["one_pass_exposure_cap_tokens"])
+    selected = [source for source in readiness["sources"] if source.get("selected")]
 
     return {
         "format": "speck_supply_gap",
-        "format_version": 1,
+        "format_version": 2,
         "status": "derived_from_receipts_no_admission",
-        "purpose": (
-            "State the distance between the declared mixture and measured retained stock, so "
-            "acquisition is planned against a number rather than an impression."
-        ),
         "generated_by": "experiments/main-data/build_supply_gap.py",
-        "source_of_truth": [
-            "experiments/main-data/plan.json",
-            "experiments/pilot/supply.json",
-            "experiments/main-data/source-readiness.json",
-            "experiments/corpus-audit/stack-edu-acquisition.json",
-        ],
+        "source_of_truth": SOURCES,
+        "parent_target_tokens": parent["target_tokens"],
         "banks": banks,
         "totals": {
-            "eligible_unique_token_preparation_target": target_total,
+            "preparation_target_tokens": target_total,
             "retained_candidate_stock_tokens": retained_total,
+            "coverage_percent": round(100 * retained_total / target_total, 2),
             "eligible_unique_tokens_established": 0,
-            "shortfall_tokens": target_total - retained_total,
-            "retained_coverage_percent": round(100.0 * retained_total / target_total, 3),
-            "acquisition_multiple_required": round(target_total / retained_total, 2),
         },
-        "zero_stock_banks": {
-            "ids": zero_stock,
-            "combined_preparation_target_tokens": sum(
-                bank["eligible_unique_token_preparation_target"]
-                for bank in banks
-                if bank["id"] in zero_stock
-            ),
-            "meaning": (
-                "These banks have no retained candidate stock of any kind, so at the declared "
-                "weights a one-pass run is capped at zero tokens until they are supplied or the "
-                "mixture is re-frozen without them. Treat that as a mixture decision, not an "
-                "acquisition detail."
-            )
-            if zero_stock
-            else (
-                "Every declared bank has some retained candidate stock, so no bank caps a "
-                "one-pass run at zero. The 2026-09-22 re-freeze removed the two that did. This "
-                "says nothing about eligibility: zero eligible tokens are still established."
-            ),
+        "binding_bank": {
+            "id": binding["id"],
+            "one_pass_exposure_cap_tokens": binding["one_pass_exposure_cap_tokens"],
         },
-        "binding_constraint": {
-            "bank": binding["id"],
-            "scope": "binding among banks that have any retained stock",
-            "maximum_total_exposure_tokens": binding[
-                "maximum_one_pass_exposure_from_retained_stock"
-            ],
-            "working_horizon_tokens": plan["main_pretraining"]["target_tokens"],
-            "percent_of_working_horizon": round(
-                100.0
-                * binding["maximum_one_pass_exposure_from_retained_stock"]
-                / plan["main_pretraining"]["target_tokens"],
-                3,
-            ),
-            "meaning": (
-                "At its declared share, this bank's retained stock alone caps a one-pass run at "
-                "this exposure. Every other bank could be complete and the horizon would still "
-                "bind here."
-            ),
-        },
-        "gate_summary": {
-            "sources_tracked": len(gate_status),
-            "sources_not_selected": [source["id"] for source in dropped],
-            "source_use_open": sum(
-                1 for gates in gate_status.values() if gates["source_use"] != "closed"
-            ),
-            "family_partition_open": sum(
-                1 for gates in gate_status.values() if gates["family_partition"] != "closed"
-            ),
-            "finite_supply_open": sum(
-                1 for gates in gate_status.values() if gates["finite_supply"] != "closed"
-            ),
+        "open_gates_over_selected_sources": {
+            gate: sum(1 for source in selected if source["gates"][gate] != "closed")
+            for gate in ("source_use", "family_partition", "finite_supply")
         },
         "boundary": (
-            "Retained stock is not eligible supply: zero eligible tokens are established, so "
-            "every figure here is an upper bound on what the gates could admit, not a promise "
-            "of usable data. Shortfalls assume the declared weights; re-freezing the mixture "
-            "changes them. No source is admitted and no acquisition is authorized."
+            "Retained stock is candidate supply with gates still open, an upper bound on what they "
+            "could admit. Targets assume the parent's starting mixture, which the ladder will "
+            "revise; ladder runs need far fewer tokens than the parent. No source is admitted."
         ),
     }
 
@@ -189,7 +109,7 @@ def main() -> None:
     args = parser.parse_args()
     report = build()
     args.output.write_text(json.dumps(report, indent=2) + "\n")
-    print(json.dumps(report["totals"] | report["binding_constraint"], indent=2, sort_keys=True))
+    print(json.dumps(report["totals"] | {"binding_bank": report["binding_bank"]}, indent=2))
 
 
 if __name__ == "__main__":

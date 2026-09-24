@@ -179,8 +179,7 @@
       "status": "candidate_named_in_plan_manifest_not_bound",
       "evidence": [
         {
-          "path": "experiments/main-data/data-study-packet.json",
-          "field": "candidate_sources.math_and_supporting_banks"
+          "path": "docs/program.md"
         }
       ],
       "boundary": "Keep refined/generated math separate until lineage, teacher/source provenance, independent correctness and finite supply are bound."

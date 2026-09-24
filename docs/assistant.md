@@ -1,13 +1,14 @@
 # Assistant data and serialization
 
-Thinking SFT and conditional verified-reward RL form the post-training part of the
-[data/training program](program.md#training-lifecycle), following pretraining and mid-training.
-The conversation targets below are for SFT. RL needs a separately qualified inventory of task
-prompts, reference answers/tests, verifiers and policy outcomes; it is not counted as SFT rows.
+Thinking SFT and verified-reward RL form the [post-training](program.md#post-training) stage.
+Its experiment families run on the parent and on an external control base; the released assistant
+is the best branch. The conversation inventory below is for SFT. RL needs a separately qualified
+inventory of task prompts, reference answers/tests, verifiers and policy outcomes; it is not counted
+as SFT rows.
 
-The release baseline is an always-thinking assistant focused on agentic coding, general coding,
-mathematical reasoning and tool-mediated tasks. A non-thinking or low/medium/high budget control is
-not a supported release feature yet. It remains a bounded research question: a chat-template flag or
+The assistant is always-thinking, focused on agentic coding, general coding, mathematical reasoning
+and tool-mediated tasks. A non-thinking or low/medium/high budget control is not a supported
+release feature yet. It remains a bounded research question: a chat-template flag or
 token cap is only useful if the model is trained to follow it and retains quality, format and
 long-task behavior. Short tasks may need brief reasoning; difficult tasks may need deeper reasoning
 and multiple tool steps. See the [post-training research synthesis](../experiments/main-data/post-training-research.json)
@@ -60,24 +61,19 @@ and a measured reasoning/output-budget recipe before a release-quality SFT run.
 
 ## Main assistant data direction — 2026-09-19
 
-The working target is **1.5M unique qualified training conversations**, with a **1–2M range**;
-the existing 500K are starting stock, not a final-size constraint. The
-[scale plan](../experiments/main-data/README.md#post-training-scale) targets 600K code reasoning,
-375K math reasoning, 375K agent/tool trajectories and 150K supporting thinking/instruction tasks.
-Assign one primary category per conversation, exclude holdouts and task-family duplicates, and
-choose final training weights from supervised/total-context tokens rather than these row quotas.
-The initial cost model assumes one pass. Inventory lengths do not set the qualified context ceiling
-or the average conversation size.
+The existing 500K conversations are starting stock, not a final size: the S1 family measures how
+quality grows with conversation count. Assign one primary category per conversation (code
+reasoning, math reasoning, agent/tool trajectories, supporting thinking/instruction tasks), exclude
+holdouts and task-family duplicates, and weight by supervised and total-context tokens rather than
+row counts. Inventory lengths do not set the qualified context ceiling or the average conversation
+size.
 
-Context production qualifies 16K/32K within the combined 600-hour capability/context/agentic
-mid-training reservation; 64K/128K is deferred until a later measured revision.
-Longer inventory remains separate from the qualified training ceiling. The 4K rehearsal above is an initial
-engineering phase, not a maximum length policy for future SFT. Preserve complete long reasoning,
-document QA and agent trajectories for extension and later SFT. Keep short interactions represented
-throughout. Do not truncate solutions, detach tool results or delete long examples merely because
-they cannot run in the initial phase. Measure length after our chat/tool serialization, including
-prompt, observations, reasoning and final answer; characterize <=4K, 4–16K, 16–32K, 32–128K and
-over-target records separately. Current validated runtime remains 4K until extension is qualified.
+The 4K rehearsal above is an initial engineering phase, not a length policy for later SFT; 16K and
+32K are qualified in mid-training. Preserve complete long reasoning, document QA and agent
+trajectories, and keep short interactions represented throughout. Do not truncate solutions, detach
+tool results or delete long examples merely because they cannot run at 4K. Measure length after our
+chat/tool serialization, including prompt, observations, reasoning and final answer; characterize
+<=4K, 4–16K, 16–32K, 32–128K and over-target records separately.
 
 The [inventory receipt](../experiments/corpus-audit/recipe-review.json) binds the earlier audit of
 500,000 retained conversations and its upstream build report:
@@ -129,8 +125,7 @@ Prioritize these additions and checks:
 
 1. Prioritize the retained [UltraData-SFT-2605](https://huggingface.co/datasets/openbmb/UltraData-SFT-2605)
    `think` math/code/instruction examples and independently checked reasoning. Balance brief and
-   deep reasoning by task difficulty. The earlier proposal to add `no_think` as a response mode is
-   superseded by the always-thinking assistant contract. Such sources may supply candidate tasks
+   deep reasoning by task difficulty. Non-thinking sources may supply candidate tasks
    or reference answers, but need separately generated/verified reasoning before reasoning-SFT
    admission. Do not fabricate a rationale or insert an empty thinking block to relabel a record.
 2. Inspect selected [SmolTalk2](https://huggingface.co/datasets/HuggingFaceTB/smoltalk2) SFT
@@ -154,8 +149,8 @@ Prioritize these additions and checks:
 The first main SFT recipe should prioritize code/math reasoning and complete agent/tool trajectories,
 with supporting general tasks following the same thinking protocol. Balance brief/deep reasoning
 by supervised tokens, while accounting for total context cost, final-answer tokens and length coverage.
-Freeze quantities after the content audit. The [main data work order](data.md#recipe-direction--2026-09-19)
-keeps one bounded comparison at a time and protects independent development/final evaluations.
+Freeze quantities after the content audit, and fix each comparison's arms in its
+[predeclared record](program.md#method) before it runs.
 
 ## Reward-data preparation
 
@@ -181,12 +176,3 @@ The [post-training audit protocol](../experiments/main-data/post-training-audit-
 the bounded review order: structural SFT audit, stratified independent outcome checks, tool-trajectory
 validation, reasoning-mode measurement, then fixed-policy verifier feasibility. It keeps query-only
 prompts separate from successful assistant trajectories and does not authorize SFT or RL.
-
-## Stage and budget ownership
-
-The [program overview](program.md#thinking-sft) connects this data/format contract to length-bucketed
-SFT and conditional reward training. Proposed subdivisions are 450 GPU-hours SFT, 200 conditional
-RL, 100 final self-SFT and 50 on-allocation teacher/verification work within the existing 800-hour
-post-training envelope. These are planning bounds, not measured costs. RL and long-context runtime
-remain unqualified; retain the SFT thinking assistant if reward training does not justify its cost
-or causes regressions.
