@@ -5,7 +5,7 @@ import json
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from speck.data.code_families import partition_code_families
+from speck.data.code_families import partition_code_families, repository_key
 from speck.data.joint_graph import _bound_json, _Families
 from speck.provenance.io import file_sha256
 
@@ -42,6 +42,23 @@ def write_partitions(plan, sources, edges, output, *, firewall_matches=()):
     for first, second, _, _ in edges:
         families.union(first, second)
     holds = defaultdict(set)
+    # A source that names each document's repository joins it to that repository's family, in
+    # the same namespace as the code cohort, so a held repository holds every file from it.
+    for source in sources:
+        field = source.get("repository_field")
+        if not field:
+            continue
+        with source["text"].open() as handle:
+            for line in handle:
+                row = json.loads(line)
+                node = (source["id"], row["released_content_sha256"])
+                families.find(node)
+                try:
+                    repository = repository_key(row.get(field))
+                except ValueError:
+                    holds[node].add("unresolved_origin_or_parent")
+                    continue
+                families.union(node, ("@repository", repository))
     for match in firewall_matches:
         holds[("code_cohort", match["content_sha256"])].add("firewall_reference_overlap")
     code_rows = {}
@@ -133,5 +150,5 @@ def write_partitions(plan, sources, edges, output, *, firewall_matches=()):
         "rule": rule,
         "documents": {key: dict(value) for key, value in sorted(counts.items())},
         "tokens": {key: dict(value) for key, value in sorted(tokens.items())},
-        "boundary": "Candidate inventory only. Code coverage is the pinned review cohort, not the full retained code stock. All other eligibility gates remain required.",
+        "boundary": "Candidate inventory only. All other eligibility gates remain required.",
     }

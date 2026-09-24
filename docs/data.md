@@ -55,7 +55,8 @@ supervised tokens and exposure separate.
 | Source readers, configuration, packing, resume | `speck/data/{acquisition,configuration,packing,dataset}.py` |
 | Global disk-backed deduplication | `scripts.production_data_preprocess` (batched MinHash is the default; `--per-shingle-minhash` is a slower bitwise-identical fallback; `--index-directory` builds the index on local flash) |
 | Secret filtering, near duplicates, contamination | `scripts.text_gitleaks_filter`, `text_near_duplicates`, `text_contamination` |
-| Cross-source family graph and partitions | `scripts.joint_family_graph` |
+| Cross-source family graph and partitions | `scripts.joint_family_graph` (a source with a `repository_field` joins each document to its repository's family) |
+| Ladder corpora from preprocessed sources and family buckets | `scripts.ladder_prepare` |
 | Source-use review | `scripts.source_rights_review` (validates a pending human template; never makes an approval decision) |
 | Checked retained-stock tokenization | `scripts.tokenize_stock` |
 | Distributed loading | `speck/data/loader.py` |

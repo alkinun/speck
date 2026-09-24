@@ -732,6 +732,35 @@ def test_full_preferred_split_discards_instead_of_rerouting(tmp_path, monkeypatc
     assert discarded not in {record["content_hash"] for record in records}
 
 
+def test_a_document_split_overrides_the_content_hash(tmp_path, monkeypatch):
+    """Family-aware callers assign validation themselves; the hash rule must not move it."""
+    monkeypatch.setattr(dataset, "_is_validation_document", lambda content, seed, fraction: True)
+    values = [
+        {"content": "family-a-" + "a" * 30, "split": "train"},
+        {"content": "family-b-" + "b" * 30, "split": "val"},
+    ]
+    path = tmp_path / "families"
+    manifest = dataset.prepare_dataset(
+        **single_source_settings(train_tokens=20, validation_tokens=20),
+        output_dir=path,
+        tokenizer=FakeTokenizer(),
+        check_disk=False,
+        document_iterators={"a": values},
+    )
+    index = path / manifest["sources"][0]["document_index"]["path"]
+    records = [json.loads(line) for line in index.read_text(encoding="utf-8").splitlines()]
+    assert [record["split"] for record in records] == ["train", "val"]
+
+    with pytest.raises(ValueError, match="unknown document split"):
+        dataset.prepare_dataset(
+            **single_source_settings(train_tokens=20, validation_tokens=20),
+            output_dir=tmp_path / "invalid",
+            tokenizer=FakeTokenizer(),
+            check_disk=False,
+            document_iterators={"a": [{"content": "x" * 30, "split": "final"}]},
+        )
+
+
 def test_tokenizer_batches_are_bounded_by_documents_and_characters(tmp_path, monkeypatch):
     monkeypatch.setattr(
         dataset,

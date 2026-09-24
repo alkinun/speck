@@ -109,6 +109,8 @@ def _resolve(plan, verify_inputs):
                 "database": database,
                 "input": definition,
                 "documents": documents,
+                "text": manifest_path.parent / output["path"],
+                "repository_field": source.get("repository_field"),
                 "references": [
                     row
                     for row in manifest["sources"]
