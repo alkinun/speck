@@ -30,6 +30,7 @@ from speck.data.validation import (
 )
 from speck.provenance.io import durable_json as _write_json
 from speck.provenance.io import file_sha256 as _sha256
+from speck.provenance.io import fsync_path
 
 FORMAT = "speck_production_text_preprocess"
 FORMAT_VERSION = 1
@@ -502,7 +503,13 @@ def accepted_document_chain(rows):
 
 
 def preprocess_sources(
-    config, *, restart=False, crash_after_records=None, timing=None, batched_minhash=True
+    config,
+    *,
+    restart=False,
+    crash_after_records=None,
+    timing=None,
+    batched_minhash=True,
+    index_directory=None,
 ):
     """Run or resume the disk-backed global exact/near deduplication pass.
 
@@ -513,6 +520,11 @@ def preprocess_sources(
     per shingle, which on real web documents means roughly 830 separate 128-wide
     permutations each and measured 5.69x slower end to end. It is retained only as a
     differential-debugging escape hatch.
+
+    ``index_directory`` builds the SQLite near-duplicate index there instead of in the
+    staging directory and moves it into staging before publication. Its random, synced
+    writes stall shingled (SMR) disks; local flash avoids that. The published output is
+    identical, and a resume must name the same directory.
     """
 
     signature_fn = _batched_signature if batched_minhash else _signature
@@ -532,8 +544,15 @@ def preprocess_sources(
         clock.finish("reopened")
         return result
     staging = output.with_name(output.name + ".building")
+    database = (
+        Path(index_directory) / f"{output.name}.near_duplicates.sqlite3"
+        if index_directory is not None
+        else staging / "near_duplicates.sqlite3"
+    )
     if staging.exists() and restart:
         shutil.rmtree(staging)
+        for leftover in database.parent.glob(database.name + "*"):
+            leftover.unlink()
     staging.mkdir(parents=True, exist_ok=True)
     clock.phase("input_verification")
     for item in config["cleanup_files"]:
@@ -594,9 +613,9 @@ def preprocess_sources(
         "removal output",
     )
     connection = (
-        _database(staging / "near_duplicates.sqlite3", sqlite_settings=config["sqlite"])
+        _database(database, sqlite_settings=config["sqlite"])
         if config["format_version"] == 2
-        else _database(staging / "near_duplicates.sqlite3")
+        else _database(database)
     )
     actual_sqlite = sqlite_runtime(connection) if config["format_version"] == 2 else None
     if actual_sqlite is not None:
@@ -813,6 +832,9 @@ def preprocess_sources(
         for index, source in enumerate(config["sources"])
     }
     index_path = staging / "near_duplicates.sqlite3"
+    if database != index_path:
+        shutil.move(database, index_path)
+        fsync_path(index_path)
     manifest = {
         "format": MANIFEST_FORMAT,
         "format_version": config["format_version"],

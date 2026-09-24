@@ -46,7 +46,7 @@ from audit_stack_edu_metadata import POLICY, file_mask  # noqa: E402
 
 from speck.data.sources.stack_v3_refine import _english_prose_result  # noqa: E402
 from speck.evaluation.protocol import BenchmarkExclusion  # noqa: E402
-from speck.provenance.io import atomic_json, file_sha256  # noqa: E402
+from speck.provenance.io import atomic_json, file_sha256, fsync_path  # noqa: E402
 from speck.tokenization.tokenizer import Tokenizer  # noqa: E402
 
 SEED = "speck-stack-edu-yield-v1"
@@ -337,6 +337,8 @@ def acquire(listing_path, census_path, language, name, output, workers=128):
                         continue
                     tokens += count
                     handle.write(json.dumps(row | {"text": text, "tokens": count}) + "\n")
+            # The manifest marks the unit complete, so its records must be on disk first.
+            fsync_path(records)
             atomic_json(
                 manifest,
                 {
@@ -349,6 +351,7 @@ def acquire(listing_path, census_path, language, name, output, workers=128):
                     "records": identity(records),
                     "seconds": time.perf_counter() - started,
                 },
+                fsync=True,
             )
             print(f"{directory.name} unit {start // UNIT_ROWS} tokens {tokens:,}", flush=True)
         units.append(json.loads(manifest.read_text()))

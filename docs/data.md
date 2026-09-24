@@ -51,7 +51,7 @@ is not an approved way to fill a supply gap. Include complete assistant examples
 | Responsibility | Code / command |
 | --- | --- |
 | Source readers, configuration, packing, resume | `speck/data/{acquisition,configuration,packing,dataset}.py` |
-| Global disk-backed deduplication | `scripts.production_data_preprocess` (batched MinHash is the default; `--per-shingle-minhash` is a slower bitwise-identical fallback) |
+| Global disk-backed deduplication | `scripts.production_data_preprocess` (batched MinHash is the default; `--per-shingle-minhash` is a slower bitwise-identical fallback; `--index-directory` builds the index on local flash) |
 | Secret filtering, near duplicates, contamination | `scripts.text_gitleaks_filter`, `text_near_duplicates`, `text_contamination` |
 | Cross-source family graph and partitions | `scripts.joint_family_graph` |
 | Source-use review | `scripts.source_rights_review` (validates a pending human template; never makes an approval decision) |
@@ -221,3 +221,12 @@ Keep source revisions, filters, counts, hashes, tokenizer identity, data order a
 in each run's manifests. Keep runtime data/checkpoints/logs outside Git, and back up irreplaceable
 checkpoints before dependent work. Preserve failed attempts. Corpus text and packed shards are not
 redistributed as model-release artifacts.
+
+Match storage to the access pattern. Bulk corpora and outputs are large sequential writes and suit
+a large disk; the SQLite deduplication index, many small unit files and scanner scratch are random,
+synced writes and belong on local flash. On 2026-09-24 the workstation's shingled (SMR) data disk
+stalled for over 30 seconds under several such writers at once, the kernel timed the commands out,
+and ext4 remounted read-only; the drive itself reported no media errors. Run one heavy writer per
+spinning disk, raise its command timeout, and publish receipts only after their data is on disk:
+fsync a unit's records before the manifest that marks it complete. Two unit manifests published
+without that fsync were found empty after the crash and were refetched.
