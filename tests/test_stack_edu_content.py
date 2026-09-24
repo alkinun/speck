@@ -1,8 +1,11 @@
 """The restored Stack-Edu screen must reject in the retained acquisition's order."""
 
+import gzip
 import hashlib
 import importlib.util
+import io
 import json
+import tarfile
 from pathlib import Path
 
 import pyarrow as pa
@@ -123,3 +126,68 @@ def test_acquire_skips_retained_rows_and_resumes(tmp_path, monkeypatch):
     summary = json.loads((tmp_path / "acquisition.json").read_text())
     assert [t["tier"] for t in summary["tranches"]] == ["4+"]
     assert summary["tokens_before_full_exclusion"] == 21
+
+
+def test_convert_joins_retained_and_acquired_records_and_rejects_changes(tmp_path):
+    retained_row = {
+        "text": "print(1)\n",
+        "content_id": "a" * 40,
+        "repo_path": "owner/one",
+        "file_path": "/a.py",
+        "language": "Python",
+        "source_file": "Python/0.parquet",
+        "source_row": "3",
+    }
+    data = (json.dumps(retained_row) + "\n").encode()
+    tar_path = tmp_path / "unit.tar"
+    with tarfile.open(tar_path, "w") as archive:
+        member = tarfile.TarInfo("unit/attempt-00000/records.jsonl")
+        member.size = len(data)
+        archive.addfile(member, io.BytesIO(data))
+    retained = tmp_path / "acquisition.json"
+    unit = {
+        "archive": {"tar": {"path": str(tar_path), "sha256": content.file_sha256(tar_path)}},
+        "manifest": {
+            "output": {
+                "path": "attempt-00000/records.jsonl",
+                "sha256": hashlib.sha256(data).hexdigest(),
+            }
+        },
+    }
+    retained.write_text(json.dumps({"units": [unit]}))
+    tranche = tmp_path / "out/Python-3"
+    tranche.mkdir(parents=True)
+    records = tranche / "unit-00000.jsonl.gz"
+    acquired_row = {
+        "text": "print(2)\n",
+        "blob_id": "b" * 40,
+        "repo_name": "owner/two",
+        "path": "/b.py",
+        "language": "Python",
+        "file": "Python/1.parquet",
+        "source_row": 7,
+    }
+    with gzip.open(records, "wt") as handle:
+        handle.write(json.dumps(acquired_row) + "\n")
+    manifest = {"records": {"path": str(records), "sha256": content.file_sha256(records)}}
+    (tranche / "unit-00000.json").write_text(json.dumps(manifest))
+    (tranche / "tranche.json").write_text(json.dumps({"units": 1}))
+    base = tmp_path / "base.json"
+    base.write_text(json.dumps({"sources": [{"id": "firewall_reference__code_unseen"}]}))
+    content.convert(retained, tmp_path / "out", base, tmp_path / "converted")
+    rows = [
+        json.loads(line) for line in (tmp_path / "converted/input.jsonl").read_text().splitlines()
+    ]
+    assert [(r["origin"], r["repository"], r["source_row"]) for r in rows] == [
+        ("retained", "owner/one", 3),
+        ("acquired", "owner/two", 7),
+    ]
+    assert rows[1]["released_content_sha256"] == hashlib.sha256(b"print(2)\n").hexdigest()
+    plan = json.loads((tmp_path / "converted/preprocess-plan.json").read_text())
+    assert [s["id"] for s in plan["sources"]] == [
+        "firewall_reference__code_unseen",
+        "acquired_train__code",
+    ]
+    records.write_bytes(gzip.compress(b"{}\n"))
+    with pytest.raises(ValueError, match="acquired records changed"):
+        content.convert(retained, tmp_path / "out", base, tmp_path / "again")
