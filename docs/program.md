@@ -1,11 +1,30 @@
 # SpeckLabs first program: execution overview
 
-2026-09-23. SpeckLabs' first model and paper center on the data pipeline across all six training
-stages: our own pretrained base and an always-thinking assistant for
-agentic coding, normal coding, math and tools. This document explains the program; [PLAN.md](../PLAN.md) records
-current status and work order. The [numeric plan](../experiments/main-data/plan.json) owns working
-quantities, while experiment configs and verified receipts own actual execution and measurements.
-No GPU run starts from this document.
+2026-09-24. This document explains the program; [PLAN.md](../PLAN.md) records current status and
+work order. The [numeric plan](../experiments/main-data/plan.json) owns working quantities, while
+experiment configs and verified receipts own actual execution and measurements. No GPU run starts
+from this document.
+
+## Goal: the data step
+
+SpeckLabs scales in steps, each much larger than the last, and each step carries forward what the
+previous one measured. This first step targets data. Its product is a set of **measured, reusable
+findings about the data pipeline of each of the six training stages**: which sources, filters,
+mixtures, schedules and derived data help, by how much, at what preparation cost, and what did not
+work. A strong 1.2B model is welcome but is not the objective; we train one because downstream-stage
+experiments need real parent checkpoints and because the pipeline must run end to end.
+
+A finding is only useful to the next step if it can be carried to a larger run. Each one therefore
+records:
+
+- the stage, the contrast and the controls, with negative and inconclusive results kept;
+- the rule in reusable form (a filter, threshold, weight or schedule), not just the chosen dataset;
+- the preparation pipeline and cost per accepted token, so it can be rerun on more data;
+- the scale at which it was measured, and whether it held across the scales we could afford;
+- the limits that stop it transferring, such as supply, licence or the fixed backbone.
+
+Rigel's six-phase recipe shows why this matters: it publishes the mixture of each phase, but no
+experiment attributes any gain to a phase or source, so none of it can be scaled with confidence.
 
 ## Decisions and open questions
 

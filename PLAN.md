@@ -5,9 +5,11 @@ Updated 2026-09-23. This is the status and the one work order for the first prog
 [plan.json](experiments/main-data/plan.json) owns the numbers; experiment configurations and
 verified receipts own actual run settings and results. Update these in place; history stays in Git.
 
-The deliverable is an open data pipeline covering all six training stages, and a 1.2B model that
-proves it end to end. The backbone is fixed by declaration, so no architecture claim is available
-on this allocation. 5,000 GH200 GPU-hours are confirmed; access timing and GH200 throughput are not.
+This release is SpeckLabs' first scaling step, and it targets data: the deliverable is
+[measured, transferable findings](docs/program.md#goal-the-data-step) about the data pipeline of
+every training stage, carried into much larger later releases. The 1.2B model provides the parent
+checkpoints those experiments need and proves the pipeline end to end; it is not the objective. The
+backbone is fixed by declaration, so no architecture claim is available on this allocation. 5,000 GH200 GPU-hours are confirmed; access timing and GH200 throughput are not.
 
 ## The binding constraint is supply, not compute
 
