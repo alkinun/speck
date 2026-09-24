@@ -1,12 +1,12 @@
 {
   "format": "speck_data_study_source_readiness",
   "format_version": 1,
-  "date": "2026-09-23",
+  "date": "2026-09-24",
   "status": "candidate_evidence_only_no_training_admission",
-  "purpose": "Bind retained source evidence to the first pretraining data-study packet without treating inventory, format compatibility or overlap counts as eligibility.",
+  "purpose": "Record, per candidate source, its identity, inventory, gates and blockers without treating inventory, format compatibility or overlap counts as eligibility.",
   "source_of_truth": {
-    "data_study_packet": {
-      "path": "experiments/main-data/data-study-packet.json"
+    "program_design": {
+      "path": "docs/program.md"
     },
     "data_readiness": {
       "path": "experiments/corpus-audit/data-readiness.json"
@@ -447,8 +447,7 @@
       },
       "evidence": [
         {
-          "path": "experiments/main-data/data-study-packet.json",
-          "field": "candidate_sources.checked_code"
+          "path": "docs/program.md"
         },
         {
           "path": "experiments/corpus-audit/code-provenance.json",
@@ -998,58 +997,7 @@
       }
     }
   ],
-  "arm_readiness": {
-    "baseline": {
-      "status": "blocked",
-      "reason": "No complete baseline union has all source-use, family, correctness and finite-supply gates closed."
-    },
-    "code_bank_candidate": {
-      "status": "blocked",
-      "reason": "Neither natural-code route has an eligible supply manifest; checked-code substitution has no qualified supply."
-    },
-    "web_bank_candidate": {
-      "status": "blocked",
-      "reason": "HQ/control overlap is measured, but source-use, family, eligible-supply and runtime gates remain open."
-    }
-  },
-  "launch_boundary": "This matrix records evidence and blockers only. It does not authorize acquisition, corpus execution, training, source substitution, repetition or a production mixture. A launch requires a revised packet with admitted manifests, rights/notice records, disjoint evaluation families, measured cost and a clean launch receipt.",
-  "horizon_accounting": {
-    "working_target": {
-      "total_exposure_tokens": 80000000000,
-      "preparation_factor": 1.25,
-      "minimum_unique_preparation_tokens": 100000000000,
-      "status": "working_target_not_qualified_horizon"
-    },
-    "observed_union": {
-      "retained_non_code_exact_unique_documents": 5661264,
-      "retained_non_code_exact_unique_tokens": 7058353273,
-      "retained_code_documents": 714369,
-      "retained_code_tokens_with_bos_eos": 476774847,
-      "eligible_tokens_established": 0,
-      "status": "retained_inventory_only"
-    },
-    "one_pass_constraints": [
-      {
-        "source": "stack_edu_combined_retained_code",
-        "declared_share_percent": 35,
-        "numerator_tokens": 476774847,
-        "maximum_total_exposure_tokens_before_exclusions": 1362213848,
-        "calculation": "floor(476774847 / 0.35)",
-        "constraint": "Natural-code stock is combined retained evidence, not eligible supply; the bound excludes all unresolved gates.",
-        "bank": "natural_code"
-      },
-      {
-        "source": "ultrafineweb_hq_distinct_from_retained_fineweb_edu",
-        "declared_share_percent": 25,
-        "numerator_tokens": 351237925,
-        "maximum_total_exposure_tokens_before_exclusions": 1404951700,
-        "calculation": "floor(351237925 / 0.25)",
-        "constraint": "HQ distinct-token accounting is a candidate overlap bound; it does not close source-use, family, quality or runtime gates.",
-        "bank": "selected_web"
-      }
-    ],
-    "decision_boundary": "Do not freeze a common comparison horizon or claim 100B supply from these counts. Use the minimum measured eligible bank after exclusions, family partition, correctness review and GH200 cost; revise the target explicitly if it is smaller."
-  },
+  "launch_boundary": "This matrix records evidence and blockers only. It does not authorize acquisition, corpus execution, training, source substitution, repetition or a mixture. A run trains only on data whose gates the matrix records as closed.",
   "source_use_decision": {
     "decided": "2026-09-22",
     "acceptance_record": {

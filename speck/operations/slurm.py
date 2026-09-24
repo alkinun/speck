@@ -15,8 +15,8 @@ FORMAT = "speck_slurm_wave"
 FORMAT_VERSION = 1
 PLAN_FORMAT = "speck_flagship_execution_plan"
 TOTAL_GPU_HOURS = 5_000
-MANDATORY_GPU_HOURS = 4_550
-RESERVE_GPU_HOURS = 450
+MANDATORY_GPU_HOURS = 4_420
+RESERVE_GPU_HOURS = 580
 REQUEUE_EXIT_CODE = 99
 
 _SHA256 = re.compile(r"[0-9a-f]{64}")
@@ -89,7 +89,9 @@ def _check_plan(plan):
         "reserve_gpu_hours": RESERVE_GPU_HOURS,
         "full_node_days": plan.get("budget", {}).get("full_node_days"),
     }:
-        raise ValueError("execution plan does not preserve the 4,550 + 450 GPU-hour budget")
+        raise ValueError(
+            "execution plan does not preserve the scheduled and reserve GPU-hour budget"
+        )
     phases = plan.get("phases")
     if not isinstance(phases, list):
         raise ValueError("execution plan phases are missing")
@@ -247,7 +249,7 @@ def load_wave(path):
         "mandatory_gpu_hours": MANDATORY_GPU_HOURS,
         "reserve_gpu_hours": RESERVE_GPU_HOURS,
     }:
-        raise ValueError("wave budget must preserve protected 4,550 + 450 accounting")
+        raise ValueError("wave budget must preserve the scheduled and reserve accounting")
     plan_identity = _identity(raw["plan"], source.parent, "execution plan")
     plan_path = Path(plan_identity["path"])
     if not plan_path.is_file() or sha256_file(plan_path) != plan_identity["sha256"]:

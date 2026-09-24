@@ -1,9 +1,9 @@
 # Performance and optimization plan
 
-The fixed 1.2B KDA/GQA reference needs a measured flagship speedup before we revise its costs.
-[The rental runbook](throughput-rental.md) owns the H100 procedure; [GH200 qualification](compute-qualification.md)
-owns production hardware and distributed checks. The JSON packets own run settings. This document
-owns measurement definitions and the optimization priorities, not another copy of those procedures.
+The fixed 1.2B KDA/GQA reference is the [program's parent](program.md#model); its costs are
+revised only from a measured speedup. [The rental runbook](throughput-rental.md) owns the H100
+procedure; [GH200 qualification](compute-qualification.md) owns grant hardware, per-rung rates and
+distributed checks. The JSON packets own run settings. This document owns measurement definitions and the optimization priorities, not another copy of those procedures.
 
 ## Evidence and limits
 
@@ -11,8 +11,8 @@ The [3090 sweep](../experiments/qualification/throughput-3090/sweep.json) measur
 318M proxy, from 8,592 to 17,906 tokens/s. Its endpoint also changed tokens per update from 32,768
 to 36,864, so the headline includes a change in optimizer amortization as well as implementation
 and microbatch changes. The only 1.2B point in that sweep was eager and checkpointed: 3,274 tokens/s.
-The optimized flagship did not fit the 24 GiB card. The proxy's 52.2% estimated MFU establishes
-neither a flagship ceiling nor a transferable speedup.
+The optimized 1.2B model did not fit the 24 GiB card. The proxy's 52.2% estimated MFU establishes
+neither a 1.2B ceiling nor a transferable speedup.
 
 The [H100 pilot](../experiments/pilot/h100-run.json) measured 13,595 steady optimizer tokens/s and
 12,859 full-trainer tokens/s. With the current 7.513 GFLOP/token estimate and the packet's 989.5
@@ -28,7 +28,7 @@ trace for overlap, idle time and classification errors before attributing a bott
 receipts remain unchanged.
 
 The [local compiled recovery screen](../experiments/qualification/compiled-recovery-3090.json)
-failed on the 318M proxy: both production-trainer processes completed, but 286 of 321 saved model
+failed on the 318M proxy: both full-trainer processes completed, but 286 of 321 saved model
 tensors exceeded the existing restart tolerance. Loader/RNG state and counters matched exactly.
 One cause is a cache change between eager FLA warmup and lazy Inductor initialization: identical
 KDA inputs selected different cached kernels. Runtime setup now fixes the Triton cache before
@@ -39,7 +39,7 @@ configurations in every process. With fixed weights and batch, each process was 
 repeatable, but two fresh processes disagreed. Eager, plain compile and `max_autotune` alone agreed
 bitwise across processes, even from independent cold Inductor caches. Coordinate descent alone
 did not. Every compiled training path now uses the shared `COMPILE_OPTIONS`, which exclude it. The
-production replay then passed at the unchanged tolerance, including optimizer state. Paired proxy
+training replay then passed at the unchanged tolerance, including optimizer state. Paired proxy
 repeats measured the change at about 0.5% slower. The sweep's 2.084x includes coordinate descent,
 so it slightly overstates the current recipe. A [compiled SFT replay](../experiments/qualification/compiled-sft-recovery-3090.json)
 on the 1.2B reference, with checkpointing on, also passed. Each result is one Ampere worker; Hopper
@@ -57,7 +57,7 @@ and four-worker compiled DDP remain unqualified.
 The loader-inclusive benchmark **does not measure the full-trainer derate**. The pilot's
 full-trainer/steady ratio, 0.9459, is an interim assumption, not a conservative bound. Faster steps
 can increase the fraction spent saving and validating. Replace it using a sustained trainer run
-with the selected recipe, production cadence and an explicit startup/restart boundary. Single-GPU
+with the selected recipe, real checkpoint cadence and an explicit startup/restart boundary. Single-GPU
 rates also need measured four-worker scaling before they can cost the allocation.
 
 Estimated MFU = tokens/s × model FLOPs/token / declared dense BF16 peak FLOPs/s. The current model
@@ -80,8 +80,8 @@ training work and compilation; it is not pure compile time.
 2. **Compare compilation at the same geometry.** Keep Liger and deterministic execution as the
    candidates selected by the proxy. Measure both compiled forward/backward and optimizer cost;
    the current compile toggle changes both. The benchmark calls the same loss path as the
-   production trainer; preflight checks every run.
-3. **Follow the flagship trace.** Investigate KDA graph boundaries if host gaps dominate; investigate
+   real trainer; preflight checks every run.
+3. **Follow the 1.2B trace.** Investigate KDA graph boundaries if host gaps dominate; investigate
    normalization, gates, weight casts and layout copies if those dominate. Batched Muon already
    groups matrices and compiles its update; optimize it only when its measured time or memory
    cost warrants it. Removing unused recurrent final-state outputs is another bounded candidate.
@@ -101,6 +101,6 @@ checkpointing, compile settings, median across run rates and range, speedup deno
 MFU/peak convention, memory peaks and warmup time. Keep loader-inclusive and full-trainer rates
 separate. Attach the selected trace and parity/restart results. Mark unmeasured cells as unmeasured.
 
-Use the [numeric plan](../experiments/main-data/plan.json)'s existing surplus/shortfall rules only
-once GH200 costs and distributed overhead are measured. The H100 rental supplies implementation
-evidence; it does not increase the 80B working horizon or establish architecture superiority.
+Apply the [numeric plan](../experiments/main-data/plan.json)'s `compute.rules` only once GH200
+costs and distributed overhead are measured. The H100 rental supplies implementation evidence; it
+does not lengthen the parent run or establish architecture superiority.

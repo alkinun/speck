@@ -1,11 +1,11 @@
 # Data
 
-This document owns the data methods for the 5,000 GPU-hour program: the shared pipeline, where
-natural, derived and synthetic records may enter, counting rules and the code route. The
-[program overview](program.md) owns stage boundaries and budgets, [PLAN.md](../PLAN.md) the work
-order, the [source-readiness matrix](../experiments/main-data/source-readiness.json) per-source
-gates, and the [main data plan](../experiments/main-data/README.md#base-mixture) the mixture.
-No document here authorizes a training run.
+This document owns the data methods: the shared pipeline, where natural, derived and synthetic
+records may enter, counting rules and the code route. The [program design](program.md) owns the
+stages, experiments and budget, [PLAN.md](../PLAN.md) the work order, the
+[source-readiness matrix](../experiments/main-data/source-readiness.json) per-source gates, and the
+[main data plan](../experiments/main-data/README.md#base-mixture) the mixture. No document here
+authorizes a training run.
 
 ## Pipeline
 
@@ -30,9 +30,9 @@ AI-assisted filtering may recommend keep/remove decisions, but pretraining retai
 source and records the model, prompt, version and decision. Generated text is a derived record and
 must never be indistinguishable from source text in a manifest.
 
-**Where derived text may enter.** The broad production pretraining mixture is natural and
-source-traceable. Late pretraining decay is the *only* initial pretraining experiment that can admit
-derived text, and it must stay separately identified by lineage, teacher/generator, verification
+**Where derived text may enter.** The parent's starting mixture is natural and source-traceable.
+Pretraining admits derived text only as a declared experiment arm (P6 synthetic share on the ladder,
+D1 decay data on the parent), separately identified by lineage, teacher/generator, verification
 result and cost. Synthetic material is most acceptable in post-training, where it is generated
 inside pinned, testable environments or used for self-distillation; it remains separately attributed
 and earns its place on held-out transfer, not training reward. Derived data never compensates for
@@ -45,8 +45,10 @@ reproducible checksums, measured throughput, a retry/recovery policy and a decla
 **Counting.** Keep raw stock, accepted unique tokens, exposure/replay and rejected material as
 separate counts, and count accepted tokens only after family, overlap and extraction review.
 Candidate flags stay review-only until a rule is adopted. Count overlapping banks once. Repetition
-is not an approved way to fill a supply gap. Include complete assistant examples in each length band
-(<=4K, 4–16K, 16–32K and 32–128K), and keep training stock, supervised tokens and exposure separate.
+is never silent: every repeated pass is declared and counted as exposure, and how much a scarce bank
+tolerates is measured by [P4](program.md#pretraining-the-ladder). Include complete assistant
+examples in each length band (<=4K, 4–16K, 16–32K and 32–128K), and keep training stock,
+supervised tokens and exposure separate.
 
 | Responsibility | Code / command |
 | --- | --- |
@@ -83,9 +85,8 @@ validation separation before reuse.
 
 At uint16 storage, each billion packed tokens requires about 2 GB for token IDs, before indexes,
 validation, preparation intermediates and duplicate databases. Budget raw acquisition, exclusion
-outputs, packed data and recovery checkpoints separately. Choose the main horizon from measured
-all-in throughput and eligible supply, then run the same joint-exclusion, partition, pack and
-full-loader checks at that scale.
+outputs, packed data and recovery checkpoints separately. Run the same joint-exclusion, partition,
+pack and full-loader checks at the parent's scale as on the ladder.
 
 ## Acquiring candidate stock
 
@@ -127,9 +128,9 @@ finishes. A 4,096-row unit takes about one minute at the default 128 fetch worke
 
 ## Recipe direction — 2026-09-19
 
-The flagship target is always-thinking agentic coding, general coding, math reasoning and tool
+The capability target is always-thinking agentic coding, general coding, math reasoning and tool
 use. High-quality code and reasoning must be present during pretraining, not deferred entirely to
-SFT. Prioritize these forms in the main corpus:
+SFT. Prioritize these forms in the parent corpus:
 
 - Natural implementation code with useful tests, documentation, API usage and project context;
   preserve Python and other target languages, including JavaScript/TypeScript.
@@ -155,7 +156,7 @@ Web and math review rules carried from the audits in the
   predicate; configuration labels (FineMath 4+, InfiWebMath 3+) are not equivalent continuous-score
   thresholds.
 - High-scoring pages can still carry extraction defects; review flags stay separate from the
-  production filter until validated against archived captures.
+  adopted filter until validated against archived captures.
 - Arithmetic or answer-consistency parsers are triage, not correctness certificates; symbolic,
   unit-bearing and multi-line reasoning need independent checks.
 - Exact normalized benchmark matches are a floor, not a contamination clearance; derived variants
@@ -211,17 +212,15 @@ mismatch. Related originals, forks, rewrites, patches and exercises belong to th
 exclusion/partition family. A clean bounded screen or a publisher licence label alone authorizes
 nothing; notice text governs, not a scanner label.
 
-**Supply position.** Natural code is the bank where the whole horizon binds; the
-[supply gap](../experiments/main-data/supply-gap.json) owns the figures. The
-[qualification packet](../experiments/main-data/QUALIFICATION.md) owns cohort holds and origin/notice
-recovery.
+**Supply position.** The [supply gap](../experiments/main-data/supply-gap.json) owns the per-bank
+figures and [PLAN.md](../PLAN.md#supply) the current position. The
+[qualification record](../experiments/main-data/QUALIFICATION.md) owns cohort holds and
+origin/notice recovery.
 
-**First comparison to prepare.** The
-[research design](../experiments/main-data/README.md#research-before-the-main-run) owns the
-screening/confirmation matrix. The code candidate is the natural-source contrast (Stack-Edu versus
-Stack v3). Keep total code share, non-intervened language coverage, non-code banks and
-serialization fixed. Checked code is not a declared bank, so do not add it back as an extra arm or
-fill a code quota by repeating a tiny bank.
+**First comparison to prepare.** The code contrast is P5 source choice on the
+[ladder](program.md#pretraining-the-ladder): Stack-Edu versus Stack v3. Keep total code share,
+non-intervened language coverage, non-code banks and serialization fixed. Checked code is not a
+declared bank, so do not add it back as an extra arm.
 
 **Evidence for a coding claim.** Keep the pilot's compiled HumanEval+ metric as a continuity check;
 33 development tasks cannot establish broad coding strength. Prepare a separate pinned protocol

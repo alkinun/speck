@@ -1,4 +1,4 @@
-"""Planning checks must reject drift even when the overall allocation still balances."""
+"""The plan check must reject drift between plan.json, the ladder configurations and the tables."""
 
 import importlib.util
 import json
@@ -16,108 +16,61 @@ SPEC.loader.exec_module(checker)
 
 @pytest.fixture
 def plan():
-    data = json.loads((ROOT / "experiments/main-data/plan.json").read_text())
-    # Unit tests exercise budgeting independently of the retained evidence tree.
-    # Dedicated tests below provide their own missing-file cases.
-    data["input_receipts"] = []
-    return data
+    return json.loads((ROOT / "experiments/main-data/plan.json").read_text())
 
 
-def validate_plan(tmp_path, plan):
+def validate(tmp_path, plan):
     path = tmp_path / "plan.json"
     path.write_text(json.dumps(plan))
     return checker.validate(path)
 
 
-def test_current_design_remains_non_authorizing(tmp_path, plan):
-    result = validate_plan(tmp_path, plan)
-    assert result["reservation_gpu_hours"] == 5000
+def test_the_committed_plan_is_consistent():
+    result = checker.validate()
+    assert result["total_gpu_hours"] == 5000
     assert result["training_authority"] is False
 
 
-def test_balanced_but_conflicting_research_components_rejected(tmp_path, plan):
-    budget = plan["compute"]["proposed_research_breakdown_gpu_hours"]["pretraining"]
-    budget["confirmation_training"] += 30
-    budget["preparation_evaluation_recovery"] -= 30
-    with pytest.raises(ValueError, match="research components drift"):
-        validate_plan(tmp_path, plan)
+def test_an_unbalanced_budget_is_rejected(tmp_path, plan):
+    plan["compute"]["budget_gpu_hours"]["pretraining_ladder"] += 10
+    with pytest.raises(ValueError, match="do not sum"):
+        validate(tmp_path, plan)
 
 
-def test_cross_stage_reallocation_requires_packet_revision(tmp_path, plan):
-    budget = plan["compute"]["data_experiments_breakdown_gpu_hours"]
-    budget["pretraining"] -= 10
-    budget["mid_training"] += 10
-    with pytest.raises(ValueError, match="study packet does not match"):
-        validate_plan(tmp_path, plan)
+def test_moving_a_line_without_the_program_table_is_rejected(tmp_path, plan):
+    budget = plan["compute"]["budget_gpu_hours"]
+    budget["pretraining_ladder"] += 100
+    budget["reserve"] -= 100
+    with pytest.raises(ValueError, match="speck.operations.slurm"):
+        validate(tmp_path, plan)
+    budget["reserve"] += 100
+    budget["evaluation"] -= 100
+    with pytest.raises(ValueError, match="program budget row 'Pretraining ladder'"):
+        validate(tmp_path, plan)
 
 
-def test_stale_screening_arm_count_rejected(tmp_path, plan):
-    plan["pretraining_data_study"]["proposed_screening"]["max_arms"] = 3
-    with pytest.raises(ValueError, match="run caps drift"):
-        validate_plan(tmp_path, plan)
+def test_more_grant_runs_than_the_ladder_budget_affords_are_rejected(tmp_path, plan):
+    plan["ladder"]["rungs"][2]["grant_runs"] = 40
+    with pytest.raises(ValueError, match="exceed the pretraining ladder budget"):
+        validate(tmp_path, plan)
 
 
-def test_missing_receipt_rejected(tmp_path, plan):
-    plan["input_receipts"] = ["experiments/main-data/missing.json"]
-    with pytest.raises(ValueError, match="missing referenced file"):
-        validate_plan(tmp_path, plan)
+def test_a_rung_size_that_differs_from_its_configuration_is_rejected(tmp_path, plan):
+    plan["ladder"]["rungs"][0]["parameters"] += 1
+    with pytest.raises(ValueError, match="size differs from its configuration"):
+        validate(tmp_path, plan)
 
 
-def test_existing_receipt_counted(tmp_path, plan):
-    plan["input_receipts"] = ["experiments/main-data/plan.json"]
-    assert validate_plan(tmp_path, plan)["input_receipts_checked"] == 1
+def test_a_longer_parent_run_must_fit_its_line_and_table(tmp_path, plan):
+    plan["parent"]["target_tokens"] = 100_000_000_000
+    with pytest.raises(ValueError, match="exceeds its budget line"):
+        validate(tmp_path, plan)
+    plan["parent"]["target_tokens"] = 70_000_000_000
+    with pytest.raises(ValueError, match="program ladder row 'Parent'"):
+        validate(tmp_path, plan)
 
 
-def test_stale_readiness_horizon_rejected(tmp_path, plan, monkeypatch):
-    original_load = checker._load
-
-    def stale_load(path):
-        value = original_load(path)
-        if path == "experiments/main-data/source-readiness.json":
-            value["horizon_accounting"]["working_target"]["total_exposure_tokens"] = 100_000_000_000
-        return value
-
-    monkeypatch.setattr(checker, "_load", stale_load)
-    with pytest.raises(ValueError, match="source-readiness horizon"):
-        validate_plan(tmp_path, plan)
-
-
-def test_re_frozen_banks_cannot_be_restored_without_a_revised_freeze(tmp_path, plan):
-    mixture = plan["main_pretraining"]["mixture"]
-    natural_code = next(item for item in mixture if item["id"] == "natural_code")
-    natural_code["weight_percent"] -= 5
-    natural_code["exposure_tokens"] -= 4_000_000_000
-    natural_code["eligible_unique_token_preparation_target"] -= 5_000_000_000
-    mixture.append(
-        {
-            "id": "checked_code",
-            "role": "Checked code explanations, exercises and repair",
-            "weight_percent": 5,
-            "exposure_tokens": 4_000_000_000,
-            "eligible_unique_token_preparation_target": 5_000_000_000,
-        }
-    )
-
-    with pytest.raises(ValueError, match="re-frozen out of the mixture"):
-        validate_plan(tmp_path, plan)
-
-
-def test_declared_domain_percentages_must_match_their_owning_banks(tmp_path, plan):
-    plan["main_pretraining"]["code_percent"] = 30
-
-    with pytest.raises(ValueError, match="code/math percentages drift"):
-        validate_plan(tmp_path, plan)
-
-
-def test_registry_bank_outside_the_mixture_rejected(tmp_path, plan, monkeypatch):
-    original_load = checker._load
-
-    def drifted_load(path):
-        value = original_load(path)
-        if path == "experiments/main-data/source-registry.json":
-            value["sources"][0]["bank"] = "checked_code"
-        return value
-
-    monkeypatch.setattr(checker, "_load", drifted_load)
-    with pytest.raises(ValueError, match="registry banks differ"):
-        validate_plan(tmp_path, plan)
+def test_a_mixture_that_does_not_sum_is_rejected(tmp_path, plan):
+    plan["parent"]["starting_mixture"][0]["weight_percent"] += 5
+    with pytest.raises(ValueError, match="sum to 100"):
+        validate(tmp_path, plan)

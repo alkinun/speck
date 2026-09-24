@@ -1,7 +1,7 @@
 # Stage-5 RL pilot on a real SFT parent (RTX 3090)
 
-Engineering pilot for the [reward trainer](../../docs/training.md#reward-training), run on the
-workstation. It spends no grant GPU-hours and admits no data. The pilot's base checkpoint (step 800,
+Engineering pilot for the [reward trainer](../../docs/training.md#reward-training) that the R1 and
+R2 [post-training families](../../docs/program.md#post-training) use, run on the workstation. It spends no grant GPU-hours and admits no data. The pilot's base checkpoint (step 800,
 the one [development scoring](../pilot/development-result.json) measured) is pinned by hash in
 `sft.json`. It first gets a short math SFT, then `rl.json` runs group-relative RL from that SFT
 checkpoint.

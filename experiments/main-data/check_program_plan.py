@@ -1,259 +1,197 @@
-"""Validate the cross-stage working plan without authorizing any run.
+"""Validate the program plan and the tables that restate it, without authorizing any run.
 
-This check catches arithmetic and receipt drift between the numeric plan and the
-design-only study packets. It never acquires data, selects sources, or launches training.
+`plan.json` owns the numbers. This check verifies its arithmetic, that the ladder configurations
+follow the shape rule and match the declared sizes, that projected costs fit their budget lines,
+that the supply gap is current, that the scheduler enforces the same total and reserve, and that
+the ladder and budget tables in docs/program.md and the supply table in PLAN.md render the same
+numbers. Those three tables are the only prose copies of these figures.
 """
 
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
+import sys
 from pathlib import Path
 
-from speck.provenance.io import check_reference
-
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from build_supply_gap import build as build_supply_gap  # noqa: E402
+
+from speck.operations import slurm  # noqa: E402
+
+PROGRAM = ROOT / "docs/program.md"
+STATUS = ROOT / "PLAN.md"
+SUPPLY_GAP = ROOT / "experiments/main-data/supply-gap.json"
+BUDGET_LABELS = {
+    "Runtime qualification": "runtime_qualification",
+    "Pretraining ladder": "pretraining_ladder",
+    "Parent stable run": "parent_stable_run",
+    "Decay experiments": "decay_experiments",
+    "Mid-training experiments": "mid_training_experiments",
+    "Post-training experiments": "post_training_experiments",
+    "Evaluation": "evaluation",
+    "Reserve": "reserve",
+}
 
 
-def _load(path: str) -> dict:
-    return json.loads((ROOT / path).read_text())
+def _load(relative: str) -> dict:
+    return json.loads((ROOT / relative).read_text())
+
+
+def _shapes():
+    spec = importlib.util.spec_from_file_location("shapes", ROOT / "experiments/ladder/shapes.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _rows(path: Path, first_cells: set[str]) -> dict[str, list[str]]:
+    """Return the cells of every table row whose first cell is one of the given labels."""
+    rows = {}
+    for line in path.read_text().splitlines():
+        if line.startswith("|"):
+            cells = [cell.strip().strip("*") for cell in line.strip("|").split("|")]
+            if cells[0] in first_cells:
+                rows[cells[0]] = cells
+    return rows
+
+
+def _number(cell: str) -> float:
+    return float(cell.replace(",", "").removesuffix("%").removesuffix("B"))
+
+
+def projected_gpu_hours(plan: dict, parameters: int, tokens: float) -> float:
+    projection = plan["compute"]["projection"]
+    rate = (
+        projection["peak_dense_bf16_flops_per_gpu"]
+        * projection["planning_model_flops_utilization"]
+        * 3600
+    )
+    return 6 * parameters * tokens / rate
 
 
 def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -> dict:
-    """Reconcile working ceilings and local receipts, not scientific readiness.
-
-    An alternate plan path supports offline regression tests; packet and receipt
-    paths still resolve against the repository root, never the caller's cwd.
-    """
     plan = json.loads(Path(plan_path).resolve().read_text())
     compute = plan["compute"]
-    reservations = compute["reservations_gpu_hours"]
-    if sum(reservations.values()) != compute["requested_total_gpu_hours"]:
-        raise ValueError("compute reservations do not sum to the requested allocation")
-
-    breakdown = compute["data_experiments_breakdown_gpu_hours"]
-    if sum(breakdown.values()) != reservations["data_experiments"]:
-        raise ValueError("data-experiment breakdown does not match its reservation")
-
-    protected = compute["proposed_protected_breakdown_gpu_hours"]
-    if sum(protected.values()) != reservations["protected_recovery_and_evaluation"]:
-        raise ValueError("protected breakdown does not match its reservation")
-    # The Slurm wave validator carries its own scheduled/protected constants and
-    # rejects any execution plan that disagrees with them. Bind them here so a
-    # revised reservation table cannot pass this check and then fail at wave
-    # submission on the cluster, which is the worst place to discover the drift.
-    from speck.operations import slurm
-
-    protected_hours = reservations["protected_recovery_and_evaluation"]
-    scheduled = compute["requested_total_gpu_hours"] - protected_hours
-    if (
-        slurm.TOTAL_GPU_HOURS != compute["requested_total_gpu_hours"]
-        or slurm.MANDATORY_GPU_HOURS != scheduled
-        or slurm.RESERVE_GPU_HOURS != protected_hours
+    budget = compute["budget_gpu_hours"]
+    if sum(budget.values()) != compute["total_gpu_hours"]:
+        raise ValueError("budget lines do not sum to the total allocation")
+    if set(BUDGET_LABELS.values()) != set(budget):
+        raise ValueError("budget lines differ from the program table's rows")
+    reserve = budget["reserve"]
+    if (slurm.TOTAL_GPU_HOURS, slurm.RESERVE_GPU_HOURS, slurm.MANDATORY_GPU_HOURS) != (
+        compute["total_gpu_hours"],
+        reserve,
+        compute["total_gpu_hours"] - reserve,
     ):
-        raise ValueError("speck.operations.slurm budget constants drift from the reservation table")
-
-    # The re-anchoring rule is predeclared so the direction of any throughput
-    # surplus is fixed before the number is known. Keep the derate tied to the
-    # two measured pilot rates rather than to a hand-edited constant.
-    rule = compute["throughput_reanchoring_rule"]
-    measured_derate = (
-        compute["h100_full_trainer_tokens_per_second"]
-        / compute["h100_steady_optimizer_tokens_per_second"]
+        raise ValueError("speck.operations.slurm budget constants drift from the plan")
+    anchor = compute["measured_anchor"]
+    derate = (
+        anchor["h100_full_trainer_tokens_per_second_1_2b"]
+        / anchor["h100_steady_optimizer_tokens_per_second_1_2b"]
     )
-    if abs(rule["overhead_derate"] - measured_derate) > 5e-7:
-        raise ValueError("throughput overhead derate drifts from the measured pilot rates")
-    if not rule["surplus_rule"].startswith("If the measured rate exceeds the anchor, the 80B"):
-        raise ValueError("surplus rule must hold the base horizon fixed")
+    if round(derate, 6) != anchor["overhead_derate"]:
+        raise ValueError("overhead derate drifts from the measured pilot rates")
 
-    # The headline 2.084x is a 318M proxy result. Keep the flagship's own
-    # baseline beside it so the proxy number is never read as a flagship rate.
-    evidence = compute["flagship_throughput_evidence"]
-    if evidence["status"] != "proxy_only_flagship_speedup_unmeasured":
-        raise ValueError("flagship throughput evidence must stay marked proxy-only")
-    # Read the three utilizations back out of the sweep itself. Copying them into
-    # the plan is what let the proxy number be quoted as a flagship number in the
-    # first place, so the copies stay bound to their source.
-    sweep = _load(evidence["receipt"])
-    variants = {item["label"]: item for item in sweep["variants"]}
-    sweep_values = {
-        "flagship_baseline_model_flops_utilization": (
-            "baseline-eager-ac-deterministic",
-            "flagship_1p2b",
-        ),
-        "proxy_baseline_model_flops_utilization": ("proxy-ac-eager", "proxy_318m"),
-        "proxy_best_model_flops_utilization": ("proxy-k5-conv-mb3", "proxy_318m"),
-    }
-    for field, (label, model) in sweep_values.items():
-        variant = variants[label]
-        if variant["model"] != model:
-            raise ValueError(f"sweep variant {label} is no longer the {model} run")
-        if evidence[field] != variant["model_flops_utilization"]:
-            raise ValueError(f"{field} drifts from the throughput sweep receipt")
+    # Every rung follows the shape rule and has the declared size; the rule reproduces the parent.
+    shapes = _shapes()
+    ladder = plan["ladder"]
+    per_token = ladder["default_tokens_per_parameter"]
+    rungs = {}
+    for rung in ladder["rungs"]:
+        config = json.loads((ROOT / rung["configuration"]).read_text())
+        if config != shapes.shape(*shapes.RUNGS[rung["id"]]):
+            raise ValueError(f"rung {rung['id']} configuration differs from the shape rule")
+        if config["expected_parameters"] != rung["parameters"]:
+            raise ValueError(f"rung {rung['id']} size differs from its configuration")
+        tokens = rung["parameters"] * per_token
+        rungs[rung["id"]] = (rung, tokens, projected_gpu_hours(plan, rung["parameters"], tokens))
+    parent = plan["parent"]
+    parent_config = json.loads((ROOT / parent["configuration"]).read_text())
+    if parent_config != shapes.shape(*shapes.REFERENCE):
+        raise ValueError("the shape rule no longer reproduces the parent configuration")
+    if parent_config["expected_parameters"] != parent["parameters"]:
+        raise ValueError("parent size differs from its configuration")
+    ladder_hours = sum(run["grant_runs"] * hours for run, _, hours in rungs.values())
+    if ladder_hours > budget["pretraining_ladder"]:
+        raise ValueError("projected grant runs exceed the pretraining ladder budget")
+    parent_hours = projected_gpu_hours(plan, parent["parameters"], parent["target_tokens"])
+    if parent_hours > budget["parent_stable_run"]:
+        raise ValueError("the projected parent run exceeds its budget line")
 
-    first_scenario = compute["main_scenarios"][0]
-    if first_scenario["tokens"] != plan["main_pretraining"]["target_tokens"]:
-        raise ValueError("first compute scenario does not match the working token horizon")
-    if compute["main_pretraining_reference_gpu_hours"] != first_scenario["reference_gpu_hours"]:
-        raise ValueError("main reference GPU-hours drift from the first compute scenario")
-
-    # Eligible preparation includes selection headroom. It is not extra exposure
-    # and must not be charged as additional production training tokens.
-    mixture = plan["main_pretraining"]["mixture"]
-    if sum(item["weight_percent"] for item in mixture) != 100:
-        raise ValueError("main mixture weights must sum to 100 percent")
-    target = plan["main_pretraining"]["target_tokens"]
-    if sum(item["exposure_tokens"] for item in mixture) != target:
-        raise ValueError("main mixture exposure does not match the working horizon")
-    unique_target = plan["main_pretraining"]["target_unique_eligible_tokens"]
-    if sum(item["eligible_unique_token_preparation_target"] for item in mixture) != unique_target:
-        raise ValueError("main mixture preparation targets do not match the eligible-token target")
-
-    # Current evidence indexes repeat the working horizon so that a stale
-    # readiness receipt cannot silently describe the superseded 100B target.
-    readiness = _load("experiments/main-data/source-readiness.json")
-    readiness_target = readiness["horizon_accounting"]["working_target"]
-    if (
-        readiness_target["total_exposure_tokens"] != target
-        or readiness_target["minimum_unique_preparation_tokens"] != unique_target
-    ):
-        raise ValueError("source-readiness horizon drifts from the working plan")
-
-    # Each domain is now one bank, so the declared domain split has a single owner and can
-    # be bound to it. Before the 2026-09-22 re-freeze these percentages were spread across a
-    # natural and a derived bank and nothing checked that they still added up.
-    by_id = {item["id"]: item for item in mixture}
-    if {"checked_code", "refined_math"} & set(by_id):
-        raise ValueError(
-            "checked_code and refined_math were re-frozen out of the mixture on 2026-09-22; "
-            "restoring either one requires a revised freeze and its own exposure ledger"
-        )
-    # The source registry owns which sources fill each bank; the plan owns only the banks.
+    mixture = parent["starting_mixture"]
+    if sum(bank["weight_percent"] for bank in mixture) != 100:
+        raise ValueError("starting mixture weights must sum to 100 percent")
     registry = _load("experiments/main-data/source-registry.json")
-    if {source["bank"] for source in registry["sources"]} != set(by_id):
-        raise ValueError("source registry banks differ from the working mixture")
-    natural_code = by_id["natural_code"]
-    if (
-        natural_code["weight_percent"] != plan["main_pretraining"]["code_percent"]
-        or by_id["natural_math"]["weight_percent"] != plan["main_pretraining"]["math_percent"]
-    ):
-        raise ValueError("declared code/math percentages drift from their owning banks")
+    if {source["bank"] for source in registry["sources"]} != {bank["id"] for bank in mixture}:
+        raise ValueError("source registry banks differ from the starting mixture")
 
-    # The re-freeze merged the checked-code share into natural_code within the code domain,
-    # so total code demand is conserved and this receipt stays valid unmodified. Checking the
-    # conserved sum is what makes the merge safe: a reassignment across domains would fail here.
-    code_expansion = _load("experiments/corpus-audit/code-expansion.json")["working_demand"]
-    if (
-        code_expansion["base_horizon_tokens"] != target
-        or code_expansion["natural_code_exposure_tokens"]
-        + code_expansion["checked_code_exposure_tokens"]
-        != natural_code["exposure_tokens"]
-        or code_expansion["natural_code_unique_preparation_tokens"]
-        + code_expansion["checked_code_unique_preparation_tokens"]
-        != natural_code["eligible_unique_token_preparation_target"]
-    ):
-        raise ValueError("code-expansion demand drifts from the working mixture")
+    supply = json.loads(SUPPLY_GAP.read_text())
+    if Path(plan_path).resolve() == (ROOT / "experiments/main-data/plan.json").resolve():
+        if supply != build_supply_gap():
+            raise ValueError("supply-gap.json is stale; rerun build_supply_gap.py")
+    if supply["totals"]["eligible_unique_tokens_established"] != 0:
+        raise ValueError("eligible tokens are recorded but no gate closure supports them")
 
-    # Packets own run counts. Reconcile their components, not just the grand
-    # total: two conflicting designs can both sum to the same reservation.
-    pre = _load("experiments/main-data/data-study-packet.json")
-    mid = _load("experiments/main-data/mid-training-study-packet.json")
-    post = _load("experiments/main-data/post-training-study-packet.json")
-    packet_budgets = {
-        "pretraining": {
-            "screening_training": pre["screening"]["training_gpu_hours"],
-            "decay_training": pre["decay_study"]["training_gpu_hours"],
-            "confirmation_training": pre["confirmation"]["training_gpu_hours"],
-            "preparation_evaluation_recovery": pre["support_and_reserve"]["gpu_hours"],
-        },
-        "mid_training": {
-            "proxy_screening_training": mid["screening"]["training_gpu_hours"],
-            "objective_and_packing_training": mid["objective_and_packing_study"][
-                "training_gpu_hours"
-            ],
-            "context_training": mid["context_study"]["training_gpu_hours"],
-            "confirmation_training": mid["confirmation"]["training_gpu_hours"],
-            "preparation_evaluation_recovery": mid["support_and_reserve"]["gpu_hours"],
-        },
-        "post_training": {
-            "sft_paired_training": post["sft"]["training_gpu_hours"],
-            "conditional_rl_prompt_feasibility": post["rl_feasibility"]["gpu_hours"],
-            "final_self_sft_pilot": post["final_self_sft_pilot"]["training_gpu_hours"],
-            "preparation_evaluation_recovery": post["support_and_reserve"]["gpu_hours"],
-        },
+    mismatches = []
+    table = _rows(PROGRAM, set(BUDGET_LABELS) | {"Total"})
+    for label, key in BUDGET_LABELS.items():
+        if label not in table or _number(table[label][1]) != budget[key]:
+            mismatches.append(f"program budget row {label!r} differs from plan")
+    if "Total" not in table or _number(table["Total"][1]) != compute["total_gpu_hours"]:
+        mismatches.append("program budget total differs from plan")
+    table = _rows(PROGRAM, set(rungs) | {"Parent"})
+    expected = {
+        rung_id: (run["parameters"], tokens, hours, run["grant_runs"])
+        for rung_id, (run, tokens, hours) in rungs.items()
     }
-    for stage, components in packet_budgets.items():
-        if components != compute["proposed_research_breakdown_gpu_hours"][stage]:
-            raise ValueError(f"{stage} research components drift from the study packet")
-        if sum(components.values()) != breakdown[stage]:
-            raise ValueError(f"{stage} study packet does not match its reservation")
-
-    study = plan["pretraining_data_study"]
-    mirrors = (
-        (study["proposed_screening"]["max_arms"], pre["screening"]["maximum_arms"]),
-        (
-            study["proposed_screening"]["per_arm_training_gpu_hour_cap"],
-            pre["screening"]["per_arm_training_cap_gpu_hours"],
-        ),
-        (
-            study["proposed_confirmation"]["per_arm_per_seed_training_gpu_hour_cap"],
-            pre["confirmation"]["per_arm_per_seed_cap_gpu_hours"],
-        ),
-        (
-            plan["context_extension"]["data_study"]["per_arm_training_gpu_hour_cap"],
-            mid["context_study"]["per_arm_training_gpu_hour_cap"],
-        ),
-        (
-            plan["post_training"]["data_study"]["sft_per_arm_per_seed_training_gpu_hour_cap"],
-            post["sft"]["per_arm_per_seed_training_gpu_hour_cap"],
-        ),
-    )
-    if any(summary != packet for summary, packet in mirrors):
-        raise ValueError("plan run caps drift from study packets")
-    if (
-        mid["production_sequence"]["production_gpu_hours"]
-        != reservations["capability_and_agentic_mid_training"]
-    ):
-        raise ValueError("mid-training production packet does not match its reservation")
-    if (
-        sum(compute["proposed_post_training_breakdown_gpu_hours"].values())
-        != reservations["post_training"]
-    ):
-        raise ValueError("post-training production breakdown does not match its reservation")
-
-    # Endpoint decay and final self-SFT are named stages of the released pipeline.
-    # They each hold a production line so the six-stage claim rests on accounting
-    # rather than on prose, and so neither can be quietly absorbed by its
-    # neighbour when a stage runs long.
-    pretraining_production = compute["proposed_pretraining_breakdown_gpu_hours"]
-    if sum(pretraining_production.values()) != reservations["main_4k_pretraining"]:
-        raise ValueError("pretraining production breakdown does not match its reservation")
-    for stage, breakdown_key, line in (
-        ("endpoint decay", "proposed_pretraining_breakdown_gpu_hours", "endpoint_decay"),
-        ("final self-SFT", "proposed_post_training_breakdown_gpu_hours", "final_self_sft"),
-    ):
-        if compute[breakdown_key].get(line, 0) <= 0:
-            raise ValueError(f"{stage} must hold its own production line")
-
-    receipts = plan["input_receipts"]
-    for relative in receipts:
-        check_reference({"path": relative})
+    expected["Parent"] = (parent["parameters"], parent["target_tokens"], parent_hours, 1)
+    for label, (parameters, tokens, hours, runs) in expected.items():
+        cells = table.get(label)
+        if (
+            cells is None
+            or _number(cells[2]) != parameters
+            or cells[3] != f"{tokens / 1e9:.{1 if label != 'Parent' else 0}f}B"
+            or cells[4] != f"{hours:.1f}"
+            or _number(cells[5]) != runs
+        ):
+            mismatches.append(f"program ladder row {label!r} differs from plan")
+    table = _rows(STATUS, {bank["id"] for bank in supply["banks"]})
+    for bank in supply["banks"]:
+        cells = table.get(bank["id"])
+        rendered = [
+            f"{bank['weight_percent']}%",
+            f"{bank['preparation_target_tokens'] / 1e9:.2f}B",
+            f"{bank['retained_candidate_stock_tokens'] / 1e9:.3f}B",
+            f"{bank['coverage_percent']:.2f}%",
+            f"{bank['one_pass_exposure_cap_tokens'] / 1e9:.2f}B",
+        ]
+        if cells is None or cells[1:6] != rendered:
+            mismatches.append(f"PLAN.md supply row {bank['id']!r} differs from supply-gap.json")
+    if mismatches:
+        raise ValueError("\n  ".join(["tables contradict the plan:", *mismatches]))
 
     return {
-        "requested_gpu_hours": compute["requested_total_gpu_hours"],
-        "reservation_gpu_hours": sum(reservations.values()),
-        "base_working_tokens": target,
-        "base_unique_preparation_tokens": unique_target,
-        "mid_research_gpu_hours": breakdown["mid_training"],
-        "mid_production_gpu_hours": mid["production_sequence"]["production_gpu_hours"],
-        "post_research_gpu_hours": breakdown["post_training"],
-        "input_receipts_checked": len(receipts),
+        "format": plan["format"],
+        "status": plan["status"],
+        "total_gpu_hours": compute["total_gpu_hours"],
+        "projected_ladder_gpu_hours": round(ladder_hours, 1),
+        "projected_parent_gpu_hours": round(parent_hours, 1),
+        "binding_bank": supply["binding_bank"]["id"],
         "training_authority": False,
     }
 
 
-if __name__ == "__main__":
+def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("plan", nargs="?", default=ROOT / "experiments/main-data/plan.json")
     args = parser.parse_args()
     print(json.dumps(validate(args.plan), indent=2, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

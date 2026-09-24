@@ -1,11 +1,11 @@
 # Research informing data and training
 
 Reviewed through 2026-09-20 using primary papers and official releases. These are lessons and
-comparisons, not a promise to reproduce another lab's scores or compute budget. **The decisions live
-in [PLAN.md](../PLAN.md); this file records what each source actually showed and what it changed
-here.** A reviewed paper does not create another experiment arm, admit a source, or expand the
-5,000-GPU-hour envelope. Attention and size choices take supporting context only: the architecture
-study is deferred, so no review here motivates a backbone change.
+comparisons, not a promise to reproduce another lab's scores or compute budget. **The design lives
+in [the program design](program.md); this file records what each source actually showed and what it
+changed here.** A reviewed paper does not create another experiment arm, admit a source, or expand
+the [compute budget](program.md#compute). The architecture is [fixed by declaration](program.md#model),
+so no review here motivates a backbone change.
 
 OpenBMB is a primary ongoing reference for our data work. The
 [data guide](data.md#code-priority-and-qualification) records the specific UltraData-Code evidence,
@@ -97,10 +97,10 @@ mid-training, which makes downstream quality per SFT/RL token and per GPU-hour a
 
 It establishes no universal mixture and no intelligence-per-FLOP law for us: 32 H200s, 8 B200s,
 strong teachers, a tool-specific corpus, weak deep-search transfer. We borrow the causal structure,
-validation requirements and efficiency measurements — not the ratios, teachers or compute. Inside
-the existing 360-hour mid-training research reservation this sharpens the question rather than
-adding an arm: compare a replay/source-only control against targeted grounded material and, only
-where environments and validation qualify, executable trajectory data, holding SFT/RL data,
+validation requirements and efficiency measurements — not the ratios, teachers or compute. Within
+the [mid-training families](program.md#mid-training) this sharpens M1 replay rather than adding an
+arm: compare a replay/source-only control against targeted grounded material and, only where
+environments and validation qualify, executable trajectory data, holding SFT/RL data,
 optimizer policy and evaluation identities fixed. Report downstream capability versus mid-training
 tokens and GPU-hours, SFT convergence, early RL adaptation and held-out transfer, counting source
 preparation, teacher generation, validation, retries and discarded trajectories. Context extension
@@ -118,10 +118,10 @@ and 2% SmolTalk; at cooldown they become 37%, 5%, 25%, 15%, 13%, 0% and 5%. **Ma
 held-out validation loss from a temporary accuracy plateau.
 
 This is a hypothesis, not a result to copy: mixture, learning-rate cooldown and checkpoint position
-change together, so it cannot isolate the late math reweighting. Test a phase-conditioned mixture
-only as a predeclared replacement or later ablation inside the 700-hour pretraining study, with
-schedule, source exposures, validation mixture and total tokens fixed. **It must not become a fourth
-screening arm.** The card exposes three candidates — [OpenMathInstruct-2](https://huggingface.co/datasets/nvidia/OpenMathInstruct-2),
+change together, so it cannot isolate the late math reweighting. The
+[D1 decay family](program.md#decay) tests a late shift with schedule, source exposures, validation
+mixture and total tokens fixed; this card adds no separate arm. The card exposes three
+candidates — [OpenMathInstruct-2](https://huggingface.co/datasets/nvidia/OpenMathInstruct-2),
 [InfiWebMath 3+](https://huggingface.co/datasets/HuggingFaceTB/finemath/tree/main/infiwebmath-3plus)
 and [SmolTalk](https://huggingface.co/datasets/HuggingFaceTB/smoltalk) — each needing the same
 source-use, family/contamination, correctness, finite-supply and runtime gates. Do not count the
@@ -158,10 +158,10 @@ means are not comparable with the table above; L3 gains 0.60 over L2 while ARC-C
 PIQA regress. Its Table 7 compares nominal 120B flat versus staged mixtures, 30.17 → 31.66 overall
 and 7.25 → 9.70 on code. Its Code-L3 is a Stack-Edu rewrite, not the UltraData-Code preview.
 
-**Decisions:** prioritize natural Ultra-FineWeb qualification for the main web component, with
-FineWeb-Edu as the control and DCLM as an independent comparator — published matched evidence is
-enough to set this preparation priority without a GPU replication. Prepare a bounded comparable
-content/coverage audit using the
+**Decisions:** prioritize natural Ultra-FineWeb qualification for the selected web bank, with
+FineWeb-Edu as the control and DCLM as an independent comparator; published matched evidence set
+this preparation priority, and [P5 source choice](program.md#pretraining-the-ladder) now tests it
+on the ladder. Prepare a bounded comparable content/coverage audit using the
 [checked release pins](../experiments/corpus-audit/web-candidate-versions.json), binding the English
 scored versus English HQ path explicitly; the archived scored cutoff was 0.8, and a stricter cutoff
 is a changed recipe, not an automatic improvement. Keep synthetic L3 source/answer checks separate,
@@ -206,15 +206,15 @@ golden-patch success and repeated checks, filtering ambiguous task statements. A
 repacking the preceding mixture sufficient in its experiments, evaluating fixed-suffix loss and
 positional retrieval.
 
-**Decisions:** keep 35% code / 25% math as an initial hypothesis, qualifying useful diversity within
-each bank and reporting unique tokens, exposure and repetition separately — do not copy another
-model's percentages or treat our 105M-token pilot as a mixture-ranking study. Extend code
-qualification beyond isolated files to source-linked changes and executable repair cases as described
-in [the data guide](data.md#code-priority-and-qualification), counting full processed context
-separately from loss-bearing targets; that needs an explicit adapter/objective contract before
-admission, since pasting raw patches into a pack is not equivalent. Add unchanged-domain repacking
-as the context-extension control, plus fixed-suffix loss and position-stratified checks, leaving
-stage tokens unset under the 360-hour mid-training research cap.
+**Decisions:** keep 35% code / 25% math as the parent's starting hypothesis, which P3 domain
+mixture revises, qualifying useful diversity within each bank and reporting unique tokens, exposure
+and repetition separately — do not copy another model's percentages or treat our 105M-token pilot
+as a mixture-ranking study. Extend code qualification beyond isolated files to source-linked changes
+and executable repair cases as described in [the data guide](data.md#code-priority-and-qualification),
+counting full processed context separately from loss-bearing targets; that needs an explicit
+adapter/objective contract before admission, since pasting raw patches into a pack is not
+equivalent. Add unchanged-domain repacking as the context-extension control (the M3 repacked
+baseline), plus fixed-suffix loss and position-stratified checks.
 
 ## ZGCM-1 review — 2026-09-18
 
@@ -243,7 +243,7 @@ also differ from the report's 4,921,933, so bind any future subset to its own im
 ## Practical conclusions
 
 1. Quality and coverage of data, optimization, post-training and evaluation all matter. Keep one
-   model candidate while establishing the pipeline; do not turn each paper into another sweep.
+   architecture family while establishing the pipeline; do not turn each paper into another sweep.
 2. Distinguish broad pretraining, capability/context mid-training and SFT/RL post-training. Domain
    emphasis must preserve enough broad data and replay to retain ordinary usefulness.
 3. Verified answers and executable code tests are useful supervision and evaluation signals. Include

@@ -4,7 +4,7 @@
   "status": "selected_candidate_registry_not_training_authority",
   "audited_on": "2026-09-22",
   "purpose": "Name the exact source set the re-frozen six-bank mixture selects, so the source-use decision has a closed list to range over. Selection is not admission: the family, correctness, finite-supply and runtime gates stay open per source in experiments/main-data/source-readiness.json.",
-  "selection_basis": "Derived from experiments/main-data/plan.json main_pretraining.mixture after the 2026-09-22 six-bank re-freeze.",
+  "selection_basis": "Derived from experiments/main-data/plan.json parent.starting_mixture (the six banks of the 2026-09-22 re-freeze).",
   "field_note": "tokenizer_sample_allocations is the field name speck.data.rights requires for the list a rights template must range over. Here it carries the selected source set rather than a tokenizer sampling budget, and its order fixes decision order.",
   "not_selected": {
     "checked_code": "Bank dropped in the 2026-09-22 re-freeze with zero retained stock and no verified origin join. No source-use decision is required for a source the mixture does not select.",

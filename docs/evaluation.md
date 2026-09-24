@@ -1,13 +1,15 @@
 # Evaluation
 
-Use the capability table in [the program overview](program.md#what-success-means) as the reporting outline. Measure math, coding,
-tools, reliability, and broad usefulness separately; keep cost alongside quality.
-Evaluate the [training lifecycle](program.md#training-lifecycle) with identified pretraining,
-mid-training, SFT and any RL checkpoints. Stage-to-stage changes describe progression; attributing
-a gain to data requires a controlled comparison with the model, training exposure and other recipe
-settings held fixed. The primary planned control is the
-[pretraining recipe study](data.md#code-priority-and-qualification), before main pretraining;
-code-data substitution is one candidate contrast after source qualification.
+The [method](program.md#method) sets what is measured at each scale. Ladder runs are scored
+mainly by held-out loss per source and domain on fixed family-disjoint validation packs, plus
+benchmarks that show signal early (cloze and log-likelihood multiple choice, code pass@k at large
+k). Generative math, coding, tool and reliability benchmarks become primary only for the parent and
+its post-trained branches; post-training families are scored on the parent and the external
+control base under the same protocol. Each rung's seed-to-seed spread sets the smallest effect it
+can report.
+Stage-to-stage changes describe progression; attributing a gain to data requires a predeclared
+contrast with the model, training exposure and other recipe settings held fixed. Keep cost
+alongside quality.
 
 The final assistant target always uses the thinking protocol for coding, math and agent tasks.
 Evaluate brief/deep reasoning budgets within that protocol, including cap exhaustion, correctness,
@@ -15,9 +17,9 @@ tool loops and end-to-end task completion. A concise final answer does not mean 
 This future assistant contract does not change the frozen base pilot or external reference-model
 protocols below. A thinking tag alone is not evidence of useful reasoning.
 
-Coding is a first-release priority. The [coding evaluation roadmap](data.md#code-priority-and-qualification)
-adds Python breadth, multilingual checks, and practical repair to prepare after the engineering
-pilot. Those additions need their own frozen protocol and training exclusions; they are not yet
+Coding is a first-release priority. The coding evaluation roadmap in [Data](data.md) adds Python
+breadth, multilingual checks, and practical repair to prepare after the engineering pilot. Those
+additions need their own frozen protocol and training exclusions; they are not yet
 implemented, and the pilot's 33 development code tasks do not establish broad coding strength.
 
 ## Available checks
@@ -51,23 +53,18 @@ For inference, separate prefill and decode, count reasoning and final-answer tok
 context length, tool access, output caps and stopping policy. Agent cost per success includes failed
 attempts and environment costs alongside success rate. SFT supervised tokens, processed context,
 padding and RL rollout tokens are distinct quantities. Report teacher/verification costs separately.
-The architecture study is deferred to a later allocation, so this release has **no measured
-reference/control design trade-off at all**: the backbone was fixed by declaration. Efficiency
-numbers here are reference-only profiling of that fixed substrate. When the study does run, its
-differing positional policy and feed-forward allocation will still prevent an isolated
-attention-mechanism claim, and a single size cannot establish parameter scaling or general
-architectural superiority.
+The backbone is fixed by declaration, so efficiency numbers profile that one design and support no
+architecture comparison.
 
-The [research design](../experiments/main-data/README.md#measurements-and-selection) fixes primary
-endpoints, common validation packs, development selection, seed/family uncertainty and promotion
-rules. Family-level uncertainty and fixed-suffix context scoring need qualified retained outputs;
+Each family's [predeclared record](program.md#method) fixes its primary metric, validation packs,
+minimum useful effect and decision rule. Family-level uncertainty and fixed-suffix context scoring need qualified retained outputs;
 the current aggregate loss evaluator does not supply those analyses automatically.
 
 ## Frozen pilot protocol and future evaluations
 
 The pilot development evaluation and isolated code grading are complete: [results](../experiments/pilot/development-result.json)
 cover 2,619 tasks; final tests remain untouched. The preparation commands below describe the frozen
-protocol, not unfinished pilot work. For each new training study, pin evaluation inputs and graders
+protocol, not unfinished pilot work. For each experiment family, pin evaluation inputs and graders
 before training. Keep development and final-test data
 separate from training and from each other. Verify final math answers, execute code in an isolated
 resource-limited runner, and evaluate tools in a deterministic environment. Include missing

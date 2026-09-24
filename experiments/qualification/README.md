@@ -2,7 +2,7 @@
 
 The exact 1.2B KDA/GQA reference at 4K is in [model.json](model.json); [plan.json](plan.json) holds
 the finite settings of the synthetic R0 recovery diagnostic, which keeps its own 70-GPU-hour
-ceiling inside the program's 120-hour runtime-qualification reservation. The
+ceiling inside the program's runtime-qualification line. The
 [GH200 access qualification runbook](../../docs/compute-qualification.md) owns the full access
 sequence. The model has 32,003 embedding rows; synthetic inputs use the original 32,000-token
 vocabulary. Deterministic algorithms, including attention backward, and a reproducible cuBLAS
@@ -29,7 +29,7 @@ model quality, sustained throughput, hard-crash recovery or scheduler behavior.
 | Check | Result | Receipt |
 | --- | --- | --- |
 | RTX 3090, one worker | Full-size optimization and fresh-process restart at the original tolerance; about 1,937 synthetic tokens/s | [local-result.json](local-result.json) |
-| One H100 | Production-data base and assistant recovery, numerical/kernel checks, native generation, CPU export parity | [h100-result.json](h100-result.json) |
+| One H100 | Real-data base and assistant recovery, numerical/kernel checks, native generation, CPU export parity | [h100-result.json](h100-result.json) |
 | One H100 timing | Components below; evaluator defects fixed and re-exported | [timing-result.json](timing-result.json) |
 
 | Measurement on one H100 SXM | Result |
@@ -44,7 +44,7 @@ model quality, sustained throughput, hard-crash recovery or scheduler behavior.
 
 [timing.json](timing.json), [microbatch-timing.json](microbatch-timing.json),
 [sft-timing.json](sft-timing.json) and [evaluation-timing.json](evaluation-timing.json) hold the
-probe configurations. `scripts.training_timing` observes the production trainer; it is not a
+probe configurations. `scripts.training_timing` observes the real trainer; it is not a
 deadline supervisor or GPU-hour ledger. The SFT rate depends on its 23% supervised density, so
 final SFT cost needs actual corpus lengths.
 
@@ -52,6 +52,6 @@ final SFT cost needs actual corpus lengths.
 
 ARM64 GH200 execution, four-worker communication and restart, compiled DDP, sustained throughput
 with checkpoint and validation overhead, and Slurm requeue all remain to be qualified on the
-allocation. Historical projections in these receipts do not describe the current
-[allocation](../../docs/program.md#compute-and-allocation) or
-[supply](../../PLAN.md#the-binding-constraint-is-supply-not-compute).
+allocation, as do per-rung rates for the [ladder](../../docs/program.md#the-ladder). Historical
+projections in these receipts do not describe the current [budget](../../docs/program.md#compute)
+or [supply](../../PLAN.md#supply).

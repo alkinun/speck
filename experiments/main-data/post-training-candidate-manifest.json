@@ -12,8 +12,8 @@
     "data_design_contract": {
       "path": "experiments/main-data/data-design-contract.json"
     },
-    "post_training_packet": {
-      "path": "experiments/main-data/post-training-study-packet.json"
+    "program_design": {
+      "path": "docs/program.md"
     },
     "qualification_rules": {
       "path": "experiments/main-data/qualification-rules.json"

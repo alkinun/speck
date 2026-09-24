@@ -9,7 +9,7 @@ or bulk candidate acquisition is needed for this review.
 [data-readiness.json](data-readiness.json) consolidates the later retained-bank token/overlap work,
 full assistant format census, sampled complete context lengths and bounded RL prompt/reference
 inventory. It preserves the earlier receipts below. The current
-[qualification packet](../main-data/QUALIFICATION.md#retained-inventory-closeout--2026-09-19) records
+[qualification record](../main-data/QUALIFICATION.md#retained-inventory-closeout--2026-09-19) records
 supply bounds and remaining decisions; [assistant data](../../docs/assistant.md) owns downstream
 format/length details. No source is admitted by these CPU measurements, and no GPU work ran.
 
@@ -44,7 +44,7 @@ extraction and apparent usefulness, not independent human annotation, complete-d
 fact checking, or an estimate of corpus quality. Four additional FineWeb documents were
 exploratory spot checks and are outside the 34-document review.
 
-Recreate a packet with the retained plan (choose a new output directory):
+Recreate the audit with the retained plan (choose a new output directory):
 
 ```bash
 uv run --no-sync python -m scripts.corpus_audit \
@@ -96,7 +96,7 @@ or increase model context based on this statistic alone.
 
 The subsequent [variant inspection](web-variants.json) pins the distinct default English,
 English v1.4 and L1-derived English HQ directories at the same UltraFineWeb release. The
-[qualification packet](../main-data/QUALIFICATION.md) keeps their source populations and schemas
+[qualification record](../main-data/QUALIFICATION.md) keeps their source populations and schemas
 separate for the next comparison; no corpus payload or quality result follows from that metadata.
 The [subsequent natural-web inspection](NATURAL_WEB.md) adds six hash-verified HQ shards and
 bounded default/control samples. HQ is now the priority for further qualification because its
@@ -129,7 +129,7 @@ gates on this frozen sample before estimating yield. The
 and the gap to proposed exposure; no main-code supply is admitted.
 
 The 105M-token engineering pilot intentionally uses the six retained sources listed in
-[its frozen recipe](../pilot/README.md#recipe). This is not the final flagship mixture.
+[its frozen recipe](../pilot/README.md#recipe). This is not the parent mixture.
 Natural Ultra-FineWeb, DCLM and DCLM-Edu were present in archived experiment configurations;
 their absence from the current pilot does not record a quality rejection. Their qualification
 for the current main-data plan remains open, and they should be explicit candidates here.
@@ -184,20 +184,12 @@ joint deduplication, benchmark exclusion, and tokenizer pipeline rather than a p
    Preserve the frozen pilot.
 3. Extend the bounded English refined-web inspection into source/answer consistency checks and
    inspect source-eligible code candidates. Establish domain coverage and overlap with current
-   stocks before assigning main-training weights.
-4. Freeze a bounded baseline/candidate pretraining comparison from paired fresh initializations,
-   with fixed architecture, schedule, total token exposure and development evaluations. Run it
-   before choosing the main starting mixture. Predeclare the contrast; a combined recipe comparison
-   cannot attribute improvement to an individual changed source. Keep final tests untouched and
-   count all training, preparation and evaluation costs within the study reservation.
+   stocks before assigning parent mixture weights.
+4. Source and filter contrasts now train on the [model ladder](../../docs/program.md#pretraining-the-ladder)
+   (P1 quality floor, P5 source choice); a combined recipe comparison cannot attribute improvement
+   to an individual changed source.
 
-The [current study design](../../docs/data.md#code-priority-and-qualification) and
-[numeric plan](../main-data/plan.json) own the 700-hour pretraining study cap within 1,230 data-research hours and the H100 cost scenarios.
-They do not freeze a run length or guarantee that short-run learning will resolve the question.
-Record the result, uncertainty and recipe decision before main pretraining; later continuation
-comparisons answer a separate question.
-
-Main training still requires sufficient eligible supply, justified repetition and weights,
+The parent run still requires sufficient eligible supply, declared repetition and weights,
 quality evidence, and measured all-in runtime. The present audit completes an initial diagnostic;
 it does not close those requirements.
 
@@ -422,13 +414,13 @@ No source ranking or eligible-yield estimate follows from these restricted batch
 The [stylesheet closeout](stylesheet-cohort-review.json) adds the final three readings / 70,475 tokens.
 All 174 then-unheld records were read. Cumulative coverage is 176 files / 412,974 tokens,
 including two earlier reads then held; all 44 family holds of that date were preserved. The
-[qualification packet](../main-data/QUALIFICATION.md) owns the current hold count. Page, template and component
+[qualification record](../main-data/QUALIFICATION.md) owns the current hold count. Page, template and component
 roles, unresolved template attribution and a file notice referring to missing NOTICE context are
 recorded. No browser, compiler, asset fetch or corpus code ran; no new or reused verified origins
 are available for this batch. Disjoint per-cohort counts reconcile all 218 original records and
 592,826 observed tokens. Reading completion does not establish source use, eligible supply or a
-source ranking. The existing [qualification packet](../main-data/QUALIFICATION.md#next-bounded-data-packet)
-owns the remaining provenance, family, intended-use and finite-inventory work before data-study selection.
+source ranking. The [qualification record](../main-data/QUALIFICATION.md#open-qualification-work)
+owns the remaining provenance, family, intended-use and finite-inventory work before admission.
 
 The [notice follow-up](code-notice-provenance.json) checks all eight sampled files in four repositories
 with recorded notice questions. Seven host origins are newly verified and one is reconfirmed; four
@@ -457,5 +449,5 @@ partition then held one of them by an exact firewall match. The
 [2026-09-23 authenticated retry](code-origin-recovery-20260923.json) ran the remaining 44 with
 authenticated API requests: 42 origins and 37 distinct ancestor notices are verified. One repository
 returns 404 and one path has no commit history, so they stay unresolved with the earlier failure.
-Nothing remains quota-blocked; the [qualification packet](../main-data/QUALIFICATION.md) holds the
+Nothing remains quota-blocked; the [qualification record](../main-data/QUALIFICATION.md) holds the
 current coverage.

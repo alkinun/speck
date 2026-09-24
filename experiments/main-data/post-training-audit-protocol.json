@@ -9,8 +9,8 @@
     "candidate_manifest": {
       "path": "experiments/main-data/post-training-candidate-manifest.json"
     },
-    "study_packet": {
-      "path": "experiments/main-data/post-training-study-packet.json"
+    "program_design": {
+      "path": "docs/program.md"
     },
     "data_readiness": {
       "path": "experiments/corpus-audit/data-readiness.json"
