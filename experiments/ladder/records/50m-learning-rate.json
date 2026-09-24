@@ -3,7 +3,7 @@
   "format_version": 1,
   "family": "learning_rate",
   "rung": "50m",
-  "status": "running",
+  "status": "declared_not_run",
   "question": "Which peak learning rate should every 50m run use?",
   "arms": [
     {

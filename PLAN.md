@@ -27,13 +27,14 @@ per bank against the parent's starting mixture at 60B tokens, prepared at 1.25 t
 | refined_web | 5% | 3.75B | 1.489B | 39.71% | 29.79B |
 
 Candidate stock has every gate still open, so it bounds what could be admitted; zero eligible tokens
-are established. Two acquisitions are running and will move this table:
+are established. Two acquisitions will move this table; both are stopped until the workstation is
+verified (see the work order):
 
-- **Selected web.** One whole Ultra-FineWeb HQ crawl, `CC-MAIN-2025-43` (27.5M documents), is in the
-  unchanged HQ preprocessor, followed by a token census.
+- **Selected web.** One whole Ultra-FineWeb HQ crawl, `CC-MAIN-2025-43` (27.5M documents), is
+  downloaded and converted; its preprocess restarts from scratch, followed by a token census.
 - **Code.** Every licence-eligible Stack-Edu `int_score` 3 row, projected at about 15B tokens from
-  the [yield probe](experiments/corpus-audit/stack-edu-yield-probe.json), is being fetched in
-  language tranches.
+  the [yield probe](experiments/corpus-audit/stack-edu-yield-probe.json), is partly fetched in
+  language tranches and resumes unit by unit.
 
 **Math becomes the binding bank** once those land: 1.1B tokens of stock against a 25% share. The
 P3 mixture and P4 repetition families decide how much math the parent actually needs.
@@ -54,8 +55,14 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
 ## Work order
 
 1. **Now, on the workstation (no grant hours).**
-   - Run the 50m learning-rate sweep (running), then the P0 seed set on the baseline corpus, and
-     choose the metrics that move at this scale.
+   - **Verify the hardware first.** The i7-13700K shows Raptor Lake instability: 11 segfaults on
+     the same two cores since 2026-09-22 and a SQLite index corrupted on a healthy NVMe, which
+     crashed the crawl preprocess on 2026-09-24. Every data and training job is stopped. Update the
+     BIOS to Intel's default power profile, run memtest86+ and a CPU stress test, and replace the
+     CPU if it still fails. Then re-verify every artifact built on this machine since 2026-09-22 by
+     content, not only by file hash, and rebuild what fails.
+   - Run the 50m learning-rate sweep, then the P0 seed set on the baseline corpus, and choose the
+     metrics that move at this scale.
    - Finish both acquisitions: census the crawl and point the supply gap at it; summarize the code
      fetch, preprocess all code and rebuild the family partition over every source.
    - Write the predeclared records for P1 to P7 and prepare their data variants on CPU.
