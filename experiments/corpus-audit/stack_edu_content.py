@@ -3,6 +3,7 @@
 PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py probe LISTING OUTPUT_DIR RECEIPT
 PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py acquire LISTING CENSUS LANGUAGE TIER OUTPUT_DIR
 PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py summarize OUTPUT_DIR RECEIPT
+PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py convert RETAINED OUTPUT_DIR BASE_PLAN OUT
 
 LISTING is the census listing with local metadata paths. Both commands fetch Software Heritage
 blobs for licence-eligible rows and apply the retained acquisition's per-document screen restored
@@ -14,6 +15,9 @@ measurement. `acquire` takes every row of one language and tier in physical list
 4,096-row units that each publish a record file and manifest, so a rerun resumes at the first
 missing unit. Tier 4+ skips the rows the retained acquisition already consumed. No code is
 executed and nothing is admitted. `summarize` records every completed tranche in one receipt.
+`convert` writes the retained stock (RETAINED is its acquisition receipt) and every completed
+tranche as one input for `scripts.production_data_preprocess`, verifying each archive and unit
+file first, with a plan that keeps the base plan's firewall references and policy.
 """
 
 import argparse
@@ -24,6 +28,7 @@ import json
 import re
 import subprocess
 import sys
+import tarfile
 import time
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -413,6 +418,112 @@ def summarize(output, receipt):
     )
 
 
+def _code_record(text, content_id, repository, path, language, source_file, source_row, origin):
+    return {
+        "text": text,
+        "released_content_sha256": hashlib.sha256(text.encode()).hexdigest(),
+        "content_id": content_id,
+        "url": None,
+        "host": None,
+        "repository": repository,
+        "path": path,
+        "language": language,
+        "source_file": source_file,
+        "source_row": int(source_row),
+        "origin": origin,
+    }
+
+
+def _retained_records(receipt):
+    """Records of the retained acquisition, unit by unit, from verified archives."""
+    for unit in json.loads(receipt.read_text())["units"]:
+        tar, manifest = unit["archive"]["tar"], unit["manifest"]
+        if file_sha256(tar["path"]) != tar["sha256"]:
+            raise ValueError(f"retained archive changed: {tar['path']}")
+        with tarfile.open(tar["path"]) as archive:
+            data = archive.extractfile("unit/" + manifest["output"]["path"]).read()
+        if hashlib.sha256(data).hexdigest() != manifest["output"]["sha256"]:
+            raise ValueError(f"retained records changed: {tar['path']}")
+        for line in data.splitlines():
+            row = json.loads(line)
+            yield _code_record(
+                row["text"],
+                row["content_id"],
+                row["repo_path"],
+                row["file_path"],
+                row["language"],
+                row["source_file"],
+                row["source_row"],
+                "retained",
+            )
+
+
+def _acquired_records(output):
+    """Records of every completed tranche, unit by unit, from verified unit files."""
+    for tranche_path in sorted(output.glob("*/tranche.json")):
+        directory = tranche_path.parent
+        for index in range(json.loads(tranche_path.read_text())["units"]):
+            manifest = json.loads((directory / f"unit-{index:05d}.json").read_text())
+            records = Path(manifest["records"]["path"])
+            if file_sha256(records) != manifest["records"]["sha256"]:
+                raise ValueError(f"acquired records changed: {records}")
+            with gzip.open(records, "rt") as handle:
+                for line in handle:
+                    row = json.loads(line)
+                    yield _code_record(
+                        row["text"],
+                        row["blob_id"],
+                        row["repo_name"],
+                        row["path"],
+                        row["language"],
+                        row["file"],
+                        row["source_row"],
+                        "acquired",
+                    )
+
+
+def convert(retained, output, base_plan, destination):
+    destination.mkdir(parents=True, exist_ok=False)
+    records = destination / "input.jsonl"
+    counts = Counter()
+    with records.open("w") as handle:
+        for source in (_retained_records(retained), _acquired_records(output)):
+            for row in source:
+                handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+                counts[row["origin"]] += 1
+    plan = json.loads(base_plan.read_text())
+    plan["sources"] = [s for s in plan["sources"] if s["id"].startswith("firewall_reference__")]
+    plan["sources"].append(
+        {
+            "id": "acquired_train__code",
+            "precedence": len(plan["sources"]) + 1,
+            "path": str(records),
+            "sha256": file_sha256(records),
+            "text_field": "text",
+            "content_sha256_field": "released_content_sha256",
+            "url_field": None,
+            "domain_field": None,
+            "blob_field": "content_id",
+        }
+    )
+    plan["output_directory"] = str(destination / "excluded")
+    plan["cleanup_files"] = []
+    atomic_json(destination / "preprocess-plan.json", plan)
+    atomic_json(
+        destination / "conversion.json",
+        {
+            "format": "speck_stack_edu_conversion",
+            "format_version": 1,
+            "training_admitted": False,
+            "retained": identity(retained),
+            "tranche_receipts": [identity(path) for path in sorted(output.glob("*/tranche.json"))],
+            "base_plan": identity(base_plan),
+            "input": {"path": str(records), "sha256": plan["sources"][-1]["sha256"]},
+            "documents": dict(counts),
+        },
+    )
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -428,13 +539,18 @@ def main():
     summary_parser = commands.add_parser("summarize")
     summary_parser.add_argument("output", type=Path)
     summary_parser.add_argument("receipt", type=Path)
+    convert_parser = commands.add_parser("convert")
+    for name in ("retained", "output", "base_plan", "destination"):
+        convert_parser.add_argument(name, type=Path)
     args = parser.parse_args()
     if args.command == "probe":
         probe(args.listing, args.output, args.receipt)
     elif args.command == "acquire":
         acquire(args.listing, args.census, args.language, args.tier, args.output)
-    else:
+    elif args.command == "summarize":
         summarize(args.output, args.receipt)
+    else:
+        convert(args.retained, args.output, args.base_plan, args.destination)
 
 
 if __name__ == "__main__":
