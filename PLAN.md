@@ -19,20 +19,22 @@ cannot go stale. Today:
 | --- | ---: | ---: | ---: | ---: | ---: |
 | selected_web | 25% | 25.0B | 0.351B | 1.41% | 1.40B |
 | independent_web | 5% | 5.0B | 2.307B | 46.13% | 46.13B |
-| natural_code | 35% | 35.0B | 0.477B | 1.36% | 1.36B |
+| natural_code | 35% | 35.0B | 1.157B | 3.31% | 3.31B |
 | natural_math | 25% | 25.0B | 1.124B | 4.50% | 4.50B |
 | reference_science | 5% | 5.0B | 1.402B | 28.04% | 28.04B |
 | refined_web | 5% | 5.0B | 1.489B | 29.79% | 29.79B |
-| **Total** | **100%** | **100.0B** | **7.150B** | **7.15%** | — |
+| **Total** | **100%** | **100.0B** | **7.831B** | **7.83%** | — |
 
 Four facts govern the order of work:
 
-1. **Zero eligible tokens are established.** The 7.15B is retained stock with every gate still open:
+1. **Zero eligible tokens are established.** The 7.83B is candidate stock with every gate still open:
    an upper bound on what the gates could admit, not usable data.
-2. **`natural_code` binds at 1.36B, 1.70% of the 80B horizon.** Since the
+2. **`selected_web` binds at 1.40B, 1.76% of the 80B horizon.** Since the
    [2026-09-22 re-freeze](experiments/main-data/README.md#base-mixture) no bank caps a one-pass run
-   at zero, and the binding bank is the one whose supply is hardest to grow.
-3. **Closing the gap is acquisition, not compute.** Roughly a **14x** increase in retained stock is
+   at zero. The [acquired `int_score` 4+ rows](experiments/corpus-audit/stack-edu-acquisition.json)
+   raised `natural_code` to 3.31B; `selected_web` lifts once the downloaded HQ crawl is preprocessed
+   and counted, and code, whose supply is hardest to grow, binds again after that.
+3. **Closing the gap is acquisition, not compute.** Roughly a **13x** increase in candidate stock is
    CPU, bandwidth and storage work that consumes no grant GPU-hours, so it runs before and during
    access, and a throughput surplus buys nothing here.
 4. **Shard choice cannot close the code gap; the score floor decides it.** The
@@ -72,13 +74,14 @@ detail.
 | Stack v3 preflight | All 16 frozen groups acquired; 29,347 repository rows / 379,942 entries; fixed 44-repository / 80-file cohort screened | [Receipt](experiments/corpus-audit/stack-v3-broader.json); four content flags, eight known-family holds; source use, quality and eligible yield unresolved; exact offline replay, no admission |
 | Common code review | 176 complete texts / 412,974 tokens reviewed; 45 of 218 records now held; all 173 unheld records read (plus three held records) | [Reading closeout](experiments/corpus-audit/stylesheet-cohort-review.json), [current holds](experiments/main-data/family-partition.json); page/template/component roles and notice questions recorded; all holds preserved; no yield estimate or admission |
 | Upstream supply census | All 42 Stack-Edu metadata files / 167,063,359 rows under the historical predicate by `int_score`; all 6,000 pinned Ultra-FineWeb HQ shards / 478 GB listed by crawl | [Code census](experiments/corpus-audit/stack-edu-metadata-census.json), [HQ listing](experiments/corpus-audit/ultrafineweb-hq-listing.json); metadata and listings only. Token figures are projections from retained yields; the `int_score` 3 yield is assumed until probed |
+| Stack-Edu 4+ acquisition | Every remaining licence-eligible `int_score` 4+ row in all 42 files: 1,350,682 fetched, 908,710 kept after the restored screen, 680,279,691 tokens | [Receipt](experiments/corpus-audit/stack-edu-acquisition.json); disjoint from the retained rows, same screen; no origin, notice, family or near-duplicate gates; no admission |
 | Stack-Edu yield probe | 15 languages x 2 tiers x 512 hash-ranked rows fetched and screened; restored screen reproduces the historical 4+ yield; `int_score` 3 at 0.81 of 4+ pooled | [Receipt](experiments/corpus-audit/stack-edu-yield-probe.json); bounded sample, current five-benchmark scanner, no origin, notice, family or near-duplicate gates; no admission |
 | Expanded data qualification | Practical CPU checks complete; 37 files screened against 22 benchmark lanes, with seven content flags and 22 files held after family propagation | [Qualification packet](experiments/main-data/QUALIFICATION.md); includes pinned LiveCodeBench v6 public text, not complete corpus admission |
 | Stratified HQ web audit | Twelve pinned shards / 290,761 documents; 192 sampled, 24 reviewed; exact offline replay | [Receipt](experiments/corpus-audit/web-hq-stratified.json); high-score extraction defects and lower-score coverage candidates; no training admissions; later full token census below |
 | Web extraction follow-up | Three matching archived captures; 32 fresh comparison documents, 125,453 sample tokens | [Receipt](experiments/corpus-audit/web-filter-validation.json); confirmed omissions/boundary issues; candidate flags remain review-only |
 | Retained-data closeout | Full HQ token/overlap census, full math text/index reconciliation, 500K SFT format census and sampled tool-aware lengths, bounded RL inventory | [Receipt](experiments/corpus-audit/data-readiness.json); finite stock bounds measured; correctness, family eligibility and finite supply remain open |
 | Joint family partitions | 5,492,692 candidate documents / 6,674,432,945 measured tokens; six text stocks and the code review cohort; 90/5/5 family buckets | [Receipt](experiments/main-data/family-partition.json); 45 code holds, full code inventory and benchmark coverage still open; no admission |
-| Other data preparation | 6.799B retained pilot-source tokens before joint eligibility (7.150B with distinct HQ, as in the supply gap); 500K assistant rows inventoried; finite tool-aware SFT rehearsal | [Supply](experiments/pilot/supply.json), [assistant contract](docs/assistant.md); not main-run qualified supply |
+| Other data preparation | 6.799B retained pilot-source tokens before joint eligibility (7.150B with distinct HQ); 500K assistant rows inventoried; finite tool-aware SFT rehearsal | [Supply](experiments/pilot/supply.json), [assistant contract](docs/assistant.md); not main-run qualified supply |
 | Training throughput pass | 2.084x over the frozen pilot recipe **on a 318M proxy**; proxy utilization 25.0% to 52.2%; selected configuration is checkpointing off, compiled with max-autotune, determinism retained, Liger loss | [Sweep](experiments/qualification/throughput-3090/sweep.json), [GH200 confirmation](experiments/qualification/throughput-gh200.json); RTX 3090 sm_86 only. **This is not a flagship speedup.** The only 1.2B point measured is the eager checkpointed baseline at 34.6% utilization, which establishes no optimized ceiling, and no checkpointing-off flagship configuration fit the 24 GiB card. Absolute rates, microbatch and checkpointing need GH200 measurement |
 | Compiled restart parity | Coordinate-descent tuning found to vary kernel choice per process and removed; compiled base replay on the 318M proxy and compiled SFT replay on the 1.2B reference pass at the unchanged tolerance with exact RNG/loader state and optimizer parity | [Base](experiments/qualification/compiled-recovery-descent-3090.json), [SFT](experiments/qualification/compiled-sft-recovery-3090.json); one RTX 3090 worker, SFT with checkpointing on. About 0.5% proxy throughput cost. Hopper and four-worker compiled DDP remain unqualified |
 
@@ -115,7 +118,7 @@ primary research evidence is added.
    100/103 unheld Stack-Edu and 68/70 Stack v3 records; the rest stay excluded. The
    [qualification packet](experiments/main-data/QUALIFICATION.md) owns this recovery state.
 2. **Turn the inventory into finite eligible arms.** Count eligible tokens per bank after
-   exclusions. Retained natural-code stock caps a one-pass run at 1.36B code tokens, so qualify
+   exclusions. Natural-code stock caps a one-pass run at 3.31B total tokens, so qualify
    additional supply or explicitly revise the finite recipe/horizon; no silent replay or
    reassignment of derived-data shares. Use the measured assistant lengths and RL prompt links
    before selecting downstream packs; adapter compatibility does not establish tool-task success.
@@ -128,11 +131,12 @@ primary research evidence is added.
      declared byte). `int_score` 3 yields 0.81 of that pooled, 0.85 to 1.06 in most languages;
      PHP, Swift and especially SQL are lower. Applying the per-language ratios projects about 15.0B
      tokens at `int_score` 3, not the assumed 16.5B.
-   - **Code, remaining `int_score` 4 and 5.** Take every licence-eligible row not already retained,
-     across all 42 files: about 1.35M blobs and 0.7B projected tokens, roughly nine hours at the
-     retained acquisition's measured 22.6K tokens/s.
-   - **Code, `int_score` 3 bulk.** About 24.7M blobs and 15.0B projected tokens, roughly a week
-     at that rate, in language-balanced tranches that each close with a receipt. Java
+   - **Code, remaining `int_score` 4 and 5: done.** Every licence-eligible row not already retained,
+     across all 42 files: 1,350,682 rows fetched, 908,710 kept, 680,279,691 tokens at 0.208 tokens
+     per declared byte, in line with the probe. The
+     [acquisition receipt](experiments/corpus-audit/stack-edu-acquisition.json) feeds the supply gap.
+   - **Code, `int_score` 3 bulk: running.** About 24.7M blobs and 15.0B projected tokens, roughly a
+     week at the measured rate, in language-balanced tranches that each close with a receipt. Java
      `int_score` 2 (about 2.9B) stays out unless a later decision adds it.
    - **Code horizon.** Even after both fetches, projected unique code is about half the 35B target.
      Proposed, not decided: reach the 28B code exposure with about 1.7 passes over unique code
