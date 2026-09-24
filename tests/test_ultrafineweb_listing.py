@@ -4,6 +4,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import sys
 from pathlib import Path
 
 import pyarrow as pa
@@ -15,6 +16,8 @@ SPEC = importlib.util.spec_from_file_location(
     Path(__file__).resolve().parents[1] / "experiments/corpus-audit/audit_ultrafineweb_listing.py",
 )
 audit = importlib.util.module_from_spec(SPEC)
+# Registered so pool workers can unpickle the census's module-level count function.
+sys.modules[SPEC.name] = audit
 SPEC.loader.exec_module(audit)
 
 
@@ -68,3 +71,49 @@ def test_convert_writes_input_and_plan_and_rejects_changed_shards(tmp_path):
     shard.write_bytes(b"changed")
     with pytest.raises(ValueError, match="differs from its acquisition receipt"):
         audit.convert(crawl, base, tmp_path / "again")
+
+
+class WordTokenizer:
+    def __init__(self, path):
+        pass
+
+    def encode_batch(self, texts, bos, eos):
+        return [[0] * (len(text.split()) + bos + eos) for text in texts]
+
+
+def test_census_counts_retained_tokens_and_fineweb_overlap(tmp_path, monkeypatch):
+    texts = ["one two", "three four five", "six"]
+    rows = [
+        {
+            "text": text,
+            "released_content_sha256": hashlib.sha256(text.encode()).hexdigest(),
+            "source_ordinal": index * 10,
+        }
+        for index, text in enumerate(texts)
+    ]
+    preprocessed = tmp_path / "pre"
+    preprocessed.mkdir()
+    retained = preprocessed / "acquired_train__web.jsonl"
+    retained.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    manifest = {
+        "outputs": {
+            "acquired_train__web": {"path": retained.name, "sha256": audit.file_sha256(retained)}
+        }
+    }
+    (preprocessed / "manifest.json").write_text(json.dumps(manifest))
+    fineweb = tmp_path / "fineweb.jsonl"
+    fineweb.write_text(
+        json.dumps({"released_content_sha256": rows[1]["released_content_sha256"]}) + "\n"
+    )
+    monkeypatch.setattr(audit, "FINEWEB_EDU", fineweb)
+    monkeypatch.setattr(audit, "TOKENIZER", fineweb)
+    monkeypatch.setattr(audit, "Tokenizer", WordTokenizer)
+    audit.census(preprocessed, tmp_path / "out", tmp_path / "census.json", workers=2)
+    receipt = json.loads((tmp_path / "census.json").read_text())
+    assert (receipt["document_count"], receipt["tokens"]) == (3, 4 + 5 + 3)
+    assert receipt["shared_with_fineweb_edu"] == {"documents": 1, "tokens": 5}
+    assert receipt["distinct_from_fineweb_edu_tokens"] == 7
+    index = [
+        json.loads(line) for line in (tmp_path / "out/documents.jsonl").read_text().splitlines()
+    ]
+    assert [(row["ordinal"], row["source_ordinal"]) for row in index] == [(0, 0), (1, 10), (2, 20)]
