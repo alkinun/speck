@@ -3,13 +3,17 @@
 PYTHONPATH=. python experiments/corpus-audit/audit_ultrafineweb_listing.py list LISTING_DIR RECEIPT
 PYTHONPATH=. python experiments/corpus-audit/audit_ultrafineweb_listing.py acquire RECEIPT CRAWL DIR
 PYTHONPATH=. python experiments/corpus-audit/audit_ultrafineweb_listing.py convert DIR BASE_PLAN OUT
+PYTHONPATH=. python experiments/corpus-audit/audit_ultrafineweb_listing.py census PREPROCESSED OUT RECEIPT
 
 `list` records every file under the pinned HQ route through the Hub API and projects Mistral
 tokens per crawl from compressed bytes at the rate the retained twelve shards measured.
 `acquire` downloads one crawl's shards, verifying each against the listing's LFS sha256, and is
 resumable: verified files are kept and only missing ones are fetched. `convert` turns an acquired
 crawl into input for `scripts.production_data_preprocess`, in the record shape of the 2026-09-22
-HQ pass, and writes a plan that keeps that pass's firewall references and policy. None admits data.
+HQ pass, and writes a plan that keeps that pass's firewall references and policy. `census` counts
+Mistral tokens (with BOS/EOS) for every document the preprocessor retained and the tokens distinct
+from the retained FineWeb-Edu stock by exact content hash, the quantity the supply gap uses. None
+admits data.
 """
 
 import argparse
@@ -19,6 +23,7 @@ import sys
 import time
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
+from multiprocessing import Pool
 from pathlib import Path
 from urllib.parse import urlsplit
 from urllib.request import urlopen
@@ -28,12 +33,15 @@ import pyarrow.parquet as pq
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from speck.provenance.io import atomic_json, file_sha256  # noqa: E402
+from speck.tokenization.tokenizer import Tokenizer  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 REPOSITORY = "openbmb/Ultra-FineWeb"
 ROUTE = "data/ultrafineweb_l1_en_hq"
 CENSUS = "experiments/corpus-audit/web-hq-stratified.json"
 READINESS = "experiments/corpus-audit/data-readiness.json"
+TOKENIZER = Path("/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model")
+FINEWEB_EDU = Path("/mnt/speck-data/speck/document-token-stock-e1s-v1/fineweb_edu/documents.jsonl")
 
 
 def tree(revision, path):
@@ -246,6 +254,92 @@ def convert(directory, base_plan, output):
     )
 
 
+_tokenizer = None
+
+
+def _count(lines):
+    global _tokenizer
+    _tokenizer = _tokenizer or Tokenizer(str(TOKENIZER))
+    rows = [json.loads(line) for line in lines]
+    encoded = _tokenizer.encode_batch([row["text"] for row in rows], bos=True, eos=True)
+    return [
+        (row["released_content_sha256"], len(tokens), row["source_ordinal"])
+        for row, tokens in zip(rows, encoded, strict=True)
+    ]
+
+
+def _batches(path, size=512):
+    with path.open() as handle:
+        batch = []
+        for line in handle:
+            batch.append(line)
+            if len(batch) == size:
+                yield batch
+                batch = []
+        if batch:
+            yield batch
+
+
+def census(preprocessed, output, receipt, workers=16):
+    """Count tokens of the retained crawl documents, in order, and their FineWeb-Edu overlap."""
+    manifest_path = preprocessed / "manifest.json"
+    entry = json.loads(manifest_path.read_text())["outputs"]["acquired_train__web"]
+    text = preprocessed / entry["path"]
+    if file_sha256(text) != entry["sha256"]:
+        raise ValueError("retained crawl text differs from its preprocess manifest")
+    reference = set()
+    with FINEWEB_EDU.open() as handle:
+        for line in handle:
+            reference.add(json.loads(line)["released_content_sha256"])
+    output.mkdir(parents=True, exist_ok=False)
+    documents = tokens = shared_documents = shared_tokens = 0
+    with Pool(workers) as pool, (output / "documents.jsonl").open("w") as index:
+        for counts in pool.imap(_count, _batches(text)):
+            for digest, count, source_ordinal in counts:
+                row = {
+                    "ordinal": documents,
+                    "released_content_sha256": digest,
+                    "source_ordinal": source_ordinal,
+                    "token_count": count,
+                }
+                index.write(json.dumps(row, sort_keys=True) + "\n")
+                documents += 1
+                tokens += count
+                if digest in reference:
+                    shared_documents += 1
+                    shared_tokens += count
+    atomic_json(
+        receipt,
+        {
+            "format": "speck_ultrafineweb_hq_crawl_census",
+            "format_version": 1,
+            "status": "preprocessed_candidate_stock_not_training_admission",
+            "training_admitted": False,
+            "eligible_tokens_established": 0,
+            "gpu_hours": 0,
+            "preprocess_manifest": {
+                "path": str(manifest_path),
+                "sha256": file_sha256(manifest_path),
+            },
+            "tokenizer": {"path": str(TOKENIZER), "sha256": file_sha256(TOKENIZER)},
+            "fineweb_edu_documents": {"path": str(FINEWEB_EDU), "sha256": file_sha256(FINEWEB_EDU)},
+            "documents": {
+                "path": str(output / "documents.jsonl"),
+                "sha256": file_sha256(output / "documents.jsonl"),
+            },
+            "document_count": documents,
+            "tokens": tokens,
+            "shared_with_fineweb_edu": {"documents": shared_documents, "tokens": shared_tokens},
+            "distinct_from_fineweb_edu_tokens": tokens - shared_tokens,
+            "boundary": (
+                "Tokens with BOS/EOS for documents retained by the unchanged HQ preprocessor "
+                "(exact and near deduplication, firewall references). Family partition, "
+                "extraction-quality review and eligible-token accounting remain open."
+            ),
+        },
+    )
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -260,13 +354,19 @@ def main():
     convert_parser.add_argument("directory", type=Path)
     convert_parser.add_argument("base_plan", type=Path)
     convert_parser.add_argument("output", type=Path)
+    census_parser = commands.add_parser("census")
+    census_parser.add_argument("preprocessed", type=Path)
+    census_parser.add_argument("output", type=Path)
+    census_parser.add_argument("receipt", type=Path)
     args = parser.parse_args()
     if args.command == "list":
         listing(args.listing_dir, args.receipt)
     elif args.command == "acquire":
         acquire(args.receipt, args.crawl, args.output)
-    else:
+    elif args.command == "convert":
         convert(args.directory, args.base_plan, args.output)
+    else:
+        census(args.preprocessed, args.output, args.receipt)
 
 
 if __name__ == "__main__":
