@@ -149,8 +149,15 @@ full vocabulary, scores them with the checked-math or sandboxed stdin/stdout ver
 `speck/evaluation/verifiers.py`, normalizes rewards within the group, and takes one on-policy
 step on completion tokens. Groups whose rewards are all equal carry no signal and are counted;
 unverifiable domains and over-long prompts are counted and skipped. Sampling is seeded per step,
-so resume is exact. The trainer is single-process, with no KL penalty, reference model or
-clipping; distributed rollout, long-context RL and measured benefit remain to qualify. The smoke
+so rollouts resume exactly. `deterministic` and `activation_checkpointing` are required and
+immutable on resume. Without deterministic kernels a resumed run matches until its first update,
+then diverges, because the backward pass is not reproducible; with them, updates are too. Each
+completion is backpropagated separately, so memory is bounded by the longest sequence rather than
+the group. `python -m scripts.rl_prompts` builds the prompt file: exact normalized-prompt
+deduplication, conflicting references dropped, the frozen benchmark scanner, and no prompt shared
+with named SFT files. The trainer is single-process, with no KL penalty, reference model or
+clipping; distributed rollout, long-context RL and measured benefit remain to qualify. The
+[RTX 3090 pilot](../experiments/rl-pilot/README.md) runs it from a real SFT parent. The smoke
 run checks the plumbing only: its tiny model earns no reward. Data and verifier requirements are in
 [the program](program.md#conditional-rl).
 

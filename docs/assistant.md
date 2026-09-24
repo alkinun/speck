@@ -43,6 +43,8 @@ census. Exact conversation identities are deduplicated; normalized first-user pr
 split. All five frozen benchmarks are checked with the existing exact/ngram exclusion scanner.
 The receipt records every selected identity, source, length, supervised token count, rejection, and
 input hash. These small balanced counts are engineering coverage, not a final assistant mixture.
+`--subset source:subset`, `--kind` and the per-kind counts restrict the same selection to one
+stock slice, as the [RL pilot](../experiments/rl-pilot/README.md) does for its math SFT.
 
 ```bash
 python -m scripts.sft_rehearsal /path/to/generator-train-*.arrow \

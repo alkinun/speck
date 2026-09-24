@@ -153,9 +153,12 @@ primary research evidence is added.
    are [implemented](docs/training.md#mid-training-readiness); 16K/32K runtime still needs GH200
    qualification. Stages 5 and 6 have minimal implementations: a
    [group-relative RL trainer](docs/training.md#reward-training) with checked verifiers and a
-   [self-distillation dataset builder](docs/training.md#final-self-distillation). Remaining
-   workstation work is multi-worker rollout and a pilot on a real SFT parent. None of it spends
-   grant hours.
+   [self-distillation dataset builder](docs/training.md#final-self-distillation). The
+   [RTX 3090 RL pilot](experiments/rl-pilot/README.md) ran from a real math SFT of the pilot base.
+   It qualified memory (18.8 GiB), rollout cost, zero-signal accounting and restart, and added the
+   required `deterministic` setting. The 105M-token base almost never earns reward, so it measures
+   no benefit, and replay parity through an update still needs a stronger parent. Remaining
+   workstation work is multi-worker rollout. None of it spends grant hours.
 4. **Prepare the reference-model GH200 packet before access.** Bind current source and exact inputs,
    checks, workload sizes, measurements and stop conditions, and rebuild the transfer bundle from
    current committed code. No paid run starts from this outline. In the same window, run the
@@ -220,7 +223,8 @@ Coverage is claimed per stage, never in aggregate, and
 today, stage 3 has best-fit masked rows, and stage 5 has a minimal
 [RL trainer](docs/training.md#reward-training) with checked verifiers; stage 6 builds a
 [verified self-distillation dataset](docs/training.md#final-self-distillation) for the SFT trainer.
-Neither is qualified at scale.
+The RL trainer has a single-GPU [engineering pilot](experiments/rl-pilot/README.md) on a real SFT
+parent. Neither stage is qualified at scale.
 
 That gap is two decisions, not one, and they have different costs and different deadlines:
 

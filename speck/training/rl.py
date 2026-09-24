@@ -21,7 +21,7 @@ from speck.evaluation.verifiers import code_reward, math_reward
 from speck.model import SpeckForCausalLM
 from speck.model.architecture import ArchitectureConfig
 from speck.model.generation import sample_group
-from speck.operations.runtime import print0
+from speck.operations.runtime import configure_determinism, print0
 from speck.tokenization.chat import get_chat_tokenizer
 from speck.training.checkpoint import latest, load, load_metadata, load_model, save
 from speck.training.step import assert_finite, lr_scale, set_optimizer_lr
@@ -40,6 +40,8 @@ SETTINGS = {
     "weight_decay",
     "grad_clip",
     "optimizer",
+    "activation_checkpointing",
+    "deterministic",
     "save_every",
     "seed",
     "parent",
@@ -62,6 +64,10 @@ def validate_settings(settings):
         raise ValueError("group-relative advantages need at least two completions per prompt")
     if not isinstance(settings["temperature"], (int, float)) or settings["temperature"] <= 0:
         raise ValueError("temperature must be positive")
+    if type(settings["activation_checkpointing"]) is not bool:
+        raise ValueError("activation_checkpointing must be boolean")
+    if type(settings["deterministic"]) is not bool:
+        raise ValueError("deterministic must be boolean")
     if set(settings["parent"]) != {"checkpoint_dir", "step", "model_sha256", "metadata_sha256"}:
         raise ValueError("parent must name a native checkpoint and its sha256 digests")
     return settings
@@ -136,6 +142,7 @@ def load_parent(parent, tokenizer):
 class RLTrainer:
     def __init__(self, configs, device="cpu", reward=None):
         self.settings = validate_settings(dict(configs["rl"]))
+        configure_determinism(self.settings["deterministic"])
         self.device = torch.device(device)
         self.tokenizer = get_chat_tokenizer(**configs["tokenizer"])
         self.prompts, self.skipped = load_prompts(
@@ -147,6 +154,7 @@ class RLTrainer:
         )
         self.output = Path(self.settings["output_dir"])
         self.model = load_parent(self.settings["parent"], self.tokenizer).to(self.device)
+        self.model.set_gradient_checkpointing(self.settings["activation_checkpointing"])
         self.optimizer = self.model.optimizer(
             self.settings["lr"], self.settings["weight_decay"], self.settings["optimizer"]
         )
@@ -193,11 +201,14 @@ class RLTrainer:
         loss_sum = torch.zeros((), device=self.device)
         for prompt, completions, rewards in groups:
             advantages = group_advantages(rewards)
-            if not advantages.any():
-                continue
-            loss, _ = policy_loss(self.model, prompt["tokens"], completions, advantages)
-            (loss / tokens).backward()
-            loss_sum += loss.detach()
+            # One completion per backward bounds activation memory by the longest sequence,
+            # not the group; the summed gradient is the same.
+            for completion, advantage in zip(completions, advantages):
+                if not advantage:
+                    continue
+                loss, _ = policy_loss(self.model, prompt["tokens"], [completion], advantage[None])
+                (loss / tokens).backward()
+                loss_sum += loss.detach()
         assert_finite(loss_sum, "non-finite RL loss")
         scale = lr_scale(
             step, settings["steps"], settings["warmup_steps"], settings["min_lr"], "cosine"
