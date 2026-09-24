@@ -2,11 +2,14 @@
 
 PYTHONPATH=. python experiments/corpus-audit/audit_ultrafineweb_listing.py list LISTING_DIR RECEIPT
 PYTHONPATH=. python experiments/corpus-audit/audit_ultrafineweb_listing.py acquire RECEIPT CRAWL DIR
+PYTHONPATH=. python experiments/corpus-audit/audit_ultrafineweb_listing.py convert DIR BASE_PLAN OUT
 
 `list` records every file under the pinned HQ route through the Hub API and projects Mistral
 tokens per crawl from compressed bytes at the rate the retained twelve shards measured.
 `acquire` downloads one crawl's shards, verifying each against the listing's LFS sha256, and is
-resumable: verified files are kept and only missing ones are fetched. Neither admits data.
+resumable: verified files are kept and only missing ones are fetched. `convert` turns an acquired
+crawl into input for `scripts.production_data_preprocess`, in the record shape of the 2026-09-22
+HQ pass, and writes a plan that keeps that pass's firewall references and policy. None admits data.
 """
 
 import argparse
@@ -17,7 +20,10 @@ import time
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from urllib.parse import urlsplit
 from urllib.request import urlopen
+
+import pyarrow.parquet as pq
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
@@ -177,6 +183,69 @@ def acquire(receipt, crawl, output):
     )
 
 
+def convert(directory, base_plan, output):
+    """Write preprocessor input and plan for one acquired crawl, verifying every shard first."""
+    acquisition = json.loads((directory / "acquisition.json").read_text())
+    output.mkdir(parents=True, exist_ok=False)
+    records = output / "input.jsonl"
+    ordinal = 0
+    with records.open("w") as handle:
+        for item in acquisition["files"]:
+            shard = directory / Path(item["path"]).name
+            if file_sha256(shard) != item["sha256"]:
+                raise ValueError(f"shard differs from its acquisition receipt: {shard}")
+            for batch in pq.ParquetFile(shard).iter_batches(batch_size=1024):
+                for row in batch.to_pylist():
+                    url = json.loads(row["meta"])["url"]
+                    record = {
+                        "text": row["content"],
+                        "released_content_sha256": hashlib.sha256(
+                            row["content"].encode()
+                        ).hexdigest(),
+                        "url": url,
+                        "host": urlsplit(url).hostname,
+                        "content_id": row["uid"],
+                        "source_path": item["path"],
+                        "source_ordinal": ordinal,
+                    }
+                    handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+                    ordinal += 1
+            print(f"converted {ordinal:,} through {shard.name}", flush=True)
+    plan = json.loads(base_plan.read_text())
+    plan["sources"] = [s for s in plan["sources"] if s["id"].startswith("firewall_reference__")]
+    plan["sources"].append(
+        {
+            "id": "acquired_train__web",
+            "precedence": len(plan["sources"]) + 1,
+            "path": str(records),
+            "sha256": file_sha256(records),
+            "text_field": "text",
+            "content_sha256_field": "released_content_sha256",
+            "url_field": "url",
+            "domain_field": "host",
+            "blob_field": "content_id",
+        }
+    )
+    plan["output_directory"] = str(output / "excluded")
+    plan["cleanup_files"] = []
+    atomic_json(output / "preprocess-plan.json", plan)
+    atomic_json(
+        output / "conversion.json",
+        {
+            "format": "speck_ultrafineweb_hq_crawl_conversion",
+            "format_version": 1,
+            "training_admitted": False,
+            "acquisition": {
+                "path": str(directory / "acquisition.json"),
+                "sha256": file_sha256(directory / "acquisition.json"),
+            },
+            "base_plan": {"path": str(base_plan), "sha256": file_sha256(base_plan)},
+            "input": {"path": str(records), "sha256": plan["sources"][-1]["sha256"]},
+            "documents": ordinal,
+        },
+    )
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -187,11 +256,17 @@ def main():
     acquire_parser.add_argument("receipt", type=Path)
     acquire_parser.add_argument("crawl")
     acquire_parser.add_argument("output", type=Path)
+    convert_parser = commands.add_parser("convert")
+    convert_parser.add_argument("directory", type=Path)
+    convert_parser.add_argument("base_plan", type=Path)
+    convert_parser.add_argument("output", type=Path)
     args = parser.parse_args()
     if args.command == "list":
         listing(args.listing_dir, args.receipt)
-    else:
+    elif args.command == "acquire":
         acquire(args.receipt, args.crawl, args.output)
+    else:
+        convert(args.directory, args.base_plan, args.output)
 
 
 if __name__ == "__main__":
