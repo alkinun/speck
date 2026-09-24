@@ -1,14 +1,18 @@
-"""Measure Stack-Edu content yield at int_score 3 against 4+ with one unchanged screen.
+"""Fetch and screen Stack-Edu content: a yield probe and resumable bulk acquisition.
 
-PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py LISTING OUTPUT_DIR RECEIPT
+PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py probe LISTING OUTPUT_DIR RECEIPT
+PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py acquire LISTING CENSUS LANGUAGE TIER OUTPUT_DIR
 
-LISTING is the census listing with local metadata paths. For every language it takes the 512
-lowest SHA-256(seed:blob_id) licence-eligible rows at int_score 3 and at 4 or 5, fetches their
-Software Heritage blobs, and applies the retained acquisition's per-document screen restored from
-Git history (`fc54dafb^`): content identity and length, decoding, high-confidence secrets, English
-prose, the 200-100,000 character envelope, raw email/IPv4, duplicate lines, benchmark matches and
-Gitleaks. Both tiers pass the same screen, so the yield ratio between them is the measurement; it
-scales the census projection for int_score 3. No code is executed and nothing is admitted.
+LISTING is the census listing with local metadata paths. Both commands fetch Software Heritage
+blobs for licence-eligible rows and apply the retained acquisition's per-document screen restored
+from Git history (`fc54dafb^`): content identity and length, decoding, high-confidence secrets,
+English prose, the 200-100,000 character envelope, raw email/IPv4, duplicate lines, benchmark
+matches and Gitleaks. `probe` takes the 512 lowest SHA-256(seed:blob_id) rows per language at
+int_score 3 and at 4 or 5; both tiers pass the same screen, so their yield ratio is the
+measurement. `acquire` takes every row of one language and tier in physical listing order, in
+4,096-row units that each publish a record file and manifest, so a rerun resumes at the first
+missing unit. Tier 4+ skips the rows the retained acquisition already consumed. No code is
+executed and nothing is admitted.
 """
 
 import argparse
@@ -24,6 +28,8 @@ from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+import numpy as np
+import pyarrow as pa
 import pyarrow.parquet as pq
 import requests
 
@@ -39,6 +45,7 @@ from speck.tokenization.tokenizer import Tokenizer  # noqa: E402
 
 SEED = "speck-stack-edu-yield-v1"
 PER_TIER = 512
+UNIT_ROWS = 4096
 BLOBS = "https://softwareheritage.s3.amazonaws.com/content/"
 TOKENIZER = Path("/mnt/speck-data/speck/tokenizer-final-mistral-v1/tokenizer.model")
 GITLEAKS = Path("/mnt/speck-data/speck/tools/gitleaks/8.30.1/gitleaks")
@@ -143,59 +150,74 @@ def screen(row, raw, prose_policy, exclusion):
     return None, text
 
 
-def gitleaks(records, output):
-    """Line numbers of records with Gitleaks findings, scanning them as one JSONL file."""
+def gitleaks(texts, output):
+    """Indexes of texts with Gitleaks findings, scanning them as one JSONL file."""
     source, report = output / "screened.jsonl", output / "gitleaks.json"
-    source.write_text("".join(json.dumps({"text": r["text"]}) + "\n" for r in records))
+    source.write_text("".join(json.dumps({"text": text}) + "\n" for text in texts))
     subprocess.run(
         [str(GITLEAKS), "detect", "--no-git", "--source", str(source), "--report-format", "json"]
         + ["--report-path", str(report), "--redact=100", "--exit-code", "0", "--no-banner"]
         + ["--log-level", "error"],
         check=True,
     )
-    return {finding["StartLine"] for finding in json.loads(report.read_text())}
+    findings = {finding["StartLine"] - 1 for finding in json.loads(report.read_text())}
+    source.unlink()
+    return findings
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("listing", type=Path)
-    parser.add_argument("output", type=Path)
-    parser.add_argument("receipt", type=Path)
-    args = parser.parse_args()
-    args.output.mkdir(parents=True, exist_ok=False)
-    listing = json.loads(args.listing.read_text())
-    selected = select(listing)
-    targets = [row for key in sorted(selected) for row in selected[key]]
-    atomic_json(args.output / "selection.json", targets)
+class Screen:
+    """The per-document screen with its settings, benchmarks and tokenizer loaded once."""
 
+    def __init__(self, workers):
+        self.workers = workers
+        self.prose = json.loads(POLICY.read_text())["filters"]["English_prose"]
+        self.exclusion = BenchmarkExclusion(json.loads(BENCHMARKS.read_text()))
+        self.tokenizer = Tokenizer(str(TOKENIZER))
+
+    def run(self, rows, workdir):
+        """Return (reason, text, tokens) per row in order; rejected rows carry no text."""
+        with ThreadPoolExecutor(self.workers) as pool:
+            blobs = list(pool.map(lambda row: fetch(row["blob_id"]), rows))
+        results = [
+            screen(row, raw, self.prose, self.exclusion)
+            for row, raw in zip(rows, blobs, strict=True)
+        ]
+        kept = [index for index, (reason, _) in enumerate(results) if reason is None]
+        flagged = gitleaks([results[index][1] for index in kept], workdir)
+        outcomes = [(reason, None, 0) for reason, _ in results]
+        for position, index in enumerate(kept):
+            text = results[index][1]
+            outcomes[index] = (
+                ("gitleaks", None, 0)
+                if position in flagged
+                else (None, text, len(self.tokenizer.encode(text, True, True)))
+            )
+        return outcomes
+
+
+def identity(path):
+    return {"path": str(path), "sha256": file_sha256(path)}
+
+
+def probe(listing_path, output, receipt):
+    output.mkdir(parents=True, exist_ok=False)
+    targets = [
+        row
+        for key, rows in sorted(select(json.loads(listing_path.read_text())).items())
+        for row in rows
+    ]
+    atomic_json(output / "selection.json", targets)
     started = time.perf_counter()
-    with ThreadPoolExecutor(32) as pool:
-        blobs = list(pool.map(lambda row: fetch(row["blob_id"]), targets))
-    fetch_seconds = time.perf_counter() - started
-
-    prose_policy = json.loads(POLICY.read_text())["filters"]["English_prose"]
-    exclusion = BenchmarkExclusion(json.loads(BENCHMARKS.read_text()))
-    tokenizer = Tokenizer(str(TOKENIZER))
-    reasons, kept = defaultdict(Counter), []
-    for row, raw in zip(targets, blobs, strict=True):
-        reason, text = screen(row, raw, prose_policy, exclusion)
+    outcomes = Screen(32).run(targets, output)
+    seconds = time.perf_counter() - started
+    strata, reasons = defaultdict(Counter), defaultdict(Counter)
+    for row, (reason, _, tokens) in zip(targets, outcomes, strict=True):
         key = (row["language"], tier(row["int_score"]))
+        strata[key].update(rows=1, declared_bytes=row["length_bytes"])
         if reason:
             reasons[key][reason] += 1
         else:
-            kept.append(row | {"text": text})
-    flagged = gitleaks(kept, args.output)
-    strata = defaultdict(Counter)
-    for row in targets:
-        strata[(row["language"], tier(row["int_score"]))].update(
-            rows=1, declared_bytes=row["length_bytes"]
-        )
-    for line, row in enumerate(kept, 1):
-        key = (row["language"], tier(row["int_score"]))
-        if line in flagged:
-            reasons[key]["gitleaks"] += 1
-            continue
-        strata[key].update(kept_rows=1, tokens=len(tokenizer.encode(row["text"], True, True)))
+            strata[key].update(kept_rows=1, tokens=tokens)
 
     by_language = {}
     for language in sorted({language for language, _ in strata}):
@@ -217,7 +239,7 @@ def main():
         for name in ("3", "4+")
     }
     atomic_json(
-        args.receipt,
+        receipt,
         {
             "format": "speck_stack_edu_yield_probe",
             "format_version": 1,
@@ -228,15 +250,12 @@ def main():
             "corpus_code_executed": False,
             "seed": SEED,
             "rows_per_language_and_tier": PER_TIER,
-            "listing": {"path": str(args.listing), "sha256": file_sha256(args.listing)},
-            "selection": {
-                "path": str(args.output / "selection.json"),
-                "sha256": file_sha256(args.output / "selection.json"),
-            },
-            "benchmarks": {"path": str(BENCHMARKS), "sha256": file_sha256(BENCHMARKS)},
-            "gitleaks": {"path": str(GITLEAKS), "sha256": file_sha256(GITLEAKS)},
-            "tokenizer": {"path": str(TOKENIZER), "sha256": file_sha256(TOKENIZER)},
-            "fetch_seconds": fetch_seconds,
+            "listing": identity(listing_path),
+            "selection": identity(output / "selection.json"),
+            "benchmarks": identity(BENCHMARKS),
+            "gitleaks": identity(GITLEAKS),
+            "tokenizer": identity(TOKENIZER),
+            "fetch_seconds": seconds,
             "pooled_tokens_per_declared_byte": pooled,
             "pooled_yield_ratio_3_to_4plus": pooled["3"] / pooled["4+"],
             "by_language": by_language,
@@ -249,7 +268,127 @@ def main():
             ),
         },
     )
-    print(json.dumps({"pooled": pooled, "fetch_seconds": fetch_seconds}, indent=2))
+    print(json.dumps({"pooled": pooled, "fetch_seconds": seconds}, indent=2))
+
+
+def tranche(listing, census, language, name):
+    """Every licence-eligible row of one language and tier, in physical listing order.
+
+    Tier 4+ is exactly the historical predicate's eligible set, whose first rows the retained
+    acquisition consumed in this same order; those are skipped so nothing is fetched twice.
+    """
+    policy = json.loads(POLICY.read_text())
+    parts = []
+    for item in listing["files"]:
+        if (
+            pq.ParquetFile(item["local"])
+            .read_row_group(0, columns=["language"])["language"][0]
+            .as_py()
+            != language
+        ):
+            continue
+        table = pq.read_table(item["local"], columns=COLUMNS)
+        scores = table["int_score"].to_numpy()
+        mask = file_mask(table, policy) & ((scores == 3) if name == "3" else (scores >= 4))
+        rows = np.nonzero(mask)[0]
+        parts.append(
+            table.take(rows)
+            .append_column("file", pa.array([item["path"]] * len(rows)))
+            .append_column("source_row", pa.array(rows))
+        )
+    if not parts:
+        raise ValueError(f"no metadata files for {language}")
+    rows = pa.concat_tables(parts)
+    if name == "4+":
+        history = census["by_language"][language].get("historical_acquisition")
+        rows = rows.slice(history["consumed_eligible_rows"] if history else 0)
+    return rows
+
+
+def acquire(listing_path, census_path, language, name, output, workers=128):
+    if name not in ("3", "4+"):
+        raise ValueError("tier must be 3 or 4+")
+    rows = tranche(
+        json.loads(listing_path.read_text()), json.loads(census_path.read_text()), language, name
+    )
+    directory = output / f"{language}-{name}".replace("+", "plus").replace("#", "sharp")
+    directory.mkdir(parents=True, exist_ok=True)
+    screen_ = None
+    units = []
+    for start in range(0, rows.num_rows, UNIT_ROWS):
+        manifest = directory / f"unit-{start // UNIT_ROWS:05d}.json"
+        if not manifest.exists():
+            screen_ = screen_ or Screen(workers)
+            unit = rows.slice(start, UNIT_ROWS).to_pylist()
+            started = time.perf_counter()
+            outcomes = screen_.run(unit, directory)
+            records = directory / manifest.name.replace(".json", ".jsonl.gz")
+            reasons, tokens = Counter(), 0
+            with gzip.open(records, "wt") as handle:
+                for row, (reason, text, count) in zip(unit, outcomes, strict=True):
+                    if reason:
+                        reasons[reason] += 1
+                        continue
+                    tokens += count
+                    handle.write(json.dumps(row | {"text": text, "tokens": count}) + "\n")
+            atomic_json(
+                manifest,
+                {
+                    "rows": len(unit),
+                    "first_row": start,
+                    "declared_bytes": sum(row["length_bytes"] for row in unit),
+                    "kept_rows": len(unit) - sum(reasons.values()),
+                    "tokens": tokens,
+                    "rejections": dict(reasons),
+                    "records": identity(records),
+                    "seconds": time.perf_counter() - started,
+                },
+            )
+            print(f"{directory.name} unit {start // UNIT_ROWS} tokens {tokens:,}", flush=True)
+        units.append(json.loads(manifest.read_text()))
+    totals = Counter()
+    for unit in units:
+        totals.update(
+            {key: unit[key] for key in ("rows", "declared_bytes", "kept_rows", "tokens", "seconds")}
+        )
+    atomic_json(
+        directory / "tranche.json",
+        {
+            "format": "speck_stack_edu_tranche",
+            "format_version": 1,
+            "training_admitted": False,
+            "eligible_tokens_established": 0,
+            "language": language,
+            "tier": name,
+            "listing": identity(listing_path),
+            "census": identity(census_path),
+            "units": len(units),
+            "totals": dict(totals),
+            "rejections": dict(sum((Counter(unit["rejections"]) for unit in units), Counter())),
+            "tokens_per_declared_byte": totals["tokens"] / totals["declared_bytes"]
+            if totals["declared_bytes"]
+            else None,
+        },
+    )
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    commands = parser.add_subparsers(dest="command", required=True)
+    probe_parser = commands.add_parser("probe")
+    for name in ("listing", "output", "receipt"):
+        probe_parser.add_argument(name, type=Path)
+    acquire_parser = commands.add_parser("acquire")
+    acquire_parser.add_argument("listing", type=Path)
+    acquire_parser.add_argument("census", type=Path)
+    acquire_parser.add_argument("language")
+    acquire_parser.add_argument("tier", choices=("3", "4+"))
+    acquire_parser.add_argument("output", type=Path)
+    args = parser.parse_args()
+    if args.command == "probe":
+        probe(args.listing, args.output, args.receipt)
+    else:
+        acquire(args.listing, args.census, args.language, args.tier, args.output)
 
 
 if __name__ == "__main__":
