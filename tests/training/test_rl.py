@@ -1,5 +1,7 @@
 import json
 import shutil
+import sys
+from pathlib import Path
 
 import torch
 
@@ -14,6 +16,7 @@ from speck.model.architecture import (
     SwiGLUSpec,
 )
 from speck.model.generation import sample_group
+from speck.operations.r0_executor import supervise
 from speck.tokenization.chat import ChatTokenizer
 from speck.training import rl
 from speck.training.checkpoint import load_model, save
@@ -99,14 +102,16 @@ def parent_checkpoint(tmp_path, tokenizer):
     }
 
 
-def test_trainer_runs_steps_and_resumes_exactly(tmp_path, monkeypatch):
-    tokenizer = ChatTokenizer(AnyIdTokenizer(tmp_path / "tokenizer.model"))
-    monkeypatch.setattr(rl, "get_chat_tokenizer", lambda **config: tokenizer)
+def parity_reward(prompt, text):
+    return float(len(text) % 2)
+
+
+def trainer_settings(tmp_path, tokenizer, output):
     prompts = tmp_path / "prompts.jsonl"
     rows = [{"domain": "Math", "query": f"{index}+1", "ground_truth": "1"} for index in range(4)]
     rows.append({"domain": "Knowledge", "query": "why", "ground_truth": "because"})
     prompts.write_text("".join(json.dumps(row) + "\n" for row in rows))
-    settings = {
+    return {
         "prompt_files": [str(prompts)],
         "group_size": 4,
         "activation_checkpointing": False,
@@ -125,12 +130,15 @@ def test_trainer_runs_steps_and_resumes_exactly(tmp_path, monkeypatch):
         "save_every": 1,
         "seed": 5,
         "parent": parent_checkpoint(tmp_path, tokenizer),
-        "output_dir": str(tmp_path / "run"),
+        "output_dir": str(output),
     }
 
-    def reward(prompt, text):
-        return float(len(text) % 2)
 
+def test_trainer_runs_steps_and_resumes_exactly(tmp_path, monkeypatch):
+    tokenizer = ChatTokenizer(AnyIdTokenizer(tmp_path / "tokenizer.model"))
+    monkeypatch.setattr(rl, "get_chat_tokenizer", lambda **config: tokenizer)
+    settings = trainer_settings(tmp_path, tokenizer, tmp_path / "run")
+    reward = parity_reward
     trainer = rl.RLTrainer({"tokenizer": {}, "rl": settings}, reward=reward)
     assert trainer.skipped == {"unverifiable_domain": 1, "prompt_too_long": 0}
     trainer.run()
@@ -154,3 +162,52 @@ def test_trainer_runs_steps_and_resumes_exactly(tmp_path, monkeypatch):
     expected, actual = load_model(tmp_path / "run", 2, "cpu"), load_model(resumed, 2, "cpu")
     for name in expected:
         torch.testing.assert_close(actual[name], expected[name], rtol=0, atol=0)
+
+
+def test_two_ranks_take_the_same_steps_as_one(tmp_path, monkeypatch):
+    tokenizer = ChatTokenizer(AnyIdTokenizer(tmp_path / "tokenizer.model"))
+    monkeypatch.setattr(rl, "get_chat_tokenizer", lambda **config: tokenizer)
+    settings = trainer_settings(tmp_path, tokenizer, tmp_path / "single")
+    rl.RLTrainer({"tokenizer": {}, "rl": settings}, reward=parity_reward).run()
+    (tmp_path / "settings.json").write_text(
+        json.dumps({**settings, "output_dir": str(tmp_path / "ranks")})
+    )
+    worker = tmp_path / "worker.py"
+    worker.write_text(
+        """import json, os, sys
+from pathlib import Path
+import torch.distributed as dist
+sys.path.insert(0, sys.argv[3])
+from speck.tokenization.chat import ChatTokenizer
+from speck.training import rl
+from tests.training.test_rl import AnyIdTokenizer, parity_reward
+root = Path(sys.argv[2])
+dist.init_process_group("gloo", init_method=sys.argv[1], rank=int(os.environ["RANK"]), world_size=2)
+tokenizer = ChatTokenizer(AnyIdTokenizer(root / "tokenizer.model"))
+rl.get_chat_tokenizer = lambda **config: tokenizer
+settings = json.loads((root / "settings.json").read_text())
+rl.RLTrainer({"tokenizer": {}, "rl": settings}, reward=parity_reward).run()
+dist.destroy_process_group()
+"""
+    )
+    store = (tmp_path / "gloo-store").as_uri()
+    root = str(Path(__file__).resolve().parents[2])
+    command = [sys.executable, str(worker), store, str(tmp_path), root]
+    execution = supervise(command, tmp_path, 120, 2, 2)
+    assert execution["returncode"] == 0, (tmp_path / "worker.log").read_text()
+    single = (tmp_path / "single/metrics.jsonl").read_text().splitlines()
+    ranks = (tmp_path / "ranks/metrics.jsonl").read_text().splitlines()
+
+    def strip(line):
+        return {
+            k: v for k, v in json.loads(line).items() if k not in ("seconds", "loss", "grad_norm")
+        }
+
+    assert [strip(line) for line in ranks] == [strip(line) for line in single]
+    assert any(json.loads(line)["grad_norm"] > 0 for line in single)
+    expected, actual = (
+        load_model(tmp_path / "single", 2, "cpu"),
+        load_model(tmp_path / "ranks", 2, "cpu"),
+    )
+    for name in expected:
+        torch.testing.assert_close(actual[name], expected[name], rtol=1e-5, atol=1e-6)
