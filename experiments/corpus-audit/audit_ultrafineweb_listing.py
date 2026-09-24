@@ -10,10 +10,10 @@ tokens per crawl from compressed bytes at the rate the retained twelve shards me
 `acquire` downloads one crawl's shards, verifying each against the listing's LFS sha256, and is
 resumable: verified files are kept and only missing ones are fetched. `convert` turns an acquired
 crawl into input for `scripts.production_data_preprocess`, in the record shape of the 2026-09-22
-HQ pass, and writes a plan that keeps that pass's firewall references and policy. `census` counts
-Mistral tokens (with BOS/EOS) for every document the preprocessor retained and the tokens distinct
-from the retained FineWeb-Edu stock by exact content hash, the quantity the supply gap uses. None
-admits data.
+HQ pass, and writes a plan that keeps that pass's firewall references and policy. `census` writes the
+document token index (speck.data.document_index) of every document the preprocessor retained, which
+the family graph and ladder builder read, and counts the tokens distinct from the retained
+FineWeb-Edu stock by exact content hash, the quantity the supply gap uses. None admits data.
 """
 
 import argparse
@@ -23,7 +23,6 @@ import sys
 import time
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
-from multiprocessing import Pool
 from pathlib import Path
 from urllib.parse import urlsplit
 from urllib.request import urlopen
@@ -32,8 +31,8 @@ import pyarrow.parquet as pq
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from speck.data.document_index import index_documents  # noqa: E402
 from speck.provenance.io import atomic_json, file_sha256, fsync_path  # noqa: E402
-from speck.tokenization.tokenizer import Tokenizer  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 REPOSITORY = "openbmb/Ultra-FineWeb"
@@ -255,65 +254,33 @@ def convert(directory, base_plan, output):
     )
 
 
-_tokenizer = None
-
-
-def _count(lines):
-    global _tokenizer
-    _tokenizer = _tokenizer or Tokenizer(str(TOKENIZER))
-    rows = [json.loads(line) for line in lines]
-    encoded = _tokenizer.encode_batch([row["text"] for row in rows], bos=True, eos=True)
-    return [
-        (row["released_content_sha256"], len(tokens), row["source_ordinal"])
-        for row, tokens in zip(rows, encoded, strict=True)
-    ]
-
-
-def _batches(path, size=512):
-    with path.open() as handle:
-        batch = []
-        for line in handle:
-            batch.append(line)
-            if len(batch) == size:
-                yield batch
-                batch = []
-        if batch:
-            yield batch
-
-
 def census(preprocessed, output, receipt, workers=16):
-    """Count tokens of the retained crawl documents, in order, and their FineWeb-Edu overlap."""
-    manifest_path = preprocessed / "manifest.json"
-    entry = json.loads(manifest_path.read_text())["outputs"]["acquired_train__web"]
-    text = preprocessed / entry["path"]
-    if file_sha256(text) != entry["sha256"]:
-        raise ValueError("retained crawl text differs from its preprocess manifest")
+    """Index the retained crawl documents' tokens, then count their FineWeb-Edu overlap."""
+    manifest_path = Path(preprocessed) / "manifest.json"
+    index = index_documents(
+        preprocessed,
+        "acquired_train__web",
+        output,
+        TOKENIZER,
+        fields=("source_ordinal",),
+        workers=workers,
+    )
     reference = set()
     with FINEWEB_EDU.open() as handle:
         for line in handle:
             reference.add(json.loads(line)["released_content_sha256"])
-    output.mkdir(parents=True, exist_ok=False)
-    documents = tokens = shared_documents = shared_tokens = 0
-    with Pool(workers) as pool, (output / "documents.jsonl").open("w") as index:
-        for counts in pool.imap(_count, _batches(text)):
-            for digest, count, source_ordinal in counts:
-                row = {
-                    "ordinal": documents,
-                    "released_content_sha256": digest,
-                    "source_ordinal": source_ordinal,
-                    "token_count": count,
-                }
-                index.write(json.dumps(row, sort_keys=True) + "\n")
-                documents += 1
-                tokens += count
-                if digest in reference:
-                    shared_documents += 1
-                    shared_tokens += count
+    shared_documents = shared_tokens = 0
+    with (Path(output) / "documents.jsonl").open() as handle:
+        for line in handle:
+            row = json.loads(line)
+            if row["released_content_sha256"] in reference:
+                shared_documents += 1
+                shared_tokens += row["token_count"]
     atomic_json(
         receipt,
         {
             "format": "speck_ultrafineweb_hq_crawl_census",
-            "format_version": 1,
+            "format_version": 2,
             "status": "preprocessed_candidate_stock_not_training_admission",
             "training_admitted": False,
             "eligible_tokens_established": 0,
@@ -322,16 +289,15 @@ def census(preprocessed, output, receipt, workers=16):
                 "path": str(manifest_path),
                 "sha256": file_sha256(manifest_path),
             },
-            "tokenizer": {"path": str(TOKENIZER), "sha256": file_sha256(TOKENIZER)},
-            "fineweb_edu_documents": {"path": str(FINEWEB_EDU), "sha256": file_sha256(FINEWEB_EDU)},
-            "documents": {
-                "path": str(output / "documents.jsonl"),
-                "sha256": file_sha256(output / "documents.jsonl"),
+            "document_index": {
+                "path": str(Path(output) / "manifest.json"),
+                "sha256": file_sha256(Path(output) / "manifest.json"),
             },
-            "document_count": documents,
-            "tokens": tokens,
+            "fineweb_edu_documents": {"path": str(FINEWEB_EDU), "sha256": file_sha256(FINEWEB_EDU)},
+            "document_count": index["document_count"],
+            "tokens": index["tokens"],
             "shared_with_fineweb_edu": {"documents": shared_documents, "tokens": shared_tokens},
-            "distinct_from_fineweb_edu_tokens": tokens - shared_tokens,
+            "distinct_from_fineweb_edu_tokens": index["tokens"] - shared_tokens,
             "boundary": (
                 "Tokens with BOS/EOS for documents retained by the unchanged HQ preprocessor "
                 "(exact and near deduplication, firewall references). Family partition, "

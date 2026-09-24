@@ -4,20 +4,19 @@ import hashlib
 import importlib.util
 import io
 import json
-import sys
 from pathlib import Path
 
 import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
+from speck.data import document_index
+
 SPEC = importlib.util.spec_from_file_location(
     "ultrafineweb_listing",
     Path(__file__).resolve().parents[1] / "experiments/corpus-audit/audit_ultrafineweb_listing.py",
 )
 audit = importlib.util.module_from_spec(SPEC)
-# Registered so pool workers can unpickle the census's module-level count function.
-sys.modules[SPEC.name] = audit
 SPEC.loader.exec_module(audit)
 
 
@@ -107,7 +106,7 @@ def test_census_counts_retained_tokens_and_fineweb_overlap(tmp_path, monkeypatch
     )
     monkeypatch.setattr(audit, "FINEWEB_EDU", fineweb)
     monkeypatch.setattr(audit, "TOKENIZER", fineweb)
-    monkeypatch.setattr(audit, "Tokenizer", WordTokenizer)
+    monkeypatch.setattr(document_index, "Tokenizer", WordTokenizer)
     audit.census(preprocessed, tmp_path / "out", tmp_path / "census.json", workers=2)
     receipt = json.loads((tmp_path / "census.json").read_text())
     assert (receipt["document_count"], receipt["tokens"]) == (3, 4 + 5 + 3)
@@ -117,3 +116,8 @@ def test_census_counts_retained_tokens_and_fineweb_overlap(tmp_path, monkeypatch
         json.loads(line) for line in (tmp_path / "out/documents.jsonl").read_text().splitlines()
     ]
     assert [(row["ordinal"], row["source_ordinal"]) for row in index] == [(0, 0), (1, 10), (2, 20)]
+    stock = json.loads((tmp_path / "out/manifest.json").read_text())
+    assert stock["plan"]["input"] == manifest["outputs"]["acquired_train__web"] | {
+        "path": str(retained)
+    }
+    assert receipt["document_index"]["path"] == str(tmp_path / "out/manifest.json")
