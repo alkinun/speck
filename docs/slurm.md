@@ -16,10 +16,9 @@ uv run --no-sync python -m scripts.slurm_ops render /shared/wave.json \
 A wave binds the exact clean Git revision, experiment/data hashes, commands, resources, and retry
 limits. Build it only after the recipe and cost are measured. `speck_slurm_wave` v1 is validated in
 [speck/operations/slurm.py](../speck/operations/slurm.py); tests contain minimal complete fixtures.
-The execution budget is 5,000 total hours: 4,420 scheduled and a 580-hour reserve, matching the
-[compute budget](program.md#compute). The constants live in `speck/operations/slurm.py`, and
-`make plan-check` fails if they drift from [plan.json](../experiments/main-data/plan.json), so a
-mismatch surfaces before `sbatch` time. A phase's `conditional` field marks reserve, and zero-hour
+The budget constants in `speck/operations/slurm.py` are checked against
+[plan.json](../experiments/main-data/plan.json) by `make plan-check`, so drift surfaces before
+`sbatch` time. A phase's `conditional` field marks reserve, and zero-hour
 phases cannot launch compute. Old wave plans must be replayed with their original checkout; they
 cannot authorize current launches. A wave still needs a frozen execution manifest and a cost check
 against its budget line before submission.

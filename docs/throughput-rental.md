@@ -1,9 +1,11 @@
 # H100 throughput rental
 
-Measure the **1.2B parent's speedup over the frozen pilot recipe** on rented H100 time, before
-grant access. The packet is [`throughput-h100.json`](../experiments/qualification/throughput-h100.json);
-this document is how it is executed. It spends **zero grant GPU-hours** and is charged to the
-external rental ledger, exactly as the completed pilot was.
+An **optional** external rental that would measure the **1.2B parent's speedup over the frozen
+pilot recipe** on H100 time, before grant access. It is prepared, not executed, and runs only if
+the user decides to fund it ([open decisions](../PLAN.md#open-decisions)). The packet is
+[`throughput-h100.json`](../experiments/qualification/throughput-h100.json); this document is how
+it would be executed. It spends **zero grant GPU-hours** and is charged to the external rental
+ledger, as the completed pilot was.
 
 Why it exists: the [RTX 3090 pass](../experiments/qualification/throughput-3090/sweep.json) selected
 a configuration but could only measure it on a 318M proxy, and no checkpointing-off 1.2B
@@ -27,7 +29,7 @@ records the earlier local preflight. Three defects were found and fixed before a
   fresh host, so the loader-inclusive check would have failed.
 - Nothing bound the packet to the CLI at all.
 
-Every run now carries a machine-generated `argv`, checked against the real
+Every run carries a machine-generated `argv`, checked against the real
 `speck.training.benchmark` parser by
 [`check_throughput_packet.py`](../experiments/qualification/check_throughput_packet.py), which runs
 in `make plan-check` and in the test suite. The sweep was also executed locally on the RTX 3090 at
@@ -46,34 +48,15 @@ Nothing below can be done from this repository:
 
 The operator controls creation and deletion. Stopping a benchmark does not stop billing.
 
-## Build and transfer the bundle
+## Bundle and instance setup
 
-The builder refuses to run against a dirty working tree, so commit first.
-
-```bash
-uv run --no-sync python -m scripts.gh200_check bundle \
-  --output /mnt/speck-data/speck/h100-throughput-20260922 \
-  --data /mnt/speck-data/speck/data/flagship-pilot-105m \
-  --tokenizer /mnt/speck-data/speck/tokenizer-final-mistral-v1 \
-  --assistant /mnt/speck-data/speck/gh200-readiness-20260918/assistant-rehearsal-2
-```
-
-This writes `h100-throughput-20260922.tar.gz` plus a transfer receipt carrying its SHA-256 and the
-source commit. The payload is about 240 MB, almost all of it the packed pilot pack that only the
-end-to-end run reads. Copy both files, verify the SHA-256 **after** transfer, then extract into a
-private directory on the instance's persistent disk. Do not publish the corpus payload.
-
-## On the instance
-
-From the extracted bundle root, clone its recorded branch, install the pinned GPU dependencies,
-and bind the transported inputs before printing benchmark commands:
+Build, transfer and verify the bundle, then clone, install and bind it, exactly as the
+[GH200 qualification](compute-qualification.md) does, with a rental output directory such as
+`/mnt/speck-data/speck/h100-throughput-20260922` and the instance's x86 dependencies. The payload
+is about 240 MB, almost all of it the packed pilot pack that only the end-to-end run reads. Then,
+from `code/`:
 
 ```bash
-speck_bundle_branch=$(python3 -c 'import json; print(json.load(open("bundle.json"))["branch"])')
-git clone --branch "$speck_bundle_branch" code.bundle code
-cd code
-uv sync --locked --python 3.10 --extra gpu --extra linear --group dev --group transformers
-uv run --no-sync python -m scripts.gh200_check bind ..
 export TORCHINDUCTOR_CACHE_DIR=$PWD/../inductor-cache   # preserve across runs
 export TRITON_CACHE_DIR=$TORCHINDUCTOR_CACHE_DIR/triton # also preserve FLA kernel choices
 export CUBLAS_WORKSPACE_CONFIG=:4096:8               # required by the deterministic recipe
@@ -150,7 +133,7 @@ Use the [performance plan](performance.md) for the compact result handoff. A sep
 trainer run at the selected cadence must measure the full-trainer derate; leave it unmeasured
 if the rental only executes this benchmark sweep.
 
-After GH200 and distributed qualification, apply the predeclared
-[compute rules](program.md#compute); a surplus buys experiments, **not** a longer parent run.
+After GH200 and distributed qualification, apply the predeclared `compute.rules` in
+[plan.json](../experiments/main-data/plan.json).
 
 Verify the instance is actually deleted. Provider billing state is separate from local backups.

@@ -3,9 +3,7 @@
 Read [PLAN.md](PLAN.md) for status and the work order, the [program design](docs/program.md) for
 the goal, method and experiments, and [plan.json](experiments/main-data/plan.json) for the numbers.
 Keep one configuration per runnable experiment. A new idea belongs in a short discussion or Git
-issue until it becomes a predeclared experiment. This release studies data; the architecture is
-fixed by declaration, so make no architecture claim and leave architecture and size research to
-later programs.
+issue until it becomes a predeclared experiment.
 
 ## Development
 
@@ -19,8 +17,8 @@ make smoke
 `make quality` checks formatting, lint, portable behavior tests, and historical snapshot integrity.
 `make plan-check` is offline design arithmetic: it checks [`plan.json`](experiments/main-data/plan.json),
 the ladder configurations, record references, the supply gap, and the only tables that render plan
-figures (the ladder and budget tables in the program design and the supply table in PLAN.md), then
-resolves every document link. Both run in CI. Do not restate plan figures elsewhere; link to them.
+figures (the ladder, family and budget tables in the program design and the supply table in
+PLAN.md), then resolves every document link. Both run in CI. Do not restate plan figures elsewhere; link to them.
 `make evidence-test` additionally verifies frozen historical inputs. Accelerator-specific tests
 skip when their dependencies are unavailable. CPU success does not qualify CUDA kernels,
 GH200 throughput, NCCL, or the scheduler.

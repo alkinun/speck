@@ -6,11 +6,10 @@ and recovery path, and measures throughput for the parent and every ladder rung.
 and selects no data.
 
 The numeric authority is [`experiments/main-data/plan.json`](../experiments/main-data/plan.json).
-The bounded synthetic diagnostic is [`experiments/qualification/plan.json`](../experiments/qualification/plan.json),
-which retains its own 70-GPU-hour R0 ceiling. That ceiling is an internal limit for R0 attempts;
-R0 work still charges the runtime-qualification line and is recorded once in the allocation ledger.
-The real-data one-worker rehearsal and distributed canaries use their own frozen settings and the
-same allocation ledger.
+The synthetic R0 diagnostic is bound by [`experiments/qualification/plan.json`](../experiments/qualification/plan.json),
+whose GPU-hour ceiling limits R0 attempts inside the runtime-qualification line. The real-data
+one-worker check and distributed canaries use their own frozen settings. Every phase is charged
+once to the allocation ledger.
 
 ## Entry gate
 
@@ -56,9 +55,9 @@ hashes, wall time, allocated GPU count and allocated GPU-hours.
 | Site preflight | 0 training hours | Record instance ID, allocation, architecture, GPU names, driver/CUDA, Python/uv, storage, network and scheduler. Verify the bundled commit and install the locked ARM64 GPU environment. | ARM64 GH200, expected dependencies, persistent output path, and free-space floor are confirmed. | Wrong hardware, missing dependency, insufficient storage, or unverified bundle. |
 | R0 single-worker diagnostic | 1 declared GPU | Run `scripts.r0_execute` with `--workers 1 --allocated-gpus 1` and the shared R0 ledger. | Synthetic KDA forward/backward, checkpoint, fresh-process restart, loader/RNG and numerical checks pass. | Any worker failure, tensor/state mismatch, timeout, or unresolved prior ledger attempt. |
 | Real-data single-worker check | 1 declared GPU | Bind the bundle, then run `scripts.gh200_check run` for the bounded 90-minute sequence. | Pilot loader scan/replay, kernels, 4K base restart, CUDA generation, base export parity, SFT restart and SFT export parity all pass. | Any phase failure. Do not proceed to distributed tests until the failed artifact is diagnosed. |
-| R0 four-worker diagnostic | 4 declared GPUs | Repeat the R0 request with `--workers 4 --allocated-gpus 4`, using a new request identity and the same R0 ledger. | All four ranks pass the synthetic collective, checkpoint and restart checks with the declared tolerance. | Collective timeout, rank mismatch, communication failure, or budget reservation failure. |
+| R0 four-worker diagnostic | 4 declared GPUs | Repeat the R0 request with `--workers 4 --allocated-gpus 4`, using a new request identity and the same R0 ledger. | All four ranks pass the synthetic collective, checkpoint and restart checks with the declared tolerance. | Collective timeout, rank mismatch, communication failure, or R0 ceiling failure. |
 | Four-worker training replay | 4 declared GPUs | Run the finite training replay with `scripts.training_replay`, `--workers 4 --allocated-gpus 4`, a four-step horizon and restart at step two. Run it **twice**: once eager, then once with `--compile`. | Real pilot data, optimizer/model parity, exact loader/RNG recovery and aggregate throughput are recorded in both modes. | Any rank failure, changed update geometry, or distributed parity failure. A compiled-only failure blocks the compiled recipe, not the allocation: fall back to eager and record the cost. |
-| Throughput confirmation | 1 declared GPU | Run the ten bounded configurations in [`experiments/qualification/throughput-gh200.json`](../experiments/qualification/throughput-gh200.json) with `scripts.benchmark`, reusing one persistent Inductor cache, then measure each [ladder rung](program.md#the-ladder) under the selected recipe. | Microbatch, activation checkpointing and determinism are selected from measurement, and tokens per second per allocated GPU is recorded for the parent and every rung. | Clock drift beyond 5%, unstable step times, or a graph-break count that differs from the Ampere result without explanation. |
+| Throughput confirmation | 1 declared GPU | Run the ten bounded configurations in [`experiments/qualification/throughput-gh200.json`](../experiments/qualification/throughput-gh200.json) with `scripts.benchmark`, reusing one persistent Inductor cache. The packet lists 1.2B runs only; per-rung runs for each [ladder rung](program.md#the-ladder) are still to be added ([PLAN work order](../PLAN.md#work-order)). | Microbatch, activation checkpointing and determinism are selected from measurement, and tokens per second per allocated GPU is recorded for the parent and every rung. | Clock drift beyond 5%, unstable step times, or a graph-break count that differs from the Ampere result without explanation. |
 | Scheduler canary | Site allocation | Bind one finite Slurm wave with current code and real input hashes. Exercise timeout-boundary checkpoint/requeue once. | The scheduler returns the job identity, the trainer checkpoints at the requested signal, resumes the last complete checkpoint, and accounting reports all allocated GPUs. | Missing account/partition, unsupported signal/requeue behavior, duplicate submission, or accounting mismatch. |
 | Qualification closeout | 0 training hours | Download receipts, logs, manifests, failed artifacts and scheduler accounting. Reconcile the allocation ledger. | A signed local closeout identifies the usable worker count, measured throughput, recovery status, costs and remaining limits. | Missing receipt, unaccounted GPU-hours, or any unresolved phase result. |
 
@@ -149,7 +148,7 @@ subdirectory too (or an explicitly configured `TRITON_CACHE_DIR`); it holds FLA 
 
 Keep two explicitly linked records:
 
-1. the R0 reservation ledger, whose 70-GPU-hour ceiling protects the synthetic diagnostic;
+1. the R0 ledger, which enforces the R0 ceiling of the synthetic diagnostic;
 2. the program ledger's runtime-qualification line, which covers all site setup,
    R0 attempts, real-data checks, distributed canaries, scheduler work and allocated idle time.
 
@@ -172,16 +171,12 @@ attempts. A training process stopping does not stop provider billing or delete a
 
 ## Qualification boundary
 
-The throughput phase exists because the frozen pilot recipe is inefficient. A bounded RTX 3090 pass
-measured 2.084x against it **on a 318M proxy** and selected a configuration; see
-[training](training.md#throughput-settings). That number is not the parent's: the only 1.2B point
-in the sweep is the eager checkpointed baseline at 34.6% utilization, against the proxy baseline's
-25.0%. Neither utilization defines a ceiling for another model or device. This phase benchmarks
-`experiments/pilot`, the 1.2B reference, so it measures the real figure. Quote no parent speedup
-before it returns.
+The throughput phase exists because the frozen pilot recipe is inefficient. The RTX 3090 proxy
+result and its limits are in [performance](performance.md#evidence-and-limits); it is not the
+parent's figure. This phase benchmarks `experiments/pilot`, the 1.2B reference, so it measures the
+real one. Quote no parent speedup before it returns.
 
-If the external [H100 throughput rental](../experiments/qualification/throughput-h100.json) has run
-first, this phase is a confirmation rather than a discovery: the expected ranking is known, and a
+If the optional [H100 throughput rental](throughput-rental.md) has run first, this phase is a confirmation rather than a discovery: the expected ranking is known, and a
 result that contradicts it is a reason to stop and diagnose rather than to explore inside a
 line that cannot be re-spent. That rental does not shorten this phase or substitute for it.
 

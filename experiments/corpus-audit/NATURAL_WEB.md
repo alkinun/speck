@@ -73,7 +73,7 @@ All 176 sample documents were counted with unchanged text and the frozen Mistral
 including BOS/EOS: 259,134 HQ tokens, 34,334 default tokens and 251,210 control tokens. These
 544,678 tokens are **inspection material**, not eligible stock. All 64 control counts match
 their retained document-index counts. Each 64-document length-balanced HQ/control sample has
-19 documents over 4K tokens and none over 32K; this does not qualify 128K source supply.
+19 documents over 4K tokens and none over 32K.
 
 Offline replay reproduced identical sample bytes and census, metadata and token results.
 To replay from the external artifact store into a fresh output directory:
@@ -86,17 +86,5 @@ PYTHONPATH=. .venv/bin/python \
 The receipt hashes the acquisition/replay scripts, their inputs, review packet and observations.
 Raw corpus text remains outside Git. The original FineWeb stock and frozen pilot are unchanged.
 
-## Next bounded decision
-
-The [follow-up](WEB_INVENTORY_DCLM.md) closes the HQ inventory and now records the completed
-12-shard acquisition: 290,761 documents, a 192-record stratified sample and 24 reviewed texts/excerpts.
-It also adds partial-viewer DCLM previews. The [extraction follow-up](web-filter-validation.json)
-now recovers all three matching archived captures and compares frozen flags on 32 previously
-unreviewed documents. False alarms and missed defects keep those flags review-only. The retained
-code census and [bounded bundle follow-up](code-bundles.json) are complete; expansion yield and
-practical coverage are the next code steps. Web source-use evidence, parent/duplicate families
-and source-aware repair remain open while preserving technical and everyday topic coverage.
-Only then count accepted unique tokens. DCLM needs comparable source-file evidence for any
-concrete coverage/eligibility decision before freezing allocations. The working 25% selected-web
-share remains a hypothesis; this inspection neither changes it nor establishes its 100B-token
-eligible-bank target.
+The [follow-up](WEB_INVENTORY_DCLM.md) continues this inspection; the current supply position is in
+[PLAN.md](../../PLAN.md#supply).

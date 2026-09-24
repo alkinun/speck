@@ -56,7 +56,7 @@ All **96 crawl × score × byte-length cells** are populated. The score bands ar
 [0.65,0.8), [0.8,0.95), [0.95,1.0]; byte boundaries are 2,048 / 8,192 / 32,768. Two bottom-hash
 records per cell give **192 complete sample documents**, containing **682,970 Mistral tokens**
 with BOS/EOS. Of these, 57 exceed 4K tokens and none exceeds 32K. These token counts describe
-inspection material, not training supply or proof of the long-context target.
+inspection material, not training supply.
 
 The population has 200,262 URL hostnames; the largest is PubMed with 482 records (0.166%).
 Concentration can be higher inside small cells: one long/high-score cell has 11 of 164 records
@@ -146,10 +146,6 @@ quality. The complete 32 observations and artifact identities are in the
 
 **Decision:** keep all candidates review-only, with no stricter HQ score cutoff. Prefer source-aware
 list preservation and boundary repair, then measure useful-content retention on fresh material.
-The bounded web diagnosis and subsequent [natural-code supply census](code-supply.json) are
-complete, as is the [bounded bundle follow-up](code-bundles.json); next qualify expansion yield
-and practical coverage with independently checked tests. Web eligibility, near-duplicate
-work and usable token counts remain launch gates, not a reason for an indefinite preview loop.
 
 ```bash
 PYTHONPATH=. .venv/bin/python experiments/corpus-audit/audit_web_filters.py \
@@ -196,7 +192,7 @@ Both cards label their datasets CC-BY-4.0. The
 describes a research-oriented intended use. Record both statements for source-use and release
 suitability review; this inspection makes no legal determination or automatic admission.
 
-## Content observations and next step
+## Content observations
 
 Seven deterministically selected examples were reviewed under the existing rubric: four full
 texts and three head/tail excerpts. The receipt records exact identities and limitations.
@@ -213,11 +209,5 @@ These are assistant inspection observations, not independent factual checks or s
 rates. Both cards were checked against pinned Git blob IDs. Offline replay reproduced exact
 sample/review bytes, metadata statistics and all 127,694 sample tokens.
 
-The HQ sample and source-recovery comparison above complete the bounded web diagnosis. Prepare
-a comparable source-file-based DCLM packet only for a concrete remaining coverage/eligibility
-question after source-use review. Exact bounded DCLM
-file routes are pinned externally: approximately 224 MB for baseline and 2.91 GB for Edu
-(3,129,916,683 bytes combined), before decoding overhead. Those selected files are convenience
-samples, not a complete DCLM inventory or representative comparison design. No bulk acquisition
-or GPU experiment follows automatically from these routes. Keep FineWeb-Edu as control and
-freeze source weights only after source-family exclusions and usable token counts are established.
+DCLM was not selected on 2026-09-22; the [source registry](../main-data/source-registry.json) lists
+the selected sources.

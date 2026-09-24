@@ -10,7 +10,7 @@ snapshot. Candidate partitions and a clean content screen never authorize traini
 Current state only; the [corpus-audit record](../corpus-audit/README.md) keeps the per-batch
 history and each receipt owns its detail. None of this establishes eligible yield or admission.
 
-| Evidence | What it establishes now |
+| Evidence | What it establishes |
 | --- | --- |
 | [Retained-code census](../corpus-audit/code-supply.json) | 714,369 files / 476,774,847 tokens reopened from all 1,999 archives; benchmark names and prior content holds cover 123 files / 209,751 tokens by propagation, not a whole-stock content screen |
 | [Stratified preflight](../corpus-audit/code-yield-result.json) and [Stack v3 broader preflight](../corpus-audit/stack-v3-broader.json) | Fixed review cohorts of 138 retained Stack-Edu and 80 Stack v3 files (218 records), replayed exactly offline |
@@ -77,7 +77,7 @@ SWE-bench Verified is the initial repository hold list, not a complete agentic-c
 Freeze any additional repair/agent benchmarks before related acquisition or synthesis. Resolve
 repository aliases from evidence; the splitter cannot discover forks, copied tasks or near-duplicates
 by itself. Freeze the complete graph, deduplication configuration and hashes before assigning the
-production inventory. Adding edges can change partitions. The reviewed feasibility cohorts are not
+parent inventory. Adding edges can change partitions. The reviewed feasibility cohorts are not
 a fresh blind evaluation set.
 
 ## Open qualification work
@@ -119,8 +119,9 @@ Open code items:
   confirms one redaction-induced syntax failure; it is not a content filter. Parser success cannot
   validate behavior, redacted assertions or contamination. Do not restore redacted source text.
 
-Remaining data-side comparisons among the [selected sources](source-registry.json); the training
-contrasts are ladder families P1 and P5 in the [program design](../../docs/program.md#pretraining-the-ladder-1900-gpu-hours):
+Remaining data-side comparisons among the [selected sources](source-registry.json). Ladder families
+P1, P2, P4 and P5 in the [program design](../../docs/program.md#pretraining-the-ladder-1900-gpu-hours)
+all train on qualified sources:
 
 | Lane | Candidates | Required comparison |
 | --- | --- | --- |
@@ -137,15 +138,9 @@ its inventory is 6,000 files / 477.97 GB compressed, and extraction flags from t
 
 ### Retained inventory closeout — 2026-09-19
 
-The [data-readiness receipt](../corpus-audit/data-readiness.json) owns the full measurements. Still
-current: all 290,761 retained HQ documents hold 351,718,255 tokens, and after within-HQ and exact
-FineWeb-Edu overlap **351,237,925 HQ tokens** remain distinct from the control, bounding a 25% bank at
-**1,404,951,700 total one-pass tokens** before further exclusions. Natural code bounds its 35% share
-at **1,362,213,848** tokens. These are stock upper bounds from that date; the
-[supply gap](supply-gap.json) owns current per-bank figures. The closeout
-also covers math index reconciliation, context length bands, the 500K SFT structural census
-(424,463 compatible rows) and the bounded RL inventory; the
-[assistant contract](../../docs/assistant.md) owns SFT fit counts.
+The [data-readiness receipt](../corpus-audit/data-readiness.json) owns the measurements of that
+closeout; its stock bounds are superseded by the [supply gap](supply-gap.json) and
+[PLAN.md](../../PLAN.md#supply). The [assistant contract](../../docs/assistant.md) owns SFT fit counts.
 
 For each new source, pin release/card/serialization first, then sample deterministically across
 length, domain/language and upstream-score bands with a shared rubric, reporting denominators and

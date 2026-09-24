@@ -7,11 +7,6 @@ seed runs. Its scores compare the checkpoints it probes; the probe of the chosen
 released light assistant. The probe's data is never varied here. SFT data studies, RL and
 self-distillation are research for a later step.
 
-The assistant is always-thinking, focused on agentic coding, general coding, mathematical reasoning
-and tool-mediated tasks. A non-thinking or low/medium/high budget control is not a supported
-release feature; the [post-training research synthesis](../experiments/main-data/post-training-research.json)
-records the evidence for studying it later.
-
 The completed hardware rehearsal used complete 4K conversations, the frozen 32K base tokenizer,
 and chat format v2 with its existing three role IDs. Context-only assistant turns retain weight
 zero. Supervision covers assistant content and EOS; system, user, and tool-result content is masked.
@@ -62,31 +57,31 @@ the probe recipe is frozen.
 The [inventory receipt](../experiments/corpus-audit/recipe-review.json) binds the earlier audit of
 500,000 retained conversations and its upstream build report:
 
-| Retained source | Rows | Current evidence |
+| Retained source | Rows | Evidence |
 | --- | ---: | --- |
 | UltraData-SFT-2605: Code / Math / Knowledge / IF, all `think` | 220,000 | Source census and sampled serialization/length audit |
 | UltraData-SFT-Agent-2609: four agent/tool subsets | 110,000 | Source census; selected examples pass the later tool-aware rehearsal |
 | glaiveai/reasoning-v1-20m | 120,000 | Source census and sampled serialization/length audit |
 | PrimeIntellect/SYNTHETIC-2-SFT-verified | 50,000 | Source census, publisher reward filter and sampled serialization/length audit |
 
-The [data-readiness receipt](../experiments/corpus-audit/data-readiness.json) now applies the
+The [data-readiness receipt](../experiments/corpus-audit/data-readiness.json) applies the
 same `speck_tools_v1` adapter used by training to the original deterministic sample: 256 rows per
 subset, with every prior sample identity preserved. Complete conversations fitting each ceiling are:
 
-| Subset | 4K | 16K | 32K | 128K | Format rejections / 256 |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| SYNTHETIC-2 verified | 80 | 226 | 256 | 256 | 0 |
-| Glaive reasoning | 256 | 256 | 256 | 256 | 0 |
-| UltraData Code/think | 89 | 227 | 256 | 256 | 0 |
-| UltraData Math/think | 164 | 239 | 256 | 256 | 0 |
-| UltraData Knowledge/think | 64 | 249 | 256 | 256 | 0 |
-| UltraData IF/think | 247 | 256 | 256 | 256 | 0 |
-| Code-Agent | 0 | 27 | 86 | 195 | 61 |
-| General-Agent | 0 | 0 | 1 | 1 | 255 |
-| Search-Agent | 0 | 23 | 56 | 96 | 160 |
-| Tool-Use | 40 | 90 | 92 | 98 | 158 |
+| Subset | 4K | 16K | 32K | Format rejections / 256 |
+| --- | ---: | ---: | ---: | ---: |
+| SYNTHETIC-2 verified | 80 | 226 | 256 | 0 |
+| Glaive reasoning | 256 | 256 | 256 | 0 |
+| UltraData Code/think | 89 | 227 | 256 | 0 |
+| UltraData Math/think | 164 | 239 | 256 | 0 |
+| UltraData Knowledge/think | 64 | 249 | 256 | 0 |
+| UltraData IF/think | 247 | 256 | 256 | 0 |
+| Code-Agent | 0 | 27 | 86 | 61 |
+| General-Agent | 0 | 0 | 1 | 255 |
+| Search-Agent | 0 | 23 | 56 | 160 |
+| Tool-Use | 40 | 90 | 92 | 158 |
 
-A separate full-stock structural pass accepts **424,463 of 500,000 rows** under the current adapter
+A separate full-stock structural pass accepts **424,463 of 500,000 rows** under the adapter
 and records the first format failure for 75,537. This is format compatibility only, independent of
 context fit, thinking quality, source use and answer correctness. Exact conversation copies are absent,
 but 89,956 repeated normalized first-user prompts and 448 prompt groups spanning sources require
@@ -94,15 +89,14 @@ shared split handling. Prompt equality is a conservative link, not proof of iden
 
 The context-fit table reports sample counts, not full-stock token totals, answer-quality scores or
 qualified runtime lengths. Lengths include schemas, observations and context-only turns; supervision
-counts remain separate. Most rejected agent samples contain prose beside structured calls or end with unresolved
-calls. Preserve those records for an explicit adapter/completeness decision; do not silently turn
-prose into reasoning, fabricate observations or truncate trajectories. The historical audit's blanket
-tool rejection is superseded for current planning; its receipt remains unchanged.
+counts remain separate. Most rejected agent samples contain prose beside structured calls or end
+with unresolved calls. Preserve those records for an explicit adapter/completeness decision; do not
+silently turn prose into reasoning, fabricate observations or truncate trajectories. The historical
+audit's blanket tool rejection is superseded; its receipt remains unchanged.
 
 The local build already excluded length tails using a 98th-percentile policy and 200,000 conversation /
 64,000 thinking character limits. It cannot represent the full upstream long-context distribution.
-The new sample includes complete 32–128K agent examples, but does not recover previously discarded
-examples or establish 128K capability. Keep the stock intact.
+Keep the stock intact.
 
 The SFT probe draws only from this retained stock. Assign one primary category per conversation
 (code reasoning, math reasoning, agent/tool trajectories, supporting thinking/instruction tasks),
@@ -114,13 +108,6 @@ and serialization after the content audit, before any branch is probed.
 Candidate additions (SmolTalk2, Dolci-Instruct-SFT, missing long agent trajectories) are reviewed
 in the [recipe review](../experiments/corpus-audit/recipe-review.json) and wait for a later step.
 
-## Reward data, kept for a later step
-
-RL is not part of this release. The [data-readiness receipt](../experiments/corpus-audit/data-readiness.json)
-binds all 32,412 Math and 11,872 Knowledge rows from the pinned
-[UltraData-RL-2609](https://huggingface.co/datasets/openbmb/UltraData-RL-2609) release, plus schema
-probes of 25 Code and 60 Long-Context rows. It records 416 repeated normalized prompt copies in 333
-groups (eight with differing references, preserved for review, not relabelled) and 43 Knowledge
-prompts that match retained SFT first-user prompts. These are prompt/reference inventories, not
-successful assistant traces. The [post-training audit protocol](../experiments/main-data/post-training-audit-protocol.json)
-fixes the review order for that later work and authorizes no SFT or RL run.
+RL prompt and reference inventories are kept for a later release in the
+[data-readiness receipt](../experiments/corpus-audit/data-readiness.json) and the
+[post-training audit protocol](../experiments/main-data/post-training-audit-protocol.json).
