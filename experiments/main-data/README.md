@@ -109,7 +109,7 @@ production subdivision.
 Freeze one common token horizon per base-training comparison from the slowest arm's measured cost,
 qualified supply and required signal. Hour caps are ceilings, not instructions to spend. At the
 historical H100 rate, 30h, 40h and 60h correspond to about 1.39B, 1.85B and 2.78B tokens; these
-illustrate scale only. Retained natural-code stock bounds a one-pass baseline at 1.36B total tokens,
+illustrate scale only. Natural-code candidate stock bounds a one-pass baseline at 3.31B total tokens,
 so even these arms need more qualified supply or shorter horizons.
 
 Protect confirmation first. If timing or supply does not fit, drop the secondary screening candidate

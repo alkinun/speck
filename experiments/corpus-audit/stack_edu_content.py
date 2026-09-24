@@ -2,6 +2,7 @@
 
 PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py probe LISTING OUTPUT_DIR RECEIPT
 PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py acquire LISTING CENSUS LANGUAGE TIER OUTPUT_DIR
+PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py summarize OUTPUT_DIR RECEIPT
 
 LISTING is the census listing with local metadata paths. Both commands fetch Software Heritage
 blobs for licence-eligible rows and apply the retained acquisition's per-document screen restored
@@ -12,7 +13,7 @@ int_score 3 and at 4 or 5; both tiers pass the same screen, so their yield ratio
 measurement. `acquire` takes every row of one language and tier in physical listing order, in
 4,096-row units that each publish a record file and manifest, so a rerun resumes at the first
 missing unit. Tier 4+ skips the rows the retained acquisition already consumed. No code is
-executed and nothing is admitted.
+executed and nothing is admitted. `summarize` records every completed tranche in one receipt.
 """
 
 import argparse
@@ -372,6 +373,46 @@ def acquire(listing_path, census_path, language, name, output, workers=128):
     )
 
 
+def summarize(output, receipt):
+    """Record completed tranches; a tranche without its receipt is still running and omitted."""
+    tranches, totals = [], defaultdict(Counter)
+    for path in sorted(output.glob("*/tranche.json")):
+        record = json.loads(path.read_text())
+        tranches.append(
+            {
+                "language": record["language"],
+                "tier": record["tier"],
+                "units": record["units"],
+                "receipt": identity(path),
+            }
+            | {key: record["totals"].get(key, 0) for key in ("rows", "kept_rows", "tokens")}
+        )
+        totals[record["tier"]].update(
+            {key: record["totals"].get(key, 0) for key in ("rows", "kept_rows", "tokens")}
+        )
+    atomic_json(
+        receipt,
+        {
+            "format": "speck_stack_edu_acquisition",
+            "format_version": 1,
+            "status": "screened_candidate_stock_not_training_admission",
+            "training_admitted": False,
+            "eligible_tokens_established": 0,
+            "gpu_hours": 0,
+            "corpus_code_executed": False,
+            "output_directory": str(output),
+            "tranches": tranches,
+            "totals_by_tier": {tier: dict(counts) for tier, counts in sorted(totals.items())},
+            "tokens_before_full_exclusion": sum(counts["tokens"] for counts in totals.values()),
+            "boundary": (
+                "Completed tranches only, screened like the retained stock and disjoint from it by "
+                "row; tokens include BOS/EOS. Origin and notice recovery, family partition, "
+                "near-duplicate and full exclusion remain open, so eligible tokens stay zero."
+            ),
+        },
+    )
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -384,11 +425,16 @@ def main():
     acquire_parser.add_argument("language")
     acquire_parser.add_argument("tier", choices=("3", "4+"))
     acquire_parser.add_argument("output", type=Path)
+    summary_parser = commands.add_parser("summarize")
+    summary_parser.add_argument("output", type=Path)
+    summary_parser.add_argument("receipt", type=Path)
     args = parser.parse_args()
     if args.command == "probe":
         probe(args.listing, args.output, args.receipt)
-    else:
+    elif args.command == "acquire":
         acquire(args.listing, args.census, args.language, args.tier, args.output)
+    else:
+        summarize(args.output, args.receipt)
 
 
 if __name__ == "__main__":

@@ -118,3 +118,8 @@ def test_acquire_skips_retained_rows_and_resumes(tmp_path, monkeypatch):
     assert (tranche["units"], tranche["totals"]["rows"], tranche["totals"]["tokens"]) == (2, 3, 21)
     content.acquire(listing, census, "Python", "4+", tmp_path / "out")
     assert len(calls) == 2
+    (tmp_path / "out/Python-3").mkdir()
+    content.summarize(tmp_path / "out", tmp_path / "acquisition.json")
+    summary = json.loads((tmp_path / "acquisition.json").read_text())
+    assert [t["tier"] for t in summary["tranches"]] == ["4+"]
+    assert summary["tokens_before_full_exclusion"] == 21

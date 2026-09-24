@@ -274,6 +274,10 @@
         {
           "path": "experiments/main-data/family-partition.json",
           "field": "result.current_code_origin_coverage.stack_edu"
+        },
+        {
+          "path": "experiments/corpus-audit/stack-edu-acquisition.json",
+          "field": "totals_by_tier"
         }
       ],
       "gates": {

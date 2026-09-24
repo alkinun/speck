@@ -1,0 +1,201 @@
+{
+  "boundary": "Completed tranches only, screened like the retained stock and disjoint from it by row; tokens include BOS/EOS. Origin and notice recovery, family partition, near-duplicate and full exclusion remain open, so eligible tokens stay zero.",
+  "corpus_code_executed": false,
+  "eligible_tokens_established": 0,
+  "format": "speck_stack_edu_acquisition",
+  "format_version": 1,
+  "gpu_hours": 0,
+  "output_directory": "/mnt/speck-data/speck/stack-edu-content-v1",
+  "status": "screened_candidate_stock_not_training_admission",
+  "tokens_before_full_exclusion": 680279691,
+  "totals_by_tier": {
+    "4+": {
+      "kept_rows": 908710,
+      "rows": 1350682,
+      "tokens": 680279691
+    }
+  },
+  "training_admitted": false,
+  "tranches": [
+    {
+      "kept_rows": 37738,
+      "language": "C",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/C-4plus/tranche.json",
+        "sha256": "5ae14214ec87515ca82e2bec88278829f174a61ae26e501efc8fa77312bb43a7"
+      },
+      "rows": 52364,
+      "tier": "4+",
+      "tokens": 21839097,
+      "units": 13
+    },
+    {
+      "kept_rows": 0,
+      "language": "C++",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/Cplusplus-4plus/tranche.json",
+        "sha256": "889db329af72f72a4d3af8e0eb22453efb9f342ad750623303eebe1ce3ad93ef"
+      },
+      "rows": 0,
+      "tier": "4+",
+      "tokens": 0,
+      "units": 0
+    },
+    {
+      "kept_rows": 122447,
+      "language": "C#",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/Csharp-4plus/tranche.json",
+        "sha256": "b28b420cfc672f230fb4ffe01eedbb6a6960f8af820e8877dc5a9e9a6f9283fd"
+      },
+      "rows": 140470,
+      "tier": "4+",
+      "tokens": 57000244,
+      "units": 35
+    },
+    {
+      "kept_rows": 0,
+      "language": "Go",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/Go-4plus/tranche.json",
+        "sha256": "0a269e2c1d1d99fb817c1343a7f49955fabcf35bdc55905696d5bcfd583384da"
+      },
+      "rows": 0,
+      "tier": "4+",
+      "tokens": 0,
+      "units": 0
+    },
+    {
+      "kept_rows": 0,
+      "language": "Java",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/Java-4plus/tranche.json",
+        "sha256": "523acaafa2bf1a0a19d6af2c55f904c7b137ca4c92dc54df66896419577da3d1"
+      },
+      "rows": 0,
+      "tier": "4+",
+      "tokens": 0,
+      "units": 0
+    },
+    {
+      "kept_rows": 0,
+      "language": "JavaScript",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/JavaScript-4plus/tranche.json",
+        "sha256": "c377702d8a282a9f00e0101244299b5b64af314c1dbf6d7db8db65f396a2989d"
+      },
+      "rows": 0,
+      "tier": "4+",
+      "tokens": 0,
+      "units": 0
+    },
+    {
+      "kept_rows": 188776,
+      "language": "Markdown",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/Markdown-4plus/tranche.json",
+        "sha256": "a1f324941039f87a050ff3e0e482c1a31054b8359fe872dfa21630da7129d68a"
+      },
+      "rows": 391395,
+      "tier": "4+",
+      "tokens": 188298845,
+      "units": 96
+    },
+    {
+      "kept_rows": 13280,
+      "language": "PHP",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/PHP-4plus/tranche.json",
+        "sha256": "65f0c8b955ee60e9625354316c49de5b14ff598c033df152d8e2be04fb94dab2"
+      },
+      "rows": 20876,
+      "tier": "4+",
+      "tokens": 6128684,
+      "units": 6
+    },
+    {
+      "kept_rows": 134371,
+      "language": "Python",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/Python-4plus/tranche.json",
+        "sha256": "0cd52589f366067ccc68154a1858882b5d386912d6d412a54b7e1404859b4fde"
+      },
+      "rows": 205298,
+      "tier": "4+",
+      "tokens": 78324976,
+      "units": 51
+    },
+    {
+      "kept_rows": 34022,
+      "language": "Ruby",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/Ruby-4plus/tranche.json",
+        "sha256": "f120d8898d6d24b03ff75a5e99438d0915ee958a6a3f17e1b14b5d42a9da8544"
+      },
+      "rows": 40974,
+      "tier": "4+",
+      "tokens": 20392511,
+      "units": 11
+    },
+    {
+      "kept_rows": 0,
+      "language": "Rust",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/Rust-4plus/tranche.json",
+        "sha256": "efcf5eee5d91bfbe7918b4e7f5b5ac35501c784eff238241112e0e33000f9812"
+      },
+      "rows": 0,
+      "tier": "4+",
+      "tokens": 0,
+      "units": 0
+    },
+    {
+      "kept_rows": 58318,
+      "language": "SQL",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/SQL-4plus/tranche.json",
+        "sha256": "976c2e2b4ff26696c35b62b6cd9dea1c9e2d7964c04300116e61d1c5e9a789af"
+      },
+      "rows": 76735,
+      "tier": "4+",
+      "tokens": 47740590,
+      "units": 19
+    },
+    {
+      "kept_rows": 304957,
+      "language": "Shell",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/Shell-4plus/tranche.json",
+        "sha256": "65905dd9e5789230bc592366fe026067c9978554d12dafa9a96c76d2186b45eb"
+      },
+      "rows": 393241,
+      "tier": "4+",
+      "tokens": 250916725,
+      "units": 97
+    },
+    {
+      "kept_rows": 14801,
+      "language": "Swift",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/Swift-4plus/tranche.json",
+        "sha256": "1f1bded3e35c73c2804cfc321a086486eaee9a3d58244039a4235ab75db6906a"
+      },
+      "rows": 29329,
+      "tier": "4+",
+      "tokens": 9638019,
+      "units": 8
+    },
+    {
+      "kept_rows": 0,
+      "language": "TypeScript",
+      "receipt": {
+        "path": "/mnt/speck-data/speck/stack-edu-content-v1/TypeScript-4plus/tranche.json",
+        "sha256": "3fc663115a97a286524cbedae4c7f899b7750e996122a56e1a23d1f41fbec272"
+      },
+      "rows": 0,
+      "tier": "4+",
+      "tokens": 0,
+      "units": 0
+    }
+  ]
+}

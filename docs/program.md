@@ -178,8 +178,8 @@ Candidate releases are not automatically admitted supply. Freeze source eligibil
 benchmark exclusions, source-family partitions, language coverage and actual token counts first.
 
 Preparation targets 100B eligible unique tokens for an 80B 4K-base working exposure,
-allowing selection headroom and normally one pass. Retained candidate stock totals 7.150B across the
-six banks before joint eligibility, including 0.477B code tokens; the
+allowing selection headroom and normally one pass. Candidate stock totals 7.831B across the
+six banks before joint eligibility, including 1.157B code tokens; the
 [supply gap](../experiments/main-data/supply-gap.json) derives it per bank. A bounded code audit or
 passing generated tests cannot close that gap. Keep raw stock, qualified unique supply, exposure/replay and
 rejected material as separate counts. If refined supply fails, explicitly revise within-domain

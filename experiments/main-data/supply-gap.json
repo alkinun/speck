@@ -7,7 +7,8 @@
   "source_of_truth": [
     "experiments/main-data/plan.json",
     "experiments/pilot/supply.json",
-    "experiments/main-data/source-readiness.json"
+    "experiments/main-data/source-readiness.json",
+    "experiments/corpus-audit/stack-edu-acquisition.json"
   ],
   "banks": [
     {
@@ -46,14 +47,15 @@
       "weight_percent": 35,
       "exposure_tokens": 28000000000,
       "eligible_unique_token_preparation_target": 35000000000,
-      "retained_candidate_stock_tokens": 476774847,
+      "retained_candidate_stock_tokens": 1157054538,
       "retained_stock_sources": [
-        "retained_code"
+        "retained_code",
+        "acquired_code"
       ],
       "eligible_unique_tokens": 0,
-      "shortfall_tokens": 34523225153,
-      "retained_coverage_percent": 1.362,
-      "maximum_one_pass_exposure_from_retained_stock": 1362213848
+      "shortfall_tokens": 33842945462,
+      "retained_coverage_percent": 3.306,
+      "maximum_one_pass_exposure_from_retained_stock": 3305870108
     },
     {
       "id": "natural_math",
@@ -104,11 +106,11 @@
   ],
   "totals": {
     "eligible_unique_token_preparation_target": 100000000000,
-    "retained_candidate_stock_tokens": 7150339910,
+    "retained_candidate_stock_tokens": 7830619601,
     "eligible_unique_tokens_established": 0,
-    "shortfall_tokens": 92849660090,
-    "retained_coverage_percent": 7.15,
-    "acquisition_multiple_required": 13.99
+    "shortfall_tokens": 92169380399,
+    "retained_coverage_percent": 7.831,
+    "acquisition_multiple_required": 12.77
   },
   "zero_stock_banks": {
     "ids": [],
@@ -116,11 +118,11 @@
     "meaning": "Every declared bank has some retained candidate stock, so no bank caps a one-pass run at zero. The 2026-09-22 re-freeze removed the two that did. This says nothing about eligibility: zero eligible tokens are still established."
   },
   "binding_constraint": {
-    "bank": "natural_code",
+    "bank": "selected_web",
     "scope": "binding among banks that have any retained stock",
-    "maximum_total_exposure_tokens": 1362213848,
+    "maximum_total_exposure_tokens": 1404951700,
     "working_horizon_tokens": 80000000000,
-    "percent_of_working_horizon": 1.703,
+    "percent_of_working_horizon": 1.756,
     "meaning": "At its declared share, this bank's retained stock alone caps a one-pass run at this exposure. Every other bank could be complete and the horizon would still bind here."
   },
   "gate_summary": {

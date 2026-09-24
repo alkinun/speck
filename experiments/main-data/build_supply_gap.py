@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BANK_STOCK = {
     "selected_web": ("ultrafineweb_hq_distinct",),
     "independent_web": ("fineweb_edu",),
-    "natural_code": ("retained_code",),
+    "natural_code": ("retained_code", "acquired_code"),
     "natural_math": ("finemath_4plus",),
     "reference_science": ("pes2o_v3", "finewiki_en"),
     "refined_web": ("cosmopedia_v2",),
@@ -34,9 +34,12 @@ def build() -> dict:
     plan = _load("experiments/main-data/plan.json")
     supply = _load("experiments/pilot/supply.json")
     readiness = _load("experiments/main-data/source-readiness.json")
+    acquisition = _load("experiments/corpus-audit/stack-edu-acquisition.json")
 
     stock = {entry["source"]: entry["tokens"] for entry in supply["sources"]}
     stock["retained_code"] = supply["code"]["tokens_before_full_exclusion"]
+    # Tranches fetched since, through the same screen and disjoint from the retained rows.
+    stock["acquired_code"] = acquisition["tokens_before_full_exclusion"]
     # The HQ bank's only measured candidate quantity is the portion distinct from
     # retained FineWeb-Edu, recorded as a one-pass constraint numerator.
     constraints = {
@@ -106,6 +109,7 @@ def build() -> dict:
             "experiments/main-data/plan.json",
             "experiments/pilot/supply.json",
             "experiments/main-data/source-readiness.json",
+            "experiments/corpus-audit/stack-edu-acquisition.json",
         ],
         "banks": banks,
         "totals": {
