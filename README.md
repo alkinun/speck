@@ -3,15 +3,16 @@
 SpeckLabs scales in steps, each much larger than the last. This first release is the **data step**:
 its product is **measured, transferable findings about the pretraining and mid-training data
 pipeline**, published as openly as the licences allow, so later and much larger releases can start
-from them. A model ladder (50m, 130m and 410m) carries most experiments, and one **1.2B parent**
-trained from scratch carries decay and mid-training; a fixed SFT recipe probes every branch. The
-released base and light always-thinking assistant for **coding, math and tools** are the best
-branches of those experiments. The KDA/NoPE-GQA architecture is fixed by declaration, so the release
-makes no architecture claim, and post-training research belongs to later releases.
+from them. A model ladder (50m, 130m and 410m parameters) carries most experiments, and one
+**1.2B parent** model, trained from scratch, carries the decay and mid-training experiments as
+branches. A fixed SFT recipe probes every branch. The released base model and light reasoning
+assistant for **coding, math and tools** are the best of those branches. The architecture, a hybrid
+of Kimi Delta Attention (KDA) and global attention layers, is [held fixed](docs/program.md#model).
 
-[PLAN.md](PLAN.md) gives status and the next work, the [program design](docs/program.md) the goal,
-method, experiments and compute budget, the [paper outline](docs/paper.md) what the report must
-show, and [plan.json](experiments/main-data/plan.json) the numbers.
+- [PLAN.md](PLAN.md): status and the next work
+- [Program design](docs/program.md): goal, method, experiments and compute budget
+- [Paper outline](docs/paper.md): what the report must show
+- [plan.json](experiments/main-data/plan.json): the numbers
 
 ## Get a working baseline
 
@@ -44,8 +45,8 @@ follows the [qualification runbook](docs/compute-qualification.md).
 
 Every command is `python -m scripts.<command>` (for example `scripts.base_train`,
 `scripts.sft_train`, `scripts.infer`) and accepts `--help`.
-Provide explicit experiment paths. Runtime data/checkpoints/logs live outside Git, under
-`~/.cache/speck` by default; set `speck_base_dir` for another volume.
+Provide explicit experiment paths. Data, checkpoints and logs live outside Git in the data store,
+`~/.cache/speck` by default; set `speck_base_dir` to use another location.
 
 ```text
 PLAN.md        One current direction and next step
@@ -61,10 +62,6 @@ Source code is [MIT licensed](LICENSE) and released weights are Apache-2.0; see
 
 ## History
 
-Retired plans, results, tools and records live only in Git history and do not govern current work.
-Two tags mark the large removals: `pre-simplification-2026-09-17` (the earlier 140M releases and
-research matrices) and `pre-cleanup-2026-09-25` (post-training code, the RL pilot, the R0
-diagnostic, one-off corpus audits and research notes). Older `precleanup-*` and `archive/*` tags
-keep earlier branch work. Read a file with
-`git show TAG:PATH`, or check out a tag in a separate worktree with its own lockfile to rerun old
-workflows.
+Retired code and records remain in Git history and do not govern current work. The tag
+`pre-cleanup-2026-09-25` marks the last large removal and `pre-simplification-2026-09-17` the earlier
+140M releases. Read an old file with `git show TAG:PATH`.

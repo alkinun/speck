@@ -13,8 +13,8 @@ confirmed; access timing and GH200 throughput are not.
 ## Supply
 
 Ladder runs need a few billion tokens each and can start from current stock. The parent needs far
-more. [`supply-gap.json`](experiments/main-data/supply-gap.json) derives retained candidate stock
-per bank against the parent's starting mixture at 60B tokens, prepared at 1.25 times exposure:
+more. [`supply-gap.json`](experiments/main-data/supply-gap.json) compares retained candidate stock
+in each [bank](experiments/main-data/README.md#base-mixture) with the parent's starting mixture at 60B tokens, prepared at 1.25 times exposure:
 
 | Bank | Weight | Preparation target | Retained candidate stock | Coverage | One-pass exposure cap |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -25,10 +25,10 @@ per bank against the parent's starting mixture at 60B tokens, prepared at 1.25 t
 | reference_science | 5% | 3.75B | 1.402B | 37.39% | 28.04B |
 | refined_web | 5% | 3.75B | 1.489B | 39.71% | 29.79B |
 
-Candidate stock has every gate still open, so it bounds what could be admitted; zero eligible tokens
-are established. Two acquisitions in progress will move this table:
+Candidate stock bounds what could be admitted; no tokens are yet eligible, because every stock
+still has open gates. Two acquisitions in progress will move this table:
 
-- **Selected web.** One whole Ultra-FineWeb HQ crawl, `CC-MAIN-2025-43` (27.5M documents), is
+- **Selected web.** One whole crawl of Ultra-FineWeb's high-quality (HQ) English subset, `CC-MAIN-2025-43` (27.5M documents), is
   downloaded and hash-verified; its conversion, preprocess and token census remain.
 - **Code.** Every licence-eligible Stack-Edu `int_score` 3 row, projected at about 15B tokens from
   the [yield probe](experiments/corpus-audit/stack-edu-yield-probe.json), is partly fetched in
@@ -64,8 +64,9 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
    - Add per-rung throughput runs to the [GH200 packet](experiments/qualification/throughput-gh200.json).
 2. **On access,** qualify one worker then four, measure every rung, and convert each budget line
    into run counts.
-3. **Pretraining ladder:** LR and P0 at every rung, P1 to P7 and C at 50m, the T transfer re-runs
-   and DR; record the predicted parent loss and the parent mixture.
+3. **Pretraining ladder:** the [families](docs/program.md#pretraining-the-ladder-1900-gpu-hours) LR
+   and P0 at every rung, P1 to P7 and C at 50m, then T and DR on the larger rungs; record the
+   predicted parent loss and the parent mixture.
 4. **Parent** stable run, then D1 to D3, each probed with the SFT recipe.
 5. **Mid-training** M1 to M4 from the selected decayed parent, each probed.
 6. **Final evaluation, paper and release.** Final test partitions are scored once, at the end.

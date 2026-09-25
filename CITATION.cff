@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use Speck, cite the software release."
-title: "Speck: a data and training toolkit for small language models"
+title: "Speck: open pretraining and mid-training data pipelines, measured across scale"
 type: software
 authors:
   - family-names: Ünlü
