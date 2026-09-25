@@ -82,7 +82,7 @@ so there is no separate production track.
 Projections use 6 × parameters FLOPs per token at 25% utilization of a 989.5-TFLOPs GPU, with
 unmeasured cost factors of 1.3 at 16K and 1.7 at 32K context. They size the plan only: the GH200
 qualification measures each rung, and run counts then follow from the budget lines. The 50m rung
-also runs on the workstation RTX 3090 before access, which costs no grant hours.
+also runs on a local RTX 3090 before access, which costs no grant hours.
 
 ## Experiments
 

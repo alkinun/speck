@@ -44,9 +44,8 @@ count once. Every repeated pass is declared and counted as exposure.
 ## Acquiring candidate stock
 
 Two resumable runs grow the selected-web and code stock. Each step writes a receipt, reruns resume
-from the last completed unit, and nothing is admitted. `D` is the runtime store
-(`/mnt/speck-data/speck`). Put `TMPDIR` and the SQLite index on local flash, and run one heavy writer
-per spinning disk.
+from the last completed unit, and nothing is admitted. `D` is the data store (`speck_base_dir`). Put
+`TMPDIR` and the SQLite index on local flash, and run one heavy writer per spinning disk.
 
 **Ultra-FineWeb HQ crawl.** This reuses the 2026-09-22 HQ preprocess plan and its firewall and
 deduplication policy.

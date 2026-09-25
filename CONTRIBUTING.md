@@ -41,5 +41,5 @@ Each run stores its exact model, data, tokenizer and training settings, and keep
 receipt: Git revision, input identities, metrics, costs, failures and output locations. Large
 corpora, checkpoints and logs stay outside Git.
 
-Work on a `codex/` or feature branch; inspect `git diff --check` and `git status` before committing.
+Work on a feature branch; inspect `git diff --check` and `git status` before committing.
 Do not force-push or rewrite recorded experiment commits.

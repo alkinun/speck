@@ -1,8 +1,7 @@
 # SpeckLabs: status and next work
 
-Updated 2026-09-25. This is the status and the one work order. The [program design](docs/program.md)
-owns the goal, method, experiments and budget; [plan.json](experiments/main-data/plan.json) owns
-the numbers; receipts own results.
+Updated 2026-09-25. The [program design](docs/program.md) defines the goal, method, experiments and
+budget, and [plan.json](experiments/main-data/plan.json) holds the numbers.
 
 This release is SpeckLabs' first scaling step, and it targets the data of pretraining and
 mid-training: its deliverable is [measured, transferable findings](docs/program.md#goal-the-data-step)
@@ -27,12 +26,10 @@ per bank against the parent's starting mixture at 60B tokens, prepared at 1.25 t
 | refined_web | 5% | 3.75B | 1.489B | 39.71% | 29.79B |
 
 Candidate stock has every gate still open, so it bounds what could be admitted; zero eligible tokens
-are established. Two acquisitions will move this table; both are stopped until the workstation is
-verified (see the work order):
+are established. Two acquisitions in progress will move this table:
 
 - **Selected web.** One whole Ultra-FineWeb HQ crawl, `CC-MAIN-2025-43` (27.5M documents), is
-  downloaded and sha-verified; its conversion, preprocess and token census are redone on verified
-  hardware.
+  downloaded and hash-verified; its conversion, preprocess and token census remain.
 - **Code.** Every licence-eligible Stack-Edu `int_score` 3 row, projected at about 15B tokens from
   the [yield probe](experiments/corpus-audit/stack-edu-yield-probe.json), is partly fetched in
   language tranches and resumes unit by unit.
@@ -54,25 +51,12 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
 
 ## Work order
 
-1. **Now, on the workstation (no grant hours).**
-   - **Verify the hardware first.** The i7-13700K shows Raptor Lake instability: 11 segfaults on the
-     same two cores since 2026-09-22 and a SQLite index corrupted on a healthy NVMe, which crashed
-     the crawl preprocess on 2026-09-24. After a reboot no kernel fault recurred, but data is still
-     silently corrupted: three conversions of the same sha-verified crawl shards produced three
-     different files; the two kept had 10 and 6 damaged records in 27.5M, all caught by their
-     per-record content hashes, and both were deleted. On 2026-09-25 a plain copy of a 4.2 GB
-     file flipped the same bit (0x04) in two bytes with no kernel message, which points at memory
-     as much as the CPU. Every data and training job is stopped. Update the BIOS to Intel's default
-     power profile, run memtest86+ first and then a CPU stress test, and replace the failing part. Then convert the crawl twice and require identical files
-     before its preprocess, and rebuild the 50m sweep corpus twice and compare. Re-verified by
-     content and kept: the fetched Stack-Edu units, the code conversion, preprocess and token index,
-     the HQ web stock and its index, and the dry-run family partition, each matching a second build
-     or its per-record content hashes. Once verified, move the 50m sweep's partition and code
-     inputs from `~/.cache/speck-ladder` into the data store, checking each hash.
+1. **Before access (local, no grant hours).**
+   - Rebuild the crawl conversion and the 50m sweep corpus twice and require identical outputs
+     before either is used. Store every 50m sweep input under the data store.
    - Run the 50m learning-rate sweep (its own corpus, from the retained HQ sample).
-   - Configure the 50m baseline corpus from the verified crawl; P0 and every P family train on it
-     and no configuration exists yet. Then run the P0 seed set and choose the metrics that move at
-     this scale.
+   - Configure the 50m baseline corpus from the crawl; P0 and every P family train on it. Then run
+     the P0 seed set and choose the metrics that move at this scale.
    - Finish both acquisitions: census the crawl and point the supply gap at it; summarize the code
      fetch, preprocess all code and rebuild the family partition over every source.
    - Write the predeclared records for P1 to P7 and prepare their data variants on CPU.

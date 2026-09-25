@@ -18,11 +18,8 @@ make plan-check
 Build a private bundle from the clean tree:
 
 ```bash
-uv run --no-sync python -m scripts.gh200_check bundle \
-  --output /external/gh200-transfer \
-  --data /mnt/speck-data/speck/data/flagship-pilot-105m \
-  --tokenizer /mnt/speck-data/speck/tokenizer-final-mistral-v1 \
-  --assistant /mnt/speck-data/speck/gh200-readiness-20260918/assistant-rehearsal-2
+uv run --no-sync python -m scripts.gh200_check bundle --output BUNDLE_DIR \
+  --data PILOT_PACK_DIR --tokenizer TOKENIZER_DIR --assistant ASSISTANT_REHEARSAL_DIR
 ```
 
 The bundle carries committed source and history, the frozen tokenizer, the 105M-token pilot pack
