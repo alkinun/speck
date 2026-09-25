@@ -1,6 +1,6 @@
 {
   "extends": "../train.json",
-  "device_batch_size": 8,
+  "device_batch_size": 16,
   "activation_checkpointing": false,
   "run": "ladder-50m",
   "train_tokens": 2631270400

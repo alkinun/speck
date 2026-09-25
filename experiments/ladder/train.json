@@ -3,7 +3,6 @@
   "checkpoint_tokens": [],
   "decay_fraction": 0.2,
   "deterministic": true,
-  "diagnostics_every": 500,
   "eval_every": 1000,
   "eval_tokens": 4194304,
   "final_eval_tokens": 4194304,
