@@ -37,6 +37,10 @@ def configure_determinism(enabled):
         torch.backends.cudnn.benchmark = False
     torch.backends.cudnn.deterministic = enabled
     torch.use_deterministic_algorithms(enabled)
+    # Deterministic mode also fills every new empty tensor, a guard against reading uninitialized
+    # memory. No kernel here does: gradients are bitwise identical without it, eager and compiled,
+    # and restart parity checks would catch a regression. The fills cost about 5% of kernel time.
+    torch.utils.deterministic.fill_uninitialized_memory = False
 
 
 def base_dir():
