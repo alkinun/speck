@@ -23,9 +23,9 @@ make smoke
 make quality
 ```
 
-The smoke workflow builds tiny local data, trains a hybrid base model, initializes an assistant from
-its native checkpoint, and verifies exact resume for both stages. It also evaluates held-out base
-loss. It uses CPU only and downloads no corpus.
+The smoke workflow builds tiny local data, trains a hybrid base model, branches it onto masked chat
+rows, trains an assistant from it, and verifies exact resume at each stage. It also evaluates
+held-out base loss. It uses CPU only and downloads no corpus.
 
 The ladder configurations are in [experiments/ladder](experiments/ladder/README.md); GH200 access
 follows the [qualification runbook](docs/compute-qualification.md).
@@ -64,6 +64,7 @@ Source code is [MIT licensed](LICENSE) and released weights are Apache-2.0; see
 Retired plans, results, tools and records live only in Git history and do not govern current work.
 Two tags mark the large removals: `pre-simplification-2026-09-17` (the earlier 140M releases and
 research matrices) and `pre-cleanup-2026-09-25` (post-training code, the RL pilot, the R0
-diagnostic, one-off corpus audits and research notes). Read a file with
+diagnostic, one-off corpus audits and research notes). Older `precleanup-*` and `archive/*` tags
+keep earlier branch work. Read a file with
 `git show TAG:PATH`, or check out a tag in a separate worktree with its own lockfile to rerun old
 workflows.

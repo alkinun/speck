@@ -57,8 +57,8 @@ Decay and mid-training runs are branches of preserved parent checkpoints:
   same architecture, sequence length, optimizer, schedule and world size. It resets only the data
   cursor and requires `--branch-schedule inherit`.
 - `--branch-kind context` allows a new manifest and context length under
-  `training_phase: context_extension`, resets the data cursor and keeps optimizer state. It is the
-  only path that changes sequence length.
+  `training_phase: context_extension`, resets the data cursor and keeps optimizer state. It
+  requires `--branch-schedule new` and is the only path that changes sequence length.
 
 One packed manifest can declare token-endpoint mixture phases for a planned curriculum. A source can
 be row-packed with `packing: {row_tokens, open_rows}`: whole records are placed best-fit into rows of
