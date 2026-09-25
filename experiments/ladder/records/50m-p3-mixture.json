@@ -1,0 +1,46 @@
+{
+  "format": "speck_ladder_record",
+  "format_version": 1,
+  "family": "P3",
+  "rung": "50m",
+  "status": "draft",
+  "question": "Which code, math and general shares?",
+  "arms": [
+    {
+      "id": "code-plus",
+      "change": "Code/math/general shares 45/25/30 percent; the baseline is 35/25/40. General shares keep their starting proportions across the web, reference and refined banks."
+    },
+    {
+      "id": "code-minus",
+      "change": "Code/math/general shares 25/25/50 percent; the baseline is 35/25/40. General shares keep their starting proportions across the web, reference and refined banks."
+    },
+    {
+      "id": "math-plus",
+      "change": "Code/math/general shares 35/35/30 percent; the baseline is 35/25/40. General shares keep their starting proportions across the web, reference and refined banks."
+    },
+    {
+      "id": "math-minus",
+      "change": "Code/math/general shares 35/15/50 percent; the baseline is 35/25/40. General shares keep their starting proportions across the web, reference and refined banks."
+    },
+    {
+      "id": "technical-plus",
+      "change": "Code/math/general shares 45/35/20 percent; the baseline is 35/25/40. General shares keep their starting proportions across the web, reference and refined banks."
+    },
+    {
+      "id": "general-plus",
+      "change": "Code/math/general shares 25/15/60 percent; the baseline is 35/25/40. General shares keep their starting proportions across the web, reference and refined banks."
+    }
+  ],
+  "controls": "P0 seed 1, the 50m baseline, is the shared baseline arm. Every arm trains experiments/ladder/50m at the learning rate the 50m learning-rate record selects, seed 1, from the same initial model tensors (verified by hash), with the same tokenizer, context, schedule and token budget. Only the named data change differs. Every arm is scored on the same validation packs: the baseline corpus's development-bucket families, held fixed across arms.",
+  "horizon_tokens": 2631270400,
+  "primary_metric": "Mean final held-out loss over the fixed per-source validation packs, each source weighted equally; per-source losses reported alongside.",
+  "secondary_metrics": "The pinned early-signal suite (scripts.open_slm_eval: HellaSwag, ARC-Easy, ARC-Challenge, PIQA, ArithMark) on each arm's final export, and held-out loss at each quarter of the horizon.",
+  "minimum_useful_effect": "2.83 times the P0 standard deviation of the metric at 50m; an arm difference below it is reported as no detectable effect.",
+  "decision_rule": "Fit held-out loss per domain against the three shares and choose the mixture with the lowest primary metric among arms within the minimum useful effect of the best, preferring the one closest to the starting mixture. The chosen shares become the parent's starting mixture, subject to supply.",
+  "data_preparation": "Each arm is packed from the same family buckets as the baseline with only the bank weights changed.",
+  "prerequisites": [
+    "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known.",
+    "Code and math stock large enough for the 45 and 35 percent arms at the 50m horizon without repetition (about 1.2B code and 0.9B math tokens)."
+  ],
+  "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 13 hours on the local RTX 3090 at the measured eager rate of 55,000 tokens per second."
+}

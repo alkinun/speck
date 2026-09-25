@@ -59,7 +59,10 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
      the P0 seed set and choose the metrics that move at this scale.
    - Finish both acquisitions: census the crawl and point the supply gap at it; summarize the code
      fetch, preprocess all code and rebuild the family partition over every source.
-   - Write the predeclared records for P1 to P7 and prepare their data variants on CPU.
+   - Close the prerequisites listed in the draft [P1 to P7 records](experiments/ladder/records):
+     keep the Stack-Edu tier and Ultra-FineWeb score on converted records, add deduplication-policy
+     arms to the preprocessor, support declared repeated passes in the ladder corpus builder, and
+     decide on FineMath 3+. Then prepare the data variants.
    - Freeze the SFT probe recipe and dataset from the retained assistant stock.
 2. **On access,** qualify one worker then four, measure every rung, and convert each budget line
    into run counts.

@@ -1,0 +1,30 @@
+{
+  "format": "speck_ladder_record",
+  "format_version": 1,
+  "family": "P5",
+  "rung": "50m",
+  "status": "draft",
+  "question": "Which source per bank?",
+  "arms": [
+    {
+      "id": "web-fineweb-edu",
+      "change": "Selected web filled from FineWeb-Edu instead of Ultra-FineWeb HQ."
+    },
+    {
+      "id": "code-stack-v3",
+      "change": "Natural code filled from Stack v3 instead of Stack-Edu, with the same total code share and language coverage."
+    }
+  ],
+  "controls": "P0 seed 1, the 50m baseline, is the shared baseline arm. Every arm trains experiments/ladder/50m at the learning rate the 50m learning-rate record selects, seed 1, from the same initial model tensors (verified by hash), with the same tokenizer, context, schedule and token budget. Only the named data change differs. Every arm is scored on the same validation packs: the baseline corpus's development-bucket families, held fixed across arms.",
+  "horizon_tokens": 2631270400,
+  "primary_metric": "Mean final held-out loss over the fixed per-source validation packs, each source weighted equally; per-source losses reported alongside.",
+  "secondary_metrics": "The pinned early-signal suite (scripts.open_slm_eval: HellaSwag, ARC-Easy, ARC-Challenge, PIQA, ArithMark) on each arm's final export, and held-out loss at each quarter of the horizon.",
+  "minimum_useful_effect": "2.83 times the P0 standard deviation of the metric at 50m; an arm difference below it is reported as no detectable effect.",
+  "decision_rule": "Keep the baseline source unless the alternative improves the primary metric by at least the minimum useful effect, and report the preparation cost per accepted token of both.",
+  "data_preparation": "Each arm is packed from the same family buckets with only the named bank's source changed; documents shared across sources are counted once, in the bank that uses them.",
+  "prerequisites": [
+    "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known.",
+    "Enough admitted Stack v3 stock to fill the 35 percent code share at the 50m horizon."
+  ],
+  "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 13 hours on the local RTX 3090 at the measured eager rate of 55,000 tokens per second."
+}

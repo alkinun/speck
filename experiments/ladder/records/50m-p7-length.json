@@ -1,0 +1,47 @@
+{
+  "format": "speck_ladder_record",
+  "format_version": 1,
+  "family": "P7",
+  "rung": "50m",
+  "status": "draft",
+  "question": "Do filtering and repetition conclusions survive longer training?",
+  "arms": [
+    {
+      "id": "baseline-short",
+      "change": "Baseline corpus at a quarter horizon (12.5 tokens per parameter).",
+      "horizon_multiple": 0.25
+    },
+    {
+      "id": "strict-short",
+      "change": "The P1 all-strict corpus at a quarter horizon.",
+      "horizon_multiple": 0.25
+    },
+    {
+      "id": "baseline-long",
+      "change": "Baseline corpus at four times the horizon (200 tokens per parameter).",
+      "horizon_multiple": 4
+    },
+    {
+      "id": "strict-long",
+      "change": "The P1 all-strict corpus at four times the horizon.",
+      "horizon_multiple": 4
+    }
+  ],
+  "controls": "Every arm trains experiments/ladder/50m at the learning rate the 50m learning-rate record selects, seed 1, from the same initial model tensors (verified by hash), with the same tokenizer, context and schedule shape. Arms at the same horizon share its token budget; only the corpus differs within a horizon, and only the horizon differs within a corpus. Every arm is scored on the same validation packs, held fixed across arms.",
+  "primary_metric": "Mean final held-out loss over the fixed per-source validation packs, each source weighted equally; per-source losses reported alongside.",
+  "secondary_metrics": "The pinned early-signal suite (scripts.open_slm_eval: HellaSwag, ARC-Easy, ARC-Challenge, PIQA, ArithMark) on each arm's final export, and held-out loss at each quarter of the horizon.",
+  "minimum_useful_effect": "2.83 times the P0 standard deviation of the metric at 50m; an arm difference below it is reported as no detectable effect.",
+  "decision_rule": "Report whether the strict-minus-baseline difference changes sign or size between the short and long horizons. A reversal at the long horizon means filtering conclusions from short runs do not carry to the parent.",
+  "data_preparation": "Corpora are packed as in P1 at each horizon; at the long horizon the smaller strict pool repeats, and its passes are recorded as exposure.",
+  "prerequisites": [
+    "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known.",
+    "P1 has run, fixing the all-strict corpus.",
+    "Enough stock for the long horizon; math is the scarcest bank and will repeat.",
+    "scripts.ladder_prepare can repeat a bank's pool for a declared number of passes; today packing fails on a supply shortfall instead of repeating."
+  ],
+  "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 13 hours on the local RTX 3090 at the measured eager rate of 55,000 tokens per second.",
+  "horizon_tokens": {
+    "short": 658636800,
+    "long": 10528358400
+  }
+}

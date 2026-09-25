@@ -1,0 +1,40 @@
+{
+  "format": "speck_ladder_record",
+  "format_version": 1,
+  "family": "P1",
+  "rung": "50m",
+  "status": "draft",
+  "question": "How strict should classifier floors be?",
+  "arms": [
+    {
+      "id": "code-4plus",
+      "change": "Natural code restricted to Stack-Edu int_score 4 and 5; the baseline admits int_score 3 and above."
+    },
+    {
+      "id": "web-strict",
+      "change": "Selected web restricted to a stricter Ultra-FineWeb classifier score than the HQ subset's own floor, set before the run from the score distribution so that it removes about half the stock."
+    },
+    {
+      "id": "math-3plus",
+      "change": "Natural math adds FineMath 3+ to the baseline's FineMath 4+ and InfiWebMath 4+."
+    },
+    {
+      "id": "all-strict",
+      "change": "code-4plus and web-strict together; this is the strictest arm that P7 carries to longer training."
+    }
+  ],
+  "controls": "P0 seed 1, the 50m baseline, is the shared baseline arm. Every arm trains experiments/ladder/50m at the learning rate the 50m learning-rate record selects, seed 1, from the same initial model tensors (verified by hash), with the same tokenizer, context, schedule and token budget. Only the named data change differs. Every arm is scored on the same validation packs: the baseline corpus's development-bucket families, held fixed across arms.",
+  "horizon_tokens": 2631270400,
+  "primary_metric": "Mean final held-out loss over the fixed per-source validation packs, each source weighted equally; per-source losses reported alongside.",
+  "secondary_metrics": "The pinned early-signal suite (scripts.open_slm_eval: HellaSwag, ARC-Easy, ARC-Challenge, PIQA, ArithMark) on each arm's final export, and held-out loss at each quarter of the horizon.",
+  "minimum_useful_effect": "2.83 times the P0 standard deviation of the metric at 50m; an arm difference below it is reported as no detectable effect.",
+  "decision_rule": "For each floor, adopt the stricter setting only if it improves the primary metric by at least the minimum useful effect; otherwise keep the looser, larger pool. Report every arm against the baseline.",
+  "data_preparation": "Each arm is packed by scripts.ladder_prepare from the same family buckets as the baseline, with only the named filter changed, and bank weights held at the starting mixture.",
+  "prerequisites": [
+    "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known.",
+    "Converted Stack-Edu records keep int_score, so code can be selected by tier (speck/data/stack_edu.py does not yet write it).",
+    "Converted Ultra-FineWeb records keep the classifier score (speck/data/ultrafineweb.py does not yet write it).",
+    "FineMath 3+ acquired and covered by a source-use decision; only finemath-4plus is a selected source."
+  ],
+  "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 13 hours on the local RTX 3090 at the measured eager rate of 55,000 tokens per second."
+}

@@ -15,4 +15,5 @@ run counts live in [plan.json](../main-data/plan.json); `make plan-check` fails 
 configuration drifts from the rule or from the plan.
 
 [records/](records) holds each family's predeclared record: question, arms, controls, primary
-metric, decision rule and cost, written before the family runs and updated only with its result.
+metric, decision rule, cost and prerequisites. A record stays a `draft` until its prerequisites are
+met, is declared before its family runs, and is then updated only with its result.

@@ -1,0 +1,38 @@
+{
+  "format": "speck_ladder_record",
+  "format_version": 1,
+  "family": "P4",
+  "rung": "50m",
+  "status": "draft",
+  "question": "How many passes over a scarce bank match fresh data?",
+  "arms": [
+    {
+      "id": "code-2x",
+      "change": "Code drawn from a unique pool half the size of its exposure, seen twice."
+    },
+    {
+      "id": "code-4x",
+      "change": "Code from a quarter-size unique pool, seen four times."
+    },
+    {
+      "id": "code-8x",
+      "change": "Code from an eighth-size unique pool, seen eight times."
+    },
+    {
+      "id": "math-4x",
+      "change": "Math from a quarter-size unique pool, seen four times."
+    }
+  ],
+  "controls": "P0 seed 1, the 50m baseline, is the shared baseline arm. Every arm trains experiments/ladder/50m at the learning rate the 50m learning-rate record selects, seed 1, from the same initial model tensors (verified by hash), with the same tokenizer, context, schedule and token budget. Only the named data change differs. Every arm is scored on the same validation packs: the baseline corpus's development-bucket families, held fixed across arms.",
+  "horizon_tokens": 2631270400,
+  "primary_metric": "Mean final held-out loss over the fixed per-source validation packs, each source weighted equally; per-source losses reported alongside.",
+  "secondary_metrics": "The pinned early-signal suite (scripts.open_slm_eval: HellaSwag, ARC-Easy, ARC-Challenge, PIQA, ArithMark) on each arm's final export, and held-out loss at each quarter of the horizon.",
+  "minimum_useful_effect": "2.83 times the P0 standard deviation of the metric at 50m; an arm difference below it is reported as no detectable effect.",
+  "decision_rule": "Report the loss penalty per pass relative to the baseline, which sees every bank once. The largest pass count within the minimum useful effect of the baseline sets how many passes the parent may use for that bank.",
+  "data_preparation": "Each arm restricts the bank's unique pool to exposure divided by the pass count, drawn from the same family buckets, and repeats it in shuffled passes; all other banks are unchanged.",
+  "prerequisites": [
+    "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known.",
+    "scripts.ladder_prepare can repeat a bank's pool for a declared number of passes; today packing fails on a supply shortfall instead of repeating."
+  ],
+  "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 13 hours on the local RTX 3090 at the measured eager rate of 55,000 tokens per second."
+}
