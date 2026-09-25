@@ -92,9 +92,13 @@ def check_loader(experiment, output_dir, *, batches=64, mode="scan"):
                     raise AssertionError("loader cursor does not match the consumed-token boundary")
                 if any(state["source_epochs"].values()):
                     raise AssertionError("finite pilot unexpectedly repeated a source")
+                # Masked targets are -100 (unsupervised); every other token must be in vocabulary.
+                supervised = targets[targets != -100]
                 if (
-                    min(inputs.min().item(), targets.min().item()) < 0
-                    or max(inputs.max().item(), targets.max().item()) >= tokenizer.vocab_size
+                    inputs.min().item() < 0
+                    or inputs.max().item() >= tokenizer.vocab_size
+                    or (supervised.numel() and supervised.min().item() < 0)
+                    or (supervised.numel() and supervised.max().item() >= tokenizer.vocab_size)
                 ):
                     raise AssertionError("packed token is outside the frozen tokenizer vocabulary")
                 if manifest["mixture"].get("schedule") is None:
