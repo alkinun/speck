@@ -191,3 +191,43 @@ def test_convert_joins_retained_and_acquired_records_and_rejects_changes(tmp_pat
     records.write_bytes(gzip.compress(b"{}\n"))
     with pytest.raises(ValueError, match="acquired records changed"):
         content.convert(retained, tmp_path / "out", base, tmp_path / "again")
+
+
+def _unit(directory, texts):
+    directory.mkdir(parents=True, exist_ok=True)
+    records = directory / "unit-00000.jsonl.gz"
+    with gzip.open(records, "wt") as handle:
+        for text in texts:
+            raw = text.encode()
+            record = {"blob_id": hashlib.sha1(raw).hexdigest(), "length_bytes": len(raw)}
+            handle.write(json.dumps(record | {"text": text, "tokens": 3}) + "\n")
+    manifest = directory / "unit-00000.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "kept_rows": len(texts),
+                "tokens": 3 * len(texts),
+                "records": content.identity(records),
+            }
+        )
+    )
+    return records
+
+
+def test_verify_rederives_units_and_repair_removes_failures(tmp_path):
+    _unit(tmp_path / "Python-3", ["print(1)", "print(2)"])
+    records = _unit(tmp_path / "Go-3", ["package main"])
+    assert content.verify(tmp_path)["failed_units"] == 0
+
+    # A corrupted text whose file hash was recomputed after corruption: only content checks see it.
+    with gzip.open(records, "wt") as handle:
+        row = {"blob_id": hashlib.sha1(b"package main").hexdigest(), "length_bytes": 12}
+        handle.write(json.dumps(row | {"text": "package mail", "tokens": 3}) + "\n")
+    manifest = tmp_path / "Go-3/unit-00000.json"
+    manifest.write_text(
+        json.dumps({"kept_rows": 1, "tokens": 3, "records": content.identity(records)})
+    )
+    report = content.verify(tmp_path, repair=True)
+    assert (report["units"], report["failed_units"]) == (2, 1)
+    assert not manifest.exists() and not records.exists()
+    assert (tmp_path / "Python-3/unit-00000.json").exists()

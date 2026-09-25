@@ -2,6 +2,7 @@
 
 PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py probe LISTING OUTPUT_DIR RECEIPT
 PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py acquire LISTING CENSUS LANGUAGE TIER OUTPUT_DIR
+PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py verify OUTPUT_DIR [--repair]
 PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py summarize OUTPUT_DIR RECEIPT
 PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py convert RETAINED OUTPUT_DIR BASE_PLAN OUT
 
@@ -14,7 +15,10 @@ int_score 3 and at 4 or 5; both tiers pass the same screen, so their yield ratio
 measurement. `acquire` takes every row of one language and tier in physical listing order, in
 4,096-row units that each publish a record file and manifest, so a rerun resumes at the first
 missing unit. Tier 4+ skips the rows the retained acquisition already consumed. No code is
-executed and nothing is admitted. `summarize` records every completed tranche in one receipt.
+executed and nothing is admitted. `verify` re-derives every completed unit from its stored records
+(each text's SHA-1 and length against its blob identity, and the unit's kept-row and token totals);
+`--repair` deletes failed units so the next `acquire` refetches them. `summarize` records every
+completed tranche in one receipt.
 `convert` writes the retained stock (RETAINED is its acquisition receipt) and every completed
 tranche as one input for `scripts.production_data_preprocess`, verifying each archive and unit
 file first, with a plan that keeps the base plan's firewall references and policy.
@@ -421,6 +425,44 @@ def summarize(output, receipt):
     )
 
 
+def _verify_unit(manifest_path):
+    """Return the problems of one completed unit, re-derived from its stored records."""
+    manifest = json.loads(Path(manifest_path).read_text())
+    records = Path(manifest["records"]["path"])
+    if not records.is_file() or file_sha256(records) != manifest["records"]["sha256"]:
+        return [f"{manifest_path}: records file changed or missing"]
+    problems, kept, tokens = [], 0, 0
+    with gzip.open(records, "rt") as handle:
+        for line in handle:
+            row = json.loads(line)
+            raw = row["text"].encode("utf-8")
+            if hashlib.sha1(raw).hexdigest() != row["blob_id"] or len(raw) != row["length_bytes"]:
+                problems.append(f"{manifest_path}: record {row['blob_id']} differs from its blob")
+            kept += 1
+            tokens += row["tokens"]
+    if (kept, tokens) != (manifest["kept_rows"], manifest["tokens"]):
+        problems.append(f"{manifest_path}: kept rows or tokens differ from the manifest")
+    return problems
+
+
+def verify(output, repair=False, workers=8):
+    """Re-verify every completed unit by content; with repair, delete failed units to refetch."""
+    manifests = sorted(Path(output).glob("*/unit-*.json"))
+    with ThreadPoolExecutor(workers) as pool:
+        results = list(pool.map(_verify_unit, manifests))
+    failed = [path for path, problems in zip(manifests, results, strict=True) if problems]
+    if repair:
+        for path in failed:
+            for stale in (path.with_suffix(".jsonl.gz"), path.parent / "tranche.json", path):
+                stale.unlink(missing_ok=True)
+    return {
+        "units": len(manifests),
+        "failed_units": len(failed),
+        "problems": [problem for problems in results for problem in problems],
+        "repaired": repair,
+    }
+
+
 def _code_record(text, content_id, repository, path, language, source_file, source_row, origin):
     return {
         "text": text,
@@ -539,6 +581,9 @@ def main():
     acquire_parser.add_argument("language")
     acquire_parser.add_argument("tier", choices=("3", "4+"))
     acquire_parser.add_argument("output", type=Path)
+    verify_parser = commands.add_parser("verify")
+    verify_parser.add_argument("output", type=Path)
+    verify_parser.add_argument("--repair", action="store_true")
     summary_parser = commands.add_parser("summarize")
     summary_parser.add_argument("output", type=Path)
     summary_parser.add_argument("receipt", type=Path)
@@ -550,6 +595,8 @@ def main():
         probe(args.listing, args.output, args.receipt)
     elif args.command == "acquire":
         acquire(args.listing, args.census, args.language, args.tier, args.output)
+    elif args.command == "verify":
+        print(json.dumps(verify(args.output, args.repair), indent=2))
     elif args.command == "summarize":
         summarize(args.output, args.receipt)
     else:
