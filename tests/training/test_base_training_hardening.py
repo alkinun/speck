@@ -179,3 +179,10 @@ def test_resume_compile_window_is_counted_as_startup_not_steady(monkeypatch):
 
     assert trainer.elapsed_optimizer == 110.0
     assert trainer.elapsed_training == 10.0
+
+
+def test_unknown_training_setting_is_rejected():
+    trainer = object.__new__(base_train.BaseTrainer)
+    trainer.configs = {"train": {"lr": 0.001, "warmup_step": 10}, "data": {}}
+    with pytest.raises(ValueError, match="unknown training settings: warmup_step"):
+        trainer._prepare_settings()

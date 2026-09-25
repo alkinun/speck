@@ -96,6 +96,41 @@ _IMMUTABLE_RESUME_SETTINGS = (
     "branch_kind",
     "seed",
 )
+# Every train.json key the trainer reads; an unknown key is a typo, not a setting.
+_TRAIN_SETTINGS = {
+    "activation_checkpointing",
+    "batch_tokens",
+    "checkpoint_tokens",
+    "data_token_offset",
+    "decay_fraction",
+    "deterministic",
+    "device_batch_size",
+    "eval_every",
+    "eval_tokens",
+    "final_eval_tokens",
+    "global_token_offset",
+    "grad_clip",
+    "log_every",
+    "loss_backend",
+    "lr",
+    "lr_schedule",
+    "min_lr",
+    "optimizer",
+    "output_dir",
+    "run",
+    "save_every",
+    "seed",
+    "sequence_length",
+    "train_tokens",
+    "training_phase",
+    "wandb_group",
+    "wandb_project",
+    "warmup_steps",
+    "weight_decay",
+}
+# Accepted and ignored so frozen configurations keep loading.
+_RETIRED_TRAIN_SETTINGS = {"diagnostics_every"}
+
 _LEGACY_RESUME_DEFAULTS = {
     "deterministic": False,
     "lr_schedule": "cosine",
@@ -285,6 +320,9 @@ class BaseTrainer:
         self._load_checkpoint_metadata()
 
     def _prepare_settings(self):
+        unknown = set(self.configs["train"]) - _TRAIN_SETTINGS - _RETIRED_TRAIN_SETTINGS
+        if unknown:
+            raise ValueError(f"unknown training settings: {', '.join(sorted(unknown))}")
         args = SimpleNamespace(**self.configs["train"])
         args.run = args.run or Path(self.cli.experiment).resolve().name
         args.device = self.cli.device
