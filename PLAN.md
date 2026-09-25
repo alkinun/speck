@@ -60,13 +60,15 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
      the crawl preprocess on 2026-09-24. After a reboot no kernel fault recurred, but data is still
      silently corrupted: three conversions of the same sha-verified crawl shards produced three
      different files; the two kept had 10 and 6 damaged records in 27.5M, all caught by their
-     per-record content hashes, and both were deleted. Every data and training job is stopped.
-     Update the BIOS to Intel's default power profile, run memtest86+ and a CPU stress test, and
-     replace the CPU if it still fails. Then convert the crawl twice and require identical files
+     per-record content hashes, and both were deleted. On 2026-09-25 a plain copy of a 4.2 GB
+     file flipped the same bit (0x04) in two bytes with no kernel message, which points at memory
+     as much as the CPU. Every data and training job is stopped. Update the BIOS to Intel's default
+     power profile, run memtest86+ first and then a CPU stress test, and replace the failing part. Then convert the crawl twice and require identical files
      before its preprocess, and rebuild the 50m sweep corpus twice and compare. Re-verified by
      content and kept: the fetched Stack-Edu units, the code conversion, preprocess and token index,
      the HQ web stock and its index, and the dry-run family partition, each matching a second build
-     or its per-record content hashes.
+     or its per-record content hashes. Once verified, move the 50m sweep's partition and code
+     inputs from `~/.cache/speck-ladder` into the data store, checking each hash.
    - Run the 50m learning-rate sweep (its own corpus, from the retained HQ sample).
    - Configure the 50m baseline corpus from the verified crawl; P0 and every P family train on it
      and no configuration exists yet. Then run the P0 seed set and choose the metrics that move at
