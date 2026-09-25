@@ -79,6 +79,11 @@ corpus documents only: every document is still matched exactly and near against 
 unchanged. The mode is part of the plan fingerprint, so a resume refuses a changed mode, and the
 published manifest records it in `policy` and `gates`.
 
+**Score floors.** Converted records keep their classifier score: `int_score` and `tier` for
+Stack-Edu, `pred_score` for Ultra-FineWeb. A ladder source with `score_column` and
+`filters.min_score` trains only on documents at or above the floor; validation documents are never
+filtered, so arms that change a floor share their validation set.
+
 Each billion packed tokens needs about 2 GB of storage before indexes. The frozen tokenizer is
 Mistral-7B-v0.1's (model SHA-256
 `dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055`).
