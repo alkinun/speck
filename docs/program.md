@@ -1,9 +1,8 @@
 # SpeckLabs first program: design
 
-2026-09-24. This document owns the design of the first program: its goal, method, experiments,
-compute budget and release. [plan.json](../experiments/main-data/plan.json) owns the numbers,
-[PLAN.md](../PLAN.md) owns status and the work order, and the [paper outline](paper.md) owns what
-the report must show. No GPU run starts from this document.
+The goal, method, experiments, compute budget and release of the first program. The numbers are in
+[plan.json](../experiments/main-data/plan.json), status and the work order in [PLAN.md](../PLAN.md),
+and what the report must show in the [paper outline](paper.md).
 
 ## Goal: the data step
 
@@ -66,8 +65,8 @@ varies tokens per parameter as well as parameters.
 source use, deduplication, benchmark firewall and family holds, as [Data](data.md) describes.
 
 **One parent, many branches.** The 1.2B parent trains once through the stable phase of a
-warmup-stable-decay schedule, with its stable checkpoints preserved. Decay branches start from them, mid-training branches from the chosen
-decay, and the SFT probe from each branch. The released base and assistant are the best branches,
+warmup-stable-decay schedule, with its stable checkpoints preserved. Decay branches start from them,
+mid-training branches from the chosen decay, and the SFT probe from each branch. The released base and assistant are the best branches,
 so there is no separate production track.
 
 ## The ladder

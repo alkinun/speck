@@ -2,9 +2,8 @@
 
 Working title: **Speck: Open Pretraining and Mid-Training Data Pipelines, Measured Across Scale**.
 
-The paper reports the experiments the [program](program.md) defines. Every table is regenerated from
-retained receipts; nothing is typed from memory. The [evaluation guide](evaluation.md) owns the
-protocols it cites.
+The paper reports the experiments the [program](program.md) defines. Every table is generated from
+retained receipts, and the [evaluation guide](evaluation.md) defines the protocols it cites.
 
 ## 1. Introduction
 

@@ -9,9 +9,9 @@ released base and light always-thinking assistant for **coding, math and tools**
 branches of those experiments. The KDA/NoPE-GQA architecture is fixed by declaration, so the release
 makes no architecture claim, and post-training research belongs to later releases.
 
-[PLAN.md](PLAN.md) gives status and the next work. The [program design](docs/program.md) owns the
-goal, method, experiments and compute budget, and the [paper outline](docs/paper.md) what the report
-must show. [plan.json](experiments/main-data/plan.json) owns the numbers.
+[PLAN.md](PLAN.md) gives status and the next work, the [program design](docs/program.md) the goal,
+method, experiments and compute budget, the [paper outline](docs/paper.md) what the report must
+show, and [plan.json](experiments/main-data/plan.json) the numbers.
 
 ## Get a working baseline
 
