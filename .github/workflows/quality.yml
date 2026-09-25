@@ -22,16 +22,10 @@ jobs:
           python-version: "3.10"
           version: "0.12.1"
       - name: Install the locked CPU test environment
-        run: >-
-          uv sync --extra cpu --group dev --group dataset-build
-          --group transformers --locked
-      - name: Check formatting
-        run: uv run --no-sync ruff format --check --config ruff-format.toml .
-      - name: Lint
-        run: uv run --no-sync ruff check .
-      - name: Test
-        run: uv run --no-sync pytest -q
-      - name: Check plan arithmetic and receipt chain
+        run: make setup
+      - name: Format, lint and test
+        run: make quality
+      - name: Check the plan, records and document links
         run: make plan-check
       - name: Exercise the CPU workflow
-        run: uv run --no-sync python -m scripts.smoke
+        run: make smoke
