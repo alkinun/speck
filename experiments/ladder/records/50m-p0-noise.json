@@ -32,5 +32,5 @@
   "primary_metric": "Standard deviation across seeds of final held-out loss, per source and averaged over sources.",
   "secondary_metrics": "The same spread for the pinned early-signal suite (scripts.open_slm_eval: HellaSwag, ARC-Easy, ARC-Challenge, PIQA, ArithMark) on each seed's final export, and for held-out loss at each quarter of the horizon.",
   "decision_rule": "No decision. The per-metric standard deviation sets the rung's minimum detectable effect: a later 50m contrast reports an effect on a metric only when the difference between arms exceeds 2.83 times that standard deviation, two standard deviations of a difference between two independent runs. Arms that share initial tensors can only be less noisy, so the rule is conservative.",
-  "cost": "Local RTX 3090 at the measured compiled rate of 86,000 tokens per second: about 8.5 hours per seed, no grant GPU-hours."
+  "cost": "Local RTX 3090 at the measured compiled rate of 100,000 tokens per second: about 7.3 hours per seed, no grant GPU-hours."
 }
