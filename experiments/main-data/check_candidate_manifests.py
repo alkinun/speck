@@ -49,7 +49,6 @@ MANIFESTS = (
     "experiments/main-data/natural-web-candidate-manifest.json",
     "experiments/main-data/natural-code-candidate-manifest.json",
     "experiments/main-data/math-candidate-manifest.json",
-    "experiments/main-data/post-training-candidate-manifest.json",
 )
 
 

@@ -15,7 +15,7 @@ from types import SimpleNamespace
 
 from speck.config import load_experiment
 from speck.export.pretrained import native_pretrained_source
-from speck.operations.r0_executor import supervise
+from speck.operations.supervise import supervise
 from speck.operations.training_replay import replay
 from speck.provenance.io import atomic_json, file_sha256
 

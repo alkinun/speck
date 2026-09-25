@@ -14,7 +14,7 @@ from pathlib import Path
 import torch
 
 from speck.config import load_experiment
-from speck.operations.r0_executor import supervise
+from speck.operations.supervise import supervise
 from speck.provenance.io import atomic_json, file_sha256
 from speck.training.checkpoint import latest, load_metadata
 

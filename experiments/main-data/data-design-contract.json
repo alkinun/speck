@@ -22,8 +22,7 @@
     "quality_vector": "Record the component scores, calibration/version and retained score distribution; a publisher score or one scalar cutoff is insufficient.",
     "dependency_metadata": "For long-context or repository-event records, record related-item identities, dependency type and an auditable dependency-distance value; use null with a reason when unavailable.",
     "lineage": "Derived records bind source identities, transformation type, teacher/generator identity, generation settings and rejection reasons.",
-    "trajectory_metadata": "Agent records bind episode, task, repository snapshot, environment image, tool schema, turn, branch, outcome, recovery labels and per-segment loss masks.",
-    "self_distillation_metadata": "Self-distilled records bind the teacher checkpoint, frozen prompt pool, decoding settings, verifier receipt, anchor mixture and rejected-output counts."
+    "trajectory_metadata": "Agent records bind episode, task, repository snapshot, environment image, tool schema, turn, branch, outcome, recovery labels and per-segment loss masks."
   },
   "bank_boundaries": [
     {
@@ -45,10 +44,6 @@
     {
       "id": "agent_trajectories",
       "rule": "Tool/environment trajectories retain schemas, turn order, observations, outcomes and recovery cases."
-    },
-    {
-      "id": "self_distillation",
-      "rule": "Model-generated post-training records remain derived data, retain teacher and verifier lineage, and are mixed with verified anchor data under an explicit promotion decision."
     }
   ],
   "sampling_policy": {

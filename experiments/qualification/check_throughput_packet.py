@@ -1,6 +1,6 @@
-"""Validate a throughput-rental packet against the benchmark CLI it will actually invoke.
+"""Validate a throughput packet against the benchmark CLI it will actually invoke.
 
-A rental packet is a spend authorization written days before anyone runs it. Until now its
+A throughput packet is a spend authorization written days before anyone runs it. Until now its
 `command` field was a prose template with `{placeholder}` holes and no machine-checked link to
 `speck.training.benchmark`, so a renamed flag, a missing `--data-dir` for end-to-end mode, or a
 `--profile true` where a path belongs would first be discovered on a metered GPU.
@@ -13,7 +13,7 @@ which is what the packet's own stop conditions are for.
 It parses arguments only. It starts no benchmark, allocates no device and spends nothing::
 
     python experiments/qualification/check_throughput_packet.py \
-        experiments/qualification/throughput-h100.json
+        experiments/qualification/throughput-gh200.json
 """
 
 from __future__ import annotations
@@ -82,10 +82,7 @@ def _materialize(run: dict, config: dict) -> tuple[list[str], list[str]]:
 def validate(packet_path: str | Path) -> dict:
     packet_path = Path(packet_path).resolve()
     packet = json.loads(packet_path.read_text())
-    if packet.get("format") not in {
-        "speck_h100_throughput_rental",
-        "speck_gh200_throughput_confirmation",
-    }:
+    if packet.get("format") != "speck_gh200_throughput_confirmation":
         raise ValueError(f"unsupported throughput packet format: {packet.get('format')}")
 
     common = packet["common"]
@@ -174,7 +171,7 @@ def main() -> None:
     parser.add_argument(
         "--print-commands",
         action="store_true",
-        help="emit the materialized command for each run, for the rental runbook",
+        help="emit the materialized command for each run, for the qualification runbook",
     )
     args = parser.parse_args()
     result = validate(args.packet)
