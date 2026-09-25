@@ -77,9 +77,10 @@ def test_base_export_tokenizer_identity_survives_relocation_and_rejects_drift(
         checkpoint_tokenizer(metadata, tmp_path)
 
 
-def test_exports_ship_the_code_licence_and_tokenizer_attribution(tmp_path):
+def test_exports_ship_weights_code_and_tokenizer_licences(tmp_path):
     from speck.export.transformers import copy_licenses
 
     copy_licenses(tmp_path)
-    assert (tmp_path / "LICENSE").read_text().startswith("MIT License")
+    assert "Apache License\n                           Version 2.0" in (tmp_path / "LICENSE").read_text()
+    assert (tmp_path / "LICENSE.code").read_text().startswith("MIT License")
     assert "Mistral-7B-v0.1" in (tmp_path / "LICENSE.tokenizer").read_text()

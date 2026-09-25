@@ -51,9 +51,11 @@ CURRENT_CONFIGURATION_SOURCE = PACKAGE_SOURCE / "transformers_configuration.py"
 CURRENT_MODELING_SOURCE = PACKAGE_SOURCE / "transformers_modeling.py"
 CURRENT_TOKENIZATION_SOURCE = PACKAGE_SOURCE / "transformers_tokenization.py"
 PADDING_DESTINATION = "padding_speck.py"
-# The code licence and the Mistral tokenizer attribution ship with every export.
+# Every export ships the weights licence (Apache-2.0), the licence of its bundled code (MIT) and
+# the Mistral tokenizer attribution.
 LICENSE_SOURCES = {
-    "LICENSE": PACKAGE_SOURCE.parent / "LICENSE",
+    "LICENSE": PACKAGE_SOURCE / "export" / "LICENSE-APACHE-2.0",
+    "LICENSE.code": PACKAGE_SOURCE.parent / "LICENSE",
     "LICENSE.tokenizer": PACKAGE_SOURCE / "export" / "LICENSE.tokenizer",
 }
 

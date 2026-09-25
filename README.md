@@ -56,8 +56,8 @@ experiments/   Runnable configurations, design records and result receipts
 docs/          Program design, paper outline and operational guides
 ```
 
-Source code is [MIT licensed](LICENSE); [Releasing](docs/releasing.md) covers weights and data. See
-the [citation](CITATION.cff).
+Source code is [MIT licensed](LICENSE) and released weights are Apache-2.0; see
+[Releasing](docs/releasing.md#licences). See the [citation](CITATION.cff).
 
 ## History
 

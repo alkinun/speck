@@ -86,6 +86,12 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
 
 ## Open decisions
 
+- Commercial use of the released weights. The weights are to be Apache-2.0, which permits it, but
+  the [source-use decision](experiments/main-data/source-rights-acceptance.json) accepted only
+  research training, publication and weight release (`commercial_use: false`). Before release,
+  either record a new signed decision that extends the scope to commercial use, or change the
+  weights licence.
+
 - Whether sources whose licences permit redistribution are released as data, or only as manifests
   from which the corpora can be rebuilt.
 - Use of FinePDFs-Edu (ODC-By over Common Crawl).

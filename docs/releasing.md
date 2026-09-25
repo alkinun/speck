@@ -17,8 +17,7 @@ uv run --no-sync python -m scripts.model_publish \
 
 Use `scripts.base_checkpoint_export --help` for base checkpoints. Supply the intended source,
 destination, and output directory explicitly. Review the generated files and parity results before
-uploading. Every export ships the repository's `LICENSE` and the tokenizer attribution in
-`speck/export/LICENSE.tokenizer`, and needs no Hub download.
+uploading. Exports need no Hub download.
 
 The export vendors architecture, model layers/state, and optimizer definitions and records their
 hashes, including the maintained exact SentencePiece backend. Both export entry points check
@@ -33,8 +32,20 @@ substituted from an older published model.
 Right-padded likelihood batches are supported without caching; cached padded inference is not.
 A production tool parser and accelerated KDA backend still require their own qualification.
 
-Source code is MIT; released weights are Apache-2.0, shipped with the complete licence and an
-accurate model card. Release model/tokenizer metadata and permitted artifacts. Whether source text
-or packed training shards are released is an [open decision](../PLAN.md#open-decisions); until it is
-recorded, upload neither. Preserve checkpoints, producing revisions, data provenance, evaluation,
-limitations, and costs. Old GGUF and one-shot release migrations are in [Git history](../README.md#history).
+## Licences
+
+Everything is released as openly as its inputs allow:
+
+| Artifact | Licence | Shipped as |
+| --- | --- | --- |
+| Source code, including the model code bundled in exports | MIT | [LICENSE](../LICENSE); `LICENSE.code` in exports |
+| Model weights and configuration | Apache-2.0 | `LICENSE` in exports |
+| Tokenizer (Mistral-7B-v0.1) | Apache-2.0, upstream | `LICENSE.tokenizer` in exports |
+| Paper, results, receipts and data manifests | MIT, with the code | this repository |
+
+Every export writes all three licence files. The model card is written separately and declares
+`license: apache-2.0`, the training sources and their licences, and the conditions of the
+[source-use decision](../experiments/main-data/source-rights-acceptance.json). Whether source text
+or packed training shards are released is an [open decision](../PLAN.md#open-decisions); until it
+is recorded, upload neither. Old GGUF and one-shot release migrations are in
+[Git history](../README.md#history).
