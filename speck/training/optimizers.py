@@ -44,9 +44,10 @@ class CombinedOptimizer:
         muon = self.optimizers.get("muon")
         if isinstance(muon, BatchedMuon):
             for group in muon.param_groups:
-                if not isinstance(group["lr"], torch.Tensor):
-                    parameter = group["params"][0]
-                    group["lr"] = torch.tensor(group["lr"], device=parameter.device)
+                # A resumed state dict loads tensor learning rates on the CPU; the compiled step
+                # must see the same device-resident scalar as a fresh run.
+                device = group["params"][0].device
+                group["lr"] = torch.as_tensor(group["lr"], dtype=torch.float32, device=device)
             muon.step = torch.compile(muon.step, dynamic=False, options=options)
 
 
