@@ -1,0 +1,207 @@
+{
+  "format": "speck_source_rights_acceptance_template",
+  "format_version": 1,
+  "status": "awaiting_human_decision",
+  "source_registry": "source-registry.json",
+  "source_registry_sha256": "8cd3cbe5867d4716797bcb0663018d0c952f1f0bc70b35e32e35fbe09910e126",
+  "evidence_packets": [
+    {
+      "category": "web",
+      "path": "rights-review/web-rights-review-20260907.json",
+      "sha256": "be460abca1c092b95a5223634ed7428fe6a9bf2debe403bb0f0974cb140b99ed",
+      "linear_issue": "SPECK-SOURCE-USE-2026-09-22#web"
+    },
+    {
+      "category": "code",
+      "path": "code-rights-review.json",
+      "sha256": "de92fed021f777648625157c563b3fb9b4f6797f1c9bab4b5016081144d6c04d",
+      "linear_issue": "SPECK-SOURCE-USE-2026-09-22#code"
+    },
+    {
+      "category": "math",
+      "path": "rights-review/math-rights-review-20260907.json",
+      "sha256": "925f287c2d5532ebfff70afb5a5108d84a44c06333c1d29b1151eeb20d1fc30f",
+      "linear_issue": "SPECK-SOURCE-USE-2026-09-22#math"
+    },
+    {
+      "category": "synthetic",
+      "path": "rights-review/synthetic-rights-review-20260907.json",
+      "sha256": "8d650530f2d820670e188939bbe5c3974e3336d4e79d5d176aa49e256c5f94fd",
+      "linear_issue": "SPECK-SOURCE-USE-2026-09-22#synthetic"
+    },
+    {
+      "category": "science",
+      "path": "rights-review/science-rights-review-20260907.json",
+      "sha256": "0250dcc0ff8d92a9b1dd34b7bc239ad2ae3974ee5a556199570bd0735bb8cc9b",
+      "linear_issue": "SPECK-SOURCE-USE-2026-09-22#science"
+    },
+    {
+      "category": "reference",
+      "path": "rights-review/reference-rights-review-20260907.json",
+      "sha256": "fe135389195541970a06422db1a1db86dd116f80dff74ed2b660b1472c454655",
+      "linear_issue": "SPECK-SOURCE-USE-2026-09-22#reference"
+    }
+  ],
+  "intended_scope": {
+    "research_training": true,
+    "paper_publication": true,
+    "public_model_weight_release": true,
+    "commercial_use": true,
+    "source_data_redistribution": false,
+    "derived_packed_shard_redistribution": false
+  },
+  "authority": {
+    "authority_type": "human",
+    "name": "Alkın Ünlü",
+    "role": "Principal Investigator",
+    "organization": "SpeckLabs"
+  },
+  "source_decisions": [
+    {
+      "source_id": "fineweb_edu",
+      "category": "web",
+      "decision": "pending",
+      "evidence_category": "web",
+      "attribution_plan": "Credit HuggingFaceFW/fineweb-edu at revision 87f09149 under ODC-By-1.0 in the model card and technical report, with a Common Crawl citation. Retain source dataset, revision, shard, released-content hash and original URL per document in the immutable attribution manifest.",
+      "redistribution_policy": "No redistribution of source data or derived packed shards under this record. Released artifacts are model weights, processing code, source manifests and measurements only. Any future corpus or shard release requires a new acceptance record.",
+      "removal_policy": "URL and content-hash deny ledger owned by the named authority; on a verified request the affected documents are removed from the ledger and every packed shard containing them is rebuilt. Frozen evidence receipts are never edited in place.",
+      "conditions": [
+        "ODC-By grants database rights with attribution and expressly does not license each item of content; residual underlying-page rights risk is accepted at the declared scope, including commercial use of the released weights.",
+        "Common Crawl terms acceptance is recorded against the 2024-03-07 terms date pinned in the web rights packet.",
+        "The 313 documents and 317,562 tokens shared with the selected-web candidate are counted once, in this bank.",
+        "Closes source use only. Joint family/benchmark partition, eligible-token accounting and measured comparison cost remain separate open gates."
+      ],
+      "rationale": "An ODC-By web corpus at a pinned revision with a measured retained inventory of 2.307B tokens, the highest coverage of any bank at 46%. It is the independent web control, so rejecting it would remove the only source-use-qualified comparison point for the selected-web candidate. Its residual underlying-page risk is the same risk every Common-Crawl-derived source in this registry carries."
+    },
+    {
+      "source_id": "ultrafineweb_hq",
+      "category": "web",
+      "decision": "pending",
+      "evidence_category": "web",
+      "attribution_plan": "Credit openbmb/Ultra-FineWeb at revision 02c85641 under its Apache-2.0 project statement, with FineWeb lineage and Common Crawl citations. Retain dataset, revision, shard, predicted score, released-content hash and original URL per document.",
+      "redistribution_policy": "No redistribution of source data or derived packed shards under this record. Released artifacts are model weights, processing code, source manifests and measurements only. Any future corpus or shard release requires a new acceptance record.",
+      "removal_policy": "Same URL and content-hash deny ledger as the web control, with shard rebuild on verified request; holds propagate to the control bank so a removed document cannot re-enter through the overlap.",
+      "conditions": [
+        "The Apache-2.0 statement covers the project release, not each underlying page; Common Crawl and page-owner terms are accepted as residual risk at the declared scope.",
+        "The previously recorded decision to adopt no score cutoff and no repair rule stands; the extraction defects found in the twelve-shard stratified audit remain review-only and must not silently change the production filter.",
+        "Threshold inventories at 0.65, 0.8 and 0.95 are document counts with no established token yield; none may be quoted as supply.",
+        "Closes source use and the cutoff review only. Family partition, extraction-quality review, eligible-token accounting and runtime cost remain open."
+      ],
+      "rationale": "The selected-web candidate carrying 25% of the mixture. Identity is pinned to an exact revision, a full twelve-shard token census exists, and the portion distinct from retained FineWeb-Edu is measured at 0.351B tokens. Its licence story is weaker than ODC-By because an Apache-2.0 project statement says less about underlying pages, which is why the control bank is retained rather than replaced."
+    },
+    {
+      "source_id": "stack_edu",
+      "category": "code",
+      "decision": "pending",
+      "evidence_category": "code",
+      "attribution_plan": "Per-repository and per-file notice bundles for every admitted record, preserving the original licence identifier and any additional terms found in the recovered upstream notice rather than in the scanner label. Credit Stack-Edu and each origin repository, and retain repository path, recovered immutable revision and Git blob identity.",
+      "redistribution_policy": "No redistribution of source data or derived packed shards under this record. Released artifacts are model weights, processing code, source manifests and measurements only. Any future corpus or shard release requires a new acceptance record.",
+      "removal_policy": "Repository, path, blob and content-hash deny ledger owned by the named authority. A verified upstream removal or licence correction removes every linked record and rebuilds the affected shards. All existing family holds are permanent unless positively cleared by evidence.",
+      "conditions": [
+        "Only records whose original licence is on the approved allowlist and whose upstream notice has been recovered and blob-verified may be admitted. An unlabelled or unresolved record is excluded, never assumed permissive.",
+        "A detected-licence label is not sufficient alone: the one record traced end to end carried an additional prohibition on promotional use of the author's name that its MIT label did not express. Notice text governs, not the label.",
+        "All 75 quota-blocked origin lookups and the one earlier unresolved outcome stay excluded until resolved by evidence. Infrastructure failure is not permission and is not a content rejection either.",
+        "All 44 content-family holds are preserved across every stage and every bank.",
+        "This records the named source-use route. Origin and notice recovery is still incomplete at 28 of 104 unheld records and remains open work."
+      ],
+      "rationale": "Natural code is the single largest bank at 35% after the re-freeze, and Stack-Edu is the only code source with a measured retained inventory: 714,369 files and 476,774,847 tokens. The route is per-file original licences with recovered notices rather than a dataset-level grant, and that route is demonstrably workable, with 28 unheld records already Git-verified against their upstream notices. Rejecting it would leave the code bank with no supplied candidate at all."
+    },
+    {
+      "source_id": "stack_v3",
+      "category": "code",
+      "decision": "pending",
+      "evidence_category": "code",
+      "attribution_plan": "Identical per-repository and per-file notice bundles to the other code route, with dataset revision 8f3f25d8, repository/commit pair, recovered immutable revision and Git blob identity retained for every admitted record.",
+      "redistribution_policy": "No redistribution of source data or derived packed shards under this record. Released artifacts are model weights, processing code, source manifests and measurements only. Any future corpus or shard release requires a new acceptance record.",
+      "removal_policy": "Shared code deny ledger keyed on repository, path, blob and content hash, with shard rebuild on verified request. The 10 family holds in the review cohort are permanent unless positively cleared.",
+      "conditions": [
+        "Most probed entries carry no licence metadata at all. Absence of a label is an exclusion, so admission is restricted to the labelled and allowlisted subset.",
+        "The two pinned sources returning 404 and the ten upstream content identities transformed without a recorded explanation stay excluded.",
+        "Of 7,084 content-ID mismatches in the feasibility probe, the 527 without explicit redaction markers are excluded pending explanation; a redaction marker is not itself an acceptance.",
+        "The 80-file / 44-repository cohort is a bounded review sample and establishes no full-release eligible supply.",
+        "This records the named source-use route; origin and notice recovery remains open."
+      ],
+      "rationale": "A second natural-code route is needed because the first covers only 1.36% of the 35B code preparation target. All 16 frozen groups are already acquired and screened, so the remaining cost is qualification rather than acquisition. Its licence metadata is materially thinner than the other route's, which is why the exclusion default for unlabelled entries is a stated condition rather than an implementation detail."
+    },
+    {
+      "source_id": "finemath_4plus",
+      "category": "math",
+      "decision": "pending",
+      "evidence_category": "math",
+      "attribution_plan": "Credit HuggingFaceTB/finemath at revision e92b25a6 under ODC-By-1.0 with a Common Crawl citation. Retain dataset, revision, config, host, released-content hash and original URL per document.",
+      "redistribution_policy": "No redistribution of source data or derived packed shards under this record. Released artifacts are model weights, processing code, source manifests and measurements only. Any future corpus or shard release requires a new acceptance record.",
+      "removal_policy": "URL, host and content-hash deny ledger with shard rebuild on verified request. The reversible candidate directory view is retained so a directory-level removal can be applied without re-deriving the bank.",
+      "conditions": [
+        "ODC-By grants database rights with attribution and does not license each page; residual underlying-page risk is accepted at the declared scope.",
+        "No worked-solution correctness claim attaches to this source. Independent solution checks remain an open gate and the report must say so.",
+        "The 4 documents in 2 repeated numeric-template families are not automatically removed; numeric variants can be distinct useful problems.",
+        "The candidate directory view removing 8,563 documents and 1.67% of tokens stays reversible and is not frozen policy."
+      ],
+      "rationale": "The only math source with a measured retained inventory, 753,071 documents and 1.124B tokens, and it now carries the whole 25% math share. Its ODC-By release with a pinned revision and full host metadata gives it the strongest attribution position of any math candidate considered."
+    },
+    {
+      "source_id": "infiwebmath_4plus",
+      "category": "math",
+      "decision": "pending",
+      "evidence_category": "math",
+      "attribution_plan": "Credit the FineMath release at revision e92b25a6 under ODC-By-1.0, name the InfiMM-WebMath derivation chain, and cite Common Crawl. Retain config, source row identity and released-content hash.",
+      "redistribution_policy": "No redistribution of source data or derived packed shards under this record. Released artifacts are model weights, processing code, source manifests and measurements only. Any future corpus or shard release requires a new acceptance record.",
+      "removal_policy": "Shared math deny ledger keyed on URL, host and content hash, with shard rebuild on verified request.",
+      "conditions": [
+        "The manual upstream-terms decision is accepted for research training, paper publication and weight release, including commercial use of the released weights.",
+        "The complete InfiMM-WebMath derivation and attribution chain is not independently verified; that limitation is reported rather than resolved by assumption.",
+        "The one likely source transcription error stays held, and the surrounding solutions are explicitly not certified correct.",
+        "Inventory is a bounded 3,725-record sample. No eligible-token or supply figure may be quoted from it."
+      ],
+      "rationale": "Adds filtered-math coverage distinct from the primary math bank at low incremental rights exposure, because it ships under the same FineMath ODC-By release and pinned revision that is already being accepted. Its bounded sample passed the source-native quality gate and its 16 parser flags all have a recorded triage classification."
+    },
+    {
+      "source_id": "cosmopedia_v2",
+      "category": "synthetic",
+      "decision": "pending",
+      "evidence_category": "synthetic",
+      "attribution_plan": "Credit HuggingFaceTB/smollm-corpus at revision 3ba9d605 under ODC-By-1.0, name the Mixtral-8x7B-Instruct-v0.1 generator family, and state plainly that the exact generation-time model revision is undisclosed upstream. Retain released-content hash and seed labels where present.",
+      "redistribution_policy": "No redistribution of source data or derived packed shards under this record. Released artifacts are model weights, processing code, source manifests and measurements only. Any future corpus or shard release requires a new acceptance record.",
+      "removal_policy": "Content-hash deny ledger with shard rebuild on verified request. Because seed revisions are undisclosed, a seed-level removal request is answered at the generated-document level.",
+      "conditions": [
+        "Generation does not clear copyright, privacy, contractual or attribution obligations in the web seed material.",
+        "The exact generator revision is undisclosed and is reported as a limitation, not inferred from the family name.",
+        "Derived lineage is separately identified in every manifest and exposure ledger, so these tokens can never be counted as natural text in the decay study or anywhere else.",
+        "Generated-content quality review remains an open gate."
+      ],
+      "rationale": "The refined_web bank's only supplied candidate, with 1.851M documents and 1.489B retained tokens at 29.8% coverage. The three-way natural/curated/derived decay study needs a derived arm, and this is the derived source with both an ODC-By release and a pinned dataset revision."
+    },
+    {
+      "source_id": "pes2o_v3",
+      "category": "science",
+      "decision": "pending",
+      "evidence_category": "science",
+      "attribution_plan": "Credit allenai/peS2o at revision 636a503e under ODC-By-1.0 with an S2ORC/Semantic Scholar citation, and retain the per-paper licence identifier, paper ID and released-content hash for every admitted record.",
+      "redistribution_policy": "No redistribution of source data or derived packed shards under this record. Released artifacts are model weights, processing code, source manifests and measurements only. Any future corpus or shard release requires a new acceptance record.",
+      "removal_policy": "Paper-ID and content-hash deny ledger with shard rebuild on verified request, plus a correction path for records whose licence metadata is later found inaccurate.",
+      "conditions": [
+        "Admit only records whose v3 metadata reports CC0, CCBY, CCBYSA, pd or public-domain. Metadata filtering is engineering evidence, not legal acceptance.",
+        "The pinned card documents v2 as latest and documents no v3 construction or licence-selection semantics. That gap is unresolved, is recorded as a limitation, and authoritative v3 documentation is still required before production acquisition.",
+        "ODC-By database rights do not clear copyright in each paper.",
+        "CC BY-SA papers carry share-alike. That is compatible with this scope only because no source data or packed shard is redistributed."
+      ],
+      "rationale": "A licence-metadata-filtered open-access corpus is the lowest-risk science route available, and 55,787 documents / 403,558,463 tokens are already retained. The undocumented v3 licence-selection semantics are the reason this decision is recorded with the gap open rather than as a clean close."
+    },
+    {
+      "source_id": "finewiki_en",
+      "category": "reference",
+      "decision": "pending",
+      "evidence_category": "reference",
+      "attribution_plan": "Credit HuggingFaceFW/finewiki at revision 8bd13e72 and Wikipedia under CC BY-SA, noting the GFDL history. Retain page ID, title, source revision and released-content hash for every admitted document.",
+      "redistribution_policy": "No redistribution of source data or derived packed shards under this record. Released artifacts are model weights, processing code, source manifests and measurements only. Any future corpus or shard release requires a new acceptance record.",
+      "removal_policy": "Page-ID and content-hash deny ledger with shard rebuild on verified request.",
+      "conditions": [
+        "CC BY-SA share-alike is accepted for model weights and the technical report only. No source text or packed shard is redistributed under this record, so no share-alike obligation attaches to a redistributed corpus.",
+        "Any future corpus or shard release requires a new decision that addresses CC BY-SA share-alike specifically; it is not covered by this one.",
+        "Reference quality review and the joint family partition remain open gates."
+      ],
+      "rationale": "387,313 documents and 582,070,378 retained tokens of high-quality reference prose, with the cleanest attribution story in the registry: stable page identifiers, a pinned dataset revision and a well-understood licence. Share-alike is the only live question and the declared no-redistribution scope answers it."
+    }
+  ],
+  "signed_at": null
+}
