@@ -28,14 +28,15 @@ and HellaSwag. Grading uses the `capability` dependency group in its own environ
 (`UV_PROJECT_ENVIRONMENT=.venv-capability uv sync --extra gpu --group capability`).
 
 ```bash
-python -m scripts.capability_eval PROTOCOL PREPARED --qualify --output /external/grader-check
+python -m scripts.capability_eval PROTOCOL PREPARED --qualify --output GRADER_CHECK_DIR
 python -m scripts.capability_eval PROTOCOL PREPARED --local-export EXPORT_DIR --limit 0 \
-  --output /external/scores
+  --output SCORES_DIR
 ```
 
 `--qualify` checks every grader against canonical and deliberately wrong answers, timeouts and
 sandbox isolation. Code runs under Bubblewrap with no network and a non-root account, with no
-unsandboxed fallback. `--local-export` requires a passing export parity receipt. `--partition final`
+unsandboxed fallback. On hosts without user namespaces, `--defer-code-grading` keeps generation on
+the GPU host and `scripts.code_grade` grades locally. `--local-export` requires a passing export parity receipt. `--partition final`
 is an explicit held-out action.
 
 The parent-branch suite is still to be frozen. Candidates are GSM8K and other checked math, and for

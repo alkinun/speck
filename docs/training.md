@@ -29,8 +29,8 @@ uv run --no-sync torchrun --standalone --nproc-per-node=4 -m scripts.base_train 
 
 Use `--device cpu --no-compile` for small CPU runs; run name `dummy` disables W&B. Resume with
 `--resume STEP`; resume checks the model, data cursor, optimizer, tokenizer and schedule, and a
-changed recipe needs a new run, not an edited resume. These commands enforce no budget; a real run
-needs its own frozen recipe and cost ceiling. [Slurm](slurm.md) covers scheduler requeue.
+changed recipe needs a new run, not an edited resume. [Slurm](slurm.md) covers scheduled runs with
+requeue and budget accounting.
 
 Ladder runs are fresh runs. Arms within a comparison share initial model tensors; verify their
 hashes before training.
@@ -40,7 +40,7 @@ per rung during [GH200 qualification](compute-qualification.md). `deterministic:
 deterministic PyTorch algorithms and a reproducible cuBLAS workspace. Training and the benchmark
 compile with `COMPILE_OPTIONS` from `speck/operations/runtime.py`. Keep `TORCHINDUCTOR_CACHE_DIR`
 and its `triton/` subdirectory across requeues; runtime setup pins `TRITON_CACHE_DIR` under it,
-because different cached FLA kernel choices change numerics.
+because different cached flash-linear-attention (FLA) kernel choices change numerics.
 
 Checkpoints include every rank's Python, NumPy, CPU and CUDA RNG state. `scripts.training_replay`
 exercises the production trainer for four steps with a restart after two and compares every tensor
@@ -70,7 +70,7 @@ Before any branch, freeze the parent identity, objective, data, schedule, optimi
 
 ## SFT probe
 
-SFT needs its own `sft.json`, prepared assistant-masked data and an explicit parent:
+SFT needs its own `sft.json`, prepared assistant-masked data and an explicit base checkpoint:
 
 ```bash
 uv run --no-sync python -m scripts.sft_prepare PATH_TO_SFT_EXPERIMENT
@@ -79,9 +79,8 @@ uv run --no-sync python -m scripts.infer "Explain this result:" \
   --experiment PATH_TO_EXPERIMENT --checkpoint-dir CHECKPOINT_DIRECTORY --max-tokens 128
 ```
 
-Bind a native base checkpoint as the parent with
-`speck.export.pretrained.native_pretrained_source(directory, step)` and use the result as
-`sft.json`'s `pretrained` setting. Changed parent bytes fail before loading. Local data uses
+Bind the base checkpoint with `speck.export.pretrained.native_pretrained_source(directory, step)` and
+use the result as `sft.json`'s `pretrained` setting; changed checkpoint bytes fail before loading. Local data uses
 `dataset.format: "messages_v1"` or `prompt_completion_v1` with pinned Parquet files; overlength
 conversations are rejected, never truncated. Hub datasets must set `long_sequences: "reject"`.
 
@@ -90,14 +89,12 @@ context. [Assistant data](assistant.md) defines the tool serialization and the s
 from. Before freezing the probe dataset, audit the stock and gate outcomes:
 
 ```bash
-uv run --no-sync python -m scripts.sft_audit /external/cache/generator-train-*.arrow \
-  --tokenizer /external/tokenizer/tokenizer.model --lengths 4096 8192 16384 \
-  --output /external/reports/sft-audit.json
-uv run --no-sync python -m scripts.sft_verify /external/cache/sft-train.parquet \
-  --output /external/reports/sft-outcomes.json
+uv run --no-sync python -m scripts.sft_audit STOCK_DIR/*.arrow \
+  --tokenizer TOKENIZER_DIR/tokenizer.model --lengths 4096 8192 16384 --output REPORT_DIR/sft-audit.json
+uv run --no-sync python -m scripts.sft_verify SFT_DATA.parquet --output REPORT_DIR/sft-outcomes.json
 ```
 
-`sft_audit` counts every row and tokenizes a deterministic sample per subset, reporting complete-
-conversation fit without truncation; pass conversation shards only, not `cache-*.arrow` shuffle
+`sft_audit` counts every row and tokenizes a deterministic sample per subset, reporting how many
+complete conversations fit each length; pass conversation shards only, not `cache-*.arrow` shuffle
 indices. `sft_verify` checks rows that declare `exact_text`, `code` or `tool` verification; the rest
 stay `unverified`.

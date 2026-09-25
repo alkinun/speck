@@ -33,50 +33,47 @@ count once. Every repeated pass is declared and counted as exposure.
 | Responsibility | Code |
 | --- | --- |
 | Source readers, configuration, packing, resume | `speck/data/{acquisition,configuration,packing,dataset}.py` |
-| Global disk-backed deduplication | `scripts.production_data_preprocess` (`--index-directory` puts the index on flash) |
+| Global disk-backed deduplication | `scripts.production_data_preprocess` |
 | Benchmark exclusion | `speck/evaluation/protocol.py` (`BenchmarkExclusion`), `scripts.livecodebench_exclusion` |
 | Cross-source family graph and partitions | `scripts.joint_family_graph` |
 | Ladder corpora from family buckets | `scripts.ladder_prepare` |
 | Per-document token index | `speck/data/document_index.py` |
-| Source-use review | `scripts.source_rights_review` (validates a human decision; never makes one) |
+| Source-use review | `scripts.source_rights_review` |
 | Distributed loading | `speck/data/loader.py` |
 
 ## Acquiring candidate stock
 
-Two resumable runs grow the selected-web and code stock. Each step writes a receipt, reruns resume
-from the last completed unit, and nothing is admitted. `D` is the data store (`speck_base_dir`). Put
-`TMPDIR` and the SQLite index on local flash, and run one heavy writer per spinning disk.
+Two resumable runs grow the selected-web and code stock. Each step writes a receipt and reruns
+resume from the last completed unit. `D` is the data store (`speck_base_dir`), and `BASE_PLAN` is
+an existing `production_data_preprocess` plan whose benchmark firewall and deduplication policy the
+new input inherits. Keep `TMPDIR` and the deduplication index (`INDEX_DIR`) on fast local storage.
 
-**Ultra-FineWeb HQ crawl.** This reuses the 2026-09-22 HQ preprocess plan and its firewall and
-deduplication policy.
+**Ultra-FineWeb HQ crawl** (the high-quality English subset of Ultra-FineWeb):
 
 ```bash
 python -m scripts.ultrafineweb acquire experiments/corpus-audit/ultrafineweb-hq-listing.json CRAWL $D/hq-CRAWL
-python -m scripts.ultrafineweb convert $D/hq-CRAWL $D/joint-family-partition-20260922/hq-preprocess-plan.json $D/hq-CRAWL-preprocess
-python -m scripts.production_data_preprocess $D/hq-CRAWL-preprocess/preprocess-plan.json --index-directory FLASH_DIR
+python -m scripts.ultrafineweb convert $D/hq-CRAWL BASE_PLAN $D/hq-CRAWL-preprocess
+python -m scripts.production_data_preprocess $D/hq-CRAWL-preprocess/preprocess-plan.json --index-directory INDEX_DIR
 python -m scripts.ultrafineweb census $D/hq-CRAWL-preprocess/excluded $D/hq-CRAWL-census $D/hq-CRAWL-census.json
 ```
 
 The supply gap uses the census receipt's `distinct_from_fineweb_edu_tokens`.
 
-**Stack-Edu code.** Fetch each language of a tier, summarize the completed tranches, then convert
-the retained stock and every tranche into one preprocessor input.
+**Stack-Edu code.** `scripts.stack_edu_census scan` writes `CENSUS_LISTING`. Fetch each language of
+a tier, summarize the completed tranches, then convert the retained code stock (`RETAINED_CODE`,
+its acquisition manifest) and every tranche into one preprocessor input:
 
 ```bash
-python -m scripts.stack_edu acquire $D/stack-edu-census-20260923/census-listing.json experiments/corpus-audit/stack-edu-metadata-census.json LANGUAGE TIER $D/stack-edu-content-v1
-python -m scripts.stack_edu summarize $D/stack-edu-content-v1 experiments/corpus-audit/stack-edu-acquisition.json
-python -m scripts.stack_edu convert $D/data-qualification-20260919/code-supply/acquisition.json $D/stack-edu-content-v1 $D/joint-family-partition-20260922/hq-preprocess-plan.json $D/stack-edu-code-preprocess
-python -m scripts.production_data_preprocess $D/stack-edu-code-preprocess/preprocess-plan.json --index-directory FLASH_DIR
+python -m scripts.stack_edu acquire CENSUS_LISTING experiments/corpus-audit/stack-edu-metadata-census.json LANGUAGE TIER $D/stack-edu-content
+python -m scripts.stack_edu summarize $D/stack-edu-content experiments/corpus-audit/stack-edu-acquisition.json
+python -m scripts.stack_edu convert RETAINED_CODE $D/stack-edu-content BASE_PLAN $D/stack-edu-code-preprocess
+python -m scripts.production_data_preprocess $D/stack-edu-code-preprocess/preprocess-plan.json --index-directory INDEX_DIR
 ```
 
-`summarize` skips a tranche until its `tranche.json` exists. Tier 3 is 6,045 units of 4,096 rows
-across 15 languages, about a minute per unit. `scripts.stack_edu_census` rebuilds the metadata
-census.
+`summarize` skips a tranche until its `tranche.json` exists.
 
-**Storage.** Each billion packed uint16 tokens takes about 2 GB before indexes and intermediates.
-Bulk corpora suit a large disk. The deduplication index, small unit files and scanner scratch are
-random synced writes and belong on flash. Fsync a unit's records before the manifest that marks it
-complete. The frozen tokenizer is `tokenizer-final-mistral-v1` (model SHA-256
+Each billion packed tokens needs about 2 GB of storage before indexes. The frozen tokenizer is
+Mistral-7B-v0.1's (model SHA-256
 `dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055`).
 
 ## Source quality

@@ -39,9 +39,9 @@ conversations:
 
 The [data-readiness receipt](../experiments/corpus-audit/data-readiness.json) has the format and
 context-fit census: 424,463 of 500,000 rows pass the adapter. Most rejections are agent
-trajectories with prose beside calls or unresolved calls. Keep those out rather than rewriting
-them. 89,956 repeated normalized first-user prompts, 448 of them groups spanning sources, need
-shared split handling.
+trajectories with prose beside calls or unresolved calls; they stay out rather than being
+rewritten. About 90,000 conversations repeat an opening prompt, some across sources, and each such
+group must fall in a single split.
 
 ## Freezing the probe
 
@@ -51,5 +51,4 @@ reasoning, agent/tool, supporting instruction tasks); exclude holdouts and task-
 weight by supervised and total tokens rather than rows; then freeze data, masks, schedule and
 serialization. Keep conversations whole. Do not truncate solutions, detach tool results, invent
 rationales or insert empty thinking blocks. The tools are in [Training](training.md#sft-probe).
-`scripts.sft_rehearsal` builds the small balanced rehearsal set the GH200 bundle carries. That set
-is an engineering fixture, not a mixture.
+`scripts.sft_rehearsal` builds the small rehearsal set the GH200 bundle carries.

@@ -45,14 +45,14 @@ GPU-hours.
 ### One-worker check
 
 ```bash
-cd /workspace/gh200-transfer
+cd BUNDLE_DIR
 speck_bundle_branch=$(python3 -c 'import json; print(json.load(open("bundle.json"))["branch"])')
 git clone --branch "$speck_bundle_branch" code.bundle code
 cd code
 uv sync --locked --python 3.10 --extra gpu --extra linear --group dev --group transformers
-uv run --no-sync python -m scripts.gh200_check bind /workspace/gh200-transfer
-uv run --no-sync python -m scripts.gh200_check run /workspace/gh200-transfer \
-  --output /workspace/gh200-results/one-worker --seconds 5400
+uv run --no-sync python -m scripts.gh200_check bind BUNDLE_DIR
+uv run --no-sync python -m scripts.gh200_check run BUNDLE_DIR \
+  --output RESULTS_DIR/one-worker --seconds 5400
 ```
 
 `run` verifies the clean commit and every input hash, then runs five steps under one 90-minute
@@ -65,20 +65,20 @@ CUDA 12.8 PyTorch 2.9.1 and Triton 3.5.1 wheels, which still need to be confirme
 ### Four-worker replay
 
 ```bash
-uv run --no-sync python -m scripts.training_replay /workspace/gh200-transfer/relocated-base \
+uv run --no-sync python -m scripts.training_replay BUNDLE_DIR/relocated-base \
   --phase base --device cuda --workers 4 --allocated-gpus 4 \
   --steps 4 --checkpoint-step 2 --seconds 1800 \
-  --output /workspace/gh200-results/four-worker-replay
+  --output RESULTS_DIR/four-worker-replay
 
-uv run --no-sync python -m scripts.training_replay /workspace/gh200-transfer/relocated-base \
+uv run --no-sync python -m scripts.training_replay BUNDLE_DIR/relocated-base \
   --phase base --device cuda --workers 4 --allocated-gpus 4 --compile \
   --steps 4 --checkpoint-step 2 --seconds 3600 \
-  --output /workspace/gh200-results/four-worker-replay-compiled
+  --output RESULTS_DIR/four-worker-replay-compiled
 ```
 
 The compiled run is the only place the compiled recipe meets four-worker DDP before real runs.
 Export a persistent `TORCHINDUCTOR_CACHE_DIR` first and keep its `triton/` subdirectory, which holds
-FLA kernel choices. A compiled-only failure blocks the compiled recipe, not the allocation: fall
+flash-linear-attention kernel choices. A compiled-only failure blocks the compiled recipe, not the allocation: fall
 back to eager and record the cost.
 
 ### Throughput
@@ -109,11 +109,10 @@ a faster or slower rate changes.
   changed tokens per update, and the optimized 1.2B model did not fit the card, so the parent's
   speedup is unmeasured.
 - The [H100 pilot](../experiments/pilot/h100-run.json) ran eager and checkpointed at about 10%
-  estimated MFU. That is an upper bound on cost, not an estimate.
+  estimated MFU, an upper bound on cost.
 - Compiled restart parity holds for [base](../experiments/qualification/compiled-recovery-descent-3090.json)
-  and [SFT](../experiments/qualification/compiled-sft-recovery-3090.json) once Inductor's
-  coordinate-descent tuning is excluded. `COMPILE_OPTIONS` in `speck/operations/runtime.py` excludes
-  it; it re-timed kernels per process and broke bitwise restart.
+  and [SFT](../experiments/qualification/compiled-sft-recovery-3090.json) with the shared
+  `COMPILE_OPTIONS` in `speck/operations/runtime.py`.
 
 MFU = tokens/s × model FLOPs/token ÷ dense BF16 peak. Keep compute, loader-inclusive
 (`--mode end-to-end`) and full-trainer rates separate. Only a sustained trainer run at the real
@@ -124,12 +123,5 @@ checkpoint cadence measures the full-trainer overhead.
 State separately: one-worker ARM64 status; four-worker restart status, eager and compiled; the
 parent's measured speedup over the pilot recipe; tokens/s per GPU for each rung and the resulting
 run counts; scheduler and requeue status; memory and storage observations; export parity; all-in
-GPU-hours and non-GPU costs; open limitations.
-
-Lessons from the H100 pilot:
-
-- A trainer stopping does not stop billing or delete an instance.
-- Verify backups by hash before deleting remote checkpoints.
-- Never reuse or reset a budget ledger to unblock an attempt.
-- Some hosts deny the user namespaces the code grader needs. `--defer-code-grading` keeps
-  generation on the GPU host and `scripts.code_grade` finishes grading locally.
+GPU-hours and non-GPU costs; open limitations. Verify every downloaded checkpoint and receipt by
+hash before releasing remote storage.
