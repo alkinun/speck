@@ -883,10 +883,10 @@
           "source_native_quality_gate": "pass",
           "benchmark_contamination": "pending_evaluation_firewall",
           "cross_source_near_duplicates": "pending",
-          "manual_legal_acceptance": "pending"
+          "manual_legal_acceptance": "closed_by_source_use_decision"
         },
         "arithmetic_diagnostic": {
-          "audit_script": "experiments/corpus-audit/audit_math_arithmetic.py",
+          "audit_script": "pre-cleanup-2026-09-25:experiments/corpus-audit/audit_math_arithmetic.py",
           "lines_seen": 292452,
           "candidate_lines": 312,
           "oracle_parsed_lines": 276,
