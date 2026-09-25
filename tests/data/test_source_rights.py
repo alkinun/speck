@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 
@@ -134,6 +135,10 @@ def test_finalization_requires_named_human_complete_scope_and_all_approvals(tmp_
     assert acceptance["authority"]["authority_type"] == "human"
     assert acceptance["approved_source_ids"] == list(SOURCES)
     assert acceptance["automated_approval_made"] is False
+    # Paths are relative to the record, so it resolves wherever the repository is checked out.
+    assert not Path(acceptance["source_registry"]).is_absolute()
+    for packet in acceptance["evidence_packets"]:
+        assert (tmp_path / packet["path"]).is_file()
     assert json.loads((tmp_path / "acceptance.json").read_text()) == acceptance
     with pytest.raises(FileExistsError):
         finalize_human_acceptance(

@@ -1,6 +1,7 @@
 """Validate, but never make, human source-rights decisions."""
 
 import json
+import os
 from pathlib import Path
 
 from speck.data.validation import exact_keys
@@ -203,6 +204,12 @@ def finalize_human_acceptance(template, output_path, *, config_dir=None):
     if incomplete:
         raise ValueError("approved source decisions require complete operational policies")
     scope = value["intended_scope"]
+    output_path = Path(output_path).resolve()
+
+    def portable(path):
+        # Record paths relative to the acceptance record so it resolves in any checkout.
+        return os.path.relpath(path, output_path.parent)
+
     acceptance = {
         "format": ACCEPTANCE_FORMAT,
         "format_version": FORMAT_VERSION,
@@ -216,14 +223,15 @@ def finalize_human_acceptance(template, output_path, *, config_dir=None):
         "signed_at": value["signed_at"],
         "scope": ", ".join(f"{key}={str(scope[key]).lower()}" for key in SCOPE_FIELDS),
         "scope_details": scope,
-        "source_registry": value["source_registry"],
+        "source_registry": portable(value["source_registry"]),
         "source_registry_sha256": value["source_registry_sha256"],
-        "evidence_packets": value["evidence_packets"],
+        "evidence_packets": [
+            {**packet, "path": portable(packet["path"])} for packet in value["evidence_packets"]
+        ],
         "approved_source_ids": value["required_source_ids"],
         "source_decisions": value["source_decisions"],
         "automated_approval_made": False,
     }
-    output_path = Path(output_path).resolve()
     if output_path.exists():
         raise FileExistsError(f"human acceptance record already exists: {output_path}")
     output_path.parent.mkdir(parents=True, exist_ok=True)
