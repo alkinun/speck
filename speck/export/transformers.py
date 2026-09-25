@@ -101,10 +101,6 @@ def load_metadata(checkpoint_dir, step):
     metadata = json.loads(path.read_text(encoding="utf-8"))
     if not is_assistant_checkpoint(metadata) or metadata.get("step") != step:
         raise ValueError("checkpoint is not a matching assistant checkpoint")
-    if metadata["training_phase"] == "rl":
-        if metadata.get("settings", {}).get("steps") != step:
-            raise ValueError("checkpoint has not completed its configured RL steps")
-        return metadata
     resolved = metadata.get("resolved", {})
     epochs = resolved.get("epochs")
     if metadata.get("data_state", {}).get("epoch") != epochs or resolved.get("steps") != step:

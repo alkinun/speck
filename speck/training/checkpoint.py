@@ -315,6 +315,6 @@ def load_timing(directory, step):
 
 
 def is_assistant_checkpoint(metadata):
-    """SFT and RL checkpoints use the chat tokenizer recorded in their metadata."""
+    """SFT checkpoints use the chat tokenizer recorded in their metadata."""
 
-    return metadata.get("training_phase") in ("sft", "rl")
+    return metadata.get("training_phase") == "sft"
