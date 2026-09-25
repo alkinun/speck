@@ -325,7 +325,7 @@ def test_a_removed_duplicate_inherits_its_originals_bucket(tmp_path):
             json.dumps(row) + "\n"
             for row in (
                 {
-                    "removed_source": "web",
+                    "removed_source": "acquired_train__web",
                     "removed_content_sha256": duplicate,
                     "reason": "near_duplicate",
                     "kept": {"source_id": "web", "content_sha256": original},
@@ -336,7 +336,11 @@ def test_a_removed_duplicate_inherits_its_originals_bucket(tmp_path):
                     "reason": "exact_duplicate",
                     "kept": {"source_id": "firewall_reference__code", "content_sha256": "d" * 64},
                 },
-                {"removed_source": "code", "removed_content_sha256": "e" * 64, "kept": None},
+                {
+                    "removed_source": "acquired_train__web",
+                    "removed_content_sha256": "e" * 64,
+                    "kept": None,
+                },
             )
         )
     )

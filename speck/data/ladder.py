@@ -56,7 +56,9 @@ def partition_buckets(partitions, source_id, removals=None):
         with Path(removals).open() as handle:
             for line in handle:
                 row = json.loads(line)
-                if row["removed_source"] == source_id and row.get("kept"):
+                # The log belongs to this input's own preprocess, whose source ids differ from
+                # the partition's, and content hashes are global: match on hashes only.
+                if row.get("kept"):
                     duplicates[row["removed_content_sha256"]] = row["kept"]["content_sha256"]
     originals = set(duplicates.values())
     buckets, original_buckets = {}, {}
