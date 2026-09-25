@@ -13,15 +13,13 @@ uv run --no-sync python -m scripts.slurm_ops render /shared/wave.json \
   --account CONFIRMED_ACCOUNT --partition CONFIRMED_PARTITION
 ```
 
-A wave binds the exact clean Git revision, experiment/data hashes, commands, resources, and retry
-limits. Build it only after the recipe and cost are measured. `speck_slurm_wave` v1 is validated in
-[speck/operations/slurm.py](../speck/operations/slurm.py); tests contain minimal complete fixtures.
-The budget constants in `speck/operations/slurm.py` are checked against
-[plan.json](../experiments/main-data/plan.json) by `make plan-check`, so drift surfaces before
-`sbatch` time. A phase's `conditional` field marks reserve, and zero-hour
-phases cannot launch compute. Old wave plans must be replayed with their original checkout; they
-cannot authorize current launches. A wave still needs a frozen execution manifest and a cost check
-against its budget line before submission.
+A wave binds the exact clean Git revision, the hash of
+[plan.json](../experiments/main-data/plan.json), experiment and data hashes, commands, resources
+and retry limits. Build it only after the recipe and cost are measured. Every job names the
+`budget_line` it charges (a key of `compute.budget_gpu_hours`, such as `pretraining_ladder`); only
+`reserve` jobs may use the reserve. `speck_slurm_wave` v1 is validated in
+[speck/operations/slurm.py](../speck/operations/slurm.py), whose budget constants `make plan-check`
+checks against plan.json.
 
 Training jobs use `torchrun -m scripts.slurm_base_train ... --slurm-requeue-resume`. Signals request
 an optimizer-boundary checkpoint; requeue resumes the last complete checkpoint explicitly.

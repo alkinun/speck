@@ -13,6 +13,7 @@ from speck.operations.slurm import (
     MANDATORY_GPU_HOURS,
     RESERVE_GPU_HOURS,
     TOTAL_GPU_HOURS,
+    _budget_lines,
     classify_state,
     daily_summary,
     ingest_sacct,
@@ -44,18 +45,14 @@ def wave(tmp_path):
     plan.write_text(
         json.dumps(
             {
-                "format": "speck_flagship_execution_plan",
-                "budget": {
-                    "gpu_hours": TOTAL_GPU_HOURS,
-                    "mandatory_gpu_hours": MANDATORY_GPU_HOURS,
-                    "reserve_gpu_hours": RESERVE_GPU_HOURS,
-                    "full_node_days": TOTAL_GPU_HOURS / 96,
+                "format": "speck_program_plan",
+                "compute": {
+                    "budget_gpu_hours": {
+                        "pretraining_ladder": 100,
+                        "parent_stable_run": MANDATORY_GPU_HOURS - 100,
+                        "reserve": RESERVE_GPU_HOURS,
+                    }
                 },
-                "phases": [
-                    {"id": "P1", "gpu_hours": 100, "conditional": False},
-                    {"id": "P5", "gpu_hours": MANDATORY_GPU_HOURS - 100, "conditional": False},
-                    {"id": "P7", "gpu_hours": RESERVE_GPU_HOURS, "conditional": True},
-                ],
             }
         )
     )
@@ -97,7 +94,7 @@ def wave(tmp_path):
         "jobs": [
             {
                 "id": "screen",
-                "phase": "P1",
+                "budget_line": "pretraining_ladder",
                 "kind": "train",
                 "allocation": "mandatory",
                 "resources": resources,
@@ -116,7 +113,7 @@ def wave(tmp_path):
             },
             {
                 "id": "flagship",
-                "phase": "P5",
+                "budget_line": "parent_stable_run",
                 "kind": "train",
                 "allocation": "mandatory",
                 "resources": {**resources, "gpus": 4, "walltime_minutes": 120},
@@ -136,7 +133,7 @@ def wave(tmp_path):
             },
             {
                 "id": "collect",
-                "phase": "P5",
+                "budget_line": "parent_stable_run",
                 "kind": "collect",
                 "allocation": "mandatory",
                 "resources": resources,
@@ -256,7 +253,7 @@ def test_submit_uses_only_mechanical_dependencies_and_refuses_duplicate_or_reser
         submit_wave(path, tmp_path / "runtime", runner=runner)
 
     value["jobs"][0]["allocation"] = "reserve"
-    value["jobs"][0]["phase"] = "P7"
+    value["jobs"][0]["budget_line"] = "reserve"
     value["jobs"][0]["max_retries"] = 0
     reserve = tmp_path / "reserve.json"
     reserve.write_text(json.dumps(value))
@@ -367,7 +364,7 @@ def test_manual_reserve_registration_enforces_protected_pool(wave, tmp_path, pri
     }
     for job in value["jobs"]:
         job["allocation"] = "reserve"
-        job["phase"] = "P7"
+        job["budget_line"] = "reserve"
         job["max_retries"] = 0
         job["identities"].append(authority)
     path = tmp_path / "reserve-wave.json"
@@ -554,19 +551,8 @@ def test_slurm_main_uses_dedicated_requeue_exit_code(monkeypatch):
     assert raised.value.code == 99
 
 
-def test_reserve_phase_name_is_defined_by_the_bound_plan(wave):
-    path, value, _, _ = wave
-    plan_path = Path(value["plan"]["path"])
-    plan = json.loads(plan_path.read_text())
-    for phase in plan["phases"]:
-        if phase["id"] == "P7":
-            phase["id"] = "RESERVE"
-    plan_path.write_text(json.dumps(plan))
-    value["plan"]["sha256"] = _sha256(plan_path)
-    job = value["jobs"][0]
-    value["jobs"] = [job]
-    job.update(phase="RESERVE", allocation="reserve", max_retries=0)
-    path.write_text(json.dumps(value))
-    normalized, _, _, planned = load_wave(path)
-    assert normalized["jobs"][0]["phase"] == "RESERVE"
-    assert planned["reserve"] > 0
+def test_the_program_plan_defines_the_budget_lines_waves_charge():
+    plan = json.loads((Path(__file__).parents[2] / "experiments/main-data/plan.json").read_text())
+    lines = _budget_lines(plan)
+    assert lines["reserve"] == RESERVE_GPU_HOURS
+    assert sum(lines.values()) == TOTAL_GPU_HOURS

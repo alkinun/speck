@@ -1,4 +1,4 @@
-"""Validate, render, submit, and observe immutable flagship Slurm waves."""
+"""Validate, render, submit, and observe immutable Slurm waves."""
 
 import argparse
 import json

@@ -13,7 +13,7 @@ from speck.provenance.io import file_sha256 as sha256_file
 
 FORMAT = "speck_slurm_wave"
 FORMAT_VERSION = 1
-PLAN_FORMAT = "speck_flagship_execution_plan"
+PLAN_FORMAT = "speck_program_plan"
 TOTAL_GPU_HOURS = 5_000
 MANDATORY_GPU_HOURS = 4_420
 RESERVE_GPU_HOURS = 580
@@ -82,31 +82,28 @@ def _identity(value, base, name):
     return {"path": str(_path(value["path"], base, name)), "sha256": value["sha256"]}
 
 
-def _check_plan(plan):
-    if plan.get("format") != PLAN_FORMAT or plan.get("budget") != {
-        "gpu_hours": TOTAL_GPU_HOURS,
-        "mandatory_gpu_hours": MANDATORY_GPU_HOURS,
-        "reserve_gpu_hours": RESERVE_GPU_HOURS,
-        "full_node_days": plan.get("budget", {}).get("full_node_days"),
-    }:
-        raise ValueError(
-            "execution plan does not preserve the scheduled and reserve GPU-hour budget"
-        )
-    phases = plan.get("phases")
-    if not isinstance(phases, list):
-        raise ValueError("execution plan phases are missing")
-    mandatory = sum(item.get("gpu_hours", 0) for item in phases if not item.get("conditional"))
-    reserve = sum(item.get("gpu_hours", 0) for item in phases if item.get("conditional"))
-    if mandatory != MANDATORY_GPU_HOURS or reserve != RESERVE_GPU_HOURS:
-        raise ValueError("execution plan phase accounting does not preserve mandatory and reserve")
+def _budget_lines(plan):
+    """Return the program plan's budget lines; each job charges exactly one of them."""
+    lines = (
+        plan.get("compute", {}).get("budget_gpu_hours")
+        if plan.get("format") == PLAN_FORMAT
+        else None
+    )
+    if (
+        not isinstance(lines, dict)
+        or sum(lines.values()) != TOTAL_GPU_HOURS
+        or lines.get("reserve") != RESERVE_GPU_HOURS
+    ):
+        raise ValueError("program plan does not preserve the scheduled and reserve GPU-hour budget")
+    return lines
 
 
-def _validate_job(raw, base, phases):
+def _validate_job(raw, base, lines):
     _exact_keys(
         raw,
         {
             "id",
-            "phase",
+            "budget_line",
             "kind",
             "allocation",
             "resources",
@@ -121,14 +118,14 @@ def _validate_job(raw, base, phases):
     )
     if not isinstance(raw["id"], str) or not _ID.fullmatch(raw["id"]):
         raise ValueError("job id must use lowercase letters, digits, and hyphens")
-    if raw["phase"] not in phases or phases[raw["phase"]]["gpu_hours"] <= 0:
-        raise ValueError(f"job {raw['id']} has a non-compute phase")
+    if raw["budget_line"] not in lines:
+        raise ValueError(f"job {raw['id']} charges an unknown budget line")
     if raw["kind"] not in {"train", "collect", "eval"}:
         raise ValueError(f"job {raw['id']} has an unsupported kind")
     if raw["allocation"] not in {"mandatory", "reserve"}:
         raise ValueError(f"job {raw['id']} has an unsupported allocation")
-    if (raw["allocation"] == "reserve") != bool(phases[raw["phase"]].get("conditional")):
-        raise ValueError(f"job {raw['id']} must keep mandatory and reserve phases separate")
+    if (raw["allocation"] == "reserve") != (raw["budget_line"] == "reserve"):
+        raise ValueError(f"job {raw['id']} must charge reserve work to the reserve line only")
     resources = raw["resources"]
     _exact_keys(
         resources,
@@ -250,12 +247,11 @@ def load_wave(path):
         "reserve_gpu_hours": RESERVE_GPU_HOURS,
     }:
         raise ValueError("wave budget must preserve the scheduled and reserve accounting")
-    plan_identity = _identity(raw["plan"], source.parent, "execution plan")
+    plan_identity = _identity(raw["plan"], source.parent, "program plan")
     plan_path = Path(plan_identity["path"])
     if not plan_path.is_file() or sha256_file(plan_path) != plan_identity["sha256"]:
-        raise ValueError("execution plan identity mismatch")
-    plan = json.loads(plan_path.read_text(encoding="utf-8"))
-    _check_plan(plan)
+        raise ValueError("program plan identity mismatch")
+    lines = _budget_lines(json.loads(plan_path.read_text(encoding="utf-8")))
     repository = raw["repository"]
     _exact_keys(repository, {"path", "commit", "require_clean"}, "repository")
     if not isinstance(repository["commit"], str) or not _COMMIT.fullmatch(repository["commit"]):
@@ -266,8 +262,7 @@ def load_wave(path):
     jobs = raw["jobs"]
     if not isinstance(jobs, list) or not jobs:
         raise ValueError("wave must contain at least one job")
-    phases = {phase["id"]: phase for phase in plan["phases"]}
-    normalized_jobs = [_validate_job(job, source.parent, phases) for job in jobs]
+    normalized_jobs = [_validate_job(job, source.parent, lines) for job in jobs]
     ids = [job["id"] for job in normalized_jobs]
     if len(ids) != len(set(ids)):
         raise ValueError("job ids must be unique")
