@@ -37,5 +37,4 @@ Source code is MIT; released weights are Apache-2.0, shipped with the complete l
 accurate model card. Release model/tokenizer metadata and permitted artifacts. Whether source text
 or packed training shards are released is an [open decision](../PLAN.md#open-decisions); until it is
 recorded, upload neither. Preserve checkpoints, producing revisions, data provenance, evaluation,
-limitations, and costs. Old GGUF and one-shot release migrations are recoverable in
-[history](../archive/README.md); they are not the current KDA export path.
+limitations, and costs. Old GGUF and one-shot release migrations are in [Git history](../README.md#history).

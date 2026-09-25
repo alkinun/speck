@@ -54,11 +54,16 @@ scripts/       Maintained command entry points
 tests/         Behavioral and integration checks
 experiments/   Runnable configurations, design records and result receipts
 docs/          Program design, paper outline and operational guides
-archive/       Pointer to the complete historical Git snapshot
 ```
-
-Earlier plans, papers, results, and retired tools are recoverable through the
-[history guide](archive/README.md). They do not govern current experiments.
 
 Source code is [MIT licensed](LICENSE); [Releasing](docs/releasing.md) covers weights and data. See
 the [citation](CITATION.cff).
+
+## History
+
+Retired plans, results, tools and records live only in Git history and do not govern current work.
+Two tags mark the large removals: `pre-simplification-2026-09-17` (the earlier 140M releases and
+research matrices) and `pre-cleanup-2026-09-25` (post-training code, the RL pilot, the R0
+diagnostic, one-off corpus audits and research notes). Read a file with
+`git show TAG:PATH`, or check out a tag in a separate worktree with its own lockfile to rerun old
+workflows.

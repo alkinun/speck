@@ -36,7 +36,30 @@ from speck.training.step import (
     resolve_device_batch_size,
     validate_loader_progress,
 )
-from tests.reference import historical_repository
+
+PILOT = Path(__file__).resolve().parents[2] / "experiments/pilot"
+# Train keys of configs written before seeds, offsets, milestones and loss backends were recorded.
+LEGACY_TRAIN_KEYS = {
+    "batch_tokens",
+    "device_batch_size",
+    "eval_every",
+    "eval_tokens",
+    "final_eval_tokens",
+    "grad_clip",
+    "log_every",
+    "lr",
+    "lr_schedule",
+    "min_lr",
+    "optimizer",
+    "output_dir",
+    "run",
+    "save_every",
+    "sequence_length",
+    "train_tokens",
+    "wandb_project",
+    "warmup_steps",
+    "weight_decay",
+}
 
 
 def test_cpu_finite_check_rejects_non_finite_values():
@@ -215,10 +238,10 @@ def test_runtime_cadence_arguments_are_optional():
 
 
 def test_stop_at_tokens_is_restricted_to_configured_milestones(tmp_path):
-    experiment = historical_repository() / "experiments" / "Speck1-140M"
+    experiment = PILOT
     configs = load_experiment(experiment, "data", "tokenizer", "model", "train")
     configs["train"] = {
-        **configs["train"],
+        **{key: value for key, value in configs["train"].items() if key in LEGACY_TRAIN_KEYS},
         "output_dir": str(tmp_path),
         "checkpoint_tokens": [50_000_000, 500_000_000],
     }
@@ -230,6 +253,10 @@ def test_stop_at_tokens_is_restricted_to_configured_milestones(tmp_path):
     assert trainer.args.stop_at_tokens == 50_000_000
     assert trainer.args.seed == 42
     assert trainer.args.data_token_offset == 0
+    assert trainer.args.global_token_offset == 0
+    assert trainer.args.training_phase == "base"
+    assert trainer.args.loss_backend == "torch"
+    assert trainer.args.deterministic is False
 
     with pytest.raises(ValueError, match="configured checkpoint"):
         BaseTrainer(
@@ -239,7 +266,7 @@ def test_stop_at_tokens_is_restricted_to_configured_milestones(tmp_path):
 
 
 def test_cli_checkpoint_directory_overrides_config_without_moving_data(tmp_path):
-    experiment = historical_repository() / "experiments" / "Speck1-140M"
+    experiment = PILOT
     configs = load_experiment(experiment, "data", "tokenizer", "model", "train")
     configs["train"] = {**configs["train"], "output_dir": str(tmp_path / "configured")}
     override = tmp_path / "volume" / "run"

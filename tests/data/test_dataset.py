@@ -20,7 +20,6 @@ from speck.data.loader import (
     scheduled_source,
     source_selection_counts,
 )
-from tests.reference import historical_repository
 
 
 class FakeTokenizer:
@@ -148,30 +147,30 @@ def source_values(path, source, split):
     return np.concatenate(pieces)
 
 
-def test_production_mixture_derives_exact_targets_and_small_reserve():
-    root = historical_repository()
-    experiment = root / "experiments" / "Speck1-140M"
-    config = json.loads((experiment / "data.json").read_text(encoding="utf-8"))
-    train = json.loads((experiment / "train.json").read_text(encoding="utf-8"))
-    assert train["train_tokens"] == 5_000_000_000
-    assert train["batch_tokens"] == 65_536
-    output_dir = config.pop("output_dir")
-    assert output_dir is None
+def test_multi_phase_mixture_derives_exact_targets_and_small_reserve():
+    weights = [
+        {"a": 12, "b": 35, "c": 8, "d": 45, "e": 0},
+        {"a": 15, "b": 25, "c": 12, "d": 30, "e": 18},
+        {"a": 20, "b": 15, "c": 15, "d": 20, "e": 30},
+    ]
+    ends = (3_500_000_000, 4_500_000_000, 5_000_000_000)
+    config = settings(train_tokens=5_000_000_000, validation_tokens=5_000_000)
+    config["sources"] = [source_config(source_id) for source_id in "abcde"]
+    config["mixture"] = {
+        "phases": [{"end_tokens": end, "weights": w} for end, w in zip(ends, weights)]
+    }
+    config["shards"] = {"tokens": 100_000_000, "maximum_loader_microbatch_tokens": 65_536}
+    train = {"batch_tokens": 65_536, "device_batch_size": 16, "sequence_length": 2048}
     config.pop("seed")
     validated = dataset.validate_data_settings(**config)
     assert validated["quotas"] == {
-        "finemath_4plus": 475_000_000,
-        "ultra_fineweb": 1_975_000_000,
-        "dclm": 1_550_000_000,
-        "cosmopedia_v2": 670_000_000,
-        "ultrafineweb_l3": 330_000_000,
+        "a": 670_000_000,
+        "b": 1_550_000_000,
+        "c": 475_000_000,
+        "d": 1_975_000_000,
+        "e": 330_000_000,
     }
     assert validated["train_reserve_tokens_per_source"] == 262_144
-    assert config["sources"][0]["id"] == "finemath_4plus"
-    assert all("train_tokens" not in source for source in config["sources"])
-    assert all("hf_config" not in source for source in config["sources"])
-    cosmopedia = next(source for source in config["sources"] if source["id"] == "cosmopedia_v2")
-    assert "seed_data" not in cosmopedia["metadata_columns"]
     schedule_manifest = {
         "requested_train_tokens": config["requested_train_tokens"],
         "mixture": {"phases": validated["phases"]},

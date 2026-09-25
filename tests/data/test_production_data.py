@@ -14,9 +14,6 @@ from speck.data.production_data import (
     preprocess_sources,
     validate_preprocess_config,
 )
-from tests.reference import historical_repository
-
-ROOT = historical_repository()
 
 
 def test_batched_cli_signature_is_exactly_equivalent_to_scalar_updates():
@@ -437,22 +434,6 @@ def test_candidate_source_handles_close_when_preprocessing_fails(tmp_path, monke
 
     assert captured
     assert all(handle.closed for handle in captured)
-
-
-@pytest.mark.evidence
-def test_flagship_production_plan_keeps_rehearsal_and_authority_pending():
-    plan = json.loads((ROOT / "research/flagship/production_data_plan.json").read_text())
-
-    assert plan["status"] == "fixture_tooling_ready_20B_rehearsal_pending_not_training_authority"
-    assert plan["preprocessor"]["candidate_policy_for_rehearsal"]["num_perm"] == 128
-    assert (
-        plan["preprocessor"]["candidate_policy_for_rehearsal"]["verified_jaccard_threshold"] == 0.8
-    )
-    assert plan["rehearsal_20B"]["status"] == "pending"
-    assert plan["production_authority_record"]["status"] == (
-        "must not be issued from fixture evidence"
-    )
-    assert plan["training_authority"] == "blocked"
 
 
 def test_index_directory_is_a_pure_storage_choice(tmp_path):

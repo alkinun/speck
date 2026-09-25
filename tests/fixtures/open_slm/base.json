@@ -1,0 +1,60 @@
+{
+  "leaderboard": {
+    "repo": "AxiomicLabs/Open_SLM_Leaderboard",
+    "revision": "2eafcfc647b667e67f3b0288e9b67da497a78052"
+  },
+  "model": {
+    "repo": "specklabs/Speck1-140M",
+    "revision": "155b759545645cc694545fab85cd7d4c385fd965",
+    "parameters": 140652288
+  },
+  "lm_eval": {
+    "revision": "64f3d0924fc695efd6d776a5ac91f97138085516",
+    "version": "0.4.13.dev0",
+    "transformers_version": "5.1.0",
+    "tasks": [
+      "hellaswag",
+      "arc_easy",
+      "arc_challenge",
+      "piqa"
+    ],
+    "datasets": {
+      "Rowan/hellaswag": "218ec52e09a7e7462a5400043bb9a69a41d06b76",
+      "allenai/ai2_arc": "210d026faf9955653af8916fad021475a3f00453",
+      "baber/piqa": "142f6d7367fd9877f0fb3b5734ea6a545f54cdd1"
+    },
+    "expected_samples": {
+      "hellaswag": 10042,
+      "arc_easy": 2376,
+      "arc_challenge": 1172,
+      "piqa": 1838
+    },
+    "batch_size": 32,
+    "dtype": "bfloat16",
+    "num_fewshot": 0
+  },
+  "arithmark_2": {
+    "repo": "AxiomicLabs/ArithMark-2.0",
+    "revision": "5bd986c7305dcccec88432d630aae1ac9280a71f",
+    "runner": "benchmark_arithmark-2.0.py",
+    "runner_sha256": "998015ebaa4ac8b5f517f7f4004cf47fc4741e351d590079aa04be3780a9df62",
+    "data": "arithmark_2.0.jsonl",
+    "data_sha256": "c245b4e50e603b32814d4f489f64934f9eeb4488ae29f744d906c8e3f326ebcd",
+    "samples": 2500,
+    "batch_size": 16,
+    "primary_metric": "acc"
+  },
+  "arithmark_3": {
+    "repo": "AxiomicLabs/Arithmark-3.0",
+    "revision": "6f6e59dd9b7e2c63455f7af7f838f9ecc3d0a746",
+    "runner": "bencharithmark-3.py",
+    "runner_sha256": "09667e1ea05ecd8b91dbfea14a47365b555c72622afed9fc284c127ecd5e1bcd",
+    "data": "arithmark-3.jsonl",
+    "data_sha256": "bf8ab1a5193d52cdf0e05ff0b3ca226bdfcf416cb6e75562dcbe72e7e4559435",
+    "samples": 1000,
+    "batch_size": 32,
+    "max_context": 1024,
+    "dtype": "bfloat16",
+    "primary_metric": "acc_norm"
+  }
+}

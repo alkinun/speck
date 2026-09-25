@@ -37,5 +37,5 @@ records each returned job ID. `collect` reads scheduler observations and `summar
 automatically submitted. Use the same ledger for the allocation, including failed attempts and
 all allocated GPUs. Partial submissions require reconciliation before another attempt.
 
-Full command/schema history remains in the [frozen checkout](../archive/README.md). New waves must
+Older wave schemas are in [Git history](../README.md#history). New waves must
 bind current code and actual inputs; a restored old wave does not become a current launch manifest.

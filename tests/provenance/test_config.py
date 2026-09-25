@@ -1,11 +1,11 @@
 import json
+from pathlib import Path
 
 import pytest
 
 from speck.config import load_experiment
 from speck.data.dataset import validate_data_settings
 from speck.data.loader import source_selection_counts
-from tests.reference import historical_repository
 
 
 def test_load_experiment(tmp_path):
@@ -19,278 +19,87 @@ def test_load_experiment_requires_objects(tmp_path):
         load_experiment(tmp_path, "model")
 
 
-def test_speck1_instruct_experiment_is_separate_from_base():
-    base = load_experiment(
-        historical_repository() / "experiments/Speck1-140M", "model", "tokenizer"
-    )
-    instruct = load_experiment(
-        historical_repository() / "experiments/Speck1-140M-Instruct", "model", "tokenizer", "sft"
-    )
-
-    assert instruct["model"] == base["model"]
-    assert instruct["tokenizer"] == base["tokenizer"]
-    assert instruct["sft"]["run"] == "Speck1-140M-Instruct"
+EXPERIMENTS = Path(__file__).resolve().parents[2] / "experiments"
 
 
-def test_speck1_1_sft_experiment_uses_speckchat2_and_original_instruct_config():
-    current = load_experiment(
-        historical_repository() / "experiments/Speck1-140M-Instruct", "model", "tokenizer", "sft"
-    )
-    updated = load_experiment(
-        historical_repository() / "experiments/Speck1.1-140M-Instruct", "model", "tokenizer", "sft"
-    )
-
-    assert updated["model"] == current["model"]
-    assert updated["tokenizer"] == current["tokenizer"]
-    assert updated["sft"]["dataset"] == {
-        "expected_samples": 500_000,
-        "files": [
-            "data/train-00000-of-00004.parquet",
-            "data/train-00001-of-00004.parquet",
-            "data/train-00002-of-00004.parquet",
-            "data/train-00003-of-00004.parquet",
-        ],
-        "repo": "specklabs/SpeckChat2",
-        "revision": "7b497b3e0c7f4653278cc67af27722b20a5c8d10",
-        "validation_samples": 1_000,
-    }
-    assert updated["sft"]["pretrained"] == current["sft"]["pretrained"]
-    assert updated["sft"]["epochs"] == 1
-    assert updated["sft"]["run"] == "Speck1.1-140M-Instruct"
+def _write(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value))
 
 
-def test_speck1_1_140m_two_epoch_variant_only_changes_training_length():
-    current = load_experiment(
-        historical_repository() / "experiments/Speck1.1-140M-Instruct", "model", "tokenizer", "sft"
-    )
-    two_epoch = load_experiment(
-        historical_repository() / "experiments/Speck1.1-140M-Instruct-2ep",
-        "model",
-        "tokenizer",
-        "sft",
-    )
+def test_extends_chains_resolve_relative_to_each_file_and_child_values_win(tmp_path):
+    _write(tmp_path / "base/train.json", {"lr": 1, "run": "base", "seed": 7})
+    _write(tmp_path / "sweep/train.json", {"extends": "../base/train.json", "run": "sweep"})
+    _write(tmp_path / "sweep/arm/train.json", {"extends": "../train.json", "lr": 2})
 
-    assert two_epoch["model"] == current["model"]
-    assert two_epoch["tokenizer"] == current["tokenizer"]
-    assert two_epoch["sft"]["dataset"] == current["sft"]["dataset"]
-    assert two_epoch["sft"]["pretrained"] == current["sft"]["pretrained"]
-    assert two_epoch["sft"]["epochs"] == 2
-    assert two_epoch["sft"]["run"] == "Speck1.1-140M-Instruct-2ep"
-
-
-def test_speck1_5_instruct_uses_speckchat2_and_pinned_speck1_5_base():
-    base = load_experiment(
-        historical_repository() / "experiments/Speck1.5-140M", "model", "tokenizer"
-    )
-    reference = load_experiment(
-        historical_repository() / "experiments/Speck1.1-140M-Instruct", "sft"
-    )
-    instruct = load_experiment(
-        historical_repository() / "experiments/Speck1.5-140M-Instruct", "model", "tokenizer", "sft"
-    )
-
-    assert instruct["model"] == base["model"]
-    assert instruct["tokenizer"] == base["tokenizer"]
-    assert instruct["sft"] == {
-        **reference["sft"],
-        "pretrained": {
-            "filename": "model.safetensors",
-            "repo": "specklabs/Speck1.5-140M",
-            "revision": "449cc369329556fbd1e0143ca01c5b40ec4082f9",
-        },
-        "run": "Speck1.5-140M-Instruct",
+    assert load_experiment(tmp_path / "sweep/arm", "train") == {
+        "train": {"lr": 2, "run": "sweep", "seed": 7}
     }
 
 
-def test_speck2_instruct_uses_speckchat2_and_pinned_speck2_base():
-    base = load_experiment(
-        historical_repository() / "experiments/Speck2-140M", "model", "tokenizer"
-    )
-    reference = load_experiment(
-        historical_repository() / "experiments/Speck1.1-140M-Instruct", "sft"
-    )
-    instruct = load_experiment(
-        historical_repository() / "experiments/Speck2-140M-Instruct", "model", "tokenizer", "sft"
-    )
+def test_extends_rejects_cycles_missing_parents_and_non_paths(tmp_path):
+    _write(tmp_path / "a/model.json", {"extends": "../b/model.json"})
+    _write(tmp_path / "b/model.json", {"extends": "../a/model.json"})
+    with pytest.raises(ValueError, match="cyclic"):
+        load_experiment(tmp_path / "a", "model")
 
-    assert instruct["model"] == base["model"]
-    assert instruct["tokenizer"] == base["tokenizer"]
-    assert instruct["sft"] == {
-        **reference["sft"],
-        "pretrained": {
-            "filename": "model.safetensors",
-            "repo": "specklabs/Speck2-140M",
-            "revision": "1201df613d9ee9d50909189f52e45c6fcefa3c01",
-        },
-        "run": "Speck2-140M-Instruct",
+    _write(tmp_path / "c/model.json", {"extends": "missing.json"})
+    with pytest.raises(FileNotFoundError, match="missing experiment config"):
+        load_experiment(tmp_path / "c", "model")
+
+    _write(tmp_path / "d/model.json", {"extends": 3})
+    with pytest.raises(ValueError, match="extends must be a path string"):
+        load_experiment(tmp_path / "d", "model")
+
+
+def test_runtime_overlay_only_sets_device_batch_size(tmp_path):
+    _write(tmp_path / "train.json", {"device_batch_size": 8, "lr": 1})
+    _write(tmp_path / "runtime.json", {"device_batch_size": 2})
+    assert load_experiment(tmp_path, "train")["train"] == {"device_batch_size": 2, "lr": 1}
+
+    _write(tmp_path / "runtime.json", {"device_batch_size": 2, "lr": 3})
+    with pytest.raises(ValueError, match="exactly device_batch_size"):
+        load_experiment(tmp_path, "train")
+
+
+def test_ladder_sweep_arm_only_changes_its_training_arm():
+    names = ("data", "model", "tokenizer", "train")
+    sweep = EXPERIMENTS / "ladder/50m/lr-sweep"
+    arm = load_experiment(sweep / "lr-2e-3", *names)
+    base = load_experiment(EXPERIMENTS / "ladder/50m", "model", "tokenizer", "train")
+
+    assert arm["model"] == base["model"]
+    assert arm["tokenizer"] == load_experiment(sweep, "tokenizer")["tokenizer"]
+    assert arm["data"] == load_experiment(sweep, "data")["data"]
+    assert arm["train"] == {
+        **base["train"],
+        "lr": 0.002,
+        "run": "ladder-50m-lr-2e-3",
+        "train_tokens": 658_636_800,
     }
 
 
-def test_speck1_5_uses_the_original_model_and_phased_corpus_mixture():
-    original = load_experiment(
-        historical_repository() / "experiments/Speck1-140M", "model", "tokenizer", "train"
-    )
-    updated = load_experiment(
-        historical_repository() / "experiments/Speck1.5-140M", "data", "model", "tokenizer", "train"
-    )
-
-    assert updated["model"] == original["model"]
-    assert updated["tokenizer"] == original["tokenizer"]
-    assert updated["train"] == {
-        **original["train"],
-        "run": "Speck1.5-140M",
-        "save_every": 3815,
-    }
-    data = dict(updated["data"])
-    assert data.pop("output_dir") is None
-    assert data.pop("output_name") == "Speck1.5-140M"
-    data.pop("seed")
+def test_pilot_mixture_fits_quotas_at_every_world_size():
+    config = load_experiment(EXPERIMENTS / "pilot", "data", "train")
+    data, train = dict(config["data"]), config["train"]
+    for key in ("output_name", "output_dir", "seed"):
+        data.pop(key, None)
     validated = validate_data_settings(**data)
-    assert validated["quotas"] == {
-        "fineweb_edu": 1_390_000_000,
-        "dclm_edu": 900_000_000,
-        "ultra_fineweb": 570_000_000,
-        "dclm": 260_000_000,
-        "finemath_4plus": 455_000_000,
-        "math_textbook_exercise": 140_000_000,
-        "math_multi_style": 90_000_000,
-        "wikimedia": 215_000_000,
-        "pes2o": 250_000_000,
-        "ufw_l3_multi_style": 335_000_000,
-        "cosmopedia_v2": 395_000_000,
-    }
-    assert len(validated["phases"]) == 3
-    assert validated["train_reserve_tokens_per_source"] == 262_144
-    assert [source["id"] for source in validated["sources"]] == [
-        "finemath_4plus",
-        "math_textbook_exercise",
-        "math_multi_style",
-        "cosmopedia_v2",
-        "ufw_l3_multi_style",
-        "pes2o",
-        "wikimedia",
-        "dclm_edu",
-        "fineweb_edu",
-        "ultra_fineweb",
-        "dclm",
-    ]
-    sources = {source["id"]: source for source in validated["sources"]}
-    assert sources["dclm_edu"]["filters"] == {
-        "language": "en",
-        "min_score": 3.5,
-        "score_operator": ">",
-    }
-    assert sources["math_multi_style"]["language_detector"] == "py3langid"
-    assert sources["math_textbook_exercise"]["language_detector"] == "py3langid"
-    assert sources["pes2o"]["file_format"] == "jsonl_gzip"
-    assert sources["pes2o"]["files"] == [
-        f"data/v2/train-{index:05d}-of-00020.json.gz" for index in range(10, 20)
-    ]
-    assert {source_id: source["revision"] for source_id, source in sources.items()} == {
-        "fineweb_edu": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
-        "dclm_edu": "dbad8ad71224482740cd9c9d353591adbf62fe04",
-        "ultra_fineweb": "02c85641e3d19a854be2e09139c25adaa9518063",
-        "dclm": "817d6752765f6a41261085171dd546b104f60626",
-        "finemath_4plus": "e92b25a616738fe95dc186b64dfb19f9c8525594",
-        "math_textbook_exercise": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
-        "math_multi_style": "fe10db8efd35597fd7fcff8ff576b5ec4ea5ff87",
-        "wikimedia": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
-        "pes2o": "636a503e44a3ca1b58e01fb61eab0825cd574de0",
-        "ufw_l3_multi_style": "bc3b1ba986fcaef6871b9790a413b16267c2de0f",
-        "cosmopedia_v2": "3ba9d605774198c5868892d7a8deda78031a781f",
-    }
+    assert sum(validated["quotas"].values()) == data["requested_train_tokens"]
 
     schedule = {
-        "requested_train_tokens": updated["data"]["requested_train_tokens"],
+        "requested_train_tokens": data["requested_train_tokens"],
         "mixture": {"phases": validated["phases"]},
         "sources": [{"id": source["id"]} for source in validated["sources"]],
     }
-    batch_tokens = updated["train"]["batch_tokens"]
-    consumed_tokens = (
-        (updated["train"]["train_tokens"] + batch_tokens - 1) // batch_tokens * batch_tokens
-    )
+    batch_tokens = train["batch_tokens"]
+    consumed_tokens = (train["train_tokens"] + batch_tokens - 1) // batch_tokens * batch_tokens
     for world_size in (1, 2, 4, 8):
         device_batch_size = min(
-            updated["train"]["device_batch_size"],
-            batch_tokens // (updated["train"]["sequence_length"] * world_size),
+            train["device_batch_size"],
+            batch_tokens // (train["sequence_length"] * world_size),
         )
-        stride = device_batch_size * updated["train"]["sequence_length"] * world_size
-        counts = source_selection_counts(schedule, "train", consumed_tokens, stride)
-        for source_id, count in counts.items():
-            assert count * stride + 1 <= (
-                validated["quotas"][source_id] + validated["train_reserve_tokens_per_source"]
-            )
-
-
-def test_speck2_uses_the_original_model_and_20b_quality_curriculum():
-    original = load_experiment(
-        historical_repository() / "experiments/Speck1-140M", "model", "tokenizer", "train"
-    )
-    updated = load_experiment(
-        historical_repository() / "experiments/Speck2-140M", "data", "model", "tokenizer", "train"
-    )
-
-    assert updated["model"] == original["model"]
-    assert updated["tokenizer"] == original["tokenizer"]
-    assert updated["train"] == {
-        **original["train"],
-        "eval_every": 1952,
-        "min_lr": 0.05,
-        "run": "Speck2-140M",
-        "save_every": 15260,
-        "train_tokens": 20_000_000_000,
-        "warmup_steps": 2048,
-    }
-    data = dict(updated["data"])
-    assert data.pop("output_dir") is None
-    assert data.pop("output_name") == "Speck2-140M"
-    data.pop("seed")
-    validated = validate_data_settings(**data)
-    assert validated["quotas"] == {
-        "ultra_fineweb_hq": 8_200_000_000,
-        "dclm": 5_800_000_000,
-        "cosmopedia_v2": 1_800_000_000,
-        "finemath_4plus": 1_800_000_000,
-        "ufw_l3_multi_style": 1_400_000_000,
-        "wikimedia": 1_000_000_000,
-    }
-    assert validated["train_reserve_tokens_per_source"] == 262_144
-    assert [source["id"] for source in validated["sources"]] == [
-        "finemath_4plus",
-        "wikimedia",
-        "cosmopedia_v2",
-        "ufw_l3_multi_style",
-        "ultra_fineweb_hq",
-        "dclm",
-    ]
-    sources = {source["id"]: source for source in validated["sources"]}
-    assert sources["ultra_fineweb_hq"]["tree_path"] == "data/ultrafineweb_l1_en_hq"
-    assert sources["ultra_fineweb_hq"]["content_column"] == "content"
-    assert sources["wikimedia"]["tree_path"] == "20231101.en"
-    assert {source_id: source["revision"] for source_id, source in sources.items()} == {
-        "finemath_4plus": "e92b25a616738fe95dc186b64dfb19f9c8525594",
-        "wikimedia": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
-        "cosmopedia_v2": "3ba9d605774198c5868892d7a8deda78031a781f",
-        "ufw_l3_multi_style": "bc3b1ba986fcaef6871b9790a413b16267c2de0f",
-        "ultra_fineweb_hq": "02c85641e3d19a854be2e09139c25adaa9518063",
-        "dclm": "817d6752765f6a41261085171dd546b104f60626",
-    }
-
-    schedule = {
-        "requested_train_tokens": updated["data"]["requested_train_tokens"],
-        "mixture": {"phases": validated["phases"]},
-        "sources": [{"id": source["id"]} for source in validated["sources"]],
-    }
-    batch_tokens = updated["train"]["batch_tokens"]
-    consumed_tokens = (
-        (updated["train"]["train_tokens"] + batch_tokens - 1) // batch_tokens * batch_tokens
-    )
-    for world_size in (1, 2, 4, 8):
-        device_batch_size = min(
-            updated["train"]["device_batch_size"],
-            batch_tokens // (updated["train"]["sequence_length"] * world_size),
-        )
-        stride = device_batch_size * updated["train"]["sequence_length"] * world_size
+        stride = device_batch_size * train["sequence_length"] * world_size
         counts = source_selection_counts(schedule, "train", consumed_tokens, stride)
         for source_id, count in counts.items():
             assert count * stride + 1 <= (

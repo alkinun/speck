@@ -1,4 +1,4 @@
-.PHONY: setup format format-check lint test evidence-test archive-check smoke plan-check quality
+.PHONY: setup format format-check lint test smoke plan-check quality
 
 setup:
 	uv sync --extra cpu --group dev --group dataset-build --group transformers --locked
@@ -15,12 +15,6 @@ lint:
 test:
 	uv run --no-sync pytest -q
 
-evidence-test:
-	uv run --no-sync pytest -q --evidence -m evidence
-
-archive-check:
-	uv run --no-sync python -m scripts.archive check
-
 smoke:
 	uv run --no-sync python -m scripts.smoke
 
@@ -32,4 +26,4 @@ plan-check:
 	uv run --no-sync python experiments/qualification/check_throughput_packet.py experiments/qualification/throughput-gh200.json
 	uv run --no-sync python experiments/main-data/check_documents.py
 
-quality: format-check lint test archive-check
+quality: format-check lint test
