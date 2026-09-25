@@ -1,113 +1,55 @@
-# Assistant data and serialization
+# Assistant data
 
 In this release, assistant conversations serve one purpose: the fixed
-[SFT probe](program.md#sft-probe-100-gpu-hours), a single frozen recipe drawn from the retained
-stock below and applied unchanged to every decay and mid-training arm and to the 410m transfer and
-seed runs. Its scores compare the checkpoints it probes; the probe of the chosen branch is the
-released light assistant. The probe's data is never varied here. SFT data studies, RL and
-self-distillation are research for a later step.
+[SFT probe](program.md#sft-probe-100-gpu-hours), one frozen recipe applied unchanged to every decay
+and mid-training arm and to the 410m transfer and seed runs. The probe of the selected branch is the
+released light assistant. The probe's data is never varied.
 
-The completed hardware rehearsal used complete 4K conversations, the frozen 32K base tokenizer,
-and chat format v2 with its existing three role IDs. Context-only assistant turns retain weight
-zero. Supervision covers assistant content and EOS; system, user, and tool-result content is masked.
-Nothing is truncated to manufacture a fitting example.
+## Serialization
 
-`speck.tokenization.tools.adapt_conversation` defines `speck_tools_v1`. It converts explicit
-OpenAI-style function definitions, calls, and results to text before the existing chat tokenizer:
+Chat format v2 with the frozen 32K tokenizer and its three role IDs. Supervision covers assistant
+content and EOS; system, user and tool-result content is masked, and `weight: 0` assistant turns are
+context. Nothing is truncated to make an example fit.
+
+`speck.tokenization.tools.adapt_conversation` defines `speck_tools_v1`, which converts
+OpenAI-style function definitions, calls and results to text before the chat tokenizer:
 
 - Definitions and protocol instructions are appended to the system message.
-- Assistant calls use `<tool_calls>[{"id":"1","name":"calculate","arguments":{...}}]</tool_calls>`.
-- Results use a user turn containing `<tool_results>[{"id":"1","name":"calculate","content":"..."}]</tool_results>`.
-- Multiple calls keep their IDs; all must receive one result before the next turn. Consecutive
-  results share a single user turn. IDs cannot be reused within a conversation.
-- Reasoning remains in `<think>...</think>`. A separate reasoning field is converted explicitly;
-  ambiguous combinations, undeclared tools, unresolved calls, duplicate JSON keys, unsupported
-  fields, and nonfinite JSON numbers are rejected. Prose accompanying structured calls must be
-  a reasoning block; other source formats require a separately reviewed adapter.
+- Calls: `<tool_calls>[{"id":"1","name":"calculate","arguments":{...}}]</tool_calls>`.
+- Results: a user turn with `<tool_results>[{"id":"1","name":"calculate","content":"..."}]</tool_results>`.
+  Every call gets one result before the next turn; IDs are unique within a conversation.
+- Reasoning stays in `<think>...</think>`. Undeclared tools, unresolved calls, duplicate JSON keys,
+  unsupported fields and prose beside structured calls are rejected.
 
-Use this adapter at inference before `apply_chat_template`, and use `parse_tool_calls` on the
-assistant response. The generic tokenizer template deliberately rejects raw tool fields. Exported
-tokenizers preserve chat v2; applications must also implement this named protocol. No untrusted
-tool definition is executed by the adapter. Production applications must validate arguments against
-their schemas and independently authorize tool side effects.
+Apply the adapter before `apply_chat_template` at inference and `parse_tool_calls` on the response.
+The chat template rejects raw tool fields. `speck.evaluation.tools` is a small deterministic tool
+environment for checks, not a capability score.
 
-The finite local rehearsal selects 32 text and 32 tool conversations for training, and eight of
-each for validation. Selection is deterministic from a bounded candidate pool after a full source
-census. Exact conversation identities are deduplicated; normalized first-user prompts determine the
-split. All five frozen benchmarks are checked with the existing exact/ngram exclusion scanner.
-The receipt records every selected identity, source, length, supervised token count, rejection, and
-input hash. These small balanced counts are engineering coverage, not a final assistant mixture.
-`--subset source:subset`, `--kind` and the per-kind counts restrict the same selection to one
-stock slice, as the [RL pilot](../experiments/rl-pilot/README.md) does for its math SFT.
+## Stock
 
-```bash
-python -m scripts.sft_rehearsal /path/to/generator-train-*.arrow \
-  --tokenizer /path/to/tokenizer.model --prepared-evaluation /path/to/evaluation.json \
-  --pool 2048 --output /external/assistant-rehearsal
-```
+The [recipe review](../experiments/corpus-audit/recipe-review.json) records the 500,000 retained
+conversations:
 
-The deterministic tool environment in `speck.evaluation.tools` exercises successful calculation,
-no-tool responses, missing information, tool failure, correction, malformed calls, and premature
-answers. Its scripted golden episodes verify the environment; they are not model capability scores.
-The stock still needs source-rights review, answer verification and semantic deduplication before
-the probe recipe is frozen.
+| Source | Rows |
+| --- | ---: |
+| UltraData-SFT-2605: Code / Math / Knowledge / IF, all `think` | 220,000 |
+| UltraData-SFT-Agent-2609: four agent/tool subsets | 110,000 |
+| glaiveai/reasoning-v1-20m | 120,000 |
+| PrimeIntellect/SYNTHETIC-2-SFT-verified | 50,000 |
 
-## Assistant stock
+The [data-readiness receipt](../experiments/corpus-audit/data-readiness.json) has the format and
+context-fit census: 424,463 of 500,000 rows pass the adapter. Most rejections are agent
+trajectories with prose beside calls or unresolved calls. Keep those out rather than rewriting
+them. 89,956 repeated normalized first-user prompts, 448 of them groups spanning sources, need
+shared split handling.
 
-The [inventory receipt](../experiments/corpus-audit/recipe-review.json) binds the earlier audit of
-500,000 retained conversations and its upstream build report:
+## Freezing the probe
 
-| Retained source | Rows | Evidence |
-| --- | ---: | --- |
-| UltraData-SFT-2605: Code / Math / Knowledge / IF, all `think` | 220,000 | Source census and sampled serialization/length audit |
-| UltraData-SFT-Agent-2609: four agent/tool subsets | 110,000 | Source census; selected examples pass the later tool-aware rehearsal |
-| glaiveai/reasoning-v1-20m | 120,000 | Source census and sampled serialization/length audit |
-| PrimeIntellect/SYNTHETIC-2-SFT-verified | 50,000 | Source census, publisher reward filter and sampled serialization/length audit |
-
-The [data-readiness receipt](../experiments/corpus-audit/data-readiness.json) applies the
-same `speck_tools_v1` adapter used by training to the original deterministic sample: 256 rows per
-subset, with every prior sample identity preserved. Complete conversations fitting each ceiling are:
-
-| Subset | 4K | 16K | 32K | Format rejections / 256 |
-| --- | ---: | ---: | ---: | ---: |
-| SYNTHETIC-2 verified | 80 | 226 | 256 | 0 |
-| Glaive reasoning | 256 | 256 | 256 | 0 |
-| UltraData Code/think | 89 | 227 | 256 | 0 |
-| UltraData Math/think | 164 | 239 | 256 | 0 |
-| UltraData Knowledge/think | 64 | 249 | 256 | 0 |
-| UltraData IF/think | 247 | 256 | 256 | 0 |
-| Code-Agent | 0 | 27 | 86 | 61 |
-| General-Agent | 0 | 0 | 1 | 255 |
-| Search-Agent | 0 | 23 | 56 | 160 |
-| Tool-Use | 40 | 90 | 92 | 158 |
-
-A separate full-stock structural pass accepts **424,463 of 500,000 rows** under the adapter
-and records the first format failure for 75,537. This is format compatibility only, independent of
-context fit, thinking quality, source use and answer correctness. Exact conversation copies are absent,
-but 89,956 repeated normalized first-user prompts and 448 prompt groups spanning sources require
-shared split handling. Prompt equality is a conservative link, not proof of identical tasks.
-
-The context-fit table reports sample counts, not full-stock token totals, answer-quality scores or
-qualified runtime lengths. Lengths include schemas, observations and context-only turns; supervision
-counts remain separate. Most rejected agent samples contain prose beside structured calls or end
-with unresolved calls. Preserve those records for an explicit adapter/completeness decision; do not
-silently turn prose into reasoning, fabricate observations or truncate trajectories. The historical
-audit's blanket tool rejection is superseded; its receipt remains unchanged.
-
-The local build already excluded length tails using a 98th-percentile policy and 200,000 conversation /
-64,000 thinking character limits. It cannot represent the full upstream long-context distribution.
-Keep the stock intact.
-
-The SFT probe draws only from this retained stock. Assign one primary category per conversation
-(code reasoning, math reasoning, agent/tool trajectories, supporting thinking/instruction tasks),
-exclude holdouts and task-family duplicates, and weight by supervised and total-context tokens
-rather than row counts. Keep complete conversations: do not truncate solutions, detach tool results,
-fabricate a rationale or insert an empty thinking block. Freeze the probe's data, masks, schedule
-and serialization after the content audit, before any branch is probed.
-
-Candidate additions (SmolTalk2, Dolci-Instruct-SFT, missing long agent trajectories) are reviewed
-in the [recipe review](../experiments/corpus-audit/recipe-review.json) and wait for a later step.
-
-RL prompt and reference inventories are kept for a later release in the
-[data-readiness receipt](../experiments/corpus-audit/data-readiness.json) and the
-[post-training audit protocol](../experiments/main-data/post-training-audit-protocol.json).
+Before any branch is probed: finish the source-use review, answer verification and semantic
+deduplication of the stock; assign one primary category per conversation (code reasoning, math
+reasoning, agent/tool, supporting instruction tasks); exclude holdouts and task-family duplicates;
+weight by supervised and total tokens rather than rows; then freeze data, masks, schedule and
+serialization. Keep conversations whole. Do not truncate solutions, detach tool results, invent
+rationales or insert empty thinking blocks. The tools are in [Training](training.md#sft-probe).
+`scripts.sft_rehearsal` builds the small balanced rehearsal set the GH200 bundle carries. That set
+is an engineering fixture, not a mixture.

@@ -1,10 +1,10 @@
 """Fetch and screen Stack-Edu content: a yield probe and resumable bulk acquisition.
 
-PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py probe LISTING OUTPUT_DIR RECEIPT
-PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py acquire LISTING CENSUS LANGUAGE TIER OUTPUT_DIR
-PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py verify OUTPUT_DIR [--repair]
-PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py summarize OUTPUT_DIR RECEIPT
-PYTHONPATH=. python experiments/corpus-audit/stack_edu_content.py convert RETAINED OUTPUT_DIR BASE_PLAN OUT
+python -m scripts.stack_edu probe LISTING OUTPUT_DIR RECEIPT
+python -m scripts.stack_edu acquire LISTING CENSUS LANGUAGE TIER OUTPUT_DIR
+python -m scripts.stack_edu verify OUTPUT_DIR [--repair]
+python -m scripts.stack_edu summarize OUTPUT_DIR RECEIPT
+python -m scripts.stack_edu convert RETAINED OUTPUT_DIR BASE_PLAN OUT
 
 LISTING is the census listing with local metadata paths. Both commands fetch Software Heritage
 blobs for licence-eligible rows and apply the retained acquisition's per-document screen restored
@@ -25,16 +25,18 @@ file first, with a plan that keeps the base plan's firewall references and polic
 """
 
 import argparse
+import ast
 import gzip
 import hashlib
+import io
 import ipaddress
 import json
 import re
 import subprocess
-import sys
 import tarfile
 import tempfile
 import time
+import tokenize
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -44,15 +46,11 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import requests
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-
-from audit_stack_edu_metadata import POLICY, file_mask  # noqa: E402
-
-from speck.data.sources.stack_v3_refine import _english_prose_result  # noqa: E402
-from speck.evaluation.protocol import BenchmarkExclusion  # noqa: E402
-from speck.provenance.io import atomic_json, file_sha256, fsync_path  # noqa: E402
-from speck.tokenization.tokenizer import Tokenizer  # noqa: E402
+from speck.data.acquisition import _py3langid_identifier
+from speck.data.stack_edu_census import POLICY, file_mask
+from speck.evaluation.protocol import BenchmarkExclusion
+from speck.provenance.io import atomic_json, file_sha256, fsync_path
+from speck.tokenization.tokenizer import Tokenizer
 
 SEED = "speck-stack-edu-yield-v1"
 PER_TIER = 512
@@ -86,6 +84,59 @@ COLUMNS = [
     "detected_licenses",
     "license_type",
 ]
+
+
+_C_STYLE_COMMENTS = re.compile(r"//[^\n]*|/\*.*?\*/", re.DOTALL)
+_SQL_COMMENTS = re.compile(r"--[^\n]*|/\*.*?\*/", re.DOTALL)
+
+
+def _python_prose(text):
+    values = []
+    try:
+        for token in tokenize.generate_tokens(io.StringIO(text).readline):
+            if token.type == tokenize.COMMENT:
+                values.append(token.string.lstrip("#"))
+    except (IndentationError, SyntaxError, tokenize.TokenError):
+        pass
+    try:
+        tree = ast.parse(text)
+    except (SyntaxError, ValueError):
+        return "\n".join(values)
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+            value = ast.get_docstring(node, clean=False)
+            if value:
+                values.append(value)
+    return "\n".join(values)
+
+
+def _extract_prose(text, language):
+    if language == "Markdown":
+        return text
+    if language == "Python":
+        return _python_prose(text)
+    if language == "Shell":
+        return "\n".join(
+            line.lstrip()[1:]
+            for line in text.splitlines()
+            if line.lstrip().startswith("#") and not line.lstrip().startswith("#!")
+        )
+    if language == "SQL":
+        return "\n".join(_SQL_COMMENTS.findall(text))
+    return "\n".join(_C_STYLE_COMMENTS.findall(text))
+
+
+def english_prose_result(text, language, settings):
+    """Classify a file's comments and docstrings (all of Markdown) as English or not."""
+    prose = _extract_prose(text, language)
+    alphabetic = sum(character.isalpha() for character in prose)
+    if alphabetic < settings["minimum_alphabetic_characters"]:
+        return "insufficient_prose", None
+    detected, probability = _py3langid_identifier().classify(prose)
+    probability = float(probability)
+    if detected == "en" and probability >= settings["minimum_probability"]:
+        return "English", probability
+    return "non_English", probability
 
 
 def tier(score):
@@ -140,7 +191,7 @@ def screen(row, raw, prose_policy, exclusion):
         return "content_non_identity_utf8", None
     if any(pattern.search(text) for pattern in SECRETS):
         return "code_high_confidence_secret", None
-    if _english_prose_result(text, row["language"], prose_policy)[0] == "non_English":
+    if english_prose_result(text, row["language"], prose_policy)[0] == "non_English":
         return "code_non_English_prose", None
     if not MIN_CHARS <= len(text) <= MAX_CHARS:
         return "code_character_envelope", None

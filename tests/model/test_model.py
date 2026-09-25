@@ -204,7 +204,7 @@ def test_int8_kv_cache_tracks_scales_and_approximates_full_forward():
     for index in range(1, tokens.size(1)):
         values.append(model(tokens[:, index : index + 1], state=state))
     logits = torch.cat(values, dim=1)
-    assert state.memory_report()["by_kind"]["attention_kv"] == 1 * 1 * 8 * (4 * 2 + 2 * 2)
+    assert state.allocated_bytes() == 1 * 1 * 8 * (4 * 2 + 2 * 2)
     assert torch.allclose(model(tokens), logits, atol=2e-3, rtol=2e-3)
 
 
@@ -247,7 +247,6 @@ def test_kimi_delta_attention_state_is_independent_of_context_length():
     expected = 1 * 2 * 4 * 4 * 4 + 1 * (2 * 4 + 2 * 4) * 2 * 4
     assert short.allocated_bytes() == expected
     assert long.allocated_bytes() == expected
-    assert short.memory_report()["by_kind"] == {"kimi_delta_attention": expected}
 
 
 @pytest.mark.parametrize("activation", ("sigmoid", "silu"))
@@ -305,7 +304,7 @@ def test_kimi_output_gate_activation_changes_only_behavior_not_geometry():
     assert not torch.allclose(sigmoid_logits, silu_logits)
     assert sigmoid.parameter_count() == silu.parameter_count()
     assert sigmoid.flops_per_token(16) == silu.flops_per_token(16)
-    assert sigmoid.state(length=8).memory_report() == silu.state(length=8).memory_report()
+    assert sigmoid.state(length=8).allocated_bytes() == silu.state(length=8).allocated_bytes()
     assert {name: tuple(tensor.shape) for name, tensor in sigmoid.state_dict().items()} == {
         name: tuple(tensor.shape) for name, tensor in silu.state_dict().items()
     }

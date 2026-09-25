@@ -1,9 +1,9 @@
 """Inventory the pinned Ultra-FineWeb HQ route and acquire whole crawls from that listing.
 
-PYTHONPATH=. python experiments/corpus-audit/audit_ultrafineweb_listing.py list LISTING_DIR RECEIPT
-PYTHONPATH=. python experiments/corpus-audit/audit_ultrafineweb_listing.py acquire RECEIPT CRAWL DIR
-PYTHONPATH=. python experiments/corpus-audit/audit_ultrafineweb_listing.py convert DIR BASE_PLAN OUT
-PYTHONPATH=. python experiments/corpus-audit/audit_ultrafineweb_listing.py census PREPROCESSED OUT RECEIPT
+python -m scripts.ultrafineweb list LISTING_DIR RECEIPT
+python -m scripts.ultrafineweb acquire RECEIPT CRAWL DIR
+python -m scripts.ultrafineweb convert DIR BASE_PLAN OUT
+python -m scripts.ultrafineweb census PREPROCESSED OUT RECEIPT
 
 `list` records every file under the pinned HQ route through the Hub API and projects Mistral
 tokens per crawl from compressed bytes at the rate the retained twelve shards measured.
@@ -19,7 +19,6 @@ FineWeb-Edu stock by exact content hash, the quantity the supply gap uses. None 
 import argparse
 import hashlib
 import json
-import sys
 import time
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
@@ -29,10 +28,8 @@ from urllib.request import urlopen
 
 import pyarrow.parquet as pq
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-
-from speck.data.document_index import index_documents  # noqa: E402
-from speck.provenance.io import atomic_json, file_sha256, fsync_path  # noqa: E402
+from speck.data.document_index import index_documents
+from speck.provenance.io import atomic_json, file_sha256, fsync_path
 
 ROOT = Path(__file__).resolve().parents[2]
 REPOSITORY = "openbmb/Ultra-FineWeb"

@@ -1,23 +1,15 @@
 """A crawl download is published only when its size and digest match the listing."""
 
 import hashlib
-import importlib.util
 import io
 import json
-from pathlib import Path
 
 import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
+import speck.data.ultrafineweb as audit
 from speck.data import document_index
-
-SPEC = importlib.util.spec_from_file_location(
-    "ultrafineweb_listing",
-    Path(__file__).resolve().parents[1] / "experiments/corpus-audit/audit_ultrafineweb_listing.py",
-)
-audit = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(audit)
 
 
 @pytest.mark.parametrize("payload", [b"", b"wrong", b"expected plus excess"])

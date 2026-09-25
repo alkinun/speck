@@ -8,7 +8,6 @@ import time
 import traceback
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.request import Request, urlopen
 
 from speck.tokenization.chat import ChatFormatError
 from speck.tokenization.chat import validate_messages as validate_chat_messages
@@ -395,93 +394,6 @@ def handler_class(service, maximum_request_bytes=16 * 1024 * 1024):
             self.dispatch("POST")
 
     return Handler
-
-
-def _local_json_request(port, path, payload=None):
-    data = None if payload is None else json.dumps(payload).encode()
-    request = Request(
-        f"http://127.0.0.1:{port}{path}",
-        data=data,
-        headers={"Content-Type": "application/json"} if data is not None else {},
-    )
-    with urlopen(request, timeout=30) as response:
-        return response.status, json.loads(response.read())
-
-
-def exercise_endpoint(engine):
-    """Exercise the external-suite request shapes over a real loopback HTTP socket."""
-
-    server = ThreadingHTTPServer(
-        ("127.0.0.1", 0),
-        handler_class(EvaluationService(engine)),
-    )
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    port = server.server_address[1]
-    cases = {
-        "nolima_chat": {
-            "model": engine.model_id,
-            "messages": [
-                {"role": "system", "content": "You are a helpful assistant"},
-                {"role": "user", "content": "Reply with one word: blue"},
-            ],
-            "seed": 43,
-            "max_tokens": 8,
-            "temperature": 0.0,
-            "top_p": 1.0,
-        },
-        "ruler_nemo_openai_chat": {
-            "model": engine.model_id,
-            "messages": [{"role": "user", "content": "Reply with one word: blue"}],
-            "seed": 42,
-            "max_completion_tokens": 8,
-            "temperature": 0.0,
-            "top_p": 1.0,
-            "stream": False,
-            "n": 1,
-            "tools": None,
-            "logprobs": False,
-            "top_logprobs": None,
-            "frequency_penalty": 0.0,
-            "presence_penalty": 0.0,
-        },
-    }
-    try:
-        health_status, health = _local_json_request(port, "/health")
-        models_status, models = _local_json_request(port, "/v1/models")
-        results = {}
-        for name, payload in cases.items():
-            first_status, first = _local_json_request(
-                port,
-                "/v1/chat/completions",
-                payload,
-            )
-            second_status, second = _local_json_request(
-                port,
-                "/v1/chat/completions",
-                payload,
-            )
-            if first_status != 200 or second_status != 200 or first != second:
-                raise RuntimeError(f"evaluation endpoint qualification failed for {name}")
-            if first.get("model") != engine.model_id or first.get("object") != "chat.completion":
-                raise RuntimeError(f"evaluation endpoint returned an invalid schema for {name}")
-            results[name] = {
-                "request": payload,
-                "response": first,
-                "repeated_response_identical": True,
-            }
-    finally:
-        server.shutdown()
-        server.server_close()
-        thread.join()
-    if health_status != 200 or health.get("status") != "ok" or models_status != 200:
-        raise RuntimeError("evaluation endpoint health or model discovery failed")
-    return {
-        "transport": "loopback_http_ephemeral_port",
-        "health": health,
-        "models": models,
-        "cases": results,
-    }
 
 
 def serve(engine, host="127.0.0.1", port=8000):

@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import pyarrow as pa
+import pyarrow.parquet as pq
 import pytest
 
 from speck.evaluation.protocol import BenchmarkExclusion, prepare_protocol
@@ -74,3 +76,66 @@ def test_benchmark_exclusion_catches_embedded_questions_without_model_outputs(tm
     exclusion = BenchmarkExclusion(result)
     assert exclusion.matches("A preamble. " + rows[5]["question"] + " Here is the answer.")
     assert not exclusion.matches("A completely unrelated description of cooking vegetables.")
+
+
+POLICY = {
+    "token_pattern": "[^\\W_]+(?:['’][^\\W_]+)*|_+|[^\\s\\w]",
+    "primary_ngram": 7,
+    "sensitivity_ngram": 5,
+    "minimum_alphanumeric_tokens": 3,
+    "minimum_unique_tokens": 3,
+    "critical_primary_matches": 2,
+    "sensitivity_matches": 2,
+    "minimum_exact_field_characters": 100,
+    "minimum_exact_field_tokens": 6,
+    "exact_anchor_tokens": 4,
+}
+EXACT = (
+    "Electromagnetism thermodynamics crystallography astrophysics bioinformatics "
+    "electrochemistry computational neuroscience biochemistry"
+)
+NGRAM = "A careful silver telescope records seven unusual comets above the quiet northern horizon"
+
+
+def parquet_protocol(tmp_path, rows):
+    path = tmp_path / "benchmark.parquet"
+    pq.write_table(pa.Table.from_pylist(rows), path)
+    benchmark = {
+        "id": "fixture",
+        "path": str(path),
+        "sha256": file_sha256(path),
+        "format": "parquet",
+        "task_id_field": "id",
+        "text_fields": ["question"],
+        "expected_tasks": len(rows),
+    }
+    return {"benchmarks": [benchmark], "policy": POLICY}
+
+
+def test_benchmark_exclusion_matches_exact_fields_and_task_unique_ngrams(tmp_path):
+    exclusion = BenchmarkExclusion(
+        parquet_protocol(
+            tmp_path,
+            [
+                {"id": "exact", "question": EXACT},
+                {"id": "ngram", "question": NGRAM + " before dawn during winter observations"},
+            ],
+        )
+    )
+    assert exclusion.matches(f"Intro. {EXACT}. Outro.") == ["fixture:exact"]
+    assert exclusion.matches(NGRAM) == ["fixture:ngram"]
+    assert not exclusion.matches(
+        "Independent prose about gardens, weather, and careful observations in a local notebook."
+    )
+
+
+def test_benchmark_exclusion_rejects_duplicate_task_references(tmp_path):
+    protocol = parquet_protocol(
+        tmp_path,
+        [
+            {"id": "duplicate", "question": "First sufficiently detailed benchmark question."},
+            {"id": "duplicate", "question": "Second sufficiently detailed benchmark question."},
+        ],
+    )
+    with pytest.raises(ValueError, match="duplicate benchmark task reference"):
+        BenchmarkExclusion(protocol)

@@ -27,9 +27,8 @@ The smoke workflow builds tiny local data, trains a hybrid base model, initializ
 its native checkpoint, and verifies exact resume for both stages. It also evaluates held-out base
 loss. It uses CPU only and downloads no corpus.
 
-The ladder configurations are in [experiments/ladder](experiments/ladder/README.md); the GH200
-qualification starts from [experiments/qualification](experiments/qualification/README.md).
-The ordered access procedure is the [GH200 qualification runbook](docs/compute-qualification.md).
+The ladder configurations are in [experiments/ladder](experiments/ladder/README.md); GH200 access
+follows the [qualification runbook](docs/compute-qualification.md).
 
 ## Working with the project
 
@@ -38,6 +37,7 @@ The ordered access procedure is the [GH200 qualification runbook](docs/compute-q
 | Prepare and reuse data | [Data](docs/data.md) |
 | Train, resume, fine-tune, generate | [Training](docs/training.md) |
 | Measure capability and cost | [Evaluation](docs/evaluation.md) |
+| Qualify GH200 access | [Qualification](docs/compute-qualification.md) |
 | Run scheduler-managed training | [Slurm](docs/slurm.md) |
 | Export a checkpoint | [Releasing](docs/releasing.md) |
 | Make a change | [Contributing](CONTRIBUTING.md) |
@@ -52,8 +52,8 @@ PLAN.md        One current direction and next step
 speck/         Model, data, training, evaluation, export, and runtime code
 scripts/       Maintained command entry points
 tests/         Behavioral and integration checks
-experiments/   Runnable configurations, clearly labeled preparation plans, and result receipts
-docs/          Program design, paper outline, operational guides, and research notes
+experiments/   Runnable configurations, design records and result receipts
+docs/          Program design, paper outline and operational guides
 archive/       Pointer to the complete historical Git snapshot
 ```
 

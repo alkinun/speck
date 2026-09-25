@@ -2,22 +2,15 @@
 
 import gzip
 import hashlib
-import importlib.util
 import io
 import json
 import tarfile
-from pathlib import Path
 
 import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-SPEC = importlib.util.spec_from_file_location(
-    "stack_edu_content",
-    Path(__file__).resolve().parents[1] / "experiments/corpus-audit/stack_edu_content.py",
-)
-content = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(content)
+import speck.data.stack_edu as content
 
 PROSE = {
     "detector": "py3langid==0.3.0",

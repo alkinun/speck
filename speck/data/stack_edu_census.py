@@ -1,7 +1,7 @@
 """Census every pinned Stack-Edu metadata file under the historical file predicate.
 
-PYTHONPATH=. python experiments/corpus-audit/audit_stack_edu_metadata.py scan LISTING OUTPUT_DIR
-PYTHONPATH=. python experiments/corpus-audit/audit_stack_edu_metadata.py summarize OUTPUT_DIR RECEIPT
+python -m scripts.stack_edu_census scan LISTING OUTPUT_DIR
+python -m scripts.stack_edu_census summarize OUTPUT_DIR RECEIPT
 
 Metadata only: rows and declared bytes by language and int_score, never file content. The
 predicate is the one that produced the retained stock, with its score floor lifted so each
@@ -12,7 +12,6 @@ measured, so they are planning figures for int_score 4 and 5 and assumptions for
 
 import argparse
 import json
-import sys
 from collections import Counter, defaultdict
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
@@ -22,9 +21,7 @@ import pyarrow as pa
 import pyarrow.compute as pc
 import pyarrow.parquet as pq
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-
-from speck.provenance.io import atomic_json, file_sha256  # noqa: E402
+from speck.provenance.io import atomic_json, file_sha256
 
 DATA = Path("/mnt/speck-data/speck/data-qualification-20260919")
 POLICY = DATA / "code-expansion/metadata-policy.json"

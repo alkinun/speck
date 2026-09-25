@@ -5,8 +5,8 @@ import json
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from speck.data.code_families import partition_code_families, repository_key
-from speck.data.joint_graph import _bound_json, _Families
+from speck.data.code_families import Families, partition_code_families, repository_key
+from speck.data.joint_graph import _bound_json
 from speck.provenance.io import file_sha256
 
 
@@ -38,7 +38,7 @@ def write_partitions(plan, sources, edges, output, *, firewall_matches=()):
         or rule.get("firewall") != "exclude_primary_and_unseen_from_all_candidate_partitions"
     ):
         raise ValueError("unsupported frozen family partition rule")
-    families = _Families()
+    families = Families()
     for first, second, _, _ in edges:
         families.union(first, second)
     holds = defaultdict(set)

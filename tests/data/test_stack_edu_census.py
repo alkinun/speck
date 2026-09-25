@@ -1,16 +1,8 @@
 """The vectorized census predicate must reject exactly what the historical row predicate did."""
 
-import importlib.util
-from pathlib import Path
-
 import pyarrow as pa
 
-SPEC = importlib.util.spec_from_file_location(
-    "stack_edu_metadata_audit",
-    Path(__file__).resolve().parents[1] / "experiments/corpus-audit/audit_stack_edu_metadata.py",
-)
-audit = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(audit)
+import speck.data.stack_edu_census as audit
 
 POLICY = {
     "filters": {

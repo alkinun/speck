@@ -50,8 +50,7 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
 | Source use: nine selected sources approved for research training and weight release | [Acceptance](experiments/main-data/source-rights-acceptance.json) |
 | Code supply: census of all 42 Stack-Edu files, `int_score` 4+ acquisition (680M tokens), `int_score` 3 yield probe | [Census](experiments/corpus-audit/stack-edu-metadata-census.json), [acquisition](experiments/corpus-audit/stack-edu-acquisition.json), [probe](experiments/corpus-audit/stack-edu-yield-probe.json) |
 | Web supply: HQ listing by crawl, stratified audit, extraction follow-up | [Listing](experiments/corpus-audit/ultrafineweb-hq-listing.json), [audit](experiments/corpus-audit/web-hq-stratified.json) |
-| Family partitions: six text stocks and the code review cohort, 45 code holds | [Partition](experiments/main-data/family-partition.json), [qualification](experiments/main-data/QUALIFICATION.md) |
-| Post-training software, kept for a later step: minimal GRPO trainer with checked verifiers, self-distillation builder, RTX 3090 RL pilot | [Training guide](docs/training.md#reward-training), [pilot](experiments/rl-pilot/README.md) |
+| Family partitions: six text stocks and the code review cohort, 45 code holds | [Partition](experiments/main-data/family-partition.json), [qualification](experiments/main-data/README.md#qualification) |
 
 ## Work order
 
@@ -68,8 +67,10 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
      content and kept: the fetched Stack-Edu units, the code conversion, preprocess and token index,
      the HQ web stock and its index, and the dry-run family partition, each matching a second build
      or its per-record content hashes.
-   - Run the 50m learning-rate sweep, then the P0 seed set on the baseline corpus, and choose the
-     metrics that move at this scale.
+   - Run the 50m learning-rate sweep (its own corpus, from the retained HQ sample).
+   - Configure the 50m baseline corpus from the verified crawl; P0 and every P family train on it
+     and no configuration exists yet. Then run the P0 seed set and choose the metrics that move at
+     this scale.
    - Finish both acquisitions: census the crawl and point the supply gap at it; summarize the code
      fetch, preprocess all code and rebuild the family partition over every source.
    - Write the predeclared records for P1 to P7 and prepare their data variants on CPU.
@@ -89,5 +90,3 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
   from which the corpora can be rebuilt.
 - Use of FinePDFs-Edu (ODC-By over Common Crawl).
 - Use of Nemotron-CC-v2 (NVIDIA agreement restricted to internal training).
-- Whether to run the optional external [H100 throughput rental](docs/throughput-rental.md) before
-  access. It costs no grant hours and would measure the 1.2B speedup before GH200 qualification.

@@ -22,8 +22,14 @@ from pathlib import Path
 
 import numpy as np
 
-from speck.data.production_data import _band_values, _batched_signature
-from speck.data.sources.code_near_duplicates import _jaccard, _shingles, _tokens
+from speck.data.code_families import Families
+from speck.data.production_data import (
+    band_values,
+    batched_minhash_signature,
+    code_tokens,
+    shingle_jaccard,
+    token_shingles,
+)
 from speck.provenance.io import durable_json, file_sha256
 
 PLAN_FORMAT = "speck_joint_family_graph_plan"
@@ -145,14 +151,14 @@ def _code_scan(entry, policy):
             dedups.append(hashlib.sha256(normalized.encode()).digest())
             contents.append(bytes.fromhex(content))
             offsets.append(offset)
-            tokens = _tokens(text, pattern, policy["maximum_document_tokens"])
+            tokens = code_tokens(text, pattern, policy["maximum_document_tokens"])
             if len(tokens) >= max(policy["minimum_document_tokens"], policy["shingle_tokens"]):
-                signature = _batched_signature(
-                    _shingles(tokens, policy["shingle_tokens"]),
+                signature = batched_minhash_signature(
+                    token_shingles(tokens, policy["shingle_tokens"]),
                     policy["num_perm"],
                     policy["minhash_seed"],
                 )
-                for band, value in enumerate(_band_values(signature, policy["bands"])):
+                for band, value in enumerate(band_values(signature, policy["bands"])):
                     bands.append(band)
                     keys.append(int.from_bytes(value[:8], "little"))
                     band_seqs.append(seq)
@@ -336,32 +342,13 @@ class _Texts:
                 handle = self.handles[index] = open(self.sources[index]["input"]["path"], "rb")
             handle.seek(self.scans[index].offset(seq))
             text = json.loads(handle.readline())[self.sources[index]["input"]["text_field"]]
-            tokens = _tokens(text, self.pattern, self.policy["maximum_document_tokens"])
-            self.cache[(index, seq)] = _shingles(tokens, self.policy["shingle_tokens"])
+            tokens = code_tokens(text, self.pattern, self.policy["maximum_document_tokens"])
+            self.cache[(index, seq)] = token_shingles(tokens, self.policy["shingle_tokens"])
         return self.cache[(index, seq)]
 
     def close(self):
         for handle in self.handles.values():
             handle.close()
-
-
-class _Families:
-    def __init__(self):
-        self.parent = {}
-
-    def find(self, node):
-        self.parent.setdefault(node, node)
-        root = node
-        while self.parent[root] != root:
-            root = self.parent[root]
-        while self.parent[node] != root:
-            self.parent[node], node = root, self.parent[node]
-        return root
-
-    def union(self, first, second):
-        first, second = self.find(first), self.find(second)
-        if first != second:
-            self.parent[max(first, second)] = min(first, second)
 
 
 def _code_firewall_matches(sources, scans, texts, policy):
@@ -390,8 +377,10 @@ def _code_firewall_matches(sources, scans, texts, policy):
             shingles = texts.shingles(index, seq)
             if not shingles:
                 continue
-            signature = _batched_signature(shingles, policy["num_perm"], policy["minhash_seed"])
-            for band, value in enumerate(_band_values(signature, policy["bands"])):
+            signature = batched_minhash_signature(
+                shingles, policy["num_perm"], policy["minhash_seed"]
+            )
+            for band, value in enumerate(band_values(signature, policy["bands"])):
                 candidates[seq].update(
                     row[0]
                     for row in connection.execute(
@@ -415,9 +404,9 @@ def _code_firewall_matches(sources, scans, texts, policy):
                     text = json.loads(handle.readline())[references[name]["text_field"]]
                     if hashlib.sha256(text.encode()).hexdigest() != content:
                         raise ValueError("firewall reference text changed")
-                    tokens = _tokens(text, texts.pattern, policy["maximum_document_tokens"])
-                    similarity = _jaccard(
-                        texts.shingles(index, seq), _shingles(tokens, policy["shingle_tokens"])
+                    tokens = code_tokens(text, texts.pattern, policy["maximum_document_tokens"])
+                    similarity = shingle_jaccard(
+                        texts.shingles(index, seq), token_shingles(tokens, policy["shingle_tokens"])
                     )
                 if similarity >= policy["verified_jaccard_threshold"]:
                     matches.append(
@@ -485,7 +474,7 @@ def build(plan, output_directory, *, verify_inputs=True):
         firewall_matches = []
         try:
             for first, second in sorted(candidates):
-                similarity = _jaccard(texts.shingles(*first), texts.shingles(*second))
+                similarity = shingle_jaccard(texts.shingles(*first), texts.shingles(*second))
                 if similarity >= policy["verified_jaccard_threshold"]:
                     near[(first, second)] = similarity
                 else:
@@ -504,7 +493,7 @@ def build(plan, output_directory, *, verify_inputs=True):
         for (first, second), similarity in found.items()
     )
 
-    families = _Families()
+    families = Families()
     pair_counts = Counter()
     for first, second, kind, _ in edges:
         families.union(first, second)

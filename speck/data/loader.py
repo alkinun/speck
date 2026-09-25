@@ -28,7 +28,6 @@ class PackedTokenSource:
         self.data_dir = Path(data_dir)
         self.source_id = source["id"]
         split_manifest = source["splits"][split]
-        self.shard_manifests = split_manifest["shards"]
         self.row_tokens = (source.get("packing") or {}).get("row_tokens")
         self.shards, self.ends = self._map(split_manifest["shards"], "<u2")
         self.masks = None

@@ -14,7 +14,7 @@ _SPEC.loader.exec_module(_MODULE)
 def test_candidate_manifests_name_readiness_sources_and_resolve_receipts():
     result = _MODULE.validate()
 
-    assert result == {"manifests": 4, "candidates": 9, "receipts_checked": 24}
+    assert result == {"manifests": 3, "candidates": 9, "receipts_checked": 20}
 
 
 @pytest.mark.parametrize(

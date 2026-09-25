@@ -1003,12 +1003,6 @@
     "acceptance_record": {
       "path": "experiments/main-data/source-rights-acceptance.json"
     },
-    "completed_template": {
-      "path": "experiments/main-data/source-rights-decision-20260922.json"
-    },
-    "blank_template": {
-      "path": "experiments/main-data/source-rights-acceptance-template.json"
-    },
     "registry": {
       "path": "experiments/main-data/source-registry.json"
     },
