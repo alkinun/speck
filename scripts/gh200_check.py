@@ -1,4 +1,4 @@
-"""Command entry point for preparing and executing a rental rehearsal."""
+"""Command entry point for bundling and running the one-GPU GH200 check."""
 
 from speck.operations.gh200 import main
 

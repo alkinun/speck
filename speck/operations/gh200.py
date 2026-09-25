@@ -1,4 +1,4 @@
-"""Prepare portable inputs and run a bounded one-GPU rental rehearsal."""
+"""Bundle portable inputs and run the bounded one-GPU GH200 check."""
 
 import argparse
 import importlib.metadata
@@ -23,7 +23,7 @@ from speck.provenance.io import atomic_json, file_sha256
 def bundle(output, data, tokenizer, assistant):
     """Copy only explicit prepared inputs plus committed Git objects; never local environments."""
     if subprocess.check_output(["git", "status", "--porcelain"], text=True).strip():
-        raise ValueError("commit or resolve working-tree changes before binding a rental bundle")
+        raise ValueError("commit or resolve working-tree changes before building a bundle")
     output = Path(output).resolve()
     output.mkdir(parents=True, exist_ok=False)
     branch = subprocess.check_output(["git", "symbolic-ref", "--short", "HEAD"], text=True).strip()
@@ -51,7 +51,7 @@ def bundle(output, data, tokenizer, assistant):
                 ".parquet",
             }:
                 if path.is_symlink():
-                    raise ValueError("rental inputs must be regular files")
+                    raise ValueError("bundle inputs must be regular files")
                 relative = path.relative_to(source)
                 destination = target / relative
                 destination.parent.mkdir(parents=True, exist_ok=True)
@@ -66,7 +66,7 @@ def bundle(output, data, tokenizer, assistant):
         if path.is_file()
     ]
     manifest = {
-        "format": "speck_rental_bundle",
+        "format": "speck_gh200_bundle",
         "format_version": 1,
         "commit": commit,
         "branch": branch,
@@ -96,12 +96,12 @@ def bind(root):
     """Verify transported bytes and create explicitly relocated engineering experiments."""
     root = Path(root).resolve()
     manifest = json.loads((root / "bundle.json").read_text())
-    if manifest.get("format") != "speck_rental_bundle" or manifest.get("format_version") != 1:
-        raise ValueError("unsupported rental bundle")
+    if manifest.get("format") != "speck_gh200_bundle" or manifest.get("format_version") != 1:
+        raise ValueError("unsupported bundle")
     for row in manifest["files"]:
         path = root / row["path"]
         if not path.resolve().is_relative_to(root) or file_sha256(path) != row["sha256"]:
-            raise ValueError(f"rental input identity mismatch: {row['path']}")
+            raise ValueError(f"bundle input identity mismatch: {row['path']}")
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     if (
         commit != manifest["commit"]
@@ -166,7 +166,7 @@ def assistant_experiment(root, configs, parent):
 
 
 def export_arguments(phase, checkpoint, output, tokenizer):
-    """Select the phase-specific exporter and keep rental artifacts local."""
+    """Select the phase-specific exporter and keep artifacts local."""
     if phase == "base":
         return [
             "-m",
@@ -190,7 +190,7 @@ def export_arguments(phase, checkpoint, output, tokenizer):
             "--output-dir",
             str(output),
             "--repo",
-            "local/rental-rehearsal",
+            "local/gh200-check",
             "--expected-epochs",
             "1",
             "--no-upload",
@@ -202,7 +202,7 @@ def run(root, output, seconds, *, allow_other_gpu=False):
     import torch
 
     if not 60 <= seconds <= 7200:
-        raise ValueError("rental rehearsal limit must be between 60 and 7200 seconds")
+        raise ValueError("check time limit must be between 60 and 7200 seconds")
     root, output = Path(root).resolve(), Path(output).resolve()
     output.mkdir(parents=True, exist_ok=False)
     started = time.monotonic()
@@ -211,7 +211,7 @@ def run(root, output, seconds, *, allow_other_gpu=False):
     try:
         manifest, configs, experiment = bind(root)
         if not torch.cuda.is_available() or torch.cuda.device_count() != 1:
-            raise ValueError("this rental workflow requires exactly one visible allocated GPU")
+            raise ValueError("this check requires exactly one visible allocated GPU")
         device = torch.cuda.get_device_properties(0)
         if not allow_other_gpu and (platform.machine() != "aarch64" or "GH200" not in device.name):
             raise ValueError(
@@ -243,7 +243,7 @@ def run(root, output, seconds, *, allow_other_gpu=False):
         def remaining():
             value = seconds - (time.monotonic() - started)
             if value <= 0:
-                raise TimeoutError("rental rehearsal exhausted its time limit")
+                raise TimeoutError("check exhausted its time limit")
             return value
 
         def command(name, arguments):
@@ -348,7 +348,7 @@ def run(root, output, seconds, *, allow_other_gpu=False):
         result["wall_seconds"] = time.monotonic() - started
         result["allocated_gpu_hours"] = result["wall_seconds"] / 3600
         result["boundary"] = (
-            "One GPU, eager execution, engineering data only. Rental installation/transfer/idle/storage charges and earlier attempts are outside this run record. Four-worker, compiled, scheduler, and production-pilot qualification remain separate."
+            "One GPU, eager execution, engineering data only. Installation, transfer, idle and storage charges and earlier attempts are outside this run record. Four-worker, compiled, scheduler, and production-pilot qualification remain separate."
         )
         atomic_json(output / "result.json", result)
     return result

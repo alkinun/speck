@@ -9,7 +9,7 @@ from speck.operations.gh200 import bind, bundle, export_arguments
 
 
 @pytest.mark.parametrize("phase", ["base", "sft"])
-def test_rental_export_uses_matching_cli_and_never_uploads(phase, tmp_path, monkeypatch):
+def test_export_uses_matching_cli_and_never_uploads(phase, tmp_path, monkeypatch):
     from speck.export import checkpoint, transformers
 
     command = export_arguments(
@@ -66,7 +66,7 @@ def test_portable_bundle_relocates_clean_checkout_and_detects_tampering(tmp_path
         (path / "payload.bin").write_bytes(b"frozen")
         (path / "documents.jsonl").write_text('{"ordinal":0}\n')
         inputs.append(path)
-    output = tmp_path / "rental"
+    output = tmp_path / "bundle"
     result = bundle(output, *inputs)
     assert (output / "pilot-data/documents.jsonl").read_text() == '{"ordinal":0}\n'
     subprocess.run(
