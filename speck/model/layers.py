@@ -18,11 +18,14 @@ def liger_linear_cross_entropy(hidden, weight, targets, reduction):
         raise RuntimeError(
             "the Liger loss backend requires the GPU dependencies; run `uv sync --extra gpu`"
         ) from exception
+    # Accumulate the chunked weight gradient in FP32: with tied embeddings it is the whole
+    # embedding gradient, summed over every chunk of the microbatch.
     return liger_fused_linear_cross_entropy(
         hidden,
         weight,
         targets,
         reduction=reduction,
+        accum_dtype=torch.float32,
     )
 
 
