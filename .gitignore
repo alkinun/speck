@@ -9,7 +9,6 @@ htmlcov/
 build/
 dist/
 *.egg-info/
-*.gguf
 
 # Secrets.
 .env
