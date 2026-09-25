@@ -52,9 +52,3 @@ def slice_sha256(path, start, end):
             hasher.update(chunk)
             remaining -= len(chunk)
     return hasher.hexdigest()
-
-
-def dump_line(handle, value):
-    handle.write(
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
-    )

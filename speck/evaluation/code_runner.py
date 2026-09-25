@@ -1,4 +1,4 @@
-"""Run frozen Python tests or stdin/stdout cases in a fail-closed Linux namespace sandbox."""
+"""Run frozen Python tests in a fail-closed Linux namespace sandbox."""
 
 import json
 import os
@@ -10,7 +10,7 @@ import tempfile
 import time
 from pathlib import Path
 
-WORKER = """import contextlib, io, json, os, resource, sys
+WORKER = """import contextlib, json, os, resource
 resource.setrlimit(resource.RLIMIT_CPU, (10, 11))
 resource.setrlimit(resource.RLIMIT_AS, (4 * 1024**3, 4 * 1024**3))
 resource.setrlimit(resource.RLIMIT_FSIZE, (1024**2, 1024**2))
@@ -21,23 +21,11 @@ report = {'status': 'failed'}
 try:
     program = compile(job['code'], '<candidate>', 'exec')
     with open(os.devnull, 'w') as sink, contextlib.redirect_stderr(sink):
-        if 'cases' in job:
-            for stdin, expected in job['cases']:
-                sys.stdin, output = io.StringIO(stdin), io.StringIO()
-                with contextlib.redirect_stdout(output):
-                    try:
-                        exec(program, {'__name__': '__main__'})
-                    except SystemExit as exit:
-                        if exit.code not in (None, 0):
-                            raise
-                if output.getvalue().split() != expected.split():
-                    raise AssertionError('wrong output')
-        else:
-            namespace = {'__name__': '__main__'}
-            with contextlib.redirect_stdout(sink):
-                exec(program, namespace)
-                exec(compile(job['test'], '<frozen-test>', 'exec'), namespace)
-                namespace['check'](namespace[job['entry_point']])
+        namespace = {'__name__': '__main__'}
+        with contextlib.redirect_stdout(sink):
+            exec(program, namespace)
+            exec(compile(job['test'], '<frozen-test>', 'exec'), namespace)
+            namespace['check'](namespace[job['entry_point']])
     report = {'status': 'pass'}
 except BaseException as error:
     report['error'] = type(error).__name__
@@ -57,11 +45,6 @@ def check_sandbox():
 def run_python(code, test, entry_point, *, seconds=15):
     """Run a candidate against a frozen `check(entry_point)` test."""
     return _run(dict(code=code, test=test, entry_point=entry_point), seconds)
-
-
-def run_stdio(code, cases, *, seconds=15):
-    """Run a candidate program once per (stdin, expected stdout) case; tokens must match."""
-    return _run(dict(code=code, cases=[[stdin, expected] for stdin, expected in cases]), seconds)
 
 
 def _run(job, seconds):
