@@ -999,7 +999,7 @@
   ],
   "launch_boundary": "This matrix records evidence and blockers only. It does not authorize acquisition, corpus execution, training, source substitution, repetition or a mixture. A run trains only on data whose gates the matrix records as closed.",
   "source_use_decision": {
-    "decided": "2026-09-22",
+    "decided": "2026-09-25",
     "acceptance_record": {
       "path": "experiments/main-data/source-rights-acceptance.json"
     },

@@ -159,7 +159,7 @@
     "study_slot": "ladder families P1 (Stack-Edu score floor), P4 (code repetition) and P5 (Stack-Edu versus Stack v3); never an undeclared extra arm"
   },
   "required_before_use": [
-    "Per-file origin and notice recovery required by the 2026-09-22 source-use decision; unresolved records stay excluded.",
+    "Per-file origin and notice recovery required by the source-use decision; unresolved records stay excluded.",
     "Complete repository/fork/rename/derivative/benchmark family graph and held-out partition.",
     "Independent content-quality review and benchmark contamination firewall.",
     "Eligible Mistral token count by language/role/length stratum after all holds and exclusions.",

@@ -21,58 +21,58 @@
     {
       "category": "web",
       "linear_issue": "SPECK-SOURCE-USE-2026-09-22#web",
-      "path": "/home/alkin/Desktop/speck/experiments/main-data/rights-review/web-rights-review-20260907.json",
+      "path": "rights-review/web-rights-review-20260907.json",
       "sha256": "be460abca1c092b95a5223634ed7428fe6a9bf2debe403bb0f0974cb140b99ed"
     },
     {
       "category": "code",
       "linear_issue": "SPECK-SOURCE-USE-2026-09-22#code",
-      "path": "/home/alkin/Desktop/speck/experiments/main-data/code-rights-review.json",
-      "sha256": "15955ddfffb487070cc94a0b12d9bc3ff2ee572342204ee4792765fea94439c7"
+      "path": "code-rights-review.json",
+      "sha256": "de92fed021f777648625157c563b3fb9b4f6797f1c9bab4b5016081144d6c04d"
     },
     {
       "category": "math",
       "linear_issue": "SPECK-SOURCE-USE-2026-09-22#math",
-      "path": "/home/alkin/Desktop/speck/experiments/main-data/rights-review/math-rights-review-20260907.json",
+      "path": "rights-review/math-rights-review-20260907.json",
       "sha256": "925f287c2d5532ebfff70afb5a5108d84a44c06333c1d29b1151eeb20d1fc30f"
     },
     {
       "category": "synthetic",
       "linear_issue": "SPECK-SOURCE-USE-2026-09-22#synthetic",
-      "path": "/home/alkin/Desktop/speck/experiments/main-data/rights-review/synthetic-rights-review-20260907.json",
+      "path": "rights-review/synthetic-rights-review-20260907.json",
       "sha256": "8d650530f2d820670e188939bbe5c3974e3336d4e79d5d176aa49e256c5f94fd"
     },
     {
       "category": "science",
       "linear_issue": "SPECK-SOURCE-USE-2026-09-22#science",
-      "path": "/home/alkin/Desktop/speck/experiments/main-data/rights-review/science-rights-review-20260907.json",
+      "path": "rights-review/science-rights-review-20260907.json",
       "sha256": "0250dcc0ff8d92a9b1dd34b7bc239ad2ae3974ee5a556199570bd0735bb8cc9b"
     },
     {
       "category": "reference",
       "linear_issue": "SPECK-SOURCE-USE-2026-09-22#reference",
-      "path": "/home/alkin/Desktop/speck/experiments/main-data/rights-review/reference-rights-review-20260907.json",
+      "path": "rights-review/reference-rights-review-20260907.json",
       "sha256": "fe135389195541970a06422db1a1db86dd116f80dff74ed2b660b1472c454655"
     }
   ],
   "format": "speck_human_source_rights_acceptance",
   "format_version": 1,
-  "scope": "research_training=true, paper_publication=true, public_model_weight_release=true, commercial_use=false, source_data_redistribution=false, derived_packed_shard_redistribution=false",
+  "scope": "research_training=true, paper_publication=true, public_model_weight_release=true, commercial_use=true, source_data_redistribution=false, derived_packed_shard_redistribution=false",
   "scope_details": {
-    "commercial_use": false,
+    "commercial_use": true,
     "derived_packed_shard_redistribution": false,
     "paper_publication": true,
     "public_model_weight_release": true,
     "research_training": true,
     "source_data_redistribution": false
   },
-  "signed_at": "2026-09-22T00:00:00Z",
+  "signed_at": "2026-09-25T00:00:00Z",
   "source_decisions": [
     {
       "attribution_plan": "Credit HuggingFaceFW/fineweb-edu at revision 87f09149 under ODC-By-1.0 in the model card and technical report, with a Common Crawl citation. Retain source dataset, revision, shard, released-content hash and original URL per document in the immutable attribution manifest.",
       "category": "web",
       "conditions": [
-        "ODC-By grants database rights with attribution and expressly does not license each item of content; residual underlying-page rights risk is accepted at the declared research, publication and weight-release scope only.",
+        "ODC-By grants database rights with attribution and expressly does not license each item of content; residual underlying-page rights risk is accepted at the declared scope, including commercial use of the released weights.",
         "Common Crawl terms acceptance is recorded against the 2024-03-07 terms date pinned in the web rights packet.",
         "The 313 documents and 317,562 tokens shared with the selected-web candidate are counted once, in this bank.",
         "Closes source use only. Joint family/benchmark partition, eligible-token accounting and measured comparison cost remain separate open gates."
@@ -154,7 +154,7 @@
       "attribution_plan": "Credit the FineMath release at revision e92b25a6 under ODC-By-1.0, name the InfiMM-WebMath derivation chain, and cite Common Crawl. Retain config, source row identity and released-content hash.",
       "category": "math",
       "conditions": [
-        "The manual upstream-terms decision is accepted for research training, paper publication and weight release only.",
+        "The manual upstream-terms decision is accepted for research training, paper publication and weight release, including commercial use of the released weights.",
         "The complete InfiMM-WebMath derivation and attribution chain is not independently verified; that limitation is reported rather than resolved by assumption.",
         "The one likely source transcription error stays held, and the surrounding solutions are explicitly not certified correct.",
         "Inventory is a bounded 3,725-record sample. No eligible-token or supply figure may be quoted from it."
@@ -214,7 +214,7 @@
       "source_id": "finewiki_en"
     }
   ],
-  "source_registry": "/home/alkin/Desktop/speck/experiments/main-data/source-registry.json",
-  "source_registry_sha256": "9530585316146633a5f421dc523ffe054bd904196bd09222d1a619d4e44eb483",
+  "source_registry": "source-registry.json",
+  "source_registry_sha256": "8cd3cbe5867d4716797bcb0663018d0c952f1f0bc70b35e32e35fbe09910e126",
   "status": "all_sources_human_approved"
 }

@@ -47,7 +47,7 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
 | Runtime: full-size H100 restart, recovery, generation and export | [H100 receipt](experiments/qualification/h100-result.json) |
 | Engineering pilot: 105M tokens, 12,859 tokens/s full trainer, weak development scores | [Run](experiments/pilot/h100-run.json), [scores](experiments/pilot/development-result.json) |
 | Throughput recipe: 2.084x on a 318M proxy, compiled restart parity | [Sweep](experiments/qualification/throughput-3090/sweep.json), [base](experiments/qualification/compiled-recovery-descent-3090.json), [SFT](experiments/qualification/compiled-sft-recovery-3090.json) |
-| Source use: nine selected sources approved for research training and weight release | [Acceptance](experiments/main-data/source-rights-acceptance.json) |
+| Source use: nine selected sources approved for research training, publication and Apache-2.0 weight release, including commercial use | [Acceptance](experiments/main-data/source-rights-acceptance.json) |
 | Code supply: census of all 42 Stack-Edu files, `int_score` 4+ acquisition (680M tokens), `int_score` 3 yield probe | [Census](experiments/corpus-audit/stack-edu-metadata-census.json), [acquisition](experiments/corpus-audit/stack-edu-acquisition.json), [probe](experiments/corpus-audit/stack-edu-yield-probe.json) |
 | Web supply: HQ listing by crawl, stratified audit, extraction follow-up | [Listing](experiments/corpus-audit/ultrafineweb-hq-listing.json), [audit](experiments/corpus-audit/web-hq-stratified.json) |
 | Family partitions: six text stocks and the code review cohort, 45 code holds | [Partition](experiments/main-data/family-partition.json), [qualification](experiments/main-data/README.md#qualification) |
@@ -86,13 +86,6 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
 
 ## Open decisions
 
-- Commercial use of the released weights, so they can ship under Apache-2.0. The signed
-  [source-use decision](experiments/main-data/source-rights-acceptance.json) excludes it. The
-  [draft extension](experiments/main-data/source-rights-commercial-draft.json) sets
-  `commercial_use: true` with every source decision pending. Review each source, mark it `approve`
-  or `reject`, set `signed_at`, then run
-  `python -m scripts.source_rights_review experiments/main-data/source-rights-commercial-draft.json --finalize experiments/main-data/source-rights-acceptance-commercial.json`
-  and point `source_use_decision` in source-readiness.json at the new record.
 - Whether sources whose licences permit redistribution are released as data, or only as manifests
   from which the corpora can be rebuilt.
 - Use of FinePDFs-Edu (ODC-By over Common Crawl).
