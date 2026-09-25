@@ -962,6 +962,12 @@ class BaseTrainer:
                 duration = window_duration / timing_steps
             if should_log:
                 self._log_step(completed, loss, grad_norm, duration)
+            if should_validate:
+                validation_loss, validation_source_losses, validation_tokens = self._validate(
+                    completed
+                )
+                validation_step = completed
+            # Validate first, so a requeue at a validation step does not skip it for good.
             if self._after_optimizer_step(
                 completed,
                 validation_loss,
@@ -972,11 +978,6 @@ class BaseTrainer:
                 stop_requested,
             ):
                 break
-            if should_validate:
-                validation_loss, validation_source_losses, validation_tokens = self._validate(
-                    completed
-                )
-                validation_step = completed
             if should_save:
                 self._checkpoint(
                     completed,

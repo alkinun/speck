@@ -466,11 +466,11 @@ def test_slurm_trainer_requires_job_and_resolves_latest_only_on_retry(tmp_path, 
         slurm_base_train._configure_resume(configs, cli)
 
 
-def test_slurm_trainer_checkpoints_usr1_at_optimizer_boundary(monkeypatch):
+def _requeue_trainer(monkeypatch, eval_every=0):
     trainer = object.__new__(slurm_base_train.SlurmBaseTrainer)
     trainer.args = SimpleNamespace(
         log_every=100,
-        eval_every=0,
+        eval_every=eval_every,
         save_every=0,
         warmup_steps=0,
         min_lr=1.0,
@@ -511,6 +511,11 @@ def test_slurm_trainer_checkpoints_usr1_at_optimizer_boundary(monkeypatch):
         return zero, zero, (object(), object(), object()), 1
 
     monkeypatch.setattr(slurm_base_train.base_train, "optimization_step", optimization)
+    return trainer, checkpoints
+
+
+def test_slurm_trainer_checkpoints_usr1_at_optimizer_boundary(monkeypatch):
+    trainer, checkpoints = _requeue_trainer(monkeypatch)
     trainer._run_steps()
 
     assert trainer.completed_step == 1
@@ -518,6 +523,18 @@ def test_slurm_trainer_checkpoints_usr1_at_optimizer_boundary(monkeypatch):
     assert checkpoints[0][0][0] == 1
     assert checkpoints[0][1] == {"partial": True}
     assert len(checkpoints) == 1
+
+
+def test_requeue_at_a_validation_step_validates_before_its_checkpoint(monkeypatch):
+    trainer, checkpoints = _requeue_trainer(monkeypatch, eval_every=1)
+    validated = []
+    monkeypatch.setattr(trainer, "_validate", lambda step: validated.append(step) or (0.5, {}, 8))
+    trainer._run_steps()
+
+    assert validated == [1]
+    step, loss, _, validation_step = checkpoints[0][0][:4]
+    assert (step, loss, validation_step) == (1, 0.5, 1)
+    assert checkpoints[0][1] == {"partial": True}
 
 
 def test_slurm_trainer_finishes_missing_final_validation_after_requeue(monkeypatch):
