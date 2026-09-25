@@ -32,7 +32,7 @@
   "secondary_metrics": "The pinned early-signal suite (scripts.open_slm_eval: HellaSwag, ARC-Easy, ARC-Challenge, PIQA, ArithMark) on each arm's final export, and held-out loss at each quarter of the horizon.",
   "minimum_useful_effect": "2.83 times the P0 standard deviation of the metric at 130m; an arm difference below it is reported as no detectable effect.",
   "decision_rule": "Report whether the strict-minus-baseline difference changes sign or size between the short and long horizons. A reversal at the long horizon means filtering conclusions from short runs do not carry to the parent.",
-  "data_preparation": "Corpora are packed as in P1 at each horizon; at the long horizon the smaller strict pool repeats, and its passes are recorded as exposure.",
+  "data_preparation": "Corpora are packed as in P1 at each horizon. At the long horizon every source whose pool is too small for its exposure declares passes in its data configuration, and the manifest records unique tokens and exposure.",
   "prerequisites": [
     "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known.",
     "P1 has run, fixing the all-strict corpus.",

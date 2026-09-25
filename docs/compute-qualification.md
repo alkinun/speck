@@ -108,8 +108,8 @@ a faster or slower rate changes.
 
 - The [RTX 3090 sweep](../experiments/qualification/throughput-3090/sweep.json) measured 2.084x on
   a 318M proxy (checkpointing off, compile with max-autotune, larger microbatch). Its endpoint also
-  changed tokens per update, and the optimized 1.2B model did not fit the card, so the parent's
-  speedup is unmeasured.
+  changed tokens per update, and the optimized 1.2B model did not fit the card, so the sweep
+  recipe's speedup for the parent is unmeasured.
 - The [H100 pilot](../experiments/pilot/h100-run.json) ran eager and checkpointed at about 10%
   estimated MFU, an upper bound on cost.
 - [Two later changes](../experiments/qualification/throughput-3090/optimizations-20260925.json),
@@ -117,7 +117,8 @@ a faster or slower rate changes.
   on the RTX 3090.
 - Compiled restart parity holds for [base](../experiments/qualification/compiled-recovery-descent-3090.json)
   and [SFT](../experiments/qualification/compiled-sft-recovery-3090.json) with the shared
-  `COMPILE_OPTIONS` in `speck/operations/runtime.py`.
+  `COMPILE_OPTIONS` in `speck/operations/runtime.py`. Both predate the head-alignment and fill
+  changes; the four-worker replay re-establishes restart parity with the current code.
 
 MFU = tokens/s × model FLOPs/token ÷ dense BF16 peak. Keep compute, loader-inclusive
 (`--mode end-to-end`) and full-trainer rates separate. Only a sustained trainer run at the real

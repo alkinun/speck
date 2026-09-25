@@ -23,7 +23,8 @@ Training jobs run `torchrun -m scripts.slurm_base_train ... --slurm-requeue-resu
 signal requests a checkpoint at an optimizer boundary (within ten steps on multi-GPU jobs, which
 poll it collectively), and a requeued job resumes from the last complete checkpoint. Each wave gets
 its own `TORCHINDUCTOR_CACHE_DIR`, so requeued attempts reuse one compilation. SFT jobs are not
-requeued. Job dependencies are limited to collection and evaluation jobs.
+requeued. Job dependencies are limited to collection and evaluation jobs. Set a job's
+`signal_seconds` to cover ten optimizer steps plus a validation and a checkpoint save.
 
 `submit` records the wave's maximum GPU-hour commitment before calling `sbatch`, and each returned
 job ID. `collect` records scheduler observations, `summary` reports cost, and `retry` resubmits a

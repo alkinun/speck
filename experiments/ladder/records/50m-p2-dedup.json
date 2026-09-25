@@ -20,11 +20,10 @@
   "primary_metric": "Mean final held-out loss over the fixed per-source validation packs, each source weighted equally; per-source losses reported alongside.",
   "secondary_metrics": "The pinned early-signal suite (scripts.open_slm_eval: HellaSwag, ARC-Easy, ARC-Challenge, PIQA, ArithMark) on each arm's final export, and held-out loss at each quarter of the horizon.",
   "minimum_useful_effect": "2.83 times the P0 standard deviation of the metric at 50m; an arm difference below it is reported as no detectable effect.",
-  "decision_rule": "Keep near deduplication if exact-only is worse than the baseline by at least the minimum useful effect on the primary metric; report the cost per accepted token of each stage alongside.",
-  "data_preparation": "Each arm reruns scripts.production_data_preprocess over the same inputs with only policy.deduplication changed; the benchmark firewall and family partition apply unchanged in every arm. The no-dedup arm's data configuration also sets dedup.scope to none, because packing otherwise removes exact copies itself.",
+  "decision_rule": "Keep near deduplication if exact-only is worse than the baseline by at least the minimum useful effect on the primary metric, and keep exact deduplication if no-dedup is worse than exact-only by the same margin. Report the cost per accepted token of each stage alongside.",
+  "data_preparation": "Each arm reruns scripts.production_data_preprocess over the same inputs with only policy.deduplication changed (none or exact); the benchmark firewall and family partition apply unchanged in every arm. Each arm's ladder inputs bind the baseline preprocess's removal log per source as removals ({path, sha256}), so duplicates the baseline removed inherit their original's family bucket. The no-dedup arm's data configuration also sets dedup.scope to none, because packing otherwise removes exact copies itself.",
   "prerequisites": [
-    "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known.",
-    "Each arm's ladder inputs bind the baseline preprocess's removals.jsonl per source, so duplicates the baseline removed inherit their original's family bucket; each arm's preprocess plan sets policy.deduplication to none or exact."
+    "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known."
   ],
-  "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 7.3 hours on the local RTX 3090 at the measured compiled rate of 100,000 tokens per second."
+  "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 7.3 hours on the local RTX 3090 at its synthetic compiled rate of 100,000 tokens per second, before validation and saves."
 }

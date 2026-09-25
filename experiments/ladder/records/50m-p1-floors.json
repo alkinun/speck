@@ -16,7 +16,7 @@
     },
     {
       "id": "math-3plus",
-      "change": "Natural math adds FineMath 3+ to the baseline's FineMath 4+ and InfiWebMath 4+."
+      "change": "Natural math adds FineMath 3+ to the baseline's FineMath 4+."
     },
     {
       "id": "all-strict",
@@ -33,7 +33,7 @@
   "prerequisites": [
     "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known.",
     "FineMath 3+ acquired and covered by a source-use decision; only finemath-4plus is a selected source.",
-    "Stack-Edu code and the crawl are reconverted with the current converters, which write int_score and pred_score; the arms then set score_column and filters.min_score on the bank's source."
+    "Stack-Edu code and the crawl are reconverted with the current converters, which write int_score and pred_score; every train record carries a numeric score (no nulls in the reconverted outputs), and the arms set score_column and filters.min_score on the bank's source."
   ],
-  "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 7.3 hours on the local RTX 3090 at the measured compiled rate of 100,000 tokens per second."
+  "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 7.3 hours on the local RTX 3090 at its synthetic compiled rate of 100,000 tokens per second, before validation and saves."
 }
