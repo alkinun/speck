@@ -166,5 +166,5 @@
     "Separate checked-exercise provenance, specification, dependency, oracle and wrong-control evidence if substitution is proposed.",
     "Measured GH200 cost and common comparison horizon."
   ],
-  "admission_boundary": "This is a launch-blocked candidate manifest. It does not admit natural code or checked exercises, authorize acquisition or change the pretraining study budget."
+  "admission_boundary": "This is a launch-blocked candidate manifest. It does not admit natural code or checked exercises, authorize acquisition or change the compute budget."
 }

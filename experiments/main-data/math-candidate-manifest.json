@@ -243,5 +243,5 @@
     "Eligible Mistral token counts and preparation cost by source/quality/coverage stratum.",
     "A predeclared ladder record before a math arm runs."
   ],
-  "admission_boundary": "This is a launch-blocked math candidate manifest. It does not admit any math source, authorize acquisition or change the pretraining study budget."
+  "admission_boundary": "This is a launch-blocked math candidate manifest. It does not admit any math source, authorize acquisition or change the compute budget."
 }

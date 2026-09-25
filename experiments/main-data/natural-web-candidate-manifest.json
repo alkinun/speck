@@ -114,5 +114,5 @@
     "Eligible unique-token counts sufficient for the common horizon.",
     "Measured GH200 cost and common comparison horizon."
   ],
-  "admission_boundary": "This is a launch-blocked candidate manifest. It does not admit either web source, authorize acquisition or change the pretraining study budget."
+  "admission_boundary": "This is a launch-blocked candidate manifest. It does not admit either web source, authorize acquisition or change the compute budget."
 }

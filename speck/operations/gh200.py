@@ -72,7 +72,7 @@ def bundle(output, data, tokenizer, assistant):
         "branch": branch,
         "files": files,
         "payload_bytes": sum(row["bytes"] for row in files),
-        "purpose": "Private engineering rehearsal; no corpus redistribution or production pilot launch.",
+        "purpose": "Private engineering check; no corpus redistribution or training launch.",
     }
     atomic_json(output / "bundle.json", manifest)
     archive = output.with_suffix(".tar.gz")

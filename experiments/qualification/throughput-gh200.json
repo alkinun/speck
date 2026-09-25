@@ -21,7 +21,7 @@
     "device_batch_size and accumulation, frozen; both are immutable on resume.",
     "activation_checkpointing, frozen; immutable on resume.",
     "deterministic, frozen; immutable on resume.",
-    "Flagship speedup over the baseline measured on this host at the same tokens per update. The proxy MFU establishes no flagship ceiling.",
+    "Parent speedup over the baseline measured on this host at the same tokens per update. The proxy MFU establishes no parent ceiling.",
     "Measured tokens per second per allocated GPU, which re-anchors every horizon in experiments/main-data/plan.json after applying compute.measured_anchor.overhead_derate. This sweep runs --mode compute and excludes startup, validation and saves; the anchor it replaces includes them.",
     "Whether the KDA custom-op work is worth funding, judged from the Hopper profile.",
     "Tokens per second for each ladder rung in experiments/ladder under the selected recipe, which converts the plan's ladder budget into run counts."
@@ -50,7 +50,7 @@
         "compile_mode": null,
         "no_compile": true
       },
-      "purpose": "Reproduce the frozen pilot recipe so every later delta is a flagship delta measured on production hardware. The pilot's own H100 rates are 12,859 tokens/s over the full trainer and 13,595 steady optimizer tokens/s; this run is the compute-mode counterpart and is not directly comparable to the full-trainer figure.",
+      "purpose": "Reproduce the frozen pilot recipe so every later delta is a parent delta measured on production hardware. The pilot's own H100 rates are 12,859 tokens/s over the full trainer and 13,595 steady optimizer tokens/s; this run is the compute-mode counterpart and is not directly comparable to the full-trainer figure.",
       "argv": [
         "../relocated-base",
         "--device",
@@ -88,7 +88,7 @@
         "batch_size": 1,
         "no_compile": true
       },
-      "purpose": "Measure the effect of removing activation recomputation at fixed geometry; the proxy gain is not a flagship prediction.",
+      "purpose": "Measure the effect of removing activation recomputation at fixed geometry; the proxy gain is not a parent prediction.",
       "argv": [
         "../relocated-base",
         "--device",
@@ -448,5 +448,5 @@
     "Compiled execution under DistributedDataParallel. This sweep is single-GPU, and base.py compiles the DDP-wrapped module with six graph breaks still present. Qualify it separately with `scripts.training_replay --compile --workers 4` before any compiled production wave.",
     "max-autotune warmup cost, which the thirty-step measurement excludes. Amortize it per wave using the persistent TORCHINDUCTOR_CACHE_DIR the Slurm renderer exports."
   ],
-  "flagship_speedup_status": "unmeasured_before_this_sweep: no flagship configuration with activation checkpointing off was ever measured, because two attempts reached 23.03 and 22.91 GiB before exhausting the 24 GiB card."
+  "parent_speedup_status": "unmeasured_before_this_sweep: no parent configuration with activation checkpointing off was ever measured, because two attempts reached 23.03 and 22.91 GiB before exhausting the 24 GiB card."
 }

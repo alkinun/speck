@@ -1,1 +1,1 @@
-"""Repository and artifact identities for current work and archived research."""
+"""Artifact identities and durable writes."""

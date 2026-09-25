@@ -129,7 +129,7 @@ parent's measured speedup over the pilot recipe; tokens/s per GPU for each rung 
 run counts; scheduler and requeue status; memory and storage observations; export parity; all-in
 GPU-hours and non-GPU costs; open limitations.
 
-Lessons from the pilot rental:
+Lessons from the H100 pilot:
 
 - A trainer stopping does not stop billing or delete an instance.
 - Verify backups by hash before deleting remote checkpoints.
