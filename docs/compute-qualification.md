@@ -112,6 +112,9 @@ a faster or slower rate changes.
   speedup is unmeasured.
 - The [H100 pilot](../experiments/pilot/h100-run.json) ran eager and checkpointed at about 10%
   estimated MFU, an upper bound on cost.
+- [Two later changes](../experiments/qualification/throughput-3090/optimizations-20260925.json),
+  aligned head GEMMs and no deterministic fills, add 9% for the 50m rung and 8.7% for the parent
+  on the RTX 3090.
 - Compiled restart parity holds for [base](../experiments/qualification/compiled-recovery-descent-3090.json)
   and [SFT](../experiments/qualification/compiled-sft-recovery-3090.json) with the shared
   `COMPILE_OPTIONS` in `speck/operations/runtime.py`.
