@@ -9,7 +9,9 @@ PYTHONPATH=. python experiments/ladder/shapes.py
 PYTHONPATH=. python experiments/ladder/shapes.py --check
 ```
 
-[train.json](train.json) is the training recipe every rung shares; a rung's own `train.json` adds its
+Every ladder corpus schedules sources per sequence (see [Training](../../docs/training.md#base-training)),
+so a run's data does not depend on its device batch size. [train.json](train.json) is the training
+recipe every rung shares; a rung's own `train.json` adds its
 device batch size, run name and token budget, and its learning-rate sweep sets `lr`. Rung sizes and
 run counts live in [plan.json](../main-data/plan.json); `make plan-check` fails if a
 configuration drifts from the rule or from the plan.

@@ -73,6 +73,11 @@
       }
     ]
   },
+  "schedule": {
+    "version": 1,
+    "unit": "sequence",
+    "sequence_length": 4096
+  },
   "requested_train_tokens": 658636800,
   "validation_tokens_per_source": 4194304,
   "validation_fraction": 0.05,

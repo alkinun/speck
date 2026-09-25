@@ -35,6 +35,12 @@ requeue and budget accounting.
 Ladder runs are fresh runs. Arms within a comparison share initial model tensors; verify their
 hashes before training.
 
+By default the loader selects one source per global microbatch, so the sources an optimizer step
+sees depend on the device batch size and GPU count. A data configuration with
+`"schedule": {"version": 1, "unit": "sequence", "sequence_length": L}` selects a source for every
+sequence instead: each optimizer step trains on the same sequences whatever the microbatch size or
+GPU count. Every ladder corpus uses it, so throughput alone can choose a rung's device batch size.
+
 **Immutable on resume:** microbatch, activation checkpointing and `deterministic`. They are frozen
 per rung during [GH200 qualification](compute-qualification.md). `deterministic: true` enables
 deterministic PyTorch algorithms and a reproducible cuBLAS workspace. Training and the benchmark
