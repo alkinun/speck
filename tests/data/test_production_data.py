@@ -225,8 +225,8 @@ def test_resume_verifies_index_without_materializing_rows(tmp_path, monkeypatch)
             raise AssertionError("resume must not materialize the accepted index")
 
     class Connection:
-        def __init__(self, path):
-            self.connection = original_database(path)
+        def __init__(self, path, **options):
+            self.connection = original_database(path, **options)
 
         def execute(self, sql, *args):
             cursor = self.connection.execute(sql, *args)
@@ -451,3 +451,235 @@ def test_index_directory_is_a_pure_storage_choice(tmp_path):
     for source_id, output in moved["manifest"]["outputs"].items():
         assert output["sha256"] == reference["manifest"]["outputs"][source_id]["sha256"]
     assert not list(index.iterdir())
+
+
+# Hashes of the default fixture published before `policy.deduplication` existed. Plans that
+# omit the mode must keep producing these bytes. The index is compared by its logical
+# contents because SQLite writes its library version into the file header.
+DEFAULT_FIXTURE_HASHES = {
+    "source_0.jsonl": "dc49cf90ddfdfa75f97823acb459d2b8bc5f88035b0bafedd0865260461fede4",
+    "source_1.jsonl": "5929aef5a783f7e45698ddb38da8631c95aa6ff00862670b604cc27c3dd677d2",
+    "removals.jsonl": "e882e7562f00a6b4a3f5abcbb98a60eb4a13a784419e1ed011dd5a615a1e87b5",
+}
+DEFAULT_FIXTURE_INDEX_CONTENTS = "fe77dc292b48585379387def8b2b5335351659a5fd9d2b8e9b6ac356e6340b24"
+
+BENCHMARK = (
+    "Benchmark item seven asks which planet in the solar system has the longest day, "
+    "then lists four candidate planets with orbital facts, rotation periods, axial tilt "
+    "measurements, surface temperatures and moons, and finally states the expected answer."
+)
+
+
+def _index_contents(path):
+    connection = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    try:
+        rows = [
+            list(connection.execute("SELECT type, name, sql FROM sqlite_master ORDER BY name")),
+            list(connection.execute("SELECT * FROM docs ORDER BY doc_seq")),
+            [
+                (band, value.hex(), seq)
+                for band, value, seq in connection.execute(
+                    "SELECT band, band_hash, doc_seq FROM bands ORDER BY doc_seq, band"
+                )
+            ],
+        ]
+    finally:
+        connection.close()
+    return hashlib.sha256(json.dumps(rows).encode()).hexdigest()
+
+
+def _firewall_config(tmp_path, output, mode=None):
+    """The default fixture behind one firewall reference, with an exact and a near copy of it."""
+    raw = _config(tmp_path, output)
+    reference = tmp_path / f"firewall-{output}.jsonl"
+    reference.write_text(json.dumps(_record(BENCHMARK)) + "\n")
+    corpus = Path(raw["sources"][1]["path"])
+    with corpus.open("a") as handle:
+        handle.write(json.dumps(_record(BENCHMARK)) + "\n")
+        handle.write(json.dumps(_record(BENCHMARK.replace("expected", "correct"))) + "\n")
+    raw["sources"][1]["sha256"] = _sha256(corpus)
+    raw["sources"].insert(
+        0,
+        {
+            **raw["sources"][0],
+            "id": "firewall_reference__fixture",
+            "path": str(reference),
+            "sha256": _sha256(reference),
+        },
+    )
+    for precedence, source in enumerate(raw["sources"], 1):
+        source["precedence"] = precedence
+    if mode is not None:
+        raw["policy"]["deduplication"] = mode
+    return raw
+
+
+def _removals(config):
+    path = Path(config["output_directory"]) / "removals.jsonl"
+    return [json.loads(line) for line in path.read_text().splitlines()]
+
+
+def test_plan_without_a_mode_publishes_the_pre_mode_bytes(tmp_path):
+    config = validate_preprocess_config(_config(tmp_path, "default"))
+    assert "deduplication" not in config["policy"]
+    manifest = preprocess_sources(config)["manifest"]
+    output = Path(config["output_directory"])
+    for name, expected in DEFAULT_FIXTURE_HASHES.items():
+        assert _sha256(output / name) == expected
+    assert _index_contents(output / "near_duplicates.sqlite3") == DEFAULT_FIXTURE_INDEX_CONTENTS
+    assert "deduplication" not in manifest["policy"]
+    assert "deduplication_mode" not in manifest["gates"]
+    assert manifest["gates"]["global_exact_deduplication"] == "pass"
+    near_gate = "disk_backed_Minhash_candidates_and_verified_near_deduplication"
+    assert manifest["gates"][near_gate] == "pass"
+
+    # Naming the default is a different plan with the same published data.
+    explicit_raw = _config(tmp_path, "explicit")
+    explicit_raw["policy"]["deduplication"] = "exact_and_near"
+    explicit = validate_preprocess_config(explicit_raw)
+    implicit = validate_preprocess_config(_config(tmp_path, "explicit"))
+    assert explicit["plan_fingerprint"] != implicit["plan_fingerprint"]
+    explicit_manifest = preprocess_sources(explicit)["manifest"]
+    assert explicit_manifest["policy"]["deduplication"] == "exact_and_near"
+    assert explicit_manifest["gates"] == manifest["gates"]
+    for name, expected in DEFAULT_FIXTURE_HASHES.items():
+        assert _sha256(Path(explicit["output_directory"]) / name) == expected
+
+
+@pytest.mark.parametrize(
+    ("mode", "exact", "near", "retained"),
+    [("exact_and_near", 2, 2, 4), ("exact", 2, 1, 5), ("none", 1, 1, 6)],
+)
+def test_every_mode_removes_firewall_matches_and_only_its_own_duplicates(
+    tmp_path, mode, exact, near, retained
+):
+    config = validate_preprocess_config(_firewall_config(tmp_path, mode, mode))
+    manifest = preprocess_sources(config)["manifest"]
+    assert manifest["counts"] == {
+        "records_removed_deny_ledger": 1,
+        "records_removed_exact": exact,
+        "records_removed_near": near,
+        "records_retained": retained,
+        "records_seen": 9,
+    }
+    removals = _removals(config)
+    firewall = [
+        record
+        for record in removals
+        if (record["kept"] or {}).get("source_id") == "firewall_reference__fixture"
+    ]
+    # The exact and the near copy of the benchmark item are removed in every mode.
+    assert sorted((r["removed_source"], r["reason"], r["removed_line"]) for r in firewall) == [
+        ("source_1", "exact_duplicate", 3),
+        ("source_1", "near_duplicate", 4),
+    ]
+    corpus = sorted(r["reason"] for r in removals if r["kept"] and r not in firewall)
+    lines = Path(config["sources"][2]["path"]).read_text().splitlines()
+    shared, near_copy = (json.loads(line)["text"] for line in lines[:2])
+    retained_text = [
+        json.loads(line)["text"]
+        for line in (Path(config["output_directory"]) / "source_1.jsonl").read_text().splitlines()
+    ]
+    assert BENCHMARK not in retained_text
+    if mode == "exact_and_near":
+        assert corpus == ["exact_duplicate", "near_duplicate"]
+        assert shared not in retained_text and near_copy not in retained_text
+    elif mode == "exact":
+        assert corpus == ["exact_duplicate"]
+        assert shared not in retained_text and near_copy in retained_text
+    else:
+        assert corpus == []
+        assert shared in retained_text and near_copy in retained_text
+    assert manifest["policy"]["deduplication"] == mode
+    assert manifest["index"]["documents"] == retained
+    if mode != "exact_and_near":
+        gates = manifest["gates"]
+        assert gates["deduplication_mode"] == mode
+        assert gates["firewall_reference_exact_and_near_exclusion"] == "pass"
+        skipped = "not_applied_by_policy_firewall_references_only"
+        assert gates["global_exact_deduplication"] == ("pass" if mode == "exact" else skipped)
+        assert gates["disk_backed_Minhash_candidates_and_verified_near_deduplication"] == skipped
+        # Only the firewall reference enters the band index.
+        assert manifest["index"]["band_entries"] == config["policy"]["bands"]
+
+
+@pytest.mark.parametrize("mode", ["exact", "none"])
+def test_reduced_modes_without_firewall_references_compute_no_minhash(tmp_path, monkeypatch, mode):
+    def forbidden(*args):
+        raise AssertionError("near-duplicate work ran")
+
+    monkeypatch.setattr(production_data, "batched_minhash_signature", forbidden)
+    monkeypatch.setattr(production_data, "code_tokens", forbidden)
+    raw = _config(tmp_path, mode)
+    raw["policy"]["deduplication"] = mode
+    manifest = preprocess_sources(validate_preprocess_config(raw))["manifest"]
+    assert manifest["index"]["band_entries"] == 0
+    assert manifest["counts"].get("records_removed_exact", 0) == (1 if mode == "exact" else 0)
+    assert manifest["counts"].get("records_removed_near", 0) == 0
+    assert manifest["gates"]["firewall_reference_exact_and_near_exclusion"] == (
+        "no_firewall_references_declared"
+    )
+
+
+@pytest.mark.parametrize("mode", ["exact", "none"])
+def test_reduced_modes_resume_through_a_relocated_index(tmp_path, mode):
+    interrupted = validate_preprocess_config(_firewall_config(tmp_path, "interrupted", mode))
+    index = tmp_path / "flash"
+    index.mkdir()
+    with pytest.raises(RuntimeError, match="injected production preprocess crash"):
+        preprocess_sources(interrupted, crash_after_records=5, index_directory=index)
+    resumed = preprocess_sources(interrupted, index_directory=index)["manifest"]
+    clean = validate_preprocess_config(_firewall_config(tmp_path, "clean", mode))
+    reference = preprocess_sources(clean)["manifest"]
+    assert resumed["counts"] == reference["counts"]
+    for source_id, output in resumed["outputs"].items():
+        assert output["sha256"] == reference["outputs"][source_id]["sha256"]
+    assert resumed["removals"] == reference["removals"]
+    assert resumed["index"]["sha256"] == reference["index"]["sha256"]
+    assert not list(index.iterdir())
+
+
+def test_resume_and_reopen_refuse_a_changed_mode(tmp_path):
+    raw = _firewall_config(tmp_path, "changed", "exact")
+    with pytest.raises(RuntimeError, match="injected production preprocess crash"):
+        preprocess_sources(validate_preprocess_config(raw), crash_after_records=5)
+    raw["policy"]["deduplication"] = "none"
+    with pytest.raises(ValueError, match="contract changed; use restart"):
+        preprocess_sources(validate_preprocess_config(raw))
+    del raw["policy"]["deduplication"]
+    with pytest.raises(ValueError, match="contract changed; use restart"):
+        preprocess_sources(validate_preprocess_config(raw))
+    manifest = preprocess_sources(validate_preprocess_config(raw), restart=True)["manifest"]
+    assert "deduplication" not in manifest["policy"]
+    assert manifest["counts"]["records_removed_near"] == 2
+    raw["policy"]["deduplication"] = "exact"
+    with pytest.raises(ValueError, match="manifest identity is invalid"):
+        preprocess_sources(validate_preprocess_config(raw))
+
+
+def test_reopen_rejects_gates_that_disagree_with_the_mode(tmp_path):
+    config = validate_preprocess_config(_firewall_config(tmp_path, "gates", "none"))
+    preprocess_sources(config)
+    path = Path(config["output_directory"]) / "manifest.json"
+    manifest = json.loads(path.read_text())
+    manifest["gates"]["global_exact_deduplication"] = "pass"
+    path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="deduplication gates differ"):
+        preprocess_sources(config)
+
+
+def test_invalid_mode_and_late_firewall_references_are_rejected(tmp_path):
+    raw = _config(tmp_path)
+    raw["policy"]["deduplication"] = "near"
+    with pytest.raises(ValueError, match="policy.deduplication must be one of"):
+        validate_preprocess_config(raw)
+
+    raw = _firewall_config(tmp_path, "late", "exact")
+    raw["sources"].append(raw["sources"].pop(0))
+    for precedence, source in enumerate(raw["sources"], 1):
+        source["precedence"] = precedence
+    with pytest.raises(ValueError, match="firewall references to precede"):
+        validate_preprocess_config(raw)
+    # The default mode keeps accepting any source order, as it always has.
+    del raw["policy"]["deduplication"]
+    validate_preprocess_config(raw)

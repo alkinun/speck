@@ -72,6 +72,13 @@ python -m scripts.production_data_preprocess $D/stack-edu-code-preprocess/prepro
 
 `summarize` skips a tranche until its `tranche.json` exists.
 
+**Deduplication mode.** A plan's `policy.deduplication` is `exact_and_near` (the default when
+absent), `exact` or `none`. The reduced modes, used by the P2 ladder arms, drop matching between
+corpus documents only: every document is still matched exactly and near against the
+`firewall_reference__*` sources, which must lead the source list, and the deny ledger applies
+unchanged. The mode is part of the plan fingerprint, so a resume refuses a changed mode, and the
+published manifest records it in `policy` and `gates`.
+
 Each billion packed tokens needs about 2 GB of storage before indexes. The frozen tokenizer is
 Mistral-7B-v0.1's (model SHA-256
 `dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055`).

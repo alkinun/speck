@@ -36,6 +36,13 @@ FORMAT_VERSION = 1
 MANIFEST_FORMAT = "speck_production_text_preprocess_result"
 LEDGER_FORMAT = "speck_removal_deny_ledger"
 STATE_FORMAT = "speck_production_text_preprocess_state"
+FIREWALL_PREFIX = "firewall_reference__"
+# `exact_and_near` is the only behavior plans written before the mode existed can mean, so an
+# absent `policy.deduplication` selects it and leaves the normalized plan, its fingerprint and
+# every published byte unchanged. The reduced modes drop matching between corpus documents
+# only: every document is still matched exactly and near against the firewall references.
+DEDUPLICATION_MODES = ("exact_and_near", "exact", "none")
+DEFAULT_DEDUPLICATION = "exact_and_near"
 
 
 def code_tokens(text, pattern, maximum):
@@ -160,6 +167,7 @@ def validate_preprocess_config(config, *, config_dir=None):
     exact_keys(
         policy,
         {
+            *(["deduplication"] if isinstance(policy, dict) and "deduplication" in policy else []),
             "normalization",
             "token_pattern",
             "shingle_tokens",
@@ -201,6 +209,19 @@ def validate_preprocess_config(config, *, config_dir=None):
     ):
         raise ValueError("verified Jaccard threshold must be in (0, 1]")
     normalized_policy["verified_jaccard_threshold"] = float(threshold)
+    if "deduplication" in policy:
+        if policy["deduplication"] not in DEDUPLICATION_MODES:
+            raise ValueError(
+                f"policy.deduplication must be one of: {', '.join(DEDUPLICATION_MODES)}"
+            )
+        if policy["deduplication"] != DEFAULT_DEDUPLICATION:
+            # Reduced modes still match against the firewall references, which works only if
+            # the references are indexed before any document that must be screened.
+            firewall = [s["id"].startswith(FIREWALL_PREFIX) for s in normalized_sources]
+            if firewall != sorted(firewall, reverse=True):
+                raise ValueError(
+                    "reduced deduplication requires firewall references to precede other sources"
+                )
     cleanup = config["cleanup_files"]
     if not isinstance(cleanup, list):
         raise ValueError("cleanup_files must be a list")
@@ -280,7 +301,17 @@ def _load_ledger(config):
     return ledger, values
 
 
-def _database(path, *, sqlite_settings=None):
+def deduplication_mode(config):
+    """The plan's deduplication mode; plans without one mean exact and near."""
+
+    return config["policy"].get("deduplication", DEFAULT_DEDUPLICATION)
+
+
+def _firewall_sources(config):
+    return sum(source["id"].startswith(FIREWALL_PREFIX) for source in config["sources"])
+
+
+def _database(path, *, sqlite_settings=None, unique_dedup=True):
     if sqlite_settings is not None:
         sqlite_settings = validate_sqlite_settings(sqlite_settings)
     connection = sqlite3.connect(path)
@@ -293,9 +324,13 @@ def _database(path, *, sqlite_settings=None):
     except BaseException:
         connection.close()
         raise
+    # Without exact deduplication retained copies share a key, so it is indexed, not unique.
     connection.execute(
-        "CREATE TABLE IF NOT EXISTS docs (doc_seq INTEGER PRIMARY KEY, processed_index INTEGER NOT NULL, source_index INTEGER NOT NULL, source_id TEXT NOT NULL, line_number INTEGER NOT NULL, byte_offset INTEGER NOT NULL, content_sha256 TEXT NOT NULL, dedup_sha256 TEXT NOT NULL UNIQUE)"
+        "CREATE TABLE IF NOT EXISTS docs (doc_seq INTEGER PRIMARY KEY, processed_index INTEGER NOT NULL, source_index INTEGER NOT NULL, source_id TEXT NOT NULL, line_number INTEGER NOT NULL, byte_offset INTEGER NOT NULL, content_sha256 TEXT NOT NULL, dedup_sha256 TEXT NOT NULL"
+        + (" UNIQUE)" if unique_dedup else ")")
     )
+    if not unique_dedup:
+        connection.execute("CREATE INDEX IF NOT EXISTS dedup_lookup ON docs(dedup_sha256)")
     connection.execute(
         "CREATE TABLE IF NOT EXISTS bands (band INTEGER NOT NULL, band_hash BLOB NOT NULL, doc_seq INTEGER NOT NULL REFERENCES docs(doc_seq) ON DELETE CASCADE)"
     )
@@ -476,6 +511,9 @@ def _verify_published(config, output, manifest):
         if manifest.get("sqlite") != config["sqlite"]:
             raise ValueError("published SQLite declaration differs from the config")
         verify_sqlite_runtime(config["sqlite"], manifest.get("sqlite_runtime"))
+    expected_gates = _deduplication_gates(deduplication_mode(config), _firewall_sources(config))
+    if any(manifest.get("gates", {}).get(key) != value for key, value in expected_gates.items()):
+        raise ValueError("published deduplication gates differ from the plan's mode")
     if set(manifest.get("outputs", {})) != {source["id"] for source in config["sources"]}:
         raise ValueError("published preprocess outputs do not cover configured sources")
     for entry in manifest["outputs"].values():
@@ -518,6 +556,25 @@ def _verify_published(config, output, manifest):
         raise ValueError("published preprocess aggregate record counts are inconsistent")
 
 
+def _deduplication_gates(mode, firewall_sources):
+    """Gate values that record which deduplication ran; the default keeps its old bytes."""
+
+    if mode == DEFAULT_DEDUPLICATION:
+        return {
+            "global_exact_deduplication": "pass",
+            "disk_backed_Minhash_candidates_and_verified_near_deduplication": "pass",
+        }
+    skipped = "not_applied_by_policy_firewall_references_only"
+    return {
+        "deduplication_mode": mode,
+        "global_exact_deduplication": "pass" if mode == "exact" else skipped,
+        "disk_backed_Minhash_candidates_and_verified_near_deduplication": skipped,
+        "firewall_reference_exact_and_near_exclusion": (
+            "pass" if firewall_sources else "no_firewall_references_declared"
+        ),
+    }
+
+
 def accepted_document_chain(rows):
     """Rebuild the ordered resume identity without retaining the index rows in RAM."""
 
@@ -542,6 +599,15 @@ def preprocess_sources(
 ):
     """Run or resume the disk-backed global exact/near deduplication pass.
 
+    ``policy.deduplication`` selects what is removed besides deny-ledger matches:
+    ``exact_and_near`` (the default) removes exact and verified near duplicates of any
+    earlier retained document; ``exact`` removes exact duplicates of any earlier document
+    and near duplicates only of firewall references; ``none`` removes exact and near
+    duplicates of firewall references only. Firewall references are the leading
+    ``firewall_reference__*`` sources, so the benchmark exclusion is identical in every
+    mode, and only they enter the band index in the reduced modes. Without firewall
+    references the reduced modes compute no MinHash at all.
+
     ``batched_minhash`` selects how each document's MinHash signature is built. Both
     paths produce bitwise identical signatures, so this is a throughput choice with no
     effect on which records are retained; the resume test asserts byte-identical
@@ -564,6 +630,11 @@ def preprocess_sources(
         payload = {key: value for key, value in config.items() if key != "plan_fingerprint"}
         if config["plan_fingerprint"] != fingerprint(payload):
             raise ValueError("normalized production preprocess fingerprint mismatch")
+    mode = deduplication_mode(config)
+    firewall_sources = _firewall_sources(config)
+    # Near matching runs if its index can hold anything: every retained document in the
+    # default mode, only the firewall references otherwise.
+    near_matching = mode == DEFAULT_DEDUPLICATION or firewall_sources > 0
     output = Path(config["output_directory"])
     if output.exists():
         clock.phase("reopen_verification")
@@ -641,10 +712,10 @@ def preprocess_sources(
         state["removal_size"],
         "removal output",
     )
-    connection = (
-        _database(database, sqlite_settings=config["sqlite"])
-        if config["format_version"] == 2
-        else _database(database)
+    connection = _database(
+        database,
+        sqlite_settings=config["sqlite"] if config["format_version"] == 2 else None,
+        unique_dedup=mode != "none",
     )
     actual_sqlite = sqlite_runtime(connection) if config["format_version"] == 2 else None
     if actual_sqlite is not None:
@@ -708,10 +779,21 @@ def preprocess_sources(
                     if reason is not None:
                         counts["records_removed_deny_ledger"] += 1
                     else:
-                        exact = connection.execute(
-                            "SELECT doc_seq, source_id, content_sha256 FROM docs WHERE dedup_sha256=?",
-                            (dedup,),
-                        ).fetchone()
+                        if mode != "none" or source_index < firewall_sources:
+                            # Any earlier document; while the leading firewall references are
+                            # read, those are the only documents indexed in `none` mode.
+                            exact = connection.execute(
+                                "SELECT doc_seq, source_id, content_sha256 FROM docs WHERE dedup_sha256=?",
+                                (dedup,),
+                            ).fetchone()
+                        elif firewall_sources:
+                            # `none` mode: only a firewall reference can remove a corpus copy.
+                            exact = connection.execute(
+                                "SELECT doc_seq, source_id, content_sha256 FROM docs WHERE dedup_sha256=? AND source_index<? ORDER BY doc_seq LIMIT 1",
+                                (dedup, firewall_sources),
+                            ).fetchone()
+                        else:
+                            exact = None
                         if exact is not None:
                             reason = "exact_duplicate"
                             kept = {
@@ -720,16 +802,16 @@ def preprocess_sources(
                                 "content_sha256": exact[2],
                             }
                             counts["records_removed_exact"] += 1
-                    tokens = code_tokens(text, pattern, config["policy"]["maximum_document_tokens"])
-                    shingles = (
-                        token_shingles(tokens, config["policy"]["shingle_tokens"])
-                        if len(tokens)
-                        >= max(
+                    shingles = set()
+                    if reason is None and near_matching:
+                        tokens = code_tokens(
+                            text, pattern, config["policy"]["maximum_document_tokens"]
+                        )
+                        if len(tokens) >= max(
                             config["policy"]["minimum_document_tokens"],
                             config["policy"]["shingle_tokens"],
-                        )
-                        else set()
-                    )
+                        ):
+                            shingles = token_shingles(tokens, config["policy"]["shingle_tokens"])
                     signature = None
                     bands = []
                     if reason is None and shingles:
@@ -816,10 +898,11 @@ def preprocess_sources(
                             + bytes.fromhex(dedup)
                             + bytes.fromhex(content_sha256)
                         ).hexdigest()
-                        for band, value in enumerate(bands):
-                            connection.execute(
-                                "INSERT INTO bands VALUES (?, ?, ?)", (band, value, doc_seq)
-                            )
+                        if mode == DEFAULT_DEDUPLICATION or source_index < firewall_sources:
+                            for band, value in enumerate(bands):
+                                connection.execute(
+                                    "INSERT INTO bands VALUES (?, ?, ?)", (band, value, doc_seq)
+                                )
                         counts["records_retained"] += 1
                     state["counts"] = dict(counts)
                     line_number += 1
@@ -890,8 +973,7 @@ def preprocess_sources(
         "cleanup_files": config["cleanup_files"],
         "gates": {
             "source_and_ledger_identity": "pass",
-            "global_exact_deduplication": "pass",
-            "disk_backed_Minhash_candidates_and_verified_near_deduplication": "pass",
+            **_deduplication_gates(mode, firewall_sources),
             "redacted_removal_records": "pass",
             "record_checkpoint_resume": "pass_by_contract_pending_rehearsal",
             "cleanup": "pending_external_receipt",
