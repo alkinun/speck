@@ -77,34 +77,9 @@ def test_base_export_tokenizer_identity_survives_relocation_and_rejects_drift(
         checkpoint_tokenizer(metadata, tmp_path)
 
 
-@pytest.mark.parametrize("cached", [True, False])
-def test_offline_export_template_uses_only_staged_cache(tmp_path, monkeypatch, cached):
-    from huggingface_hub import HfApi, constants
-    from huggingface_hub.errors import LocalEntryNotFoundError
+def test_exports_ship_the_code_licence_and_tokenizer_attribution(tmp_path):
+    from speck.export.transformers import copy_licenses
 
-    from speck.export.checkpoint import (
-        TEMPLATE_FILES,
-        TEMPLATE_REPO,
-        TEMPLATE_REVISION,
-        template_snapshot,
-    )
-
-    monkeypatch.setattr(constants, "HF_HUB_OFFLINE", True)
-    monkeypatch.setattr(constants, "HF_HUB_CACHE", str(tmp_path))
-
-    def forbidden(*args, **kwargs):
-        raise AssertionError("offline export attempted a Hub API call")
-
-    monkeypatch.setattr(HfApi, "repo_info", forbidden)
-    monkeypatch.setattr(HfApi, "list_repo_tree", forbidden)
-    snapshot = (
-        tmp_path / ("models--" + TEMPLATE_REPO.replace("/", "--")) / "snapshots" / TEMPLATE_REVISION
-    )
-    if cached:
-        snapshot.mkdir(parents=True)
-        for name in TEMPLATE_FILES:
-            (snapshot / name).write_text(name)
-        assert template_snapshot() == snapshot
-    else:
-        with pytest.raises(LocalEntryNotFoundError):
-            template_snapshot()
+    copy_licenses(tmp_path)
+    assert (tmp_path / "LICENSE").read_text().startswith("MIT License")
+    assert "Mistral-7B-v0.1" in (tmp_path / "LICENSE.tokenizer").read_text()

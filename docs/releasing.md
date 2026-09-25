@@ -17,8 +17,8 @@ uv run --no-sync python -m scripts.model_publish \
 
 Use `scripts.base_checkpoint_export --help` for base checkpoints. Supply the intended source,
 destination, and output directory explicitly. Review the generated files and parity results before
-uploading. The pinned compatibility-code provenance refers to an older published Speck checkpoint; the
-new artifact must identify its own source checkpoint and producing revision.
+uploading. Every export ships the repository's `LICENSE` and the tokenizer attribution in
+`speck/export/LICENSE.tokenizer`, and needs no Hub download.
 
 The export vendors architecture, model layers/state, and optimizer definitions and records their
 hashes, including the maintained exact SentencePiece backend. Both export entry points check

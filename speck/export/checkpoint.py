@@ -6,11 +6,11 @@ import os
 import shutil
 from pathlib import Path
 
-from huggingface_hub import constants, snapshot_download
 from safetensors.torch import save_file
 
 from speck.export.pretrained import checkpoint_tokenizer_fingerprint
 from speck.export.transformers import (
+    copy_licenses,
     prepare_current_release_code,
     release_config,
     release_state,
@@ -25,14 +25,6 @@ from speck.training.checkpoint import (
     is_assistant_checkpoint,
     latest,
     load_model,
-)
-
-TEMPLATE_REPO = "specklabs/Speck1-140M"
-TEMPLATE_REVISION = "155b759545645cc694545fab85cd7d4c385fd965"
-TEMPLATE_FILES = (
-    "LICENSE",
-    "LICENSE.tokenizer",
-    "tokenization_speck.py",
 )
 
 
@@ -94,26 +86,13 @@ def checkpoint_tokenizer(metadata, directory=None):
     return tokenizer
 
 
-def template_snapshot():
-    return Path(
-        snapshot_download(
-            repo_id=TEMPLATE_REPO,
-            revision=TEMPLATE_REVISION,
-            allow_patterns=list(TEMPLATE_FILES),
-            local_files_only=constants.HF_HUB_OFFLINE,
-        )
-    )
-
-
 def export(state, output_dir, metadata, provenance, tokenizer_dir=None):
     tokenizer = checkpoint_tokenizer(metadata, tokenizer_dir)
     building = output_dir.with_name(output_dir.name + ".building")
     shutil.rmtree(building, ignore_errors=True)
     building.mkdir(parents=True)
     try:
-        template = template_snapshot()
-        for filename in TEMPLATE_FILES:
-            shutil.copy2(template / filename, building / filename)
+        copy_licenses(building)
         shutil.copy2(tokenizer.model_path, building / "tokenizer.model")
         atomic_json(
             building / "tokenizer_config.json",

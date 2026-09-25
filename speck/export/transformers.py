@@ -10,7 +10,7 @@ from importlib.resources import files
 from pathlib import Path
 
 import torch
-from huggingface_hub import CommitOperationAdd, HfApi, snapshot_download
+from huggingface_hub import CommitOperationAdd, HfApi
 from safetensors.torch import load_file, save_file
 
 from speck.model import build_model
@@ -30,9 +30,6 @@ from speck.training.checkpoint import (
     load_model,
 )
 
-CODE_REPO = "specklabs/Speck1-140M-Instruct"
-CODE_REVISION = "16ad80599d499490b70317770a84a18466719bba"
-LICENSE_FILES = ("LICENSE", "LICENSE.tokenizer")
 TOKENIZER_FILES = (
     "chat_template.jinja",
     "special_tokens_map.json",
@@ -54,6 +51,11 @@ CURRENT_CONFIGURATION_SOURCE = PACKAGE_SOURCE / "transformers_configuration.py"
 CURRENT_MODELING_SOURCE = PACKAGE_SOURCE / "transformers_modeling.py"
 CURRENT_TOKENIZATION_SOURCE = PACKAGE_SOURCE / "transformers_tokenization.py"
 PADDING_DESTINATION = "padding_speck.py"
+# The code licence and the Mistral tokenizer attribution ship with every export.
+LICENSE_SOURCES = {
+    "LICENSE": PACKAGE_SOURCE.parent / "LICENSE",
+    "LICENSE.tokenizer": PACKAGE_SOURCE / "export" / "LICENSE.tokenizer",
+}
 
 
 def arguments():
@@ -174,6 +176,11 @@ def release_state(state):
     }
 
 
+def copy_licenses(output_dir):
+    for name, source in LICENSE_SOURCES.items():
+        shutil.copy2(source, output_dir / name)
+
+
 def prepare_current_release_code(output_dir):
     """Ship the current native implementation behind a small Transformers wrapper."""
 
@@ -277,15 +284,7 @@ def prepare_export(checkpoint_dir, step, output_dir, metadata, state=None):
             json.dumps(tokenizer_config, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
 
-        code_dir = Path(
-            snapshot_download(
-                repo_id=CODE_REPO,
-                revision=CODE_REVISION,
-                allow_patterns=list(LICENSE_FILES),
-            )
-        )
-        for filename in LICENSE_FILES:
-            shutil.copy2(code_dir / filename, building / filename)
+        copy_licenses(building)
         prepare_current_release_code(building)
         if (building / "README.md").exists():
             raise RuntimeError("model-card-free export unexpectedly contains README.md")
