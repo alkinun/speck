@@ -25,14 +25,17 @@ class Tokenizer:
 BUCKETS = ["train", "development", "final", "quarantine"]
 
 
-def _source(tmp_path, name):
+def _source(tmp_path, name, score=None):
     texts = [f"{name} document {index} " + "x" * 20 for index in range(40)]
     text = tmp_path / f"{name}.jsonl"
     rows = []
     with text.open("w") as handle:
         for index, value in enumerate(texts):
             digest = hashlib.sha256(value.encode()).hexdigest()
-            handle.write(json.dumps({"text": value, "released_content_sha256": digest}) + "\n")
+            record = {"text": value, "released_content_sha256": digest}
+            if score is not None:
+                record |= score(index)
+            handle.write(json.dumps(record) + "\n")
             rows.append(
                 {
                     "source": name,
@@ -43,7 +46,7 @@ def _source(tmp_path, name):
     return {"id": name, "text": {"path": str(text), "sha256": file_sha256(text)}}, rows
 
 
-def _experiment(tmp_path, name, weights, inputs, *, tokens=200, passes=None):
+def _experiment(tmp_path, name, weights, inputs, *, tokens=200, passes=None, overrides=None):
     directory = tmp_path / name
     directory.mkdir()
     sources = [
@@ -56,6 +59,7 @@ def _experiment(tmp_path, name, weights, inputs, *, tokens=200, passes=None):
             "filters": {},
             **({"passes": passes[source]} if source in (passes or {}) else {}),
         }
+        | (overrides or {}).get(source, {})
         for source in weights
     ]
     data = {
@@ -151,6 +155,10 @@ def _inputs(tmp_path, *names):
         source, source_rows = _source(tmp_path, name)
         sources.append(source)
         rows += source_rows
+    return _write_inputs(tmp_path, sources, rows)
+
+
+def _write_inputs(tmp_path, sources, rows):
     partitions = tmp_path / "partitions.jsonl"
     partitions.write_text("".join(json.dumps(row) + "\n" for row in rows))
     inputs = tmp_path / "inputs.json"
@@ -264,3 +272,39 @@ def test_a_pool_smaller_than_declared_fails_explicitly(tmp_path, monkeypatch):
         _experiment(
             tmp_path, "short", {"web": 20, "code": 80}, inputs, tokens=1000, passes={"code": 2}
         )
+
+
+def test_a_score_floor_filters_train_documents_and_keeps_validation(tmp_path, monkeypatch):
+    monkeypatch.setattr(ladder, "get_tokenizer", lambda **_: Tokenizer())
+    web, rows = _source(tmp_path, "web", lambda index: {"pred_score": (index % 10) / 10})
+    inputs = _write_inputs(tmp_path, [web], rows)
+    with open(web["text"]["path"]) as handle:
+        score = {
+            row["released_content_sha256"]: row["pred_score"] for row in map(json.loads, handle)
+        }
+    floor = {"web": {"score_column": "pred_score", "filters": {"min_score": 0.5}}}
+    receipt, strict = _experiment(
+        tmp_path, "strict", {"web": 100}, inputs, overrides=floor, tokens=120
+    )
+    _, loose = _experiment(tmp_path, "loose", {"web": 100}, inputs, tokens=120)
+
+    strict_records, loose_records = _records(strict)["web"], _records(loose)["web"]
+    train = [score[r["content_hash"]] for r in strict_records if r["split"] == "train"]
+    assert train and min(train) >= 0.5
+    validation = [
+        {r["content_hash"] for r in records if r["split"] == "val"}
+        for records in (strict_records, loose_records)
+    ]
+    assert validation[0] and validation[0] == validation[1]
+    assert any(score[digest] < 0.5 for digest in validation[0])
+    assert receipt["documents_streamed_by_bucket"]["web"]["train_below_score_floor"] > 0
+    assert receipt["score_floors"] == {"web": ["pred_score", 0.5, ">="]}
+
+
+def test_a_score_floor_rejects_a_train_document_without_the_field(tmp_path, monkeypatch):
+    monkeypatch.setattr(ladder, "get_tokenizer", lambda **_: Tokenizer())
+    code, rows = _source(tmp_path, "code", lambda index: {"int_score": None})
+    inputs = _write_inputs(tmp_path, [code], rows)
+    floor = {"code": {"score_column": "int_score", "filters": {"min_score": 4}}}
+    with pytest.raises(ValueError, match="no numeric int_score"):
+        _experiment(tmp_path, "missing", {"code": 100}, inputs, overrides=floor)

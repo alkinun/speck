@@ -5,6 +5,11 @@ graph assigned to whole-family buckets. Train-bucket documents may be trained on
 development-bucket documents form validation, and final or held documents are never read into a
 corpus. Each source is streamed in SHA-256(seed:content) order, so validation selection does not
 depend on the mixture and every arm sharing a source validates on the same documents.
+
+A source's `score_column` with `filters.min_score` (and optional `score_operator`) sets a
+classifier floor on a field of the preprocessed records, such as Stack-Edu `int_score` or
+Ultra-FineWeb `pred_score`. The floor applies to train documents only, so arms that differ only
+in a floor still validate on the same documents; a train document without the field is an error.
 """
 
 import hashlib
@@ -13,6 +18,7 @@ from collections import Counter
 from pathlib import Path
 
 from speck.config import load_experiment
+from speck.data.acquisition import _score_passes
 from speck.data.dataset import prepare_dataset, resolve_data_dir, verify_shards
 from speck.provenance.io import atomic_json, file_sha256
 from speck.tokenization.tokenizer import get_tokenizer
@@ -51,8 +57,19 @@ def partition_buckets(partitions, source_id):
     return buckets
 
 
-def family_documents(text, buckets, seed, counts):
-    """Yield train and development documents of one source in seeded hash order."""
+def score_floor(source):
+    """(field, minimum, operator) of a source's classifier floor, or None without one."""
+    filters = source.get("filters", {})
+    if "min_score" not in filters:
+        return None
+    return source["score_column"], filters["min_score"], filters.get("score_operator", ">=")
+
+
+def family_documents(text, buckets, seed, counts, floor=None):
+    """Yield train and development documents of one source in seeded hash order.
+
+    With a floor, train documents whose score fails it are counted and skipped.
+    """
     positions = []
     with Path(text).open("rb") as handle:
         while True:
@@ -76,6 +93,14 @@ def family_documents(text, buckets, seed, counts):
             counts[bucket] += 1
             if bucket not in SPLITS:
                 continue
+            if floor is not None and bucket == "train":
+                field, minimum, operator = floor
+                score = row.get(field)
+                if isinstance(score, bool) or not isinstance(score, (int, float)):
+                    raise ValueError(f"a train document has no numeric {field}")
+                if not _score_passes(score, minimum, operator):
+                    counts["train_below_score_floor"] += 1
+                    continue
             yield {
                 "content": row["text"],
                 "row": ordinal,
@@ -102,7 +127,7 @@ def prepare(experiment, inputs_path):
         text = _verified(bound["text"], f"{source['id']} text")
         buckets = partition_buckets(partitions, bound.get("partition_source", source["id"]))
         iterators[source["id"]] = family_documents(
-            text, buckets, data["seed"], counts[source["id"]]
+            text, buckets, data["seed"], counts[source["id"]], score_floor(source)
         )
     try:
         manifest = prepare_dataset(
@@ -125,6 +150,11 @@ def prepare(experiment, inputs_path):
         },
         "data_order": "per-source SHA-256(seed:released_content_sha256) ascending",
         "split_rule": "train bucket to train, development bucket to validation, others never read",
+        "score_floors": {
+            source["id"]: list(floor)
+            for source in data["sources"]
+            if (floor := score_floor(source)) is not None
+        },
         "documents_streamed_by_bucket": {key: dict(value) for key, value in counts.items()},
         "training_admitted": False,
     }

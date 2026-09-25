@@ -121,17 +121,8 @@ def test_acquire_skips_retained_rows_and_resumes(tmp_path, monkeypatch):
     assert summary["tokens_before_full_exclusion"] == 21
 
 
-def test_convert_joins_retained_and_acquired_records_and_rejects_changes(tmp_path):
-    retained_row = {
-        "text": "print(1)\n",
-        "content_id": "a" * 40,
-        "repo_path": "owner/one",
-        "file_path": "/a.py",
-        "language": "Python",
-        "source_file": "Python/0.parquet",
-        "source_row": "3",
-    }
-    data = (json.dumps(retained_row) + "\n").encode()
+def _retained(tmp_path, rows):
+    data = "".join(json.dumps(row) + "\n" for row in rows).encode()
     tar_path = tmp_path / "unit.tar"
     with tarfile.open(tar_path, "w") as archive:
         member = tarfile.TarInfo("unit/attempt-00000/records.jsonl")
@@ -148,25 +139,56 @@ def test_convert_joins_retained_and_acquired_records_and_rejects_changes(tmp_pat
         },
     }
     retained.write_text(json.dumps({"units": [unit]}))
-    tranche = tmp_path / "out/Python-3"
+    return retained
+
+
+def _tranche(tmp_path, name, rows):
+    tranche = tmp_path / "out" / name
     tranche.mkdir(parents=True)
     records = tranche / "unit-00000.jsonl.gz"
-    acquired_row = {
-        "text": "print(2)\n",
-        "blob_id": "b" * 40,
-        "repo_name": "owner/two",
-        "path": "/b.py",
-        "language": "Python",
-        "file": "Python/1.parquet",
-        "source_row": 7,
-    }
     with gzip.open(records, "wt") as handle:
-        handle.write(json.dumps(acquired_row) + "\n")
+        handle.writelines(json.dumps(row) + "\n" for row in rows)
     manifest = {"records": {"path": str(records), "sha256": content.file_sha256(records)}}
     (tranche / "unit-00000.json").write_text(json.dumps(manifest))
     (tranche / "tranche.json").write_text(json.dumps({"units": 1}))
+    return records
+
+
+def _retained_row(index, **change):
+    return {
+        "text": f"print({index})\n",
+        "content_id": f"{index:040x}",
+        "repo_path": "owner/one",
+        "file_path": f"/{index}.py",
+        "language": "Python",
+        "source_file": "Python/0.parquet",
+        "source_row": str(index),
+    } | change
+
+
+def _acquired_row(index, score):
+    return {
+        "text": f"print({index})\n",
+        "blob_id": f"{index:040x}",
+        "repo_name": "owner/two",
+        "path": f"/{index}.py",
+        "language": "Python",
+        "file": "Python/1.parquet",
+        "source_row": index,
+        "int_score": score,
+    }
+
+
+def _base(tmp_path):
     base = tmp_path / "base.json"
     base.write_text(json.dumps({"sources": [{"id": "firewall_reference__code_unseen"}]}))
+    return base
+
+
+def test_convert_joins_retained_and_acquired_records_and_rejects_changes(tmp_path):
+    retained = _retained(tmp_path, [_retained_row(3)])
+    records = _tranche(tmp_path, "Python-3", [_acquired_row(7, 3)])
+    base = _base(tmp_path)
     content.convert(retained, tmp_path / "out", base, tmp_path / "converted")
     rows = [
         json.loads(line) for line in (tmp_path / "converted/input.jsonl").read_text().splitlines()
@@ -175,7 +197,7 @@ def test_convert_joins_retained_and_acquired_records_and_rejects_changes(tmp_pat
         ("retained", "owner/one", 3),
         ("acquired", "owner/two", 7),
     ]
-    assert rows[1]["released_content_sha256"] == hashlib.sha256(b"print(2)\n").hexdigest()
+    assert rows[1]["released_content_sha256"] == hashlib.sha256(b"print(7)\n").hexdigest()
     plan = json.loads((tmp_path / "converted/preprocess-plan.json").read_text())
     assert [s["id"] for s in plan["sources"]] == [
         "firewall_reference__code_unseen",
@@ -184,6 +206,35 @@ def test_convert_joins_retained_and_acquired_records_and_rejects_changes(tmp_pat
     records.write_bytes(gzip.compress(b"{}\n"))
     with pytest.raises(ValueError, match="acquired records changed"):
         content.convert(retained, tmp_path / "out", base, tmp_path / "again")
+
+
+def test_convert_records_the_stack_edu_score_and_tier(tmp_path):
+    retained = _retained(
+        tmp_path,
+        [_retained_row(1), _retained_row(2, metadata={"int_score": 5, "repo_name": "owner/one"})],
+    )
+    _tranche(tmp_path, "Python-3", [_acquired_row(3, 3)])
+    _tranche(tmp_path, "Python-4plus", [_acquired_row(4, 4), _acquired_row(5, 5)])
+    content.convert(retained, tmp_path / "out", _base(tmp_path), tmp_path / "converted")
+    rows = [
+        json.loads(line) for line in (tmp_path / "converted/input.jsonl").read_text().splitlines()
+    ]
+    # Retained stock is 4+ by its historical predicate; its exact score only where recorded.
+    assert [(r["origin"], r["int_score"], r["tier"]) for r in rows] == [
+        ("retained", None, "4+"),
+        ("retained", 5, "4+"),
+        ("acquired", 3, "3"),
+        ("acquired", 4, "4+"),
+        ("acquired", 5, "4+"),
+    ]
+
+
+@pytest.mark.parametrize("score", [3, "5", True])
+def test_convert_rejects_a_retained_score_outside_the_historical_floor(tmp_path, score):
+    retained = _retained(tmp_path, [_retained_row(1, metadata={"int_score": score})])
+    (tmp_path / "out").mkdir()
+    with pytest.raises(ValueError, match="has int_score"):
+        content.convert(retained, tmp_path / "out", _base(tmp_path), tmp_path / "converted")
 
 
 def _unit(directory, texts):

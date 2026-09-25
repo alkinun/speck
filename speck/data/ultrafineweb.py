@@ -10,7 +10,8 @@ tokens per crawl from compressed bytes at the rate the retained twelve shards me
 `acquire` downloads one crawl's shards, verifying each against the listing's LFS sha256, and is
 resumable: verified files are kept and only missing ones are fetched. `convert` turns an acquired
 crawl into input for `scripts.production_data_preprocess`, in the record shape of the 2026-09-22
-HQ pass, and writes a plan that keeps that pass's firewall references and policy. `census` writes the
+HQ pass plus the upstream classifier score (`pred_score` from each row's `meta`, null if absent),
+and writes a plan that keeps that pass's firewall references and policy. `census` writes the
 document token index (speck.data.document_index) of every document the preprocessor retained, which
 the family graph and ladder builder read, and counts the tokens distinct from the retained
 FineWeb-Edu stock by exact content hash, the quantity the supply gap uses. None admits data.
@@ -201,7 +202,8 @@ def convert(directory, base_plan, output):
                 raise ValueError(f"shard differs from its acquisition receipt: {shard}")
             for batch in pq.ParquetFile(shard).iter_batches(batch_size=1024):
                 for row in batch.to_pylist():
-                    url = json.loads(row["meta"])["url"]
+                    meta = json.loads(row["meta"])
+                    url = meta["url"]
                     record = {
                         "text": row["content"],
                         "released_content_sha256": hashlib.sha256(
@@ -212,6 +214,7 @@ def convert(directory, base_plan, output):
                         "content_id": row["uid"],
                         "source_path": item["path"],
                         "source_ordinal": ordinal,
+                        "pred_score": meta.get("pred_score"),
                     }
                     handle.write(json.dumps(record, ensure_ascii=False) + "\n")
                     ordinal += 1

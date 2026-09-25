@@ -40,9 +40,9 @@ def test_convert_writes_input_and_plan_and_rejects_changed_shards(tmp_path):
         {
             "uid": f"u{i}",
             "content": f"text {i}",
-            "meta": json.dumps({"url": f"https://a.example/{i}"}),
+            "meta": json.dumps({"url": f"https://a.example/{i}"} | score),
         }
-        for i in range(2)
+        for i, score in enumerate([{"pred_score": 0.875}, {}])
     ]
     pq.write_table(pa.Table.from_pylist(rows), shard)
     item = {"path": "data/x/part-0001.parquet", "sha256": audit.file_sha256(shard)}
@@ -56,6 +56,8 @@ def test_convert_writes_input_and_plan_and_rejects_changed_shards(tmp_path):
         ("u0", "a.example", 0),
         ("u1", "a.example", 1),
     ]
+    # The classifier score rides along from meta, and is null rather than invented when absent.
+    assert [r["pred_score"] for r in records] == [0.875, None]
     plan = json.loads((tmp_path / "out/preprocess-plan.json").read_text())
     assert [s["id"] for s in plan["sources"]] == [firewall["id"], "acquired_train__web"]
     assert plan["output_directory"] == str(tmp_path / "out/excluded")

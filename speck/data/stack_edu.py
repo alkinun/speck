@@ -21,7 +21,10 @@ executed and nothing is admitted. `verify` re-derives every completed unit from 
 completed tranche in one receipt.
 `convert` writes the retained stock (RETAINED is its acquisition receipt) and every completed
 tranche as one input for `scripts.production_data_preprocess`, verifying each archive and unit
-file first, with a plan that keeps the base plan's firewall references and policy.
+file first, with a plan that keeps the base plan's firewall references and policy. Each record
+carries its Stack-Edu `int_score` and `tier`. Acquired rows keep the listing's int_score. The
+retained stock was selected by the historical predicate, whose score floor is 4, so its tier is
+4+; its int_score is the one its record's metadata carries, or null when the record has none.
 """
 
 import argparse
@@ -514,7 +517,9 @@ def verify(output, repair=False, workers=8):
     }
 
 
-def _code_record(text, content_id, repository, path, language, source_file, source_row, origin):
+def _code_record(
+    text, content_id, repository, path, language, source_file, source_row, origin, int_score, name
+):
     return {
         "text": text,
         "released_content_sha256": hashlib.sha256(text.encode()).hexdigest(),
@@ -527,7 +532,22 @@ def _code_record(text, content_id, repository, path, language, source_file, sour
         "source_file": source_file,
         "source_row": int(source_row),
         "origin": origin,
+        "int_score": int_score,
+        "tier": name,
     }
+
+
+def _retained_score(row):
+    """The retained record's int_score, or None when its metadata does not carry one.
+
+    The historical predicate admitted int_score 4 and above only, so a lower score contradicts
+    the stock's provenance and is rejected rather than recorded.
+    """
+    metadata = row.get("metadata")
+    score = metadata.get("int_score") if isinstance(metadata, dict) else None
+    if score is not None and (isinstance(score, bool) or not isinstance(score, int) or score < 4):
+        raise ValueError(f"retained record {row['content_id']} has int_score {score!r}")
+    return score
 
 
 def _retained_records(receipt):
@@ -551,6 +571,8 @@ def _retained_records(receipt):
                 row["source_file"],
                 row["source_row"],
                 "retained",
+                _retained_score(row),
+                "4+",
             )
 
 
@@ -575,6 +597,8 @@ def _acquired_records(output):
                         row["file"],
                         row["source_row"],
                         "acquired",
+                        row["int_score"],
+                        tier(row["int_score"]),
                     )
 
 
