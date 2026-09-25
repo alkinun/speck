@@ -1,62 +1,5 @@
 {
-  "sources": [
-    {
-      "id": "ultrafineweb_hq",
-      "repo": "local/ultrafineweb_hq",
-      "revision": null,
-      "tree_path": "",
-      "content_column": "text",
-      "filters": {}
-    },
-    {
-      "id": "fineweb_edu",
-      "repo": "local/fineweb_edu",
-      "revision": null,
-      "tree_path": "",
-      "content_column": "text",
-      "filters": {}
-    },
-    {
-      "id": "stack_edu",
-      "repo": "local/stack_edu",
-      "revision": null,
-      "tree_path": "",
-      "content_column": "text",
-      "filters": {}
-    },
-    {
-      "id": "finemath_4plus",
-      "repo": "local/finemath_4plus",
-      "revision": null,
-      "tree_path": "",
-      "content_column": "text",
-      "filters": {}
-    },
-    {
-      "id": "pes2o_v3",
-      "repo": "local/pes2o_v3",
-      "revision": null,
-      "tree_path": "",
-      "content_column": "text",
-      "filters": {}
-    },
-    {
-      "id": "finewiki_en",
-      "repo": "local/finewiki_en",
-      "revision": null,
-      "tree_path": "",
-      "content_column": "text",
-      "filters": {}
-    },
-    {
-      "id": "cosmopedia_v2",
-      "repo": "local/cosmopedia_v2",
-      "revision": null,
-      "tree_path": "",
-      "content_column": "text",
-      "filters": {}
-    }
-  ],
+  "extends": "../data.json",
   "mixture": {
     "phases": [
       {
@@ -73,28 +16,6 @@
       }
     ]
   },
-  "schedule": {
-    "version": 1,
-    "unit": "sequence",
-    "sequence_length": 4096
-  },
   "requested_train_tokens": 658636800,
-  "validation_tokens_per_source": 4194304,
-  "validation_fraction": 0.05,
-  "filtering": {
-    "min_chars": 0,
-    "max_chars": 16000000
-  },
-  "dedup": {
-    "normalization": "NFKC+lower+whitespace",
-    "hash": "blake2b-128",
-    "scope": "global"
-  },
-  "shards": {
-    "tokens": 10485760,
-    "maximum_loader_microbatch_tokens": 65536
-  },
-  "seed": 42,
-  "output_dir": null,
   "output_name": "ladder-50m-lr-sweep"
 }

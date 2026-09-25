@@ -55,8 +55,9 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
    - Rebuild the crawl conversion and the 50m sweep corpus twice and require identical outputs
      before either is used. Store every 50m sweep input under the data store.
    - Run the 50m learning-rate sweep (its own corpus, from the retained HQ sample).
-   - Configure the 50m baseline corpus from the crawl; P0 and every P family train on it. Then run
-     the P0 seed set and choose the metrics that move at this scale.
+   - Bind the [50m baseline corpus](experiments/ladder/50m/data.json) to the crawl census in an
+     `inputs.json`; P0 and every P family train on it. Then run the P0 seed set and choose the
+     metrics that move at this scale.
    - Finish both acquisitions: census the crawl and point the supply gap at it; summarize the code
      fetch, preprocess all code and rebuild the family partition over every source.
    - Close the prerequisites listed in the draft [P1 to P7 records](experiments/ladder/records):
