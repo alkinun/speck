@@ -700,6 +700,38 @@ def test_prepare_writes_nested_source_manifest_and_normalized_global_dedup(
         assert journal["end_byte"] - journal["start_byte"] == source["documents"] * 16
 
 
+def test_dedup_scope_none_keeps_exact_copies(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        dataset,
+        "_is_validation_document",
+        lambda content, seed, fraction: content.startswith("val-"),
+    )
+    config = settings()
+    config["dedup"] = {**config["dedup"], "scope": "none"}
+    path = tmp_path / "packed"
+    manifest = dataset.prepare_dataset(
+        **config,
+        output_dir=path,
+        tokenizer=FakeTokenizer(),
+        check_disk=False,
+        document_iterators={
+            "a": documents("a", "Ａ  Foo\tBAR"),
+            "b": documents("b", "a foo   bar"),
+        },
+    )
+    duplicate_hash = dataset.dedup_hash("a foo bar").hex()
+    sources = [
+        json.loads(line)["source_id"]
+        for source in manifest["sources"]
+        for line in (path / source["document_index"]["path"]).read_text().splitlines()
+        if json.loads(line)["dedup_hash"] == duplicate_hash
+    ]
+    assert sorted(sources) == ["a", "b"]
+    assert manifest["dedup"]["scope"] == "none"
+    assert manifest["dedup"]["accepted_hashes"] == manifest["documents"]
+    dataset.verify_shards(path)
+
+
 def test_full_preferred_split_discards_instead_of_rerouting(tmp_path, monkeypatch):
     monkeypatch.setattr(
         dataset,

@@ -208,9 +208,11 @@ class SourceBuilder:
         shard_tokens,
         filtering,
         seed,
+        deduplicate=True,
         progress=None,
     ):
         self.directory = Path(directory)
+        self.deduplicate = deduplicate
         self.source = source
         self.source_id = source["id"]
         self.resolved = resolved
@@ -313,7 +315,9 @@ class SourceBuilder:
             normalized = normalize_for_dedup(content)
             digest = hashlib.blake2b(normalized.encode("utf-8"), digest_size=_DEDUP_BYTES).digest()
             digest_integer = int.from_bytes(digest, "big")
-            if digest_integer in self.accepted_hashes or digest_integer in pending:
+            if self.deduplicate and (
+                digest_integer in self.accepted_hashes or digest_integer in pending
+            ):
                 continue
             # A caller that knows document families assigns the split itself, so validation
             # families stay disjoint from training; otherwise the content hash decides.
@@ -1092,6 +1096,7 @@ class _DatasetBuild:
             "shard_tokens": self.settings["shards"]["tokens"],
             "filtering": self.settings["filtering"],
             "seed": self.seed,
+            "deduplicate": self.settings["dedup"]["scope"] == "global",
         }
 
     def _build_source_files(self, source, resolved, progress, builder_settings):
@@ -1316,7 +1321,9 @@ def _validate_text_manifest(manifest):
         raise ValueError("packed dataset phases are not canonical")
     validate_schedule(manifest["mixture"].get("schedule"))
     dedup = manifest.get("dedup", {})
-    if any(dedup.get(key) != value for key, value in _DEDUP_SETTINGS.items()):
+    if dedup.get("scope") not in {"global", "none"} or any(
+        dedup.get(key) != value for key, value in _DEDUP_SETTINGS.items() if key != "scope"
+    ):
         raise ValueError("packed dataset dedup settings are invalid")
     journal_boundary = 0
     for source in sources:

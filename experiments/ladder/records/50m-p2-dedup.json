@@ -21,7 +21,7 @@
   "secondary_metrics": "The pinned early-signal suite (scripts.open_slm_eval: HellaSwag, ARC-Easy, ARC-Challenge, PIQA, ArithMark) on each arm's final export, and held-out loss at each quarter of the horizon.",
   "minimum_useful_effect": "2.83 times the P0 standard deviation of the metric at 50m; an arm difference below it is reported as no detectable effect.",
   "decision_rule": "Keep near deduplication if exact-only is worse than the baseline by at least the minimum useful effect on the primary metric; report the cost per accepted token of each stage alongside.",
-  "data_preparation": "Each arm reruns scripts.production_data_preprocess over the same inputs with only its deduplication policy changed. The benchmark firewall and family partition apply unchanged in every arm.",
+  "data_preparation": "Each arm reruns scripts.production_data_preprocess over the same inputs with only policy.deduplication changed; the benchmark firewall and family partition apply unchanged in every arm. The no-dedup arm's data configuration also sets dedup.scope to none, because packing otherwise removes exact copies itself.",
   "prerequisites": [
     "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known.",
     "scripts.ladder_prepare assigns each duplicate the baseline removed to the family bucket of the document it duplicates; today a document absent from the partition has no bucket. Each arm's preprocess plan sets policy.deduplication to none or exact."

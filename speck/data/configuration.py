@@ -316,8 +316,9 @@ def validate_data_settings(
         raise ValueError("filtering.min_chars cannot exceed filtering.max_chars")
     if max_chars > _MAX_DOCUMENT_CHARACTERS:
         raise ValueError(f"filtering.max_chars cannot exceed {_MAX_DOCUMENT_CHARACTERS:,}")
-    if dedup != _DEDUP_SETTINGS:
-        raise ValueError(f"dedup must be {_DEDUP_SETTINGS}")
+    # Scope "none" keeps exact copies, for arms that measure deduplication itself.
+    if dedup not in (_DEDUP_SETTINGS, {**_DEDUP_SETTINGS, "scope": "none"}):
+        raise ValueError(f'dedup must be {_DEDUP_SETTINGS}, optionally with scope "none"')
     if not isinstance(shards, dict) or set(shards) != {
         "tokens",
         "maximum_loader_microbatch_tokens",
