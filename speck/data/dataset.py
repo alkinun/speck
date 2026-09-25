@@ -112,6 +112,9 @@ from speck.data.configuration import (
 from speck.data.configuration import (
     validate_data_settings as validate_data_settings,
 )
+from speck.data.configuration import (
+    validate_schedule as validate_schedule,
+)
 from speck.data.packing import BestFitRows
 from speck.data.packing import TokenShardWriter as TokenShardWriter
 from speck.data.validation import fingerprint, slice_sha256
@@ -890,7 +893,7 @@ class _DatasetBuild:
         contract = {
             "format_version": format_version,
             "sources": self.settings["sources"],
-            "mixture": {"phases": self.settings["phases"]},
+            "mixture": self._mixture({"phases": self.settings["phases"]}),
             "requested_train_tokens": self.requested_train_tokens,
             "validation_tokens_per_source": self.validation_tokens_per_source,
             "validation_fraction": self.validation_fraction,
@@ -1145,6 +1148,12 @@ class _DatasetBuild:
         self._print_summary(manifest, ordered_summaries)
         return manifest
 
+    def _mixture(self, mixture):
+        # Only an opt-in schedule is recorded, so default contracts and manifests keep their bytes.
+        if self.settings["schedule"] is not None:
+            mixture["schedule"] = self.settings["schedule"]
+        return mixture
+
     def _manifest(self, ordered_summaries):
         aggregate_splits = {}
         for split in ("train", "val"):
@@ -1165,17 +1174,23 @@ class _DatasetBuild:
             "dtype": "<u2",
             "requested_train_tokens": self.requested_train_tokens,
             "validation_tokens_per_source": self.validation_tokens_per_source,
-            "mixture": {
-                "phases": self.settings["phases"],
-                "source_quotas": self.settings["quotas"],
-            },
+            "mixture": self._mixture(
+                {
+                    "phases": self.settings["phases"],
+                    "source_quotas": self.settings["quotas"],
+                }
+            ),
             "preparation": {
                 "seed": self.seed,
                 "validation_fraction": self.settings["validation_fraction"],
                 "filtering": self.settings["filtering"],
                 "shards": self.settings["shards"],
                 "train_reserve_tokens_per_source": self.settings["train_reserve_tokens_per_source"],
-                "reserve_basis": "(phase_count + 1) * maximum_loader_microbatch_tokens",
+                "reserve_basis": (
+                    "(phase_count + 1) * maximum_loader_microbatch_tokens"
+                    if self.settings["schedule"] is None
+                    else "2 * phase_count * schedule.sequence_length"
+                ),
                 "tokenizer_batch": {
                     "maximum_documents": _MAX_TOKENIZER_DOCUMENTS,
                     "maximum_characters": _MAX_TOKENIZER_BATCH_CHARACTERS,
@@ -1234,6 +1249,7 @@ def prepare_dataset(
     filtering,
     dedup,
     shards,
+    schedule=None,
     seed=42,
     output_dir=None,
     output_name=None,
@@ -1255,6 +1271,7 @@ def prepare_dataset(
         filtering=filtering,
         dedup=dedup,
         shards=shards,
+        schedule=schedule,
     )
     seed = _integer(seed, "seed")
     tokenizer = tokenizer or get_tokenizer()
@@ -1297,6 +1314,7 @@ def _validate_text_manifest(manifest):
         raise ValueError("packed dataset source quotas do not match its phases")
     if manifest["mixture"]["phases"] != phases:
         raise ValueError("packed dataset phases are not canonical")
+    validate_schedule(manifest["mixture"].get("schedule"))
     dedup = manifest.get("dedup", {})
     if any(dedup.get(key) != value for key, value in _DEDUP_SETTINGS.items()):
         raise ValueError("packed dataset dedup settings are invalid")

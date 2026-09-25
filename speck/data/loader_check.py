@@ -9,7 +9,7 @@ import torch
 
 from speck.config import load_experiment
 from speck.data.dataset import load_manifest, resolve_data_dir, verify_shards
-from speck.data.loader import manifest_fingerprint, packed_loader
+from speck.data.loader import manifest_fingerprint, packed_loader, sequence_schedule
 from speck.model import build_model
 from speck.operations.runtime import dist_info
 from speck.provenance.io import atomic_json, file_sha256
@@ -97,7 +97,13 @@ def check_loader(experiment, output_dir, *, batches=64, mode="scan"):
                     or max(inputs.max().item(), targets.max().item()) >= tokenizer.vocab_size
                 ):
                     raise AssertionError("packed token is outside the frozen tokenizer vocabulary")
-                counts[state["selected_source"]] += inputs.numel()
+                if manifest["mixture"].get("schedule") is None:
+                    counts[state["selected_source"]] += inputs.numel()
+                else:
+                    rows = train["device_batch_size"]
+                    first = index * stride // train["sequence_length"] + rank * rows
+                    for source_id, _ in sequence_schedule(manifest, first, rows):
+                        counts[source_id] += train["sequence_length"]
                 if start <= index < start + 8:
                     replay.append(_batch_identity(inputs, targets, state))
         finally:

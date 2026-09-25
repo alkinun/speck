@@ -154,6 +154,25 @@ def derive_source_quotas(sources, mixture, requested_train_tokens):
     return quotas, normalized_phases
 
 
+def validate_schedule(schedule):
+    """Validate the opt-in per-sequence mixture schedule; None keeps per-microbatch selection."""
+
+    if schedule is None:
+        return None
+    if (
+        not isinstance(schedule, dict)
+        or set(schedule) != {"version", "unit", "sequence_length"}
+        or type(schedule["version"]) is not int
+        or schedule["version"] != 1
+        or schedule["unit"] != "sequence"
+    ):
+        raise ValueError(
+            'schedule must be {"version": 1, "unit": "sequence", "sequence_length": n}'
+        )
+    _integer(schedule["sequence_length"], "schedule.sequence_length", minimum=1)
+    return dict(schedule)
+
+
 def _validate_source(source):
     if not isinstance(source, dict):
         raise ValueError("each data source must be an object")
@@ -276,6 +295,7 @@ def validate_data_settings(
     filtering,
     dedup,
     shards,
+    schedule=None,
 ):
     """Validate preparation settings and return their normalized derived values."""
 
@@ -308,7 +328,13 @@ def validate_data_settings(
         shards["maximum_loader_microbatch_tokens"],
         "shards.maximum_loader_microbatch_tokens",
     )
-    reserve = (len(phases) + 1) * maximum_microbatch if maximum_microbatch else 0
+    schedule = validate_schedule(schedule)
+    if schedule is None:
+        reserve = (len(phases) + 1) * maximum_microbatch if maximum_microbatch else 0
+    else:
+        # Within a phase, rounding its token range to whole sequences adds under one
+        # sequence, and a smooth-cycle prefix overshoots a source's share by under one.
+        reserve = 2 * len(phases) * schedule["sequence_length"]
     return {
         "sources": normalized_sources,
         "phases": phases,
@@ -322,6 +348,7 @@ def validate_data_settings(
             "maximum_loader_microbatch_tokens": maximum_microbatch,
         },
         "train_reserve_tokens_per_source": reserve,
+        "schedule": schedule,
     }
 
 

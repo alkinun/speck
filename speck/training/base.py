@@ -70,6 +70,8 @@ _BRANCH_FIXED_SETTINGS = (
 )
 _SCHEDULE_SETTINGS = ("lr", "warmup_steps", "min_lr", "lr_schedule", "decay_fraction")
 _CONTEXT_FIXED_SETTINGS = ("weight_decay", "grad_clip", "optimizer", "seed", "deterministic")
+# A sequence-scheduled loader could resume at another device batch size or world size,
+# but the checkpoint RNG contract is per rank, so both stay fixed for a resumed run.
 _IMMUTABLE_RESUME_SETTINGS = (
     "deterministic",
     "sequence_length",

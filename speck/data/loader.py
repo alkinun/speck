@@ -180,6 +180,53 @@ def source_selection_counts(manifest, split, global_consumed_tokens, global_stri
     return counts
 
 
+def _sequence_schedule(manifest, split):
+    """Return the opt-in per-sequence schedule, or None for per-microbatch selection.
+
+    A sequence schedule selects a source for every training sequence, so the data order
+    is independent of device batch size and world size. Validation keeps its
+    per-microbatch round-robin, which gives each validation batch one source for the
+    per-source validation losses.
+    """
+
+    return manifest["mixture"].get("schedule") if split == "train" else None
+
+
+def _schedule_stride(manifest, split, sequence_length, global_stride):
+    """Return the token span of one scheduling unit for this manifest and split."""
+
+    schedule = _sequence_schedule(manifest, split)
+    if schedule is None:
+        return global_stride
+    if sequence_length != schedule["sequence_length"]:
+        raise ValueError(
+            f"packed dataset schedules {schedule['sequence_length']}-token sequences; "
+            f"train it at that sequence length, not {sequence_length}"
+        )
+    return sequence_length
+
+
+def sequence_schedule(manifest, first_sequence, count):
+    """Return the source and source cursor of consecutive global training sequences.
+
+    Global sequence g starts at global token g * sequence_length; a source's cursor
+    counts the sequences scheduled to it before g.
+    """
+
+    sequence_length = manifest["mixture"]["schedule"]["sequence_length"]
+    cursors = source_selection_counts(
+        manifest, "train", first_sequence * sequence_length, sequence_length
+    )
+    rows = []
+    for sequence in range(first_sequence, first_sequence + count):
+        source_id, _ = scheduled_source(
+            manifest, "train", sequence * sequence_length, sequence_length
+        )
+        rows.append((source_id, cursors[source_id]))
+        cursors[source_id] += 1
+    return rows
+
+
 def _shard_diagnostic(source, split, source_offset):
     shards = source["splits"][split]["shards"]
     total = 0
@@ -225,17 +272,27 @@ def loader_state_for_offset(
     global_stride = sequence_length * batch_size * world_size
     if global_consumed_tokens < 0 or global_consumed_tokens % global_stride:
         raise ValueError("loader offset must align with distributed microbatches")
-    selected_source, phase = scheduled_source(
-        manifest, split, global_consumed_tokens, global_stride
+    stride = _schedule_stride(manifest, split, sequence_length, global_stride)
+    return _loader_state(
+        manifest,
+        manifest_fingerprint(manifest),
+        split,
+        global_consumed_tokens,
+        stride,
+        (sequence_length, batch_size, world_size),
     )
-    counts = source_selection_counts(manifest, split, global_consumed_tokens, global_stride)
+
+
+def _loader_state(manifest, dataset_hash, split, global_consumed_tokens, stride, geometry):
+    selected_source, phase = scheduled_source(manifest, split, global_consumed_tokens, stride)
+    counts = source_selection_counts(manifest, split, global_consumed_tokens, stride)
     sources = _source_map(manifest)
     offsets = {}
     epochs = {}
     schedule_end = manifest["requested_train_tokens"]
     for source_id, count in counts.items():
         total = sources[source_id]["splits"][split]["tokens"]
-        batches_per_epoch = (total - 1) // global_stride
+        batches_per_epoch = (total - 1) // stride
         if batches_per_epoch < 1:
             raise ValueError(
                 f"packed source {source_id} is smaller than one distributed microbatch"
@@ -244,12 +301,13 @@ def loader_state_for_offset(
             epoch, batch_offset = divmod(count, batches_per_epoch)
         else:
             epoch, batch_offset = 0, count
-        offsets[source_id] = batch_offset * global_stride
+        offsets[source_id] = batch_offset * stride
         epochs[source_id] = epoch
+    sequence_length, batch_size, world_size = geometry
     return {
         "format_version": 2,
         "contract": "batch_start",
-        "manifest": manifest_fingerprint(manifest),
+        "manifest": dataset_hash,
         "split": split,
         "global_consumed_tokens": global_consumed_tokens,
         "source_offsets": offsets,
@@ -277,9 +335,14 @@ def _validate_resume_state(
         raise ValueError("cannot resume with a different packed dataset")
     if state.get("split") != split:
         raise ValueError("cannot resume a different packed split")
-    if state.get("sequence_length") != sequence_length or state.get("batch_size") != batch_size:
+    # A sequence schedule's cursors depend only on the global token offset, so it may
+    # resume under another device batch size or world size at an aligned offset.
+    sequenced = _sequence_schedule(manifest, split) is not None
+    if state.get("sequence_length") != sequence_length or (
+        not sequenced and state.get("batch_size") != batch_size
+    ):
         raise ValueError("cannot resume with different batch geometry")
-    if state.get("world_size") != world_size:
+    if not sequenced and state.get("world_size") != world_size:
         raise ValueError("cannot resume with a different world size")
     offset = state.get("global_consumed_tokens")
     if isinstance(offset, bool) or not isinstance(offset, int):
@@ -322,6 +385,56 @@ def _validate_training_capacity(manifest, global_stride):
             )
 
 
+def _sequence_batches(
+    manifest, dataset_hash, packed, global_consumed_tokens, rank, geometry, device
+):
+    """Yield microbatches whose rows are consecutive, individually scheduled sequences.
+
+    Rank r reads global sequences first + r * batch_size + row, so every optimizer
+    step trains on its next batch_tokens / sequence_length global sequences however
+    they are split across ranks and accumulation microbatches.
+    """
+
+    sequence_length, batch_size, world_size = geometry
+    global_stride = sequence_length * batch_size * world_size
+    schedule_end = manifest["requested_train_tokens"]
+    read_dtype = np.uint16 if device.type == "cuda" else np.int64
+    while True:
+        state = _loader_state(
+            manifest, dataset_hash, "train", global_consumed_tokens, sequence_length, geometry
+        )
+        first = global_consumed_tokens // sequence_length + rank * batch_size
+        tokens, masks = [], []
+        for sequence, (source_id, cursor) in enumerate(
+            sequence_schedule(manifest, first, batch_size), first
+        ):
+            source = packed[source_id]
+            sequences_per_epoch = (source.total_tokens - 1) // sequence_length
+            if cursor >= sequences_per_epoch and sequence * sequence_length < schedule_end:
+                raise RuntimeError(
+                    f"packed source {source_id} exhausted at global sequence "
+                    f"{sequence:,}; the configured mixture cannot be preserved"
+                )
+            offset = cursor % sequences_per_epoch * sequence_length
+            tokens.append(source.read(offset, sequence_length + 1, dtype=read_dtype))
+            if source.masks is not None:
+                masks.append(source.read(offset, sequence_length + 1, dtype=np.uint8, mask=True))
+            else:
+                masks.append(np.ones(sequence_length + 1, dtype=np.uint8))
+        rows = torch.from_numpy(np.stack(tokens))
+        if device.type == "cuda":
+            rows = rows.pin_memory().to(device, dtype=torch.int64, non_blocking=True)
+        else:
+            rows = rows.to(device)
+        inputs = rows[:, :-1]
+        targets = rows[:, 1:]
+        if any(source.masks is not None for source in packed.values()):
+            mask = torch.from_numpy(np.stack(masks)).to(device, non_blocking=True)
+            targets = targets.masked_fill(mask[:, 1:] == 0, -100)
+        yield inputs, targets, state
+        global_consumed_tokens += global_stride
+
+
 def packed_loader(
     tokenizer,
     batch_size,
@@ -332,7 +445,10 @@ def packed_loader(
     data_dir=None,
     initial_token_offset=0,
 ):
-    """Yield one-source microbatches and their exact batch-start cursor state."""
+    """Yield microbatches and their exact batch-start cursor state.
+
+    Microbatches hold one source unless the manifest opts into a sequence schedule.
+    """
 
     if split not in {"train", "val"}:
         raise ValueError("split must be train or val")
@@ -360,8 +476,9 @@ def packed_loader(
     local_stride = batch_size * sequence_length
     global_stride = local_stride * world_size
     required = local_stride + 1
+    stride = _schedule_stride(manifest, split, sequence_length, global_stride)
     if split == "train":
-        _validate_training_capacity(manifest, global_stride)
+        _validate_training_capacity(manifest, stride)
     if resume_state_dict is not None and initial_token_offset:
         raise ValueError("initial token offset cannot be combined with resume state")
     if split != "train" and initial_token_offset:
@@ -390,6 +507,17 @@ def packed_loader(
     schedule_end = manifest["requested_train_tokens"]
     dataset_hash = manifest_fingerprint(manifest)
     device = torch.device(device)
+    if _sequence_schedule(manifest, split) is not None:
+        yield from _sequence_batches(
+            manifest,
+            dataset_hash,
+            packed,
+            global_consumed_tokens,
+            rank,
+            (sequence_length, batch_size, world_size),
+            device,
+        )
+        return
 
     while True:
         source_id, phase = scheduled_source(manifest, split, global_consumed_tokens, global_stride)
