@@ -37,8 +37,7 @@
     "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known.",
     "P1 has run, fixing the all-strict corpus.",
     "The 130m learning-rate sweep has run.",
-    "Enough stock for the long horizon; math is the scarcest bank and will repeat.",
-    "scripts.ladder_prepare can repeat a bank's pool for a declared number of passes; today packing fails on a supply shortfall instead of repeating."
+    "Enough stock for the long horizon; math is the scarcest bank and will repeat."
   ],
   "cost": "Projected 5.8 GH200 GPU-hours per full-horizon run (program design): about 1.5 at a quarter horizon and 23 at four times.",
   "horizon_tokens": {

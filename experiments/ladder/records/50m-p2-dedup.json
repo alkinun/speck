@@ -24,7 +24,7 @@
   "data_preparation": "Each arm reruns scripts.production_data_preprocess over the same inputs with only its deduplication policy changed. The benchmark firewall and family partition apply unchanged in every arm.",
   "prerequisites": [
     "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known.",
-    "scripts.production_data_preprocess supports disabling near or all deduplication while keeping the benchmark firewall; today it always applies both."
+    "scripts.ladder_prepare assigns each duplicate the baseline removed to the family bucket of the document it duplicates; today a document absent from the partition has no bucket. Each arm's preprocess plan sets policy.deduplication to none or exact."
   ],
   "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 8.5 hours on the local RTX 3090 at the measured compiled rate of 86,000 tokens per second."
 }
