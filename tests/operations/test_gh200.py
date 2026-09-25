@@ -88,7 +88,7 @@ def test_portable_bundle_relocates_clean_checkout_and_detects_tampering(tmp_path
     assert configs["data"]["output_dir"] == str(output / "pilot-data")
     assert "output_name" not in configs["data"]
     # Execute the packet's experiment lookup from the transported checkout, where the original
-    # workstation tokenizer path is unavailable.
+    # original tokenizer path is unavailable.
     from speck.config import load_experiment
 
     packet = Path(__file__).resolve().parents[2] / "experiments/qualification/throughput-gh200.json"

@@ -7,6 +7,7 @@ import time
 from pathlib import Path
 
 from speck.evaluation.code_runner import check_sandbox, run_python
+from speck.operations.runtime import base_dir
 from speck.provenance.io import atomic_json, file_sha256
 
 TASK_FILES = {
@@ -186,10 +187,11 @@ def qualify(prepared, protocol, *, defer_code_grading=False):
         run_python("import os\nos._exit(0)", "def check(f): pass", "f")["status"]
         == "runner_failure"
     )
-    isolation = """def f():
+    # Host credentials and the data store must be invisible inside the sandbox.
+    hidden = [str(Path.home() / ".ssh"), base_dir()]
+    isolation = f"""def f():
  import os, socket
- assert not os.path.exists('/home/alkin/.ssh')
- assert not os.path.exists('/mnt/speck-data')
+ assert not any(os.path.exists(path) for path in {hidden!r})
  try:
   socket.create_connection(('1.1.1.1', 443), timeout=0.2)
  except OSError:
