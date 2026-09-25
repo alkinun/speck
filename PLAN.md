@@ -61,7 +61,6 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
      fetch, preprocess all code and rebuild the family partition over every source.
    - Write the predeclared records for P1 to P7 and prepare their data variants on CPU.
    - Freeze the SFT probe recipe and dataset from the retained assistant stock.
-   - Add per-rung throughput runs to the [GH200 packet](experiments/qualification/throughput-gh200.json).
 2. **On access,** qualify one worker then four, measure every rung, and convert each budget line
    into run counts.
 3. **Pretraining ladder:** the [families](docs/program.md#pretraining-the-ladder-1900-gpu-hours) LR

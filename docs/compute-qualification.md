@@ -38,7 +38,7 @@ GPU-hours.
 | Site preflight | 0 | Record instance, architecture, driver/CUDA, storage and scheduler; verify the bundle; install the ARM64 environment | ARM64 GH200, dependencies installed, storage confirmed |
 | One-worker check | 1 | `scripts.gh200_check run` | Loader replay, kernels, base restart, generation, export parity, SFT restart and export all pass |
 | Four-worker replay | 4 | `scripts.training_replay`, eager then `--compile` | Model, optimizer, loader and RNG parity after restart in both modes |
-| Throughput | 1 | The runs in [throughput-gh200.json](../experiments/qualification/throughput-gh200.json), plus per-rung runs | Microbatch, activation checkpointing and determinism selected; tokens/s recorded for the parent and every rung |
+| Throughput | 1 | The runs in [throughput-gh200.json](../experiments/qualification/throughput-gh200.json) for the parent and each ladder rung | Microbatch, activation checkpointing and determinism selected; tokens/s recorded for the parent and every rung |
 | Scheduler canary | site | One finite [Slurm](slurm.md) wave with a timeout-boundary checkpoint and requeue | Checkpoint at the signal, resume, accounting matches |
 | Closeout | 0 | Download receipts, logs and accounting; reconcile the ledger | Every GPU-hour accounted for |
 
@@ -83,7 +83,9 @@ back to eager and record the cost.
 
 ### Throughput
 
-Print the packet's commands rather than retyping them, and run them from `code/` after binding:
+Binding writes `relocated-base` (the parent) and one `relocated-RUNG` experiment per ladder rung,
+with the transported tokenizer. Print the packet's commands rather than retyping them, and run them
+from `code/`:
 
 ```bash
 uv run --no-sync python experiments/qualification/check_throughput_packet.py \

@@ -116,7 +116,20 @@ def bind(root):
     directory.mkdir(exist_ok=True)
     for name, config in configs.items():
         atomic_json(directory / f"{name}.json", config)
+    relocate_ladder(root, configs["tokenizer"])
     return manifest, configs, directory
+
+
+def relocate_ladder(root, tokenizer):
+    """Write one benchmark experiment per ladder rung: its model with the ladder training recipe."""
+    plan = json.loads(Path("experiments/main-data/plan.json").read_text())
+    train = load_experiment("experiments/ladder", "train")["train"]
+    for rung in plan["ladder"]["rungs"]:
+        model = load_experiment(Path(rung["configuration"]).parent, "model")["model"]
+        directory = root / f"relocated-{rung['id']}"
+        directory.mkdir(exist_ok=True)
+        for name, config in {"model": model, "tokenizer": tokenizer, "train": train}.items():
+            atomic_json(directory / f"{name}.json", config)
 
 
 def assistant_experiment(root, configs, parent):

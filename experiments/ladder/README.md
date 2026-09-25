@@ -9,7 +9,9 @@ PYTHONPATH=. python experiments/ladder/shapes.py
 PYTHONPATH=. python experiments/ladder/shapes.py --check
 ```
 
-Rung sizes and run counts live in [plan.json](../main-data/plan.json); `make plan-check` fails if a
+[train.json](train.json) is the training recipe every rung shares; a rung's own `train.json` adds its
+device batch size, run name and token budget, and its learning-rate sweep sets `lr`. Rung sizes and
+run counts live in [plan.json](../main-data/plan.json); `make plan-check` fails if a
 configuration drifts from the rule or from the plan.
 
 [records/](records) holds each family's predeclared record: question, arms, controls, primary

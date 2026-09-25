@@ -1,4 +1,5 @@
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -44,6 +45,13 @@ def test_portable_bundle_relocates_clean_checkout_and_detects_tampering(tmp_path
         "tokenizer": {"directory": "/old/machine/tokenizer"},
     }.items():
         (experiment / f"{name}.json").write_text(json.dumps(value))
+    # The ladder configurations the bind step relocates, copied from this checkout.
+    source = Path(__file__).resolve().parents[2]
+    ladder = ["experiments/main-data/plan.json", "experiments/ladder/train.json"]
+    ladder += [f"experiments/ladder/{rung}/model.json" for rung in ("50m", "130m", "410m")]
+    for name in ladder:
+        (repository / name).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source / name, repository / name)
     subprocess.run(["git", "add", "."], check=True)
     subprocess.run(
         [
@@ -87,13 +95,24 @@ def test_portable_bundle_relocates_clean_checkout_and_detects_tampering(tmp_path
     assert configs["tokenizer"]["directory"] == str(output / "tokenizer")
     assert configs["data"]["output_dir"] == str(output / "pilot-data")
     assert "output_name" not in configs["data"]
-    # Execute the packet's experiment lookup from the transported checkout, where the original
-    # original tokenizer path is unavailable.
+    # Execute the packet's experiment lookups from the transported checkout, where the original
+    # tokenizer path is unavailable.
     from speck.config import load_experiment
 
-    packet = Path(__file__).resolve().parents[2] / "experiments/qualification/throughput-gh200.json"
-    common = json.loads(packet.read_text())["common"]
+    packet = json.loads(
+        (
+            Path(__file__).resolve().parents[2] / "experiments/qualification/throughput-gh200.json"
+        ).read_text()
+    )
+    common = packet["common"]
     assert load_experiment(common["experiment"], *configs) == configs
+    for run in packet["runs"]:
+        experiment = run.get("overrides", {}).get("experiment", common["experiment"])
+        loaded = load_experiment(experiment, "tokenizer", "model", "train")
+        assert loaded["tokenizer"] == configs["tokenizer"]
+    rung = load_experiment("../relocated-410m", "model", "train")
+    assert rung["model"] == load_experiment("experiments/ladder/410m", "model")["model"]
+    assert rung["train"]["batch_tokens"] == 131072
     assert Path(common["data_dir"]).resolve() == output / "pilot-data"
     assert not Path(common["output_directory"]).resolve().is_relative_to(output / "code")
     (output / "pilot-data/payload.bin").write_bytes(b"changed")
