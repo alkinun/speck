@@ -1,6 +1,6 @@
 # SpeckLabs: status and next work
 
-Updated 2026-09-24. This is the status and the one work order. The [program design](docs/program.md)
+Updated 2026-09-25. This is the status and the one work order. The [program design](docs/program.md)
 owns the goal, method, experiments and budget; [plan.json](experiments/main-data/plan.json) owns
 the numbers; receipts own results.
 
@@ -31,7 +31,8 @@ are established. Two acquisitions will move this table; both are stopped until t
 verified (see the work order):
 
 - **Selected web.** One whole Ultra-FineWeb HQ crawl, `CC-MAIN-2025-43` (27.5M documents), is
-  downloaded and converted; its preprocess restarts from scratch, followed by a token census.
+  downloaded and sha-verified; its conversion, preprocess and token census are redone on verified
+  hardware.
 - **Code.** Every licence-eligible Stack-Edu `int_score` 3 row, projected at about 15B tokens from
   the [yield probe](experiments/corpus-audit/stack-edu-yield-probe.json), is partly fetched in
   language tranches and resumes unit by unit.
@@ -55,12 +56,18 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
 ## Work order
 
 1. **Now, on the workstation (no grant hours).**
-   - **Verify the hardware first.** The i7-13700K shows Raptor Lake instability: 11 segfaults on
-     the same two cores since 2026-09-22 and a SQLite index corrupted on a healthy NVMe, which
-     crashed the crawl preprocess on 2026-09-24. Every data and training job is stopped. Update the
-     BIOS to Intel's default power profile, run memtest86+ and a CPU stress test, and replace the
-     CPU if it still fails. Then re-verify every artifact built on this machine since 2026-09-22 by
-     content, not only by file hash, and rebuild what fails.
+   - **Verify the hardware first.** The i7-13700K shows Raptor Lake instability: 11 segfaults on the
+     same two cores since 2026-09-22 and a SQLite index corrupted on a healthy NVMe, which crashed
+     the crawl preprocess on 2026-09-24. After a reboot no kernel fault recurred, but data is still
+     silently corrupted: three conversions of the same sha-verified crawl shards produced three
+     different files; the two kept had 10 and 6 damaged records in 27.5M, all caught by their
+     per-record content hashes, and both were deleted. Every data and training job is stopped.
+     Update the BIOS to Intel's default power profile, run memtest86+ and a CPU stress test, and
+     replace the CPU if it still fails. Then convert the crawl twice and require identical files
+     before its preprocess, and rebuild the 50m sweep corpus twice and compare. Re-verified by
+     content and kept: the fetched Stack-Edu units, the code conversion, preprocess and token index,
+     the HQ web stock and its index, and the dry-run family partition, each matching a second build
+     or its per-record content hashes.
    - Run the 50m learning-rate sweep, then the P0 seed set on the baseline corpus, and choose the
      metrics that move at this scale.
    - Finish both acquisitions: census the crawl and point the supply gap at it; summarize the code
