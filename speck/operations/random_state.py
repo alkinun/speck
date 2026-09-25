@@ -1,8 +1,6 @@
 """Persist process-local generators, including each distributed training rank."""
 
 import base64
-import hashlib
-import json
 import random
 
 import numpy as np
@@ -126,14 +124,3 @@ def warmup_resume_backend(model, device, shapes, vocab_size, *, loss_reduction=N
             loss = model(inputs, targets, **options)
             loss.backward()
     model.zero_grad(set_to_none=True)
-
-
-def rng_probe(device):
-    """Exercise every persisted generator even when the model itself has no stochastic layers."""
-    digest = hashlib.sha256()
-    digest.update(torch.randint(2**30, (32,)).numpy().tobytes())
-    digest.update(np.random.randint(2**30, size=32, dtype=np.int64).tobytes())
-    digest.update(json.dumps([random.random() for _ in range(32)]).encode())
-    if device.type == "cuda":
-        digest.update(torch.randint(2**30, (32,), device=device).cpu().numpy().tobytes())
-    return digest.hexdigest()

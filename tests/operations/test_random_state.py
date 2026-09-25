@@ -1,12 +1,26 @@
+import hashlib
+import inspect
 import json
+import random
 import sys
 
+import numpy as np
 import pytest
 import torch
 
 from speck.operations import random_state
-from speck.operations.random_state import rng_probe
 from speck.operations.supervise import supervise
+
+
+def rng_probe(device):
+    """Exercise every persisted generator even when the model itself has no stochastic layers."""
+    digest = hashlib.sha256()
+    digest.update(torch.randint(2**30, (32,)).numpy().tobytes())
+    digest.update(np.random.randint(2**30, size=32, dtype=np.int64).tobytes())
+    digest.update(json.dumps([random.random() for _ in range(32)]).encode())
+    if device.type == "cuda":
+        digest.update(torch.randint(2**30, (32,), device=device).cpu().numpy().tobytes())
+    return digest.hexdigest()
 
 
 def test_json_checkpoint_replays_all_cpu_generators():
@@ -94,11 +108,16 @@ def test_assistant_warmup_initializes_masked_sum_loss():
 def test_real_two_rank_collective_preserves_each_cpu_rng(tmp_path):
     worker = tmp_path / "worker.py"
     store = (tmp_path / "gloo-store").as_uri()
-    worker.write_text("""import json, os, sys
+    worker.write_text(
+        """import hashlib, json, os, random, sys
 from pathlib import Path
+import numpy as np
 import torch
 import torch.distributed as dist
-from speck.operations.random_state import seed_generators, gather_training_rng, restore_training_rng, rng_probe
+from speck.operations.random_state import seed_generators, gather_training_rng, restore_training_rng
+"""
+        + inspect.getsource(rng_probe)
+        + """
 rank = int(os.environ['RANK'])
 dist.init_process_group('gloo', init_method=sys.argv[1], rank=rank, world_size=2)
 device = torch.device('cpu')
@@ -110,7 +129,8 @@ restore_training_rng(state, device, rank, 2)
 assert rng_probe(device) == expected
 Path(sys.argv[2], f'rank-{rank}.json').write_text(json.dumps(state))
 dist.destroy_process_group()
-""")
+"""
+    )
     execution = supervise([sys.executable, str(worker), store, str(tmp_path)], tmp_path, 30, 2, 2)
     assert execution["returncode"] == 0, (tmp_path / "worker.log").read_text()
     first = json.loads((tmp_path / "rank-0.json").read_text())
