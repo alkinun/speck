@@ -573,3 +573,15 @@ def test_the_program_plan_defines_the_budget_lines_waves_charge():
     lines = _budget_lines(plan)
     assert lines["reserve"] == RESERVE_GPU_HOURS
     assert sum(lines.values()) == TOTAL_GPU_HOURS
+
+
+def test_distributed_requeue_polls_only_on_shared_check_steps(monkeypatch):
+    trainer = object.__new__(slurm_base_train.SlurmBaseTrainer)
+    trainer.distributed = True
+    polled = []
+    monkeypatch.setattr(trainer, "_requeue_requested", lambda: polled.append(1) or True)
+    trainer.completed_step = slurm_base_train.REQUEUE_CHECK_STEPS + 1
+    assert trainer._optimizer_boundary_stop_requested() is False
+    trainer.completed_step = 2 * slurm_base_train.REQUEUE_CHECK_STEPS
+    assert trainer._optimizer_boundary_stop_requested() is True
+    assert polled == [1]

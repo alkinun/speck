@@ -14,6 +14,8 @@ from speck.operations.slurm import REQUEUE_EXIT_CODE
 from speck.training import base as base_train
 from speck.training.checkpoint import latest
 
+REQUEUE_CHECK_STEPS = 10
+
 
 def arguments(argv=None):
     raw = list(sys.argv[1:] if argv is None else argv)
@@ -79,6 +81,10 @@ class SlurmBaseTrainer(base_train.BaseTrainer):
         return requested
 
     def _optimizer_boundary_stop_requested(self):
+        # Across ranks the check is a collective and a host sync, so poll on shared step numbers
+        # only; a few steps is far inside the scheduler's signal margin.
+        if self.distributed and self.completed_step % REQUEUE_CHECK_STEPS:
+            return False
         return self._requeue_requested()
 
     def _after_optimizer_step(

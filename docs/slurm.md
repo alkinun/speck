@@ -20,7 +20,8 @@ a key of `compute.budget_gpu_hours` such as `pretraining_ladder`; only `reserve`
 reserve. `make plan-check` checks the module's budget constants against plan.json.
 
 Training jobs run `torchrun -m scripts.slurm_base_train ... --slurm-requeue-resume`. The timeout
-signal requests a checkpoint at the next optimizer boundary, and a requeued job resumes from the
+signal requests a checkpoint at an optimizer boundary (within ten steps on multi-GPU jobs, which
+poll it collectively), and a requeued job resumes from the
 last complete checkpoint. Each wave gets its own `TORCHINDUCTOR_CACHE_DIR`, so requeued attempts
 reuse one compilation. SFT jobs are not requeued. Job dependencies are limited to collection and
 evaluation jobs.
