@@ -3915,6 +3915,7 @@ linear = [
 
 [package.dev-dependencies]
 capability = [
+    { name = "datasets" },
     { name = "evalplus" },
     { name = "immutabledict" },
     { name = "langdetect" },
@@ -3922,7 +3923,6 @@ capability = [
     { name = "transformers" },
 ]
 dataset-build = [
-    { name = "datasets" },
     { name = "datasketch" },
 ]
 dev = [
@@ -3956,16 +3956,14 @@ provides-extras = ["cpu", "gpu", "linear"]
 
 [package.metadata.requires-dev]
 capability = [
+    { name = "datasets", specifier = "==5.0.1" },
     { name = "evalplus", git = "https://github.com/evalplus/evalplus.git?rev=26d6d00bb1fd0fa37f39c99d5290da67891d1c5e" },
     { name = "immutabledict", specifier = "==4.3.1" },
     { name = "langdetect", specifier = "==1.0.9" },
     { name = "lm-eval", extras = ["hf"], git = "https://github.com/EleutherAI/lm-evaluation-harness.git?rev=64f3d0924fc695efd6d776a5ac91f97138085516" },
     { name = "transformers", specifier = "==5.1.0" },
 ]
-dataset-build = [
-    { name = "datasets", specifier = "==5.0.1" },
-    { name = "datasketch", specifier = "==2.0.0" },
-]
+dataset-build = [{ name = "datasketch", specifier = "==2.0.0" }]
 dev = [
     { name = "pytest", specifier = ">=8.0.0" },
     { name = "ruff", specifier = ">=0.15.0" },

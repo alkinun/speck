@@ -28,7 +28,6 @@ namespaces = false
 [dependency-groups]
 dataset-build = [
     "datasketch==2.0.0",
-    "datasets==5.0.1",
 ]
 dev = [
     "pytest>=8.0.0",
@@ -40,6 +39,7 @@ open-slm = [
 ]
 capability = [
     { include-group = "open-slm" },
+    "datasets==5.0.1",
     "evalplus @ git+https://github.com/evalplus/evalplus.git@26d6d00bb1fd0fa37f39c99d5290da67891d1c5e",
     "langdetect==1.0.9",
     "immutabledict==4.3.1",
