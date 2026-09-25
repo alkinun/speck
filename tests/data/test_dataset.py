@@ -731,6 +731,67 @@ def test_full_preferred_split_discards_instead_of_rerouting(tmp_path, monkeypatc
     assert discarded not in {record["content_hash"] for record in records}
 
 
+def test_declared_passes_validate_and_leave_undeclared_sources_unchanged():
+    assert "passes" not in dataset._validate_source(source_config("a"))
+    assert dataset._validate_source({**source_config("a"), "passes": 3})["passes"] == 3
+    for passes in (1, 0, True, 2.0, "2"):
+        with pytest.raises(ValueError, match="passes must be an integer >= 2"):
+            dataset._validate_source({**source_config("a"), "passes": passes})
+    with pytest.raises(ValueError, match="passes are not supported with row packing"):
+        dataset._validate_source(
+            {**source_config("a"), "passes": 2, "packing": {"row_tokens": 64, "open_rows": 2}}
+        )
+
+
+def test_hash_split_source_repeats_its_pool_and_verifies(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        dataset,
+        "_is_validation_document",
+        lambda content, seed, fraction: content.startswith("val-"),
+    )
+    config = single_source_settings(train_tokens=120, validation_tokens=20)
+    config["sources"] = [{**source_config("a"), "passes": 3}]
+    values = [{"content": "val-" + "v" * 30}] + [
+        {"content": f"train-{index:02d}-" + "t" * 6} for index in range(20)
+    ]
+    path = tmp_path / "repeated"
+    manifest = dataset.prepare_dataset(
+        **config,
+        output_dir=path,
+        tokenizer=FakeTokenizer(),
+        check_disk=False,
+        document_iterators={"a": values},
+    )
+    dataset.verify_shards(path)
+    source = manifest["sources"][0]
+    repetition = source["repetition"]
+    assert repetition["unique_target_tokens"] == 40
+    assert repetition["unique_documents"] == source["splits"]["train"]["documents"] == 3
+    assert repetition["exposure_tokens"] == source["splits"]["train"]["tokens"] >= 120
+    assert repetition["unique_tokens"] == 51
+    assert manifest["dedup"]["accepted_hashes"] == 4
+
+
+def test_a_pool_too_coarse_for_its_declared_passes_fails(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        dataset,
+        "_is_validation_document",
+        lambda content, seed, fraction: content.startswith("val-"),
+    )
+    config = single_source_settings(train_tokens=100, validation_tokens=10)
+    config["sources"] = [{**source_config("a"), "passes": 3}]
+    # One 60-token document fills the 34-token unique target, so two passes reach exposure.
+    values = [{"content": "val-" + "v" * 30}, {"content": "train-" + "t" * 52}]
+    with pytest.raises(ValueError, match="reaches its exposure before pass 3"):
+        dataset.prepare_dataset(
+            **config,
+            output_dir=tmp_path / "coarse",
+            tokenizer=FakeTokenizer(),
+            check_disk=False,
+            document_iterators={"a": values},
+        )
+
+
 def test_a_document_split_overrides_the_content_hash(tmp_path, monkeypatch):
     """Family-aware callers assign validation themselves; the hash rule must not move it."""
     monkeypatch.setattr(dataset, "_is_validation_document", lambda content, seed, fraction: True)

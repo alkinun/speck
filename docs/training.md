@@ -66,6 +66,12 @@ exactly the sequence length, never truncated, with a parallel loss mask. `record
 supervises only assistant content. 16K and 32K memory and throughput still need GH200
 qualification.
 
+Repetition is declared, never silent. A source with `passes: k` (an integer of at least 2) streams a
+unique train pool of its quota plus reserve divided by `k`, then repeats that pool; each later pass
+is a seeded reordering of the same documents, and only the last may be partial. The manifest
+records passes, unique tokens and exposure per source. Validation documents do not change, and a
+pool smaller than declared fails the build.
+
 Before any branch, freeze the parent identity, objective, data, schedule, optimizer and cost.
 
 ## SFT probe

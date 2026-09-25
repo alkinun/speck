@@ -3,6 +3,7 @@
 import hashlib
 import json
 
+import numpy as np
 import pytest
 
 from speck.data import ladder
@@ -42,7 +43,7 @@ def _source(tmp_path, name):
     return {"id": name, "text": {"path": str(text), "sha256": file_sha256(text)}}, rows
 
 
-def _experiment(tmp_path, name, weights, inputs):
+def _experiment(tmp_path, name, weights, inputs, *, tokens=200, passes=None):
     directory = tmp_path / name
     directory.mkdir()
     sources = [
@@ -53,13 +54,14 @@ def _experiment(tmp_path, name, weights, inputs):
             "tree_path": "",
             "content_column": "text",
             "filters": {},
+            **({"passes": passes[source]} if source in (passes or {}) else {}),
         }
         for source in weights
     ]
     data = {
         "sources": sources,
-        "mixture": {"phases": [{"end_tokens": 200, "weights": weights}]},
-        "requested_train_tokens": 200,
+        "mixture": {"phases": [{"end_tokens": tokens, "weights": weights}]},
+        "requested_train_tokens": tokens,
         "validation_tokens_per_source": 90,
         "validation_fraction": 0.5,
         "filtering": {"min_chars": 0, "max_chars": 10_000},
@@ -141,3 +143,124 @@ def test_a_changed_input_is_rejected(tmp_path, monkeypatch):
         handle.write("\n")
     with pytest.raises(ValueError, match="web text changed"):
         _experiment(tmp_path, "changed", {"web": 100}, inputs)
+
+
+def _inputs(tmp_path, *names):
+    sources, rows = [], []
+    for name in names:
+        source, source_rows = _source(tmp_path, name)
+        sources.append(source)
+        rows += source_rows
+    partitions = tmp_path / "partitions.jsonl"
+    partitions.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    inputs = tmp_path / "inputs.json"
+    inputs.write_text(
+        json.dumps(
+            {
+                "format": "speck_ladder_inputs",
+                "format_version": 1,
+                "partitions": {"path": str(partitions), "sha256": file_sha256(partitions)},
+                "sources": sources,
+            }
+        )
+    )
+    return inputs
+
+
+def _source_manifest(packed, source_id):
+    manifest = json.loads((packed / "manifest.json").read_text())
+    return next(source for source in manifest["sources"] if source["id"] == source_id)
+
+
+def _train_passes(packed, source):
+    """Split a source's train stream into per-pass lists of document token tuples."""
+    shards = source["splits"]["train"]["shards"]
+    stream = np.concatenate([np.fromfile(packed / shard["path"], dtype="<u2") for shard in shards])
+    starts = np.cumsum([0] + [shard["tokens"] for shard in shards])
+    orders = source["repetition"]["pass_orders"]
+    bounds = [int(starts[entry["first_shard"]]) for entry in orders] + [len(stream)]
+    passes = []
+    for first, last in zip(bounds, bounds[1:]):
+        tokens = stream[first:last].tolist()
+        documents, current = [], []
+        for token in tokens:
+            current.append(token)
+            if token == 2:
+                documents.append(tuple(current))
+                current = []
+        assert not current
+        passes.append(documents)
+    return passes
+
+
+def test_declared_passes_repeat_a_scarce_pool_in_distinct_seeded_orders(tmp_path, monkeypatch):
+    monkeypatch.setattr(ladder, "get_tokenizer", lambda **_: Tokenizer())
+    inputs = _inputs(tmp_path, "web", "code")
+    weights = {"web": 20, "code": 80}
+    # Without a declaration the scarce code bank fails rather than silently repeating.
+    with pytest.raises(RuntimeError, match="code was exhausted"):
+        _experiment(tmp_path, "undeclared", weights, inputs, tokens=1000)
+
+    _, packed = _experiment(tmp_path, "repeated", weights, inputs, tokens=1000, passes={"code": 4})
+    code = _source_manifest(packed, "code")
+    train = code["splits"]["train"]
+    repetition = code["repetition"]
+    assert repetition["passes"] == 4
+    assert repetition["unique_target_tokens"] == 200
+    assert (
+        repetition["unique_documents"]
+        == train["documents"]
+        == len([r for r in _records(packed)["code"] if r["split"] == "train"])
+    )
+    assert repetition["unique_tokens"] >= 200
+    assert repetition["exposure_tokens"] == train["tokens"] >= train["requested_tokens"] == 800
+    assert train["preparation_target_tokens"] == 800
+    orders = repetition["pass_orders"]
+    assert [entry["pass"] for entry in orders] == [1, 2, 3, 4]
+    assert sum(entry["tokens"] for entry in orders) == train["tokens"]
+    assert orders[0]["tokens"] == repetition["unique_tokens"]
+    assert len({entry["order_sha256"] for entry in orders}) == 4
+    assert "repetition" not in _source_manifest(packed, "web")
+
+    passes = _train_passes(packed, code)
+    pool = passes[0]
+    assert len(pool) == repetition["unique_documents"] > 2
+    for index, documents in enumerate(passes[1:], start=2):
+        assert documents != pool[: len(documents)]
+        if index < 4:
+            # Full passes are permutations of exactly the unique pool.
+            assert sorted(documents) == sorted(pool)
+        else:
+            assert set(documents) <= set(pool)
+    assert passes[1] != passes[2]
+
+    # The same declaration packs byte-identical shards and manifest entries.
+    _, again = _experiment(tmp_path, "again", weights, inputs, tokens=1000, passes={"code": 4})
+    assert _source_manifest(again, "code") == code
+
+
+def test_repetition_leaves_validation_documents_and_bytes_unchanged(tmp_path, monkeypatch):
+    monkeypatch.setattr(ladder, "get_tokenizer", lambda **_: Tokenizer())
+    inputs = _inputs(tmp_path, "web", "code")
+    _, plain = _experiment(tmp_path, "plain", {"web": 50, "code": 50}, inputs)
+    _, repeated = _experiment(
+        tmp_path, "repeated", {"web": 20, "code": 80}, inputs, tokens=1000, passes={"code": 4}
+    )
+    for source_id in ("web", "code"):
+        before, after = _source_manifest(plain, source_id), _source_manifest(repeated, source_id)
+        assert before["splits"]["val"] == after["splits"]["val"]
+        validation = [
+            [r["content_hash"] for r in _records(packed)[source_id] if r["split"] == "val"]
+            for packed in (plain, repeated)
+        ]
+        assert validation[0] and validation[0] == validation[1]
+
+
+def test_a_pool_smaller_than_declared_fails_explicitly(tmp_path, monkeypatch):
+    monkeypatch.setattr(ladder, "get_tokenizer", lambda **_: Tokenizer())
+    inputs = _inputs(tmp_path, "web", "code")
+    # Two passes need a 400-token unique code pool; its train families hold fewer tokens.
+    with pytest.raises(RuntimeError, match="unique pool for 2 passes"):
+        _experiment(
+            tmp_path, "short", {"web": 20, "code": 80}, inputs, tokens=1000, passes={"code": 2}
+        )

@@ -29,6 +29,7 @@ _SOURCE_FIELDS = {
     "metadata_columns",
     "filters",
     "packing",
+    "passes",
     "record_format",
 }
 
@@ -248,6 +249,11 @@ def _validate_source(source):
         raise ValueError(f"source {source_id} record_format must be text or messages")
     if record_format == "messages" and packing is None:
         raise ValueError(f"source {source_id} messages records need row packing for their masks")
+    if "passes" in source:
+        # Declared repetition: the train pool shrinks to 1/passes of its exposure and repeats.
+        _integer(source["passes"], f"source {source_id} passes", minimum=2)
+        if packing is not None:
+            raise ValueError(f"source {source_id} passes are not supported with row packing")
     return {
         **source,
         "revision": source.get("revision"),

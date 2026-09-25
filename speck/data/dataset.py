@@ -221,8 +221,11 @@ class SourceBuilder:
         self.validation_fraction = validation_fraction
         self.filtering = filtering
         self.seed = seed
+        # A source that declares passes streams only its unique pool, which finish() repeats.
+        self.passes = source.get("passes", 1)
+        self.exposure_target = train_requested + train_reserve
         self.targets = {
-            "train": train_requested + train_reserve,
+            "train": -(-self.exposure_target // self.passes),
             "val": validation_requested,
         }
         restored_splits = (progress or {}).get("splits", {})
@@ -499,10 +502,14 @@ class SourceBuilder:
                 for split in ("train", "val")
                 if self.writers[split].total_tokens < self.targets[split]
             )
+            pool = (
+                f" (train is the unique pool for {self.passes} passes)" if self.passes > 1 else ""
+            )
             raise RuntimeError(
-                f"source {self.source_id} was exhausted before meeting its budgets: {missing}"
+                f"source {self.source_id} was exhausted before meeting its budgets: {missing}{pool}"
             )
         self._flush_rows(tail=True)
+        repetition = self._repeat_passes() if self.passes > 1 else None
         self._sync_outputs()
         self.index_file.close()
         final_index = self.index_path
@@ -511,7 +518,7 @@ class SourceBuilder:
         split_summaries = {}
         for split in ("train", "val"):
             requested = self.train_requested if split == "train" else self.validation_requested
-            target = self.targets[split]
+            target = self.exposure_target if split == "train" else self.targets[split]
             split_summaries[split] = {
                 "requested_tokens": requested,
                 "preparation_target_tokens": target,
@@ -561,8 +568,112 @@ class SourceBuilder:
         if self.packing is not None:
             summary["packing"] = {**self.packing, "kind": "best_fit_rows"}
             summary["record_format"] = self.record_format
+        if repetition is not None:
+            summary["repetition"] = repetition
         _atomic_json(self.directory / "source.json", summary)
         return summary
+
+    def _pass_priority(self, pass_number, dedup_hex):
+        return hashlib.sha256(
+            f"{self.seed}:{self.source_id}:{pass_number}:{dedup_hex}".encode()
+        ).digest()
+
+    def _repeat_passes(self):
+        """Append passes 2..k of the unique train pool, each in its own seeded order.
+
+        Pass 1 is the pool as streamed. Every later pass copies the same documents' tokens from
+        the pass-1 shards in SHA-256(seed:source:pass:dedup_hash) order, stopping at the exposure
+        target, so only the final pass may be partial. Each pass starts on a fresh shard.
+        """
+
+        writer = self.writers["train"]
+        writer.finish()
+        self.index_file.flush()
+        documents = []
+        with self.index_path.open("rb") as handle:
+            for line in handle:
+                record = json.loads(line)
+                if record["split"] == "train":
+                    documents.append(
+                        (record["dedup_hash"], record["start_token"], record["end_token"])
+                    )
+        unique_tokens = writer.total_tokens
+        if sum(end - start for _, start, end in documents) != unique_tokens:
+            raise ValueError(f"source {self.source_id} train index does not cover its pool")
+        pool = _ShardReader(self.directory, writer.shards)
+        passes = [
+            {
+                "pass": 1,
+                "documents": len(documents),
+                "tokens": unique_tokens,
+                "first_shard": 0,
+                "order_sha256": _line_hash([digest for digest, _, _ in documents]),
+            }
+        ]
+        for pass_number in range(2, self.passes + 1):
+            order = sorted(
+                documents, key=lambda document: self._pass_priority(pass_number, document[0])
+            )
+            first_shard = len(writer.shards)
+            start_tokens = writer.total_tokens
+            written = []
+            for digest, start, end in order:
+                if writer.total_tokens >= self.exposure_target:
+                    break
+                writer.write(pool.read(start, end))
+                written.append(digest)
+            if not written:
+                raise ValueError(
+                    f"source {self.source_id} reaches its exposure before pass {pass_number}; "
+                    f"its {unique_tokens:,}-token unique pool cannot fill {self.passes} passes"
+                )
+            writer.finish()
+            passes.append(
+                {
+                    "pass": pass_number,
+                    "documents": len(written),
+                    "tokens": writer.total_tokens - start_tokens,
+                    "first_shard": first_shard,
+                    "order_sha256": _line_hash(written),
+                }
+            )
+        del pool
+        if writer.total_tokens < self.exposure_target:
+            raise ValueError(f"source {self.source_id} repeated passes fall short of exposure")
+        return {
+            "passes": self.passes,
+            "unique_target_tokens": self.targets["train"],
+            "unique_tokens": unique_tokens,
+            "unique_documents": len(documents),
+            "exposure_tokens": writer.total_tokens,
+            "exposure_documents": sum(entry["documents"] for entry in passes),
+            "order": (
+                "pass 1 in source stream order; pass p > 1 in "
+                "SHA-256(seed:source_id:p:dedup_hash) ascending order, truncated at exposure"
+            ),
+            "pass_orders": passes,
+        }
+
+
+class _ShardReader:
+    """Read token ranges of a finished split stream without loading it whole."""
+
+    def __init__(self, directory, shards):
+        self.arrays = [
+            np.memmap(Path(directory) / shard["path"], mode="r", dtype="<u2") for shard in shards
+        ]
+        self.starts = np.cumsum([0] + [shard["tokens"] for shard in shards])
+
+    def read(self, start, end):
+        parts = []
+        index = int(np.searchsorted(self.starts, start, side="right")) - 1
+        while start < end:
+            offset = int(self.starts[index])
+            stop = min(end, int(self.starts[index + 1]))
+            parts.append(self.arrays[index][start - offset : stop - offset])
+            start = stop
+            index += 1
+        return np.concatenate(parts)
 
 
 def _prepare_injected_source(*, documents, **builder_settings):
@@ -1096,6 +1207,12 @@ class _DatasetBuild:
                 f"{source['id']}: requested {train['requested_tokens']:,}, "
                 f"reserve {train['reserve_tokens']:,}, actual {train['tokens']:,}"
             )
+            repetition = source.get("repetition")
+            if repetition is not None:
+                print(
+                    f"{source['id']}: {repetition['passes']} passes over "
+                    f"{repetition['unique_tokens']:,} unique tokens"
+                )
         print(f"Manifest: {self.output_dir / 'manifest.json'}")
 
     def run(self):
@@ -1207,6 +1324,17 @@ def _validate_text_manifest(manifest):
                 # Whole rows plus one unsupervised lookahead token.
                 if split_manifest["tokens"] % packing.get("row_tokens", 0) != 1:
                     raise ValueError(f"packed dataset source {source_id} has partial {split} rows")
+        repetition = source.get("repetition")
+        if repetition is not None:
+            train = source["splits"]["train"]
+            orders = repetition.get("pass_orders", [])
+            if (
+                len(orders) != repetition.get("passes")
+                or repetition.get("exposure_tokens") != train["tokens"]
+                or sum(entry.get("tokens", 0) for entry in orders) != train["tokens"]
+                or repetition.get("unique_documents") != train["documents"]
+            ):
+                raise ValueError(f"packed dataset source {source_id} repetition is inconsistent")
         if source.get("documents") != source.get("document_index", {}).get("records"):
             raise ValueError(f"packed dataset source {source_id} document index is invalid")
         journal = source.get("dedup_journal", {})
