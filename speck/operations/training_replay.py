@@ -132,10 +132,15 @@ def replay(args):
     )
     if args.phase == "base":
         batch = settings["device_batch_size"] * settings["sequence_length"] * args.workers
+        # Accumulate microbatches so the replay covers the path real runs take (DDP no_sync).
+        accumulation = getattr(args, "accumulation", 2)
+        if isinstance(accumulation, bool) or not isinstance(accumulation, int) or accumulation < 1:
+            raise ValueError("accumulation must be a positive integer")
+        update = batch * accumulation
         settings.update(
-            batch_tokens=batch,
-            train_tokens=args.steps * batch,
-            checkpoint_tokens=[args.checkpoint_step * batch],
+            batch_tokens=update,
+            train_tokens=args.steps * update,
+            checkpoint_tokens=[args.checkpoint_step * update],
             warmup_steps=min(settings["warmup_steps"], args.checkpoint_step - 1),
             eval_tokens=batch * len(configs["data"]["sources"]),
             final_eval_tokens=batch * len(configs["data"]["sources"]),
@@ -268,6 +273,9 @@ def main(argv=None):
     parser.add_argument("--allocated-gpus", type=int, default=1)
     parser.add_argument("--steps", type=int, default=4, help="engineering base horizon")
     parser.add_argument("--checkpoint-step", type=int, default=2)
+    parser.add_argument(
+        "--accumulation", type=int, default=2, help="base microbatches per optimizer step"
+    )
     parser.add_argument("--seconds", type=float, default=1800)
     # The selected production recipe is compiled, but compilation had never been
     # exercised under DistributedDataParallel: base.py compiles the DDP-wrapped

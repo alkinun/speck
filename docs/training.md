@@ -49,8 +49,9 @@ and its `triton/` subdirectory across requeues; runtime setup pins `TRITON_CACHE
 because different cached flash-linear-attention (FLA) kernel choices change numerics.
 
 Checkpoints include every rank's Python, NumPy, CPU and CUDA RNG state. `scripts.training_replay`
-exercises the production trainer for four steps with a restart after two and compares every tensor
-and the loader and RNG state; `--phase sft` does the same for a finite SFT recipe.
+exercises the production trainer for four steps of two accumulated microbatches, with a restart
+after two, and compares every tensor and the loader and RNG state; `--phase sft` does the same for
+a finite SFT recipe.
 
 ## Branches: decay and mid-training
 
