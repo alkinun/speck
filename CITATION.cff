@@ -3,8 +3,8 @@ message: "If you use Speck, cite the software release."
 title: "Speck: a data and training toolkit for small language models"
 type: software
 authors:
-  - family-names: Unlu
-    given-names: Alkin
+  - family-names: Ünlü
+    given-names: Alkın
 version: 0.1.0
 repository-code: "https://github.com/alkinun/speck"
 url: "https://github.com/alkinun/speck"
