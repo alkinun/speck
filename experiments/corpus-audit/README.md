@@ -1,7 +1,7 @@
 # Corpus audits
 
-Completed CPU audits of candidate sources. Each receipt holds its own detail and keeps its original
-bytes; none admits training data. Per-source gates and blockers are in
+Completed audits of candidate sources. Each receipt holds its own detail and keeps its original
+bytes. Per-source gates and blockers are in
 [source-readiness.json](../main-data/source-readiness.json), which cites these receipts, and the
 open qualification work is in the [main-data record](../main-data/README.md#qualification).
 Superseded audits and their replay scripts are in Git history (tag `pre-cleanup-2026-09-25`).
