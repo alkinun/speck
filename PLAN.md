@@ -61,8 +61,8 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
    - Finish both acquisitions: census the crawl and point the supply gap at it; summarize the code
      fetch, preprocess all code and rebuild the family partition over every source.
    - Close the prerequisites listed in the draft [P1 to P7 records](experiments/ladder/records):
-     reconvert code and the crawl so records carry their classifier scores, give P2's retained
-     duplicates a family bucket, and decide on FineMath 3+. Then prepare the data variants.
+     reconvert code and the crawl so records carry their classifier scores, and decide on FineMath
+     3+. Then prepare the data variants.
    - Freeze the SFT probe recipe and dataset from the retained assistant stock.
 2. **On access,** qualify one worker then four, measure every rung, and convert each budget line
    into run counts.

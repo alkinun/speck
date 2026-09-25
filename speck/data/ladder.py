@@ -44,17 +44,38 @@ def load_inputs(path):
     return inputs
 
 
-def partition_buckets(partitions, source_id):
-    """Map one source's content hashes to their family bucket."""
-    buckets = {}
+def partition_buckets(partitions, source_id, removals=None):
+    """Map one source's content hashes to their family bucket.
+
+    With the baseline preprocess's removal log, a duplicate the baseline removed (and so never
+    partitioned) inherits the bucket of the document it duplicates. Arms that deduplicate less,
+    such as P2's, keep those duplicates in the same family as their originals.
+    """
+    duplicates = {}
+    if removals is not None:
+        with Path(removals).open() as handle:
+            for line in handle:
+                row = json.loads(line)
+                if row["removed_source"] == source_id and row.get("kept"):
+                    duplicates[row["removed_content_sha256"]] = row["kept"]["content_sha256"]
+    originals = set(duplicates.values())
+    buckets, original_buckets = {}, {}
     with Path(partitions).open() as handle:
         for line in handle:
             row = json.loads(line)
+            content = row["released_content_sha256"]
             if row["source"] == source_id:
-                buckets[row["released_content_sha256"]] = row["candidate_partition"]
+                buckets[content] = row["candidate_partition"]
+            if content in originals:
+                original_buckets[content] = row["candidate_partition"]
     if not buckets:
         raise ValueError(f"the partition assigns no documents to {source_id}")
-    return buckets
+    inherited = 0
+    for duplicate, original in duplicates.items():
+        if duplicate not in buckets and original in original_buckets:
+            buckets[duplicate] = original_buckets[original]
+            inherited += 1
+    return buckets, inherited
 
 
 def score_floor(source):
@@ -121,11 +142,19 @@ def prepare(experiment, inputs_path):
     if missing:
         raise ValueError(f"sources without bound inputs: {missing}")
     counts = {source["id"]: Counter() for source in data["sources"]}
+    inherited = {}
     iterators = {}
     for source in data["sources"]:
         bound = by_id[source["id"]]
         text = _verified(bound["text"], f"{source['id']} text")
-        buckets = partition_buckets(partitions, bound.get("partition_source", source["id"]))
+        removals = (
+            _verified(bound["removals"], f"{source['id']} removals")
+            if "removals" in bound
+            else None
+        )
+        buckets, inherited[source["id"]] = partition_buckets(
+            partitions, bound.get("partition_source", source["id"]), removals
+        )
         iterators[source["id"]] = family_documents(
             text, buckets, data["seed"], counts[source["id"]], score_floor(source)
         )
@@ -156,6 +185,7 @@ def prepare(experiment, inputs_path):
             if (floor := score_floor(source)) is not None
         },
         "documents_streamed_by_bucket": {key: dict(value) for key, value in counts.items()},
+        "buckets_inherited_from_removed_duplicates": inherited,
         "training_admitted": False,
     }
     atomic_json(output / "ladder-data.json", receipt)

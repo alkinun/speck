@@ -24,7 +24,7 @@
   "data_preparation": "Each arm reruns scripts.production_data_preprocess over the same inputs with only policy.deduplication changed; the benchmark firewall and family partition apply unchanged in every arm. The no-dedup arm's data configuration also sets dedup.scope to none, because packing otherwise removes exact copies itself.",
   "prerequisites": [
     "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known.",
-    "scripts.ladder_prepare assigns each duplicate the baseline removed to the family bucket of the document it duplicates; today a document absent from the partition has no bucket. Each arm's preprocess plan sets policy.deduplication to none or exact."
+    "Each arm's ladder inputs bind the baseline preprocess's removals.jsonl per source, so duplicates the baseline removed inherit their original's family bucket; each arm's preprocess plan sets policy.deduplication to none or exact."
   ],
   "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 7.3 hours on the local RTX 3090 at the measured compiled rate of 100,000 tokens per second."
 }

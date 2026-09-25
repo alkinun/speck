@@ -308,3 +308,39 @@ def test_a_score_floor_rejects_a_train_document_without_the_field(tmp_path, monk
     floor = {"code": {"score_column": "int_score", "filters": {"min_score": 4}}}
     with pytest.raises(ValueError, match="no numeric int_score"):
         _experiment(tmp_path, "missing", {"code": 100}, inputs, overrides=floor)
+
+
+def test_a_removed_duplicate_inherits_its_originals_bucket(tmp_path):
+    partitions = tmp_path / "partitions.jsonl"
+    original, duplicate, orphan = "a" * 64, "b" * 64, "c" * 64
+    partitions.write_text(
+        json.dumps(
+            {"source": "web", "released_content_sha256": original, "candidate_partition": "final"}
+        )
+        + "\n"
+    )
+    removals = tmp_path / "removals.jsonl"
+    removals.write_text(
+        "".join(
+            json.dumps(row) + "\n"
+            for row in (
+                {
+                    "removed_source": "web",
+                    "removed_content_sha256": duplicate,
+                    "reason": "near_duplicate",
+                    "kept": {"source_id": "web", "content_sha256": original},
+                },
+                {
+                    "removed_source": "web",
+                    "removed_content_sha256": orphan,
+                    "reason": "exact_duplicate",
+                    "kept": {"source_id": "firewall_reference__code", "content_sha256": "d" * 64},
+                },
+                {"removed_source": "code", "removed_content_sha256": "e" * 64, "kept": None},
+            )
+        )
+    )
+    buckets, inherited = ladder.partition_buckets(partitions, "web", removals)
+    assert buckets == {original: "final", duplicate: "final"}
+    assert inherited == 1
+    assert ladder.partition_buckets(partitions, "web") == ({original: "final"}, 0)

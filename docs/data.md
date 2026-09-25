@@ -82,7 +82,9 @@ published manifest records it in `policy` and `gates`.
 **Score floors.** Converted records keep their classifier score: `int_score` and `tier` for
 Stack-Edu, `pred_score` for Ultra-FineWeb. A ladder source with `score_column` and
 `filters.min_score` trains only on documents at or above the floor; validation documents are never
-filtered, so arms that change a floor share their validation set.
+filtered, so arms that change a floor share their validation set. A ladder input may also bind the
+baseline preprocess's `removals.jsonl`, so duplicates the baseline removed inherit the family bucket
+of the document they duplicate in arms that keep them.
 
 Each billion packed tokens needs about 2 GB of storage before indexes. The frozen tokenizer is
 Mistral-7B-v0.1's (model SHA-256
