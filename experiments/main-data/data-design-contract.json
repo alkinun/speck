@@ -1,9 +1,9 @@
 {
   "format": "speck_stage_conditioned_data_design_contract",
   "format_version": 1,
-  "date": "2026-09-20",
+  "date": "2026-09-25",
   "status": "design_only_not_training_authority",
-  "purpose": "Make the reviewed frontier-data findings executable as shared requirements for source manifests and bounded data studies across pretraining, mid-training and post-training.",
+  "purpose": "Shared requirements for source manifests and data experiments in pretraining, decay and mid-training.",
   "evidence_boundary": "This contract changes experiment metadata and admission requirements only. It does not admit a source, set mixture weights, authorize acquisition or change the 5,000-GPU-hour allocation.",
   "manifest_schema": {
     "required_fields": [
@@ -20,9 +20,8 @@
       "repetition_count"
     ],
     "quality_vector": "Record the component scores, calibration/version and retained score distribution; a publisher score or one scalar cutoff is insufficient.",
-    "dependency_metadata": "For long-context or repository-event records, record related-item identities, dependency type and an auditable dependency-distance value; use null with a reason when unavailable.",
-    "lineage": "Derived records bind source identities, transformation type, teacher/generator identity, generation settings and rejection reasons.",
-    "trajectory_metadata": "Agent records bind episode, task, repository snapshot, environment image, tool schema, turn, branch, outcome, recovery labels and per-segment loss masks."
+    "dependency_metadata": "For repository or long-context records, record related-item identities, dependency type and an auditable dependency-distance value; use null with a reason when unavailable.",
+    "lineage": "Derived records bind source identities, transformation type, teacher/generator identity, generation settings and rejection reasons."
   },
   "bank_boundaries": [
     {
@@ -36,14 +35,6 @@
     {
       "id": "synthetic_reasoning",
       "rule": "Generated reasoning or solutions remain a separate family with teacher and correctness evidence."
-    },
-    {
-      "id": "repository_events",
-      "rule": "Issues, reviews, pull requests, commits, diffs and tests retain repository/event links and behavioral checks."
-    },
-    {
-      "id": "agent_trajectories",
-      "rule": "Tool/environment trajectories retain schemas, turn order, observations, outcomes and recovery cases."
     }
   ],
   "sampling_policy": {
@@ -72,13 +63,20 @@
         "token utility per unique and exposed token"
       ]
     },
-    "capability_mid_training": {
-      "default": "Targeted repository, code, math, repair, tool-use and executable workflow data; grounded or executable supervision is admitted only with environment, outcome and loss-mask evidence.",
+    "decay": {
+      "default": "The parent's mixture or a declared late shift toward higher-quality natural and verified derived data, with total tokens and schedule fixed per arm.",
+      "measure": [
+        "held-out source/domain loss",
+        "SFT-probe scores",
+        "short-task retention"
+      ]
+    },
+    "mid_training": {
+      "default": "Code, math and repository-ordered data with declared general replay.",
       "measure": [
         "capability per continuation token and GPU-hour",
-        "lineage/correctness coverage",
-        "tool-call validity, recovery and long-horizon coherence",
-        "downstream SFT convergence and early RL adaptation"
+        "short-task retention",
+        "SFT-probe scores"
       ]
     },
     "context_extension": {
@@ -89,24 +87,12 @@
         "related-prefix benefit",
         "short-task retention"
       ]
-    },
-    "post_training": {
-      "default": "Select supervised, rollout and self-distillation data by independently verified outcomes and reward reliability.",
-      "measure": [
-        "outcome validity",
-        "supervised-token efficiency",
-        "verifier agreement",
-        "failure recovery",
-        "self-distillation rejection and anchor-replay coverage",
-        "held-out transfer"
-      ]
     }
   },
   "cross_stage_controls": [
     "Benchmark decontamination is an independent gate from exact, fuzzy and semantic deduplication.",
     "Proxy-study rankings require matched-exposure confirmation on held-out families before production claims.",
-    "Frontier-reported mixture percentages, token totals and teacher pipelines are directional evidence only and are not copied.",
-    "Multimodal data remains outside the first text-only release."
+    "Frontier-reported mixture percentages, token totals and teacher pipelines are directional evidence only and are not copied."
   ],
   "admission_boundary": "A launch manifest must bind this contract, all required fields, five source-readiness gates, disjoint evaluation families and measured cost. This contract alone never authorizes training."
 }
