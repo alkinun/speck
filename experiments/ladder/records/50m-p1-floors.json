@@ -36,5 +36,5 @@
     "Converted Ultra-FineWeb records keep the classifier score (speck/data/ultrafineweb.py does not yet write it).",
     "FineMath 3+ acquired and covered by a source-use decision; only finemath-4plus is a selected source."
   ],
-  "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 13 hours on the local RTX 3090 at the measured eager rate of 55,000 tokens per second."
+  "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 8.5 hours on the local RTX 3090 at the measured compiled rate of 86,000 tokens per second."
 }

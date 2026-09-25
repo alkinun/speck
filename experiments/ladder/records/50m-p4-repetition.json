@@ -34,5 +34,5 @@
     "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known.",
     "scripts.ladder_prepare can repeat a bank's pool for a declared number of passes; today packing fails on a supply shortfall instead of repeating."
   ],
-  "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 13 hours on the local RTX 3090 at the measured eager rate of 55,000 tokens per second."
+  "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 8.5 hours on the local RTX 3090 at the measured compiled rate of 86,000 tokens per second."
 }

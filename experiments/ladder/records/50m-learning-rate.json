@@ -34,6 +34,6 @@
   "decision_rule": "Choose the arm with the lowest primary metric. If the best arm is at either end of the grid, extend the grid by one factor of two in that direction before choosing. The chosen rate then trains one full-horizon run on the baseline corpus, which is P0 seed 1.",
   "minimum_useful_effect": null,
   "minimum_useful_effect_basis": "Not applicable: this sets a hyperparameter, it tests no data effect.",
-  "cost": "Local RTX 3090 at the measured eager rate of 55,000 tokens per second: about 3.3 hours per arm, no grant GPU-hours.",
+  "cost": "Local RTX 3090 at the measured compiled rate of 86,000 tokens per second: about 2.1 hours per arm, no grant GPU-hours.",
   "corpus": "experiments/ladder/50m/lr-sweep: the parent's starting mixture at the sweep horizon, packed by scripts.ladder_prepare from the inputs its inputs.json binds. Its web share comes from the retained twelve-shard Ultra-FineWeb HQ sample, not the CC-MAIN-2025-43 crawl the baseline uses; arms are compared only with each other."
 }
