@@ -54,5 +54,4 @@ exclusion identities before data selection, and re-run reference models under th
   disclosed. Declare the FLOP convention; 6ND omits attention, recurrence and recomputation.
 - For inference, separate prefill and decode and count reasoning and answer tokens.
 
-`scripts.benchmark` measures training cost, `scripts.inference_benchmark` prefill and decode,
-`scripts.evaluation_server` serves a local export, and `scripts.logprob_parity` compares backends.
+`scripts.benchmark` measures training cost and `scripts.inference_benchmark` prefill and decode.
