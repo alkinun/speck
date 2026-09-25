@@ -1,227 +1,106 @@
 # Data
 
-This document owns the data methods: the shared pipeline, where natural, derived and synthetic
-records may enter, counting rules and the code route. The [program design](program.md) owns the
-stages, experiments and budget, [PLAN.md](../PLAN.md) the work order, the
-[source-readiness matrix](../experiments/main-data/source-readiness.json) per-source gates, and and
-[plan.json](../experiments/main-data/plan.json) (`parent.starting_mixture`) the mixture. No document here
-authorizes a training run.
+The shared data pipeline, its rules and its commands. The [program design](program.md) defines the
+experiments. Per-source gates are in
+[source-readiness.json](../experiments/main-data/source-readiness.json), and the mixture is in
+[plan.json](../experiments/main-data/plan.json) (`parent.starting_mixture`).
 
 ## Pipeline
 
-Pin source revisions and permitted use → acquire/filter → deduplicate and exclude evaluation
-material → partition → tokenize/pack → verify → train. Source-separated shards allow later mixture
-changes without retokenizing. Recheck tokenizer fingerprints and hashes whenever reusing stock.
+Every record at every stage follows one auditable path:
 
-Every record follows the same auditable path, at every stage:
-
-1. identify the source, licence or use constraint, family, acquisition receipt and transformation history;
-2. extract with a source-specific parser, retaining the original text or artifact identity;
-3. remove exact duplicates, near duplicates, template copies and semantic repeats, while preserving
-   a family graph for held-out splits;
-4. apply quality, language, safety, benchmark-contamination and source-coverage filters;
-5. attach lineage, quality dimensions, derivation cost and accepted-token accounting;
+1. identify source, licence or use condition, family, acquisition receipt and transformations;
+2. extract with a source-specific parser, keeping the original identity;
+3. remove exact and near duplicates, keeping a family graph for held-out splits;
+4. apply quality, language, safety, benchmark-contamination and coverage filters;
+5. attach lineage, quality fields, derivation cost and accepted-token accounting;
 6. partition by source family before tokenization and packing;
 7. verify manifests, token counts, packing, sampling weights, checksums and resumability;
-8. train only from the hash-bound manifest, reporting exposure, replay, discarded data and
-   evaluation results separately.
+8. train only from the hash-bound manifest.
 
-AI-assisted filtering may recommend keep/remove decisions, but pretraining retains the original
-source and records the model, prompt, version and decision. Generated text is a derived record and
-must never be indistinguishable from source text in a manifest.
+The [data-design contract](../experiments/main-data/data-design-contract.json) lists the manifest
+fields each stage records. No gate is relaxed for small runs.
 
-**Where derived text may enter.** The parent's starting mixture is natural and source-traceable.
-Pretraining admits derived text only as a declared experiment arm (P6 synthetic share on the ladder,
-D1 decay data on the parent), separately identified by lineage, teacher/generator, verification
-result and cost. Derived data never compensates for missing natural supply. Post-training
-synthesis (generated SFT traces, self-distillation) belongs to a later step.
+**Derived text.** The parent's starting mixture is natural and source-traceable. Derived text enters
+pretraining only as a declared arm (P6 on the ladder, D1 on the parent), identified by lineage,
+generator, verification and cost. It never fills a gap in natural supply. AI-assisted filtering may
+recommend decisions, but the original source is kept and the model, prompt and decision recorded.
 
-**Admission gates.** Before compute is committed, each stage must have a pinned manifest, a
-family-disjoint evaluation split, a contamination report, accepted-token or example accounting,
-reproducible checksums, measured throughput, a retry/recovery policy and a declared stop rule.
+**Counting.** Raw stock, accepted unique tokens, exposure and rejected material are separate counts.
+Accepted tokens are counted only after family, overlap and extraction review, and overlapping banks
+count once. Every repeated pass is declared and counted as exposure.
 
-**Counting.** Keep raw stock, accepted unique tokens, exposure/replay and rejected material as
-separate counts, and count accepted tokens only after family, overlap and extraction review.
-Candidate flags stay review-only until a rule is adopted. Count overlapping banks once. Repetition
-is never silent: every repeated pass is declared and counted as exposure, and how much a scarce bank
-tolerates is measured by [P4](program.md#pretraining-the-ladder-1900-gpu-hours).
-
-| Responsibility | Code / command |
+| Responsibility | Code |
 | --- | --- |
 | Source readers, configuration, packing, resume | `speck/data/{acquisition,configuration,packing,dataset}.py` |
-| Global disk-backed deduplication | `scripts.production_data_preprocess` (batched MinHash is the default; `--per-shingle-minhash` is a slower bitwise-identical fallback; `--index-directory` builds the index on local flash) |
-| Benchmark exclusion identities | `speck/evaluation/protocol.py` (`BenchmarkExclusion`) |
-| Cross-source family graph and partitions | `scripts.joint_family_graph` (a source with a `repository_field` joins each document to its repository's family) |
-| Ladder corpora from preprocessed sources and family buckets | `scripts.ladder_prepare` |
-| Source-use review | `scripts.source_rights_review` (validates a pending human template; never makes an approval decision) |
-| Per-document token index of a preprocessed source | `speck/data/document_index.py` |
+| Global disk-backed deduplication | `scripts.production_data_preprocess` (`--index-directory` puts the index on flash) |
+| Benchmark exclusion | `speck/evaluation/protocol.py` (`BenchmarkExclusion`), `scripts.livecodebench_exclusion` |
+| Cross-source family graph and partitions | `scripts.joint_family_graph` |
+| Ladder corpora from family buckets | `scripts.ladder_prepare` |
+| Per-document token index | `speck/data/document_index.py` |
+| Source-use review | `scripts.source_rights_review` (validates a human decision; never makes one) |
 | Distributed loading | `speck/data/loader.py` |
-
-For a complete experiment directory containing `tokenizer.json` and `data.json`:
-
-```bash
-uv run --no-sync python -m scripts.tokenizer_prepare PATH_TO_EXPERIMENT
-uv run --no-sync python -m scripts.data_prepare PATH_TO_EXPERIMENT
-```
-
-These can download substantial data. Use `make smoke` for the offline fixture. The old finite
-source-acquisition jobs run only from the [historical checkout](../archive/README.md).
-
-## Retained material
-
-The runtime store is `/mnt/speck-data/speck` on the maintainer's machine; portable code defaults to
-`~/.cache/speck`, overridden by `speck_base_dir`. The frozen tokenizer is under
-`tokenizer-final-mistral-v1`; its model SHA-256 is
-`dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055`.
-
-The [supply gap](../experiments/main-data/supply-gap.json) derives retained stock per bank; the
-[pilot supply receipt](../experiments/pilot/supply.json) verifies the retained token stocks, and the
-[pilot](../experiments/pilot/README.md) records its finite packed corpus. Retained stock is not
-eligible supply: reopen manifests, preserve source-use conditions and verify cross-source and
-validation separation before reuse.
-
-At uint16 storage, each billion packed tokens requires about 2 GB for token IDs, before indexes,
-validation, preparation intermediates and duplicate databases. Budget raw acquisition, exclusion
-outputs, packed data and recovery checkpoints separately. Run the same joint-exclusion, partition,
-pack and full-loader checks at the parent's scale as on the ladder.
 
 ## Acquiring candidate stock
 
-Two resumable runs grow the selected-web and natural-code stock. Each step publishes a receipt,
-reruns resume from the last completed unit, and nothing is admitted. `D` is the runtime store; run
-from the repository root with `PYTHONPATH=.` and `TMPDIR` on local flash. Keep the SQLite index
-on flash with `--index-directory` and run one heavy writer per spinning disk (see
-[artifact discipline](#artifact-discipline)).
+Two resumable runs grow the selected-web and code stock. Each step writes a receipt, reruns resume
+from the last completed unit, and nothing is admitted. `D` is the runtime store
+(`/mnt/speck-data/speck`). Put `TMPDIR` and the SQLite index on local flash, and run one heavy writer
+per spinning disk.
 
-**One Ultra-FineWeb HQ crawl.** The crawl reuses the 2026-09-22 HQ preprocess plan, so it
-inherits its firewall references and deduplication policy.
+**Ultra-FineWeb HQ crawl.** This reuses the 2026-09-22 HQ preprocess plan and its firewall and
+deduplication policy.
 
 ```bash
-A=experiments/corpus-audit/audit_ultrafineweb_listing.py
-python $A acquire experiments/corpus-audit/ultrafineweb-hq-listing.json CRAWL $D/hq-CRAWL
-python $A convert $D/hq-CRAWL $D/joint-family-partition-20260922/hq-preprocess-plan.json $D/hq-CRAWL-preprocess
+python -m scripts.ultrafineweb acquire experiments/corpus-audit/ultrafineweb-hq-listing.json CRAWL $D/hq-CRAWL
+python -m scripts.ultrafineweb convert $D/hq-CRAWL $D/joint-family-partition-20260922/hq-preprocess-plan.json $D/hq-CRAWL-preprocess
 python -m scripts.production_data_preprocess $D/hq-CRAWL-preprocess/preprocess-plan.json --index-directory FLASH_DIR
-python $A census $D/hq-CRAWL-preprocess/excluded $D/hq-CRAWL-census $D/hq-CRAWL-census.json
+python -m scripts.ultrafineweb census $D/hq-CRAWL-preprocess/excluded $D/hq-CRAWL-census $D/hq-CRAWL-census.json
 ```
 
-The census receipt's `distinct_from_fineweb_edu_tokens` is the quantity the supply gap uses. On the
-workstation the preprocessor ran at about 700 documents/s, and its index grows by about 2 KB per
-document.
+The supply gap uses the census receipt's `distinct_from_fineweb_edu_tokens`.
 
-**Stack-Edu code.** Fetch each language of a tier, record completed tranches, then convert the
-retained stock and every tranche into one preprocessor input.
+**Stack-Edu code.** Fetch each language of a tier, summarize the completed tranches, then convert
+the retained stock and every tranche into one preprocessor input.
 
 ```bash
-S=experiments/corpus-audit/stack_edu_content.py
-python $S acquire $D/stack-edu-census-20260923/census-listing.json experiments/corpus-audit/stack-edu-metadata-census.json LANGUAGE TIER $D/stack-edu-content-v1
-python $S summarize $D/stack-edu-content-v1 experiments/corpus-audit/stack-edu-acquisition.json
-python $S convert $D/data-qualification-20260919/code-supply/acquisition.json $D/stack-edu-content-v1 $D/joint-family-partition-20260922/hq-preprocess-plan.json $D/stack-edu-code-preprocess
+python -m scripts.stack_edu acquire $D/stack-edu-census-20260923/census-listing.json experiments/corpus-audit/stack-edu-metadata-census.json LANGUAGE TIER $D/stack-edu-content-v1
+python -m scripts.stack_edu summarize $D/stack-edu-content-v1 experiments/corpus-audit/stack-edu-acquisition.json
+python -m scripts.stack_edu convert $D/data-qualification-20260919/code-supply/acquisition.json $D/stack-edu-content-v1 $D/joint-family-partition-20260922/hq-preprocess-plan.json $D/stack-edu-code-preprocess
 python -m scripts.production_data_preprocess $D/stack-edu-code-preprocess/preprocess-plan.json --index-directory FLASH_DIR
 ```
 
-`summarize` omits a tranche until its `tranche.json` exists, so rerun it after each language
-finishes. A 4,096-row unit takes about one minute at the default 128 fetch workers; tier 3 is
-6,045 units across 15 languages.
+`summarize` skips a tranche until its `tranche.json` exists. Tier 3 is 6,045 units of 4,096 rows
+across 15 languages, about a minute per unit. `scripts.stack_edu_census` rebuilds the metadata
+census.
+
+**Storage.** Each billion packed uint16 tokens takes about 2 GB before indexes and intermediates.
+Bulk corpora suit a large disk. The deduplication index, small unit files and scanner scratch are
+random synced writes and belong on flash. Fsync a unit's records before the manifest that marks it
+complete. The frozen tokenizer is `tokenizer-final-mistral-v1` (model SHA-256
+`dadfd56d766715c61d2ef780a525ab43b8e6da4de6865bda3d95fdef5e134055`).
 
 ## Source quality
 
-High-quality code and reasoning must be present during pretraining, not deferred entirely to SFT.
-Prioritize these forms in the parent corpus:
+Code and reasoning quality are a pretraining requirement, not something left to SFT. Prioritize
+natural code with tests, documentation, API use and project context; correct worked math and
+scientific explanation from foundations to hard problems; and coherent repository bundles for
+context extension. Keep everyday and nontechnical prose as well. An educational score, long
+reasoning or a passing generated test is not quality by itself.
 
-- Natural implementation code with useful tests, documentation, API usage and project context;
-  preserve Python and other target languages, including JavaScript/TypeScript.
-- Correct worked math, derivations and scientific explanations spanning elementary foundations
-  through harder problems; inspect intermediate reasoning as well as final answers.
-- Checked code explanations, algorithm derivations, debugging/repair examples and exercises with
-  independent tests. Preserve mistakes only when clearly identified and followed by valid correction.
-- Coherent repository/document bundles for context extension.
+Rules carried from the [audits](../experiments/corpus-audit/README.md):
 
-Selected natural web and reference material provide language, knowledge and task diversity.
-Preserve everyday, nontechnical topics and varied prose as well as difficult educational material.
-Do not equate educational score, reasoning length or a passing generated test with quality. Retain
-source-family identity across original pages, rewrites, Q&A and instruction derivatives; several
-dataset names can represent the same underlying information. Pilot shares are engineering
-settings, not quotas.
+- Score labels are not interchangeable cutoffs. Name the exact field and operator; FineMath 4+ or
+  InfiWebMath 3+ labels are not continuous-score thresholds.
+- Extraction and arithmetic flags are review hints until validated, not filters or correctness
+  certificates.
+- An exact normalized benchmark match is a floor for contamination, not a clearance.
+- Keep source-family identity across original pages, rewrites, Q&A and derivatives; related forks,
+  patches and exercises share one family.
+- Natural code needs immutable identity, applicable notices, intact content, family and benchmark
+  exclusions and joint deduplication. It does not need invented tests. Verified exercises also need
+  clear specifications, linked tests and independent oracles, and are tracked separately. Notice
+  text governs, not a scanner or publisher label.
 
-Web and math review rules carried from the audits in the
-[corpus-audit record](../experiments/corpus-audit/README.md):
-
-- Score labels are not interchangeable cutoffs. Name the exact field and operator for any stricter
-  predicate; configuration labels (FineMath 4+, InfiWebMath 3+) are not equivalent continuous-score
-  thresholds.
-- High-scoring pages can still carry extraction defects; review flags stay separate from the
-  adopted filter until validated against archived captures.
-- Arithmetic or answer-consistency parsers are triage, not correctness certificates; symbolic,
-  unit-bearing and multi-line reasoning need independent checks.
-- Exact normalized benchmark matches are a floor, not a contamination clearance; derived variants
-  and semantic overlap remain separate checks.
-
-The [source registry](../experiments/main-data/source-registry.json) fixes the selected sources;
-[recipe-review.json](../experiments/corpus-audit/recipe-review.json) keeps the reviewed public
-cards for later revised freezes. The assistant stock behind the SFT probe is in
-[assistant data](assistant.md#assistant-stock).
-
-Design records for this evidence:
-
-- The [data-design contract](../experiments/main-data/data-design-contract.json) fixes the
-  manifest fields every stage records: stage, source family, transformation, quality, coverage,
-  dependency, contamination and lineage.
-- The [source-mapping receipt](../experiments/main-data/frontier-data-source-mapping.json) indexes
-  which audits support each reviewed hypothesis; it closes no gate.
-- The [natural-web](../experiments/main-data/natural-web-candidate-manifest.json),
-  [natural-code](../experiments/main-data/natural-code-candidate-manifest.json),
-  [math](../experiments/main-data/math-candidate-manifest.json) candidate manifests add domain
-  evidence and comparison contracts for the readiness sources. The
-  [post-training](../experiments/main-data/post-training-candidate-manifest.json) manifest and the
-  [post-training research synthesis](../experiments/main-data/post-training-research.json) are kept
-  for a later step.
-
-Preserve source-family identity and exclusions across every stage, including derived exercises
-and teacher traces. Useful context is measured as the
-[mid-training design](program.md#mid-training-800-gpu-hours) states, never by a configured maximum.
-
-## Code priority and qualification
-
-Code quality is a pretraining requirement: natural code, tests, documentation and correct worked
-explanations should establish useful foundations before any SFT. Preserve practical API use,
-debugging and repository relationships alongside algorithmic exercises. Long-context preparation
-retains coherent repository units and dependencies for context extension; an arbitrary
-concatenation of unrelated files is not repository-level supervision. Split original repositories
-and derived tasks together to protect held-out evaluations.
-
-**Qualification rules.** Natural source code needs immutable identity, applicable source-use
-evidence, intact useful content, family/benchmark exclusions and joint deduplication. It does *not*
-need to pass invented tests to be natural-code material. Verified exercises additionally require
-clear specifications, same-revision implementation/test linkage, bound dependencies, independent
-oracles and deliberately wrong controls; tests generated alongside a solution establish
-self-consistency only. Keep natural-code and verified-exercise outcomes separate throughout
-preparation and experiments. Preserve original bytes and notices, upstream content IDs,
-repository/commit/file identities and consumed-text hashes. Encoding changes, redaction and notebook
-cleanup require explicit provenance; never disable exact-byte checks to accommodate an unexplained
-mismatch. Related originals, forks, rewrites, patches and exercises belong to the same
-exclusion/partition family. A clean bounded screen or a publisher licence label alone authorizes
-nothing; notice text governs, not a scanner label.
-
-**Supply position.** The [supply gap](../experiments/main-data/supply-gap.json) owns the per-bank
-figures and [PLAN.md](../PLAN.md#supply) the supply position. The
-[qualification record](../experiments/main-data/QUALIFICATION.md) owns cohort holds and
-origin/notice recovery.
-
-**Code comparison.** The code contrast is P5 source choice on the
-[ladder](program.md#pretraining-the-ladder-1900-gpu-hours): Stack-Edu versus Stack v3. Keep total code share,
-non-intervened language coverage, non-code banks and serialization fixed. Checked code is not a
-declared bank, so do not add it back as an extra arm. Candidate coding evaluations are in
-[Evaluation](evaluation.md#coding-evaluations).
-
-## Artifact discipline
-
-Keep source revisions, filters, counts, hashes, tokenizer identity, data order and output locations
-in each run's manifests. Keep runtime data/checkpoints/logs outside Git, and back up irreplaceable
-checkpoints before dependent work. Preserve failed attempts. Whether corpus text or packed shards are released is an
-[open decision](../PLAN.md#open-decisions).
-
-Match storage to the access pattern. Bulk corpora and outputs are large sequential writes and suit
-a large disk; the SQLite deduplication index, many small unit files and scanner scratch are random,
-synced writes and belong on local flash. Run one heavy writer per spinning disk, and publish
-receipts only after their data is on disk: fsync a unit's records before the manifest that marks it
-complete.
+The P5 code contrast (Stack-Edu against Stack v3) keeps total code share, language coverage, other
+banks and serialization fixed.

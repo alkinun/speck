@@ -1,57 +1,21 @@
-# First hardware qualification
+# Hardware qualification
 
-The exact 1.2B KDA/GQA reference at 4K is in [model.json](model.json); [plan.json](plan.json) holds
-the finite settings of the synthetic R0 recovery diagnostic, including its GPU-hour ceiling inside
-the program's runtime-qualification line. The
-[GH200 access qualification runbook](../../docs/compute-qualification.md) owns the full access
-sequence. The model has 32,003 embedding rows; synthetic inputs use the original 32,000-token
-vocabulary. Deterministic algorithms, including attention backward, and a reproducible cuBLAS
-workspace stay enabled across initial and restarted workers; the restart tolerance is not relaxed.
+[model.json](model.json) is the exact 1.2B parent at 4K. [throughput-gh200.json](throughput-gh200.json)
+is the GH200 throughput packet, checked against the benchmark CLI by
+[check_throughput_packet.py](check_throughput_packet.py). The access procedure is the
+[GH200 runbook](../../docs/compute-qualification.md).
 
-Bind the configuration and source hashes without launching workers, then run on the allocated node:
+## Completed
 
-```bash
-uv run --no-sync python -m scripts.r0_execute experiments/qualification/plan.json \
-  --workers 1 --allocated-gpus 1
-uv run --no-sync python -m scripts.r0_execute experiments/qualification/plan.json \
-  --workers 1 --allocated-gpus 1 --run \
-  --ledger /shared/speck/qualification-ledger/r0 --prior-r0-gpu-hours ACCOUNTED_HOURS
-```
-
-Declare every allocated GPU. Inspect the one-worker result before `--workers 4`. The command
-reserves both worker generations against the ceiling, enforces timeouts and a 128GiB free-space
-floor, preserves failures and refuses unresolved prior attempts. Fresh workers warm the backend,
-restore model, optimizer, cursor and RNG, and compare the next step. The probe does not establish
-model quality, sustained throughput, hard-crash recovery or scheduler behavior.
-
-## What is qualified
-
-| Check | Result | Receipt |
-| --- | --- | --- |
-| RTX 3090, one worker | Full-size optimization and fresh-process restart at the original tolerance; about 1,937 synthetic tokens/s | [local-result.json](local-result.json) |
-| One H100 | Real-data base and assistant recovery, numerical/kernel checks, native generation, CPU export parity | [h100-result.json](h100-result.json) |
-| One H100 timing | Components below; evaluator defects fixed and re-exported | [timing-result.json](timing-result.json) |
-
-| Measurement on one H100 SXM | Result |
+| Check | Receipt |
 | --- | --- |
-| Base, batch 131,072, microbatch 1, 4K | 13,615 tokens/s; 28 steady steps; 19.3 GiB peak allocated |
-| Same token batch, microbatch 4 | 16,398 tokens/s; six steady steps; not restart-qualified |
-| Full 786,432-token validation | 15.9 seconds initially, 14.2 seconds warm |
-| Durable model + optimizer checkpoint | 10.7–11.0 seconds; 9.16 GiB |
-| Fresh-process restart overhead | 16.9 seconds beyond optimizer/validation/save work |
-| SFT at fixed 4K | 13,493 padded positions/s; about 3,110 supervised tokens/s at this sample's density |
-| Native cached decode, 1K prefix + 256 tokens | 55 tokens/s at batch 1; 428 aggregate tokens/s at batch 8 |
+| RTX 3090: full-size optimization and fresh-process restart | [local-result.json](local-result.json) |
+| One H100: real-data base and assistant recovery, kernels, generation, export parity | [h100-result.json](h100-result.json) |
+| One H100: training, validation, checkpoint, SFT and decode timing | [timing-result.json](timing-result.json) |
+| RTX 3090: throughput recipe, 2.084x on a 318M proxy | [throughput-3090/sweep.json](throughput-3090/sweep.json) |
+| RTX 3090: compiled restart parity for base and SFT | [base](compiled-recovery-descent-3090.json), [SFT](compiled-sft-recovery-3090.json) |
 
-[timing.json](timing.json), [microbatch-timing.json](microbatch-timing.json),
-[sft-timing.json](sft-timing.json) and [evaluation-timing.json](evaluation-timing.json) hold the
-probe configurations, measured with `scripts.training_timing`, which observed the real trainer and
-is kept only in Git history. The SFT rate depends on its 23% supervised density, so
-final SFT cost needs actual corpus lengths.
+## Open
 
-## What is open
-
-ARM64 GH200 execution, four-worker communication and restart, compiled DDP, sustained throughput
-with checkpoint and validation overhead, and Slurm requeue all remain to be qualified on the
-allocation, as do per-rung rates for the [ladder](../../docs/program.md#the-ladder). Historical
-projections in these receipts do not describe the current [budget](../../docs/program.md#compute)
-or [supply](../../PLAN.md#supply).
+ARM64 GH200 execution, per-rung throughput, four-worker communication and restart (eager and
+compiled), sustained throughput with checkpoint and validation overhead, and Slurm requeue.

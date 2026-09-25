@@ -13,7 +13,6 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from speck.data.preprocess_timing import PreprocessTiming
-from speck.data.sources.code_near_duplicates import _jaccard, _shingles, _signature, _tokens
 from speck.data.sqlite_settings import (
     configure_sqlite,
     sqlite_runtime,
@@ -39,7 +38,37 @@ LEDGER_FORMAT = "speck_removal_deny_ledger"
 STATE_FORMAT = "speck_production_text_preprocess_state"
 
 
-def _batched_signature(shingles, num_perm, seed):
+def code_tokens(text, pattern, maximum):
+    """Lowercased NFKC tokens, keeping the head and tail of documents longer than `maximum`."""
+    values = pattern.findall(unicodedata.normalize("NFKC", text).lower())
+    if len(values) <= maximum:
+        return values
+    half = maximum // 2
+    return values[:half] + values[-(maximum - half) :]
+
+
+def token_shingles(tokens, size):
+    return {
+        "\0".join(tokens[position : position + size]).encode()
+        for position in range(len(tokens) - size + 1)
+    }
+
+
+def shingle_jaccard(left, right):
+    union = len(left | right)
+    return len(left & right) / union if union else 1.0
+
+
+def minhash_signature(shingles, num_perm, seed):
+    from datasketch import MinHash
+
+    value = MinHash(num_perm=num_perm, seed=seed)
+    for shingle in shingles:
+        value.update(shingle)
+    return value
+
+
+def batched_minhash_signature(shingles, num_perm, seed):
     from datasketch import MinHash
 
     value = MinHash(num_perm=num_perm, seed=seed)
@@ -280,7 +309,7 @@ def _database(path, *, sqlite_settings=None):
     return connection
 
 
-def _band_values(signature, bands):
+def band_values(signature, bands):
     rows = len(signature.hashvalues) // bands
     return [
         hashlib.blake2b(
@@ -527,7 +556,7 @@ def preprocess_sources(
     identical, and a resume must name the same directory.
     """
 
-    signature_fn = _batched_signature if batched_minhash else _signature
+    signature_fn = batched_minhash_signature if batched_minhash else minhash_signature
     clock = PreprocessTiming(timing)
     if "plan_fingerprint" not in config:
         config = validate_preprocess_config(config)
@@ -691,9 +720,9 @@ def preprocess_sources(
                                 "content_sha256": exact[2],
                             }
                             counts["records_removed_exact"] += 1
-                    tokens = _tokens(text, pattern, config["policy"]["maximum_document_tokens"])
+                    tokens = code_tokens(text, pattern, config["policy"]["maximum_document_tokens"])
                     shingles = (
-                        _shingles(tokens, config["policy"]["shingle_tokens"])
+                        token_shingles(tokens, config["policy"]["shingle_tokens"])
                         if len(tokens)
                         >= max(
                             config["policy"]["minimum_document_tokens"],
@@ -709,7 +738,7 @@ def preprocess_sources(
                             config["policy"]["num_perm"],
                             config["policy"]["minhash_seed"],
                         )
-                        bands = _band_values(signature, config["policy"]["bands"])
+                        bands = band_values(signature, config["policy"]["bands"])
                         candidates = set()
                         for band, value in enumerate(bands):
                             candidates.update(
@@ -723,14 +752,16 @@ def preprocess_sources(
                             candidate_text = _candidate_text(
                                 connection, config["sources"], candidate, candidate_handles
                             )
-                            candidate_tokens = _tokens(
+                            candidate_tokens = code_tokens(
                                 candidate_text,
                                 pattern,
                                 config["policy"]["maximum_document_tokens"],
                             )
-                            value = _jaccard(
+                            value = shingle_jaccard(
                                 shingles,
-                                _shingles(candidate_tokens, config["policy"]["shingle_tokens"]),
+                                token_shingles(
+                                    candidate_tokens, config["policy"]["shingle_tokens"]
+                                ),
                             )
                             if similarity is None or value > similarity:
                                 similarity = value

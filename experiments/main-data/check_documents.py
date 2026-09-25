@@ -14,8 +14,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 
-# Directories whose Markdown is not ours to govern, plus the history pointer.
-SKIP = (".venv", "wandb", "node_modules", ".git", "archive/", ".pytest_cache")
+# Directories whose Markdown is not ours to govern.
+SKIP = (".venv", "wandb", "node_modules", ".git", ".pytest_cache")
 
 
 def _slug(heading: str) -> str:

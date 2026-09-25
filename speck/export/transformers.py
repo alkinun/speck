@@ -32,13 +32,7 @@ from speck.training.checkpoint import (
 
 CODE_REPO = "specklabs/Speck1-140M-Instruct"
 CODE_REVISION = "16ad80599d499490b70317770a84a18466719bba"
-CODE_FILES = (
-    "LICENSE",
-    "LICENSE.tokenizer",
-    "configuration_speck.py",
-    "modeling_speck.py",
-    "tokenization_speck.py",
-)
+LICENSE_FILES = ("LICENSE", "LICENSE.tokenizer")
 TOKENIZER_FILES = (
     "chat_template.jinja",
     "special_tokens_map.json",
@@ -60,115 +54,6 @@ CURRENT_CONFIGURATION_SOURCE = PACKAGE_SOURCE / "transformers_configuration.py"
 CURRENT_MODELING_SOURCE = PACKAGE_SOURCE / "transformers_modeling.py"
 CURRENT_TOKENIZATION_SOURCE = PACKAGE_SOURCE / "transformers_tokenization.py"
 PADDING_DESTINATION = "padding_speck.py"
-MODEL_IMPORT = "from .configuration_speck import SpeckConfig\n"
-PATCHED_MODEL_IMPORT = MODEL_IMPORT + "from .padding_speck import validate_right_padding\n"
-MODEL_FORWARD_SETUP = """        if (input_ids is None) == (inputs_embeds is None):
-            raise ValueError("provide exactly one of input_ids or inputs_embeds")
-        if output_attentions:
-            raise ValueError("Speck does not expose attention weights")
-        if output_hidden_states:
-            raise ValueError("Speck does not expose per-layer hidden states")
-        if attention_mask is not None and not torch.all(attention_mask == 1):
-            raise ValueError("Speck does not support padded inputs")
-
-        use_cache = self.config.use_cache if use_cache is None else use_cache
-        if past_key_values is not None and not isinstance(
-            past_key_values, SequenceState
-        ):
-            raise TypeError("Speck requires its native SequenceState cache")
-        if past_key_values is not None and not use_cache:
-            raise ValueError("past_key_values requires use_cache=True")
-        batch_size = (
-            input_ids.size(0) if input_ids is not None else inputs_embeds.size(0)
-        )
-        if use_cache and past_key_values is None:
-            past_key_values = self.state(
-                batch_size=batch_size,
-                device=self.device,
-                dtype=self.dtype,
-            )
-
-        length = input_ids.size(1) if input_ids is not None else inputs_embeds.size(1)
-"""
-PATCHED_MODEL_FORWARD_SETUP = """        if (input_ids is None) == (inputs_embeds is None):
-            raise ValueError("provide exactly one of input_ids or inputs_embeds")
-        if output_attentions:
-            raise ValueError("Speck does not expose attention weights")
-        if output_hidden_states:
-            raise ValueError("Speck does not expose per-layer hidden states")
-
-        values = input_ids if input_ids is not None else inputs_embeds
-        batch_size, length = values.shape[:2]
-        has_padding = validate_right_padding(attention_mask, batch_size, length)
-        use_cache = self.config.use_cache if use_cache is None else use_cache
-        if has_padding and use_cache:
-            raise ValueError("right-padded inputs require use_cache=False")
-        if past_key_values is not None and not isinstance(
-            past_key_values, SequenceState
-        ):
-            raise TypeError("Speck requires its native SequenceState cache")
-        if past_key_values is not None and not use_cache:
-            raise ValueError("past_key_values requires use_cache=True")
-        if use_cache and past_key_values is None:
-            past_key_values = self.state(
-                batch_size=batch_size,
-                device=self.device,
-                dtype=self.dtype,
-            )
-
-"""
-MODEL_POSITION_CHECK = """        if position_ids is not None:
-            expected = expected_positions.unsqueeze(0).expand(batch_size, -1)
-            if not torch.equal(position_ids, expected):
-                raise ValueError(
-                    "position_ids does not match the unpadded Speck sequence"
-                )
-"""
-PATCHED_MODEL_POSITION_CHECK = """        if position_ids is not None:
-            expected = expected_positions.unsqueeze(0).expand(batch_size, -1)
-            valid = (
-                attention_mask.bool()
-                if has_padding
-                else torch.ones_like(expected, dtype=torch.bool)
-            )
-            if position_ids.shape != expected.shape or not torch.equal(
-                position_ids[valid], expected[valid]
-            ):
-                raise ValueError("position_ids does not match the Speck sequence")
-"""
-MODEL_GENERATION_PREPARE = """        return super().prepare_inputs_for_generation(
-            input_ids,
-            past_key_values=past_key_values,
-            attention_mask=attention_mask,
-            inputs_embeds=inputs_embeds,
-            cache_position=cache_position,
-            use_cache=use_cache,
-            is_first_iteration=is_first_iteration,
-            **kwargs,
-        )
-"""
-PATCHED_MODEL_GENERATION_PREPARE = """        model_inputs = super().prepare_inputs_for_generation(
-            input_ids,
-            past_key_values=past_key_values,
-            attention_mask=attention_mask,
-            inputs_embeds=inputs_embeds,
-            cache_position=cache_position,
-            use_cache=use_cache,
-            is_first_iteration=is_first_iteration,
-            **kwargs,
-        )
-        current = model_inputs.get("input_ids")
-        if current is None:
-            current = model_inputs.get("inputs_embeds")
-        current_mask = model_inputs.get("attention_mask")
-        if (
-            current_mask is not None
-            and current is not None
-            and current_mask.size(1) != current.size(1)
-        ):
-            model_inputs["attention_mask"] = current_mask[:, -current.size(1) :]
-        return model_inputs
-"""
 
 
 def arguments():
@@ -289,43 +174,6 @@ def release_state(state):
     }
 
 
-def patch_modeling_source(source):
-    replacements = (
-        (MODEL_IMPORT, PATCHED_MODEL_IMPORT, "configuration import"),
-        (MODEL_FORWARD_SETUP, PATCHED_MODEL_FORWARD_SETUP, "forward setup"),
-        (MODEL_POSITION_CHECK, PATCHED_MODEL_POSITION_CHECK, "position check"),
-    )
-    for original, replacement, label in replacements:
-        if source.count(original) != 1:
-            raise ValueError(f"pinned Transformers source has unexpected {label}")
-        source = source.replace(original, replacement)
-    compile(source, "modeling_speck.py", "exec")
-    return source
-
-
-def patch_generation_source(source):
-    if source.count(MODEL_GENERATION_PREPARE) != 1:
-        raise ValueError("pinned Transformers source has unexpected generation preparation")
-    source = source.replace(MODEL_GENERATION_PREPARE, PATCHED_MODEL_GENERATION_PREPARE)
-    compile(source, "modeling_speck.py", "exec")
-    return source
-
-
-def prepare_release_code(code_dir, output_dir):
-    for filename in CODE_FILES:
-        source = code_dir / filename
-        if not source.is_file():
-            raise FileNotFoundError(f"Transformers source is missing {filename}")
-        if filename == "modeling_speck.py":
-            patched = patch_generation_source(
-                patch_modeling_source(source.read_text(encoding="utf-8"))
-            )
-            (output_dir / filename).write_text(patched, encoding="utf-8")
-        else:
-            shutil.copy2(source, output_dir / filename)
-    shutil.copy2(PADDING_SOURCE, output_dir / PADDING_DESTINATION)
-
-
 def prepare_current_release_code(output_dir):
     """Ship the current native implementation behind a small Transformers wrapper."""
 
@@ -433,10 +281,10 @@ def prepare_export(checkpoint_dir, step, output_dir, metadata, state=None):
             snapshot_download(
                 repo_id=CODE_REPO,
                 revision=CODE_REVISION,
-                allow_patterns=list(CODE_FILES),
+                allow_patterns=list(LICENSE_FILES),
             )
         )
-        for filename in ("LICENSE", "LICENSE.tokenizer", "tokenization_speck.py"):
+        for filename in LICENSE_FILES:
             shutil.copy2(code_dir / filename, building / filename)
         prepare_current_release_code(building)
         if (building / "README.md").exists():

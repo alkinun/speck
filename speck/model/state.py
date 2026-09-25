@@ -1,7 +1,5 @@
 """Persistent attention and recurrent decoding state."""
 
-from collections import defaultdict
-
 import torch
 
 
@@ -201,10 +199,3 @@ class SequenceState:
 
     def allocated_bytes(self):
         return sum(entry.allocated_bytes() for entry in self.entries.values())
-
-    def memory_report(self):
-        by_kind = defaultdict(int)
-        for entry in self.entries.values():
-            kind = "attention_kv" if isinstance(entry, AttentionState) else entry.kind
-            by_kind[kind] += entry.allocated_bytes()
-        return {"total_bytes": sum(by_kind.values()), "by_kind": dict(sorted(by_kind.items()))}

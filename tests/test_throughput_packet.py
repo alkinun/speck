@@ -1,4 +1,4 @@
-"""A rental packet must stay executable, because it is discovered on metered hardware."""
+"""The throughput packet must stay executable, because it is discovered on metered hardware."""
 
 import json
 import shlex
@@ -12,10 +12,7 @@ sys.path.insert(0, str(ROOT / "experiments/qualification"))
 
 from check_throughput_packet import main, validate  # noqa: E402
 
-PACKETS = (
-    ROOT / "experiments/qualification/throughput-h100.json",
-    ROOT / "experiments/qualification/throughput-gh200.json",
-)
+PACKETS = (ROOT / "experiments/qualification/throughput-gh200.json",)
 
 
 @pytest.mark.parametrize("packet", PACKETS, ids=lambda path: path.stem)
@@ -40,9 +37,9 @@ def test_recorded_argv_is_not_allowed_to_go_stale(packet, tmp_path):
 
 
 def test_end_to_end_run_without_a_data_directory_is_rejected(tmp_path):
-    value = json.loads((ROOT / "experiments/qualification/throughput-h100.json").read_text())
+    value = json.loads(PACKETS[0].read_text())
     value["common"]["data_dir"] = ""
-    broken = tmp_path / "throughput-h100.json"
+    broken = tmp_path / "throughput-gh200.json"
     broken.write_text(json.dumps(value))
 
     with pytest.raises(ValueError, match="end-to-end"):
@@ -50,12 +47,12 @@ def test_end_to_end_run_without_a_data_directory_is_rejected(tmp_path):
 
 
 def test_boolean_profile_flag_is_rejected_because_the_flag_takes_a_path(tmp_path):
-    value = json.loads((ROOT / "experiments/qualification/throughput-h100.json").read_text())
+    value = json.loads(PACKETS[0].read_text())
     for run in value["runs"]:
         if run["overrides"].get("profile"):
             run["overrides"]["profile"] = True
             run.pop("argv")
-    broken = tmp_path / "throughput-h100.json"
+    broken = tmp_path / "throughput-gh200.json"
     broken.write_text(json.dumps(value))
 
     with pytest.raises(ValueError, match="profile must be a trace path"):
@@ -65,7 +62,7 @@ def test_boolean_profile_flag_is_rejected_because_the_flag_takes_a_path(tmp_path
 def test_print_commands_validates_before_emitting_commands(tmp_path, monkeypatch, capsys):
     value = json.loads(PACKETS[0].read_text())
     value["runs"][0]["argv"] = ["stale"]
-    broken = tmp_path / "throughput-h100.json"
+    broken = tmp_path / "throughput-gh200.json"
     broken.write_text(json.dumps(value))
     monkeypatch.setattr(sys, "argv", ["check_throughput_packet", str(broken), "--print-commands"])
 

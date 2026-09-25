@@ -5,7 +5,6 @@ from speck.evaluation.server import (
     EvaluationService,
     RequestError,
     TransformersEvaluationEngine,
-    exercise_endpoint,
     generation_settings,
 )
 
@@ -169,15 +168,6 @@ def test_chat_generation_extracts_ids_from_transformers_batch_encoding():
     )
 
     assert result == ([1, 7, 2], {"max_tokens": 3, "temperature": 0.0})
-
-
-def test_endpoint_exercise_uses_real_http_and_repeats_external_shapes():
-    result = exercise_endpoint(FakeEngine())
-
-    assert result["transport"] == "loopback_http_ephemeral_port"
-    assert result["health"] == {"status": "ok", "model": "speck-test"}
-    assert set(result["cases"]) == {"nolima_chat", "ruler_nemo_openai_chat"}
-    assert all(case["repeated_response_identical"] for case in result["cases"].values())
 
 
 @pytest.mark.parametrize(

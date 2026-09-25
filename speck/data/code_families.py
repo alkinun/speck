@@ -14,6 +14,27 @@ def repository_key(value):
     return value
 
 
+class Families:
+    """Union-find over hashable nodes whose root is the smallest member."""
+
+    def __init__(self):
+        self.parent = {}
+
+    def find(self, node):
+        self.parent.setdefault(node, node)
+        root = node
+        while self.parent[root] != root:
+            root = self.parent[root]
+        while self.parent[node] != root:
+            self.parent[node], node = root, self.parent[node]
+        return root
+
+    def union(self, first, second):
+        first, second = self.find(first), self.find(second)
+        if first != second:
+            self.parent[max(first, second)] = min(first, second)
+
+
 def partition_code_families(records, *, aliases=(), held_repositories=(), seed):
     """Join repositories, declared aliases, parents and duplicate groups transitively.
 
@@ -26,22 +47,8 @@ def partition_code_families(records, *, aliases=(), held_repositories=(), seed):
         raise ValueError("a nonempty frozen seed is required")
     records = list(records)
     by_id = {}
-    links = {}
-
-    def find(node):
-        links.setdefault(node, node)
-        root = node
-        while links[root] != root:
-            root = links[root]
-        while links[node] != node:
-            parent = links[node]
-            links[node] = root
-            node = parent
-        return root
-
-    def union(a, b):
-        a, b = find(a), find(b)
-        links[max(a, b)] = min(a, b)
+    links = Families()
+    find, union = links.find, links.union
 
     for row in records:
         key = row.get("id")
@@ -82,7 +89,7 @@ def partition_code_families(records, *, aliases=(), held_repositories=(), seed):
     held_roots = {find(node) for node in held | overlaps}
     unresolved_roots = {find(node) for node in unresolved}
     families = {}
-    for node in list(links):
+    for node in list(links.parent):
         if node[0] == "repo":
             families.setdefault(find(node), set()).add(node[1])
     result = []

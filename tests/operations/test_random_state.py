@@ -5,8 +5,8 @@ import pytest
 import torch
 
 from speck.operations import random_state
-from speck.operations.r0_executor import supervise
-from speck.operations.r0_replay import rng_probe
+from speck.operations.random_state import rng_probe
+from speck.operations.supervise import supervise
 
 
 def test_json_checkpoint_replays_all_cpu_generators():
@@ -98,8 +98,7 @@ def test_real_two_rank_collective_preserves_each_cpu_rng(tmp_path):
 from pathlib import Path
 import torch
 import torch.distributed as dist
-from speck.operations.random_state import seed_generators, gather_training_rng, restore_training_rng
-from speck.operations.r0_replay import rng_probe
+from speck.operations.random_state import seed_generators, gather_training_rng, restore_training_rng, rng_probe
 rank = int(os.environ['RANK'])
 dist.init_process_group('gloo', init_method=sys.argv[1], rank=rank, world_size=2)
 device = torch.device('cpu')

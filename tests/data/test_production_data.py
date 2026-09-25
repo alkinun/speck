@@ -7,13 +7,13 @@ import pytest
 
 import speck.data.production_data as production_data
 from speck.data.production_data import (
-    _batched_signature,
     _candidate_text,
     accepted_document_chain,
+    batched_minhash_signature,
+    minhash_signature,
     preprocess_sources,
     validate_preprocess_config,
 )
-from speck.data.sources.code_near_duplicates import _signature
 from tests.reference import historical_repository
 
 ROOT = historical_repository()
@@ -22,8 +22,8 @@ ROOT = historical_repository()
 def test_batched_cli_signature_is_exactly_equivalent_to_scalar_updates():
     shingles = {f"token-{index}".encode() for index in range(100)}
 
-    scalar = _signature(shingles, 128, 42)
-    batched = _batched_signature(shingles, 128, 42)
+    scalar = minhash_signature(shingles, 128, 42)
+    batched = batched_minhash_signature(shingles, 128, 42)
 
     assert scalar.hashvalues.tolist() == batched.hashvalues.tolist()
 
