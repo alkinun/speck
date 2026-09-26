@@ -263,7 +263,7 @@ def replay(args):
     return request
 
 
-def main(argv=None):
+def parser():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("experiment")
     parser.add_argument("--output", required=True, help="new external artifact directory")
@@ -287,7 +287,11 @@ def main(argv=None):
         action="store_true",
         help="replay with torch.compile enabled, qualifying the compiled distributed path",
     )
-    print(json.dumps(replay(parser.parse_args(argv)), indent=2))
+    return parser
+
+
+def main(argv=None):
+    print(json.dumps(replay(parser().parse_args(argv)), indent=2))
 
 
 if __name__ == "__main__":

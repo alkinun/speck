@@ -11,11 +11,11 @@ import sys
 import tarfile
 import time
 from pathlib import Path
-from types import SimpleNamespace
 
 from speck.config import load_experiment
 from speck.export.pretrained import native_pretrained_source
 from speck.operations.supervise import supervise
+from speck.operations.training_replay import parser as replay_parser
 from speck.operations.training_replay import replay
 from speck.provenance.io import atomic_json, file_sha256
 
@@ -211,6 +211,31 @@ def export_arguments(phase, checkpoint, output, tokenizer):
     raise ValueError(f"unsupported export phase: {phase}")
 
 
+def replay_arguments(config, output, phase, seconds):
+    """Parse the one-GPU eager replay through its own CLI so every option has its default."""
+    return replay_parser().parse_args(
+        [
+            str(config),
+            "--output",
+            str(output),
+            "--phase",
+            phase,
+            "--device",
+            "cuda",
+            "--workers",
+            "1",
+            "--allocated-gpus",
+            "1",
+            "--seconds",
+            str(seconds),
+            "--steps",
+            "4",
+            "--checkpoint-step",
+            "2",
+        ]
+    )
+
+
 def run(root, output, seconds, *, allow_other_gpu=False):
     import torch
 
@@ -313,17 +338,7 @@ def run(root, output, seconds, *, allow_other_gpu=False):
             if phase == "sft":
                 config = assistant_experiment(root, configs, output / "base/uninterrupted")
             result["phases"][phase] = replay(
-                SimpleNamespace(
-                    experiment=str(config),
-                    output=str(output / phase),
-                    phase=phase,
-                    device="cuda",
-                    workers=1,
-                    allocated_gpus=1,
-                    seconds=remaining(),
-                    steps=4,
-                    checkpoint_step=2,
-                )
+                replay_arguments(config, output / phase, phase, remaining())
             )
             atomic_json(output / "result.json", result)
             checkpoint = output / phase / "uninterrupted"
