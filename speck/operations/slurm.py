@@ -374,6 +374,7 @@ def render_job_script(job, digest, runtime_root, *, account=None, partition=None
         f"#SBATCH --job-name={job['id']}-{digest[:8]}",
         "#SBATCH --nodes=1",
         "#SBATCH --ntasks=1",
+        "#SBATCH --requeue",
         f"#SBATCH --cpus-per-task={resources['cpus_per_task']}",
         f"#SBATCH --mem={resources['memory_mb']}M",
         f"#SBATCH --gres=gpu:{resources['gpus']}",
@@ -400,6 +401,7 @@ def render_job_script(job, digest, runtime_root, *, account=None, partition=None
         + 'readonly task_id="${SLURM_ARRAY_TASK_ID:-single}"\n'
         + 'readonly SPECK_REQUEUE_SIGNAL_FILE="${signal_dir}/${SLURM_JOB_ID:?}-'
         + '${task_id}"\n'
+        + 'readonly SPECK_REQUEUE_READY_FILE="${SPECK_REQUEUE_SIGNAL_FILE}.ready"\n'
         + 'readonly attempt_file="${attempt_dir}/${SLURM_JOB_ID}-${task_id}"\n'
         + "attempt=${SPECK_RETRY_OFFSET:-0}\n"
         + 'if [[ -f "${attempt_file}" ]]; then read -r attempt < "${attempt_file}"; fi\n'
@@ -410,9 +412,10 @@ def render_job_script(job, digest, runtime_root, *, account=None, partition=None
         + f"readonly TORCHINDUCTOR_CACHE_DIR={shlex.quote(str(inductor_dir))}\n"
         + 'mkdir -p "${TORCHINDUCTOR_CACHE_DIR}"\n'
         + "export SPECK_MANIFEST_SHA256 SPECK_RUN_ID SPECK_REQUEUE_SIGNAL_FILE "
-        + "SPECK_MAX_RETRIES SPECK_EXPECTED_LOCAL_WORLD_SIZE TORCHINDUCTOR_CACHE_DIR\n"
+        + "SPECK_MAX_RETRIES SPECK_EXPECTED_LOCAL_WORLD_SIZE TORCHINDUCTOR_CACHE_DIR "
+        + "SPECK_REQUEUE_READY_FILE\n"
         + 'export SPECK_RETRY_OFFSET="${attempt}"\n'
-        + 'rm -f "${SPECK_REQUEUE_SIGNAL_FILE}"\n'
+        + 'rm -f "${SPECK_REQUEUE_SIGNAL_FILE}" "${SPECK_REQUEUE_READY_FILE}"\n'
         + f"cd {shlex.quote(job['working_directory'])}\n"
         + "request_requeue() {\n"
         + '  : > "${SPECK_REQUEUE_SIGNAL_FILE}"\n'
@@ -428,7 +431,10 @@ def render_job_script(job, digest, runtime_root, *, account=None, partition=None
         + "  status=$?\n"
         + "done\n"
         + "set -e\n"
-        + f"if [[ $status -eq {REQUEUE_EXIT_CODE} ]]; then\n"
+        # torchrun exits 1 when its ranks exit REQUEUE_EXIT_CODE; the ready marker
+        # written after the requeue checkpoint identifies that case.
+        + f"if [[ $status -eq {REQUEUE_EXIT_CODE} || ( $status -ne 0 && -f "
+        + '"${SPECK_REQUEUE_READY_FILE}" ) ]]; then\n'
         + f"  if (( attempt < {retries} )); then\n"
         + "    next_attempt=$(( attempt + 1 ))\n"
         + '    temporary="${attempt_file}.tmp.$$"\n'

@@ -11,6 +11,7 @@ import torch
 from speck.config import load_experiment
 from speck.operations.runtime import base_dir
 from speck.operations.slurm import REQUEUE_EXIT_CODE
+from speck.provenance.io import atomic_json
 from speck.training import base as base_train
 from speck.training.checkpoint import latest
 
@@ -108,6 +109,14 @@ class SlurmBaseTrainer(base_train.BaseTrainer):
             milestone,
             partial=True,
         )
+        # torchrun reports a failed worker as exit status 1, not the ranks' own status, so
+        # the batch script cannot rely on REQUEUE_EXIT_CODE alone. The marker says the
+        # requeue checkpoint is complete; no rank exits before it is durable.
+        ready_file = os.environ.get("SPECK_REQUEUE_READY_FILE")
+        if self.master and ready_file:
+            atomic_json(ready_file, {"step": step}, fsync=True)
+        if self.distributed:
+            torch.distributed.barrier()
         self.interrupted_for_requeue = True
         return True
 
