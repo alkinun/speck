@@ -13,7 +13,6 @@ is the GH200 throughput packet, checked against the benchmark CLI by
 | One H100: real-data base and assistant recovery, kernels, generation, export parity | [h100-result.json](h100-result.json) |
 | One H100: training, validation, checkpoint, SFT and decode timing | [timing-result.json](timing-result.json) |
 | RTX 3090: throughput recipe on a 318M proxy (its configuration, `experiments/throughput-proxy`, is at tag `pre-cleanup-2026-09-25`) | [throughput-3090/sweep.json](throughput-3090/sweep.json) |
-| RTX 3090: aligned head GEMMs and no deterministic fills, +9% (50m) and +8.7% (1.2B) | [optimizations-20260925.json](throughput-3090/optimizations-20260925.json) |
 | RTX 3090: compiled restart parity for base and SFT | [base](compiled-recovery-descent-3090.json), [SFT](compiled-sft-recovery-3090.json) |
 
 ## Open

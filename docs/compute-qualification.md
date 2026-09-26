@@ -112,13 +112,10 @@ a faster or slower rate changes.
   recipe's speedup for the parent is unmeasured.
 - The [H100 pilot](../experiments/pilot/h100-run.json) ran eager and checkpointed at about 10%
   estimated MFU, an upper bound on cost.
-- [Two later changes](../experiments/qualification/throughput-3090/optimizations-20260925.json),
-  aligned head GEMMs and no deterministic fills, add 9% for the 50m rung and 8.7% for the parent
-  on the RTX 3090.
 - Compiled restart parity holds for [base](../experiments/qualification/compiled-recovery-descent-3090.json)
   and [SFT](../experiments/qualification/compiled-sft-recovery-3090.json) with the shared
-  `COMPILE_OPTIONS` in `speck/operations/runtime.py`. Both predate the head-alignment and fill
-  changes; the four-worker replay re-establishes restart parity with the current code.
+  `COMPILE_OPTIONS` in `speck/operations/runtime.py`; the four-worker replay re-establishes it
+  with the current code.
 
 MFU = tokens/s × model FLOPs/token ÷ dense BF16 peak. Keep compute, loader-inclusive
 (`--mode end-to-end`) and full-trainer rates separate. Only a sustained trainer run at the real
