@@ -12,7 +12,10 @@ sys.path.insert(0, str(ROOT / "experiments/qualification"))
 
 from check_throughput_packet import main, validate  # noqa: E402
 
-PACKETS = (ROOT / "experiments/qualification/throughput-gh200.json",)
+PACKETS = (
+    ROOT / "experiments/qualification/throughput-gh200.json",
+    ROOT / "experiments/qualification/throughput-h100.json",
+)
 
 
 @pytest.mark.parametrize("packet", PACKETS, ids=lambda path: path.stem)

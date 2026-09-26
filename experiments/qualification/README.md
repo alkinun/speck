@@ -3,7 +3,8 @@
 [model.json](model.json) is the exact 1.2B parent at 4K. [throughput-gh200.json](throughput-gh200.json)
 is the GH200 throughput packet, checked against the benchmark CLI by
 [check_throughput_packet.py](check_throughput_packet.py). The access procedure is the
-[GH200 runbook](../../docs/compute-qualification.md).
+[GH200 runbook](../../docs/compute-qualification.md). [throughput-h100.json](throughput-h100.json)
+is the packet for the pre-access [H100 rental](../../docs/throughput-rental.md).
 
 ## Completed
 

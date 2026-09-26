@@ -24,6 +24,7 @@ plan-check:
 	uv run --no-sync python experiments/main-data/check_source_readiness.py experiments/main-data/source-readiness.json
 	uv run --no-sync python experiments/main-data/check_candidate_manifests.py
 	uv run --no-sync python experiments/qualification/check_throughput_packet.py experiments/qualification/throughput-gh200.json
+	uv run --no-sync python experiments/qualification/check_throughput_packet.py experiments/qualification/throughput-h100.json
 	uv run --no-sync python experiments/main-data/check_documents.py
 
 quality: format-check lint test
