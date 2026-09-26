@@ -15,8 +15,9 @@ is the packet for the pre-access [H100 rental](../../docs/throughput-rental.md).
 | One H100: training, validation, checkpoint, SFT and decode timing | [timing-result.json](timing-result.json) |
 | RTX 3090: throughput recipe on a 318M proxy (its configuration, `experiments/throughput-proxy`, is at tag `pre-cleanup-2026-09-25`) | [throughput-3090/sweep.json](throughput-3090/sweep.json) |
 | RTX 3090: compiled restart parity for base and SFT | [base](compiled-recovery-descent-3090.json), [SFT](compiled-sft-recovery-3090.json) |
+| One H100: parent and rung throughput, `liger_aligned` A/B, Hopper profile | [throughput-h100/sweep.json](throughput-h100/sweep.json) |
 
 ## Open
 
-ARM64 GH200 execution, per-rung throughput, four-worker communication and restart (eager and
+ARM64 GH200 execution and per-rung throughput, four-worker communication and restart (eager and
 compiled), sustained throughput with checkpoint and validation overhead, and Slurm requeue.

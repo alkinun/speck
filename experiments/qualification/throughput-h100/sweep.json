@@ -1,0 +1,709 @@
+{
+  "format": "speck_throughput_sweep",
+  "format_version": 2,
+  "date": "2026-09-26",
+  "status": "measured_single_gpu_hopper",
+  "packet": {
+    "path": "experiments/qualification/throughput-h100.json"
+  },
+  "git_revision": "6e010e087543862fe32da4bdc52dbb7c369a3e69",
+  "hardware": {
+    "device": "NVIDIA H100 80GB HBM3",
+    "capability": [
+      9,
+      0
+    ],
+    "memory_gib": 80,
+    "peak_bf16_tflops": 989.5,
+    "driver": "595.91.07",
+    "cuda": "12.8",
+    "torch": "2.9.1+cu128",
+    "host": "RunPod pod, 208 CPU cores, shared host"
+  },
+  "boundary": "Single-GPU throughput on one rented 80 GiB H100 SXM, before grant access. It measures relative effects and anchors the plan's projections; it does not qualify GH200, distributed execution, scheduler requeue, long-context cost or data eligibility, and freezes no immutable setting. GH200 carries the same Hopper GPU with more memory and more bandwidth, so for this bandwidth-bound workload its rates should be at or above these.",
+  "cost": {
+    "reservation": "external rental ledger; no grant GPU-hours",
+    "pod_hours": 2.3,
+    "hourly_usd": 3.52,
+    "provider_bill_known": false,
+    "note": "About 13:09 to 15:30 UTC, including setup, the one-worker check, fourteen idle minutes between it and the sweep, and copy-back."
+  },
+  "one_worker_check": {
+    "status": "pass",
+    "wall_seconds": 1026.0445197410008,
+    "receipt": {
+      "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/one-worker/result.json",
+      "sha256": "1feef9463d3192d371984047d90b98640f6ca4c7f984227e7cabb61935d7d7d5"
+    }
+  },
+  "noise_band": {
+    "label": "h100-mb4 and four repeats",
+    "median_tokens_per_second": 35424.35545722015,
+    "maximum_absolute_relative_to_median": 0.002669906122309107,
+    "summary": {
+      "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/noise-summary.json",
+      "sha256": "931fa9bb252f202f45f58fd945f854f9dbefb3869ce9bf827e911362fffc3c5b"
+    }
+  },
+  "selection": {
+    "parent_batch_size": 4,
+    "parent_accumulation": 8,
+    "rule": "Highest tokens/s at 131,072 tokens per update; mb4 is the median of five runs. Microbatch 8 ran out of memory at 77.8 GiB allocated.",
+    "record": {
+      "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/selection.json",
+      "sha256": "f3d2e42531170cb356312f5e6f46169b093a33ad84799849278ec4ee39ccbb84"
+    }
+  },
+  "planning_rates_tokens_per_second": {
+    "parent": 35424.35545722015,
+    "50m": 338580.51833038306,
+    "130m": 170342.29906423038,
+    "410m": 77860.17477739381
+  },
+  "parent_speedup_over_pilot_recipe_same_host": 3.6904264817885206,
+  "liger_aligned_delta": {
+    "parent_median_of_three": 0.1103,
+    "50m_single": 0.0157,
+    "130m_single": -0.0233,
+    "410m_single": -0.0775
+  },
+  "findings": {
+    "parent_meets_planning_utilization": "The parent's selected configuration runs at 26.9% benchmark MFU (25.7% at 6 x parameters), matching the plan's former 25% assumption within 3% after the overhead derate.",
+    "rungs_fall_short_of_it": "Smaller models cannot fill the card: at their fastest measured microbatch, 410m, 130m and 50m run at 0.77, 0.54 and 0.43 of the rate a uniform 25% would give. Each rung's fastest microbatch was the largest the packet tried.",
+    "microbatch_is_the_lever": "Microbatch one to four is 2.65x on the parent; compile alone is 1.036x, because chunk_kda and the Liger loss are compiler-disabled and cause all six graph breaks.",
+    "loader_is_not_a_bottleneck": "End-to-end on the pilot pack is within the noise band of compute mode.",
+    "determinism_cost": "Non-deterministic execution is 3.9% faster at the selected microbatch.",
+    "liger_aligned": "11% faster on the parent across three repeats, forty times the noise band; single runs at the rungs are inside their larger step-time variation. It still fails restart parity.",
+    "profile": "A cutlass_75 align1 GEMM, an unaligned fallback, takes 4.9% of kernel time on the parent. The 32,003-token vocabulary head is the likely source; liger_aligned pads it to a multiple of 64 and also accumulates in FP32. The profile summary files the H100 nvjet cuBLAS kernels under other, so its gemm share is understated.",
+    "power_cap": "Clocks dipped below 95% of 1980 MHz in a few five-second samples in most runs, at the 700 W cap. Five repeats agree within 0.27%, so the dips do not move the rates.",
+    "pilot_recipe_discrepancy": "The pilot recipe ran at 9,599 tokens/s in compute mode here, against the 18 September pilot's 13,595 steady optimizer tokens/s on another H100 host. Host, driver and code have all changed since; this sweep cannot attribute the gap. The eager microbatch-one recipe is launch-bound and the selected configuration is not (p90/median 1.001)."
+  },
+  "runs": [
+    {
+      "label": "h100-pilot-baseline",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 1,
+      "accumulation": 32,
+      "activation_checkpointing": true,
+      "compiled": false,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 9598.986900845173,
+      "model_flops_utilization": 0.07288334776588924,
+      "p90_over_median": 1.0746304703379217,
+      "stable": false,
+      "peak_reserved_bytes": 23353884672,
+      "warmup_seconds": 135.67343825902208,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-pilot-baseline.json",
+        "sha256": "86cda153b2929119396177f308c41ab5b5002f815bf94acaa3a67f1bf06f1577"
+      }
+    },
+    {
+      "label": "h100-noac-eager",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 1,
+      "accumulation": 32,
+      "activation_checkpointing": false,
+      "compiled": false,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 12898.00003526651,
+      "model_flops_utilization": 0.09793214969092323,
+      "p90_over_median": 1.0391786896204862,
+      "stable": true,
+      "peak_reserved_bytes": 32921092096,
+      "warmup_seconds": 102.57233985999483,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-noac-eager.json",
+        "sha256": "95306b06acdc43c8e8a8fc83a79d7da28451fba608b280072591d4537f388f77"
+      }
+    },
+    {
+      "label": "h100-noac-compile-mb1",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 1,
+      "accumulation": 32,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 13366.606068434721,
+      "model_flops_utilization": 0.10149018939171556,
+      "p90_over_median": 1.071207086474113,
+      "stable": false,
+      "peak_reserved_bytes": 32346472448,
+      "warmup_seconds": 208.00807729599182,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-noac-compile-mb1.json",
+        "sha256": "b0b3ce2fac52b5fdaced86ed6a44b0aec3ba320b486fecf3ae2e1ac9fa9f5bc3"
+      }
+    },
+    {
+      "label": "h100-mb2",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 2,
+      "accumulation": 16,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 26194.01671306219,
+      "model_flops_utilization": 0.1988863667805957,
+      "p90_over_median": 1.05024406797208,
+      "stable": false,
+      "peak_reserved_bytes": 40969961472,
+      "warmup_seconds": 96.77847746000043,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-mb2.json",
+        "sha256": "4458f9d3e80d8e7888a1f5a78f86d58ebd781ff92ee9ec6233495b131f393a4a"
+      }
+    },
+    {
+      "label": "h100-mb4",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 4,
+      "accumulation": 8,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 35436.99398856173,
+      "model_flops_utilization": 0.2690665987281078,
+      "p90_over_median": 1.0008700525509542,
+      "stable": true,
+      "peak_reserved_bytes": 67998056448,
+      "warmup_seconds": 94.20631516099093,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-mb4.json",
+        "sha256": "1ccd3d743e1ec72e6b2f28a2a4df09f0f71e28ed69a2e5019f21f768db3801b5"
+      }
+    },
+    {
+      "label": "h100-mb4-r2",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 4,
+      "accumulation": 8,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 35424.35545722015,
+      "model_flops_utilization": 0.26897063667663984,
+      "p90_over_median": 1.0015315111183491,
+      "stable": true,
+      "peak_reserved_bytes": 67998056448,
+      "warmup_seconds": 45.24827725900104,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-mb4-r2.json",
+        "sha256": "e35516455518e982790bfc6d06c941c758cfa5c9f93d9d54ce7eada92ede7e98"
+      }
+    },
+    {
+      "label": "h100-mb4-r3",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 4,
+      "accumulation": 8,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 35432.14105994152,
+      "model_flops_utilization": 0.26902975133077683,
+      "p90_over_median": 1.001705433190556,
+      "stable": true,
+      "peak_reserved_bytes": 67998056448,
+      "warmup_seconds": 44.3436449720175,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-mb4-r3.json",
+        "sha256": "76f91169d0b4a31a95d08cd8606bc758a267362f395b1cc74468532566de49d9"
+      }
+    },
+    {
+      "label": "h100-mb4-r4",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 4,
+      "accumulation": 8,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 35329.77575370606,
+      "model_flops_utilization": 0.26825251032705555,
+      "p90_over_median": 1.0048911973579053,
+      "stable": true,
+      "peak_reserved_bytes": 67998056448,
+      "warmup_seconds": 44.11013762798393,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-mb4-r4.json",
+        "sha256": "25bf07a057b75a01ce5f59ab7fbe77894d036a2ff47a44e88f0a808bb62f17f8"
+      }
+    },
+    {
+      "label": "h100-mb4-r5",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 4,
+      "accumulation": 8,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 35408.26701353609,
+      "model_flops_utilization": 0.2688484800732244,
+      "p90_over_median": 1.0025066559455755,
+      "stable": true,
+      "peak_reserved_bytes": 67998056448,
+      "warmup_seconds": 44.95731211500242,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-mb4-r5.json",
+        "sha256": "bb5e61fda63ce0108e8f33326d2f8956008d0f94684c47e20325ca06c5ef54b0"
+      }
+    },
+    {
+      "label": "h100-mb8",
+      "model": "parent",
+      "status": "out_of_memory",
+      "log": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-mb8.log",
+        "sha256": "948c04a027ae973c7f8b84ab2419d94e8abef3a4f9dd5db962757923f5ddd7c5"
+      }
+    },
+    {
+      "label": "h100-mb4-aligned-r1",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 4,
+      "accumulation": 8,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger_aligned",
+      "mode": "compute",
+      "tokens_per_second": 39263.22589601078,
+      "model_flops_utilization": 0.298118476142275,
+      "p90_over_median": 1.0150537043106975,
+      "stable": true,
+      "peak_reserved_bytes": 68369252352,
+      "warmup_seconds": 41.08143624098739,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-mb4-aligned-r1.json",
+        "sha256": "b5a5e038b3268f94d03699ce25e17f84045fda55b1df9d0f3062f6579c5a541a"
+      }
+    },
+    {
+      "label": "h100-mb4-aligned-r2",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 4,
+      "accumulation": 8,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger_aligned",
+      "mode": "compute",
+      "tokens_per_second": 39331.554663483796,
+      "model_flops_utilization": 0.2986372839470562,
+      "p90_over_median": 1.0012662086918223,
+      "stable": true,
+      "peak_reserved_bytes": 68369252352,
+      "warmup_seconds": 40.66094777701073,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-mb4-aligned-r2.json",
+        "sha256": "1fb55d26aee39b18f696696a50bfa4d3c69819d272e308c823b329b36d440d89"
+      }
+    },
+    {
+      "label": "h100-mb4-aligned-r3",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 4,
+      "accumulation": 8,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger_aligned",
+      "mode": "compute",
+      "tokens_per_second": 39403.62487606508,
+      "model_flops_utilization": 0.2991844998586291,
+      "p90_over_median": 1.0010925159060844,
+      "stable": true,
+      "peak_reserved_bytes": 68369252352,
+      "warmup_seconds": 40.82047507399693,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-mb4-aligned-r3.json",
+        "sha256": "b2db299401401029745230840b3dbd31712fc240fd38a94b510fd1c715cdf44b"
+      }
+    },
+    {
+      "label": "h100-best-nondet",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 4,
+      "accumulation": 8,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": false,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 36802.254544292555,
+      "model_flops_utilization": 0.2794327718359823,
+      "p90_over_median": 1.0014723164494275,
+      "stable": true,
+      "peak_reserved_bytes": 68161634304,
+      "warmup_seconds": 145.13145847799024,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-best-nondet.json",
+        "sha256": "fc789bde8c8424bc4116532efa89ba930a753cfc115e39d9dd7535b3593443bb"
+      }
+    },
+    {
+      "label": "h100-best-endtoend",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 4,
+      "accumulation": 8,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "end-to-end",
+      "tokens_per_second": 35520.86980294807,
+      "model_flops_utilization": 0.269703452409878,
+      "p90_over_median": 1.0010498154160017,
+      "stable": true,
+      "peak_reserved_bytes": 68000153600,
+      "warmup_seconds": 44.42370742300409,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-best-endtoend.json",
+        "sha256": "8d90faa0f661b1a2b45eaae47128e7c7d3dd4387d93df29e3267a94c7a3cb94d"
+      }
+    },
+    {
+      "label": "h100-best-profile",
+      "model": "parent",
+      "status": "measured",
+      "batch_size": 4,
+      "accumulation": 8,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 35484.91374692321,
+      "model_flops_utilization": 0.2694304446682673,
+      "p90_over_median": 1.000964885990878,
+      "stable": true,
+      "peak_reserved_bytes": 67998056448,
+      "warmup_seconds": 43.854534190992126,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-best-profile.json",
+        "sha256": "484fe464ee46ef580fce8653322b75781904e08065e6ec9f183a41c59ed9dd98"
+      }
+    },
+    {
+      "label": "h100-50m-mb8",
+      "model": "50m",
+      "status": "measured",
+      "batch_size": 8,
+      "accumulation": 4,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 171949.89918783976,
+      "model_flops_utilization": 0.06221637605325077,
+      "p90_over_median": 1.0741536884649094,
+      "stable": false,
+      "peak_reserved_bytes": 14661189632,
+      "warmup_seconds": 178.71061536599882,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-50m-mb8.json",
+        "sha256": "f1d5d1235a879113fd885ba9dce73823dc6b83d0fcae80cdcbecd501c9aa8fc7"
+      }
+    },
+    {
+      "label": "h100-50m-mb16",
+      "model": "50m",
+      "status": "measured",
+      "batch_size": 16,
+      "accumulation": 2,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 307727.1215803271,
+      "model_flops_utilization": 0.1113444463093935,
+      "p90_over_median": 1.0611082124895617,
+      "stable": false,
+      "peak_reserved_bytes": 28636610560,
+      "warmup_seconds": 58.45008298300672,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-50m-mb16.json",
+        "sha256": "c0d8c0a4c7b4c68de6bf502971eee77607590bdcff2a294795c8246be7d518da"
+      }
+    },
+    {
+      "label": "h100-50m-mb32",
+      "model": "50m",
+      "status": "measured",
+      "batch_size": 32,
+      "accumulation": 1,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 338580.51833038306,
+      "model_flops_utilization": 0.12250808492615507,
+      "p90_over_median": 1.0049434058485585,
+      "stable": true,
+      "peak_reserved_bytes": 57476644864,
+      "warmup_seconds": 71.24600005699904,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-50m-mb32.json",
+        "sha256": "2ed34cfa17d8288784505aea4f957ce41e9e2243f3f85eeec4b40b534f59ec55"
+      }
+    },
+    {
+      "label": "h100-50m-mb16-aligned",
+      "model": "50m",
+      "status": "measured",
+      "batch_size": 16,
+      "accumulation": 2,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger_aligned",
+      "mode": "compute",
+      "tokens_per_second": 312560.38921090646,
+      "model_flops_utilization": 0.11309326034121582,
+      "p90_over_median": 1.0933730232341434,
+      "stable": false,
+      "peak_reserved_bytes": 28965863424,
+      "warmup_seconds": 8.704208199982531,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-50m-mb16-aligned.json",
+        "sha256": "075481843d343a6000e1169781b179b4ec032840c3e538611c639aa2bddda76a"
+      }
+    },
+    {
+      "label": "h100-130m-mb4",
+      "model": "130m",
+      "status": "measured",
+      "batch_size": 4,
+      "accumulation": 8,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 65166.60825645064,
+      "model_flops_utilization": 0.05760152938720004,
+      "p90_over_median": 1.0407406844347777,
+      "stable": true,
+      "peak_reserved_bytes": 15170797568,
+      "warmup_seconds": 147.6305329889874,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-130m-mb4.json",
+        "sha256": "30271f7a03bb33079b14cf6a66a143bbb2b1576ceccf4301c5fe62c2636a308e"
+      }
+    },
+    {
+      "label": "h100-130m-mb8",
+      "model": "130m",
+      "status": "measured",
+      "batch_size": 8,
+      "accumulation": 4,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 141300.98696956033,
+      "model_flops_utilization": 0.1248975997237332,
+      "p90_over_median": 1.0659773802024968,
+      "stable": false,
+      "peak_reserved_bytes": 29070721024,
+      "warmup_seconds": 67.73071425198577,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-130m-mb8.json",
+        "sha256": "b735f34b9263e2032eb670730b670d23f13d9b4fcba26c36219c2061009df610"
+      }
+    },
+    {
+      "label": "h100-130m-mb16",
+      "model": "130m",
+      "status": "measured",
+      "batch_size": 16,
+      "accumulation": 2,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 170342.29906423038,
+      "model_flops_utilization": 0.1505675561142961,
+      "p90_over_median": 1.0030333332630348,
+      "stable": true,
+      "peak_reserved_bytes": 56413388800,
+      "warmup_seconds": 75.7627916969941,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-130m-mb16.json",
+        "sha256": "1e7bc71bd87936105e987efdad3dd4b433e7f668f52d8ddc93d6b51ef15c4723"
+      }
+    },
+    {
+      "label": "h100-130m-mb8-aligned",
+      "model": "130m",
+      "status": "measured",
+      "batch_size": 8,
+      "accumulation": 4,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger_aligned",
+      "mode": "compute",
+      "tokens_per_second": 138008.37138792055,
+      "model_flops_utilization": 0.12198721819151953,
+      "p90_over_median": 1.0794311431024535,
+      "stable": false,
+      "peak_reserved_bytes": 29035069440,
+      "warmup_seconds": 14.51537965197349,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-130m-mb8-aligned.json",
+        "sha256": "58f1e081df1bd3db76d94c211a7219bd8f5d45b4e128a2cb09f4ae55ff77399b"
+      }
+    },
+    {
+      "label": "h100-410m-mb2",
+      "model": "410m",
+      "status": "measured",
+      "batch_size": 2,
+      "accumulation": 16,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 30466.18664179135,
+      "model_flops_utilization": 0.08116314786646163,
+      "p90_over_median": 1.0387611456311614,
+      "stable": true,
+      "peak_reserved_bytes": 18670944256,
+      "warmup_seconds": 236.61485399701633,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-410m-mb2.json",
+        "sha256": "a623e68401d3e290b33f1a2b52079c6e0f1f3265b8689315ce99095386f546c9"
+      }
+    },
+    {
+      "label": "h100-410m-mb4",
+      "model": "410m",
+      "status": "measured",
+      "batch_size": 4,
+      "accumulation": 8,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 59748.077942957025,
+      "model_flops_utilization": 0.1591712852624986,
+      "p90_over_median": 1.0324264233256413,
+      "stable": true,
+      "peak_reserved_bytes": 33174847488,
+      "warmup_seconds": 75.24085460501374,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-410m-mb4.json",
+        "sha256": "7929e48e5a6eb151ebd69cdff59e2f11f47165517aa0fd7ab555992ee599317f"
+      }
+    },
+    {
+      "label": "h100-410m-mb8",
+      "model": "410m",
+      "status": "measured",
+      "batch_size": 8,
+      "accumulation": 4,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger",
+      "mode": "compute",
+      "tokens_per_second": 77860.17477739381,
+      "model_flops_utilization": 0.20742264047242748,
+      "p90_over_median": 1.002841155508937,
+      "stable": true,
+      "peak_reserved_bytes": 61306044416,
+      "warmup_seconds": 72.25515642401297,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-410m-mb8.json",
+        "sha256": "8abf7d492623cc79aa8fe0d8f7b83da10f0ac420f23d32e9c03d09ae7812cd94"
+      }
+    },
+    {
+      "label": "h100-410m-mb4-aligned",
+      "model": "410m",
+      "status": "measured",
+      "batch_size": 4,
+      "accumulation": 8,
+      "activation_checkpointing": false,
+      "compiled": true,
+      "deterministic": true,
+      "loss_backend": "liger_aligned",
+      "mode": "compute",
+      "tokens_per_second": 55114.78733074394,
+      "model_flops_utilization": 0.14682801252249977,
+      "p90_over_median": 1.0524135502665444,
+      "stable": false,
+      "peak_reserved_bytes": 33428602880,
+      "warmup_seconds": 30.16371682600584,
+      "receipt": {
+        "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/throughput-h100/h100-410m-mb4-aligned.json",
+        "sha256": "6c67c110093fbfc450ab0aae3be3a02d9cc84ba0d4d15fc0cb8b9965c927a3c1"
+      }
+    }
+  ],
+  "telemetry": {
+    "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/gpu-telemetry.csv",
+    "sha256": "4425807fc865297132c9a9f8a0da5eecc3ce5f0b33b8ebd8ebae0f2df5c0014a"
+  },
+  "progress_log": {
+    "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/sweep-progress.log",
+    "sha256": "e25d962fc1f5c4635e31782e69ccb1d364ef22b0bb2531b37b1686956df8ece6"
+  },
+  "excluded_artifacts": {
+    "manifest": {
+      "path": "/mnt/speck-data/speck/h100-throughput-results-20260926/one-worker-excluded.tsv",
+      "sha256": "48b38b7de2153dd800ca480e475e8e5984284d75088daea7de71b60674f00d96"
+    },
+    "reason": "Eighteen one-worker checkpoint and export files, 83.4 GB, were not copied back: their parity comparison is in the one-worker receipt, and the copy would have cost about seven pod-hours."
+  },
+  "open": [
+    "GH200 rates, and microbatch 8 for the parent on 96 GiB.",
+    "Four-worker scaling under DDP, eager and compiled.",
+    "Rung microbatches above those the packet tried.",
+    "Long-context cost factors.",
+    "The pilot-recipe discrepancy above."
+  ],
+  "training_admitted": false
+}

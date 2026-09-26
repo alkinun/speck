@@ -110,8 +110,10 @@ a faster or slower rate changes.
   a 318M proxy (checkpointing off, compile with max-autotune, larger microbatch). Its endpoint also
   changed tokens per update, and the optimized 1.2B model did not fit the card, so the sweep
   recipe's speedup for the parent is unmeasured.
-- The [H100 pilot](../experiments/pilot/h100-run.json) ran eager and checkpointed at about 10%
-  estimated MFU, an upper bound on cost.
+- The [H100 sweep](../experiments/qualification/throughput-h100/sweep.json) measured the parent at
+  35,424 tokens/s and 26.9% MFU, compiled with checkpointing off at microbatch 4 (microbatch 8 does
+  not fit 80 GiB), 3.69x the pilot recipe on the same host. The rungs reach 12% to 21%. Its rates
+  are the plan's projections until this qualification replaces them.
 - Compiled restart parity holds for [base](../experiments/qualification/compiled-recovery-descent-3090.json)
   and [SFT](../experiments/qualification/compiled-sft-recovery-3090.json) with the shared
   `COMPILE_OPTIONS` in `speck/operations/runtime.py`; the four-worker replay re-establishes it
