@@ -109,7 +109,7 @@ def arguments(argv=None):
     )
     parser.add_argument(
         "--loss-backend",
-        choices=("torch", "liger"),
+        choices=("torch", "liger", "liger_aligned"),
         default="torch",
         help="linear cross-entropy implementation (default: %(default)s)",
     )

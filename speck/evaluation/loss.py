@@ -35,7 +35,7 @@ def arguments(argv=None):
     parser.add_argument("--sequence-length", type=int, default=None)
     parser.add_argument("--eval-tokens", type=int, default=20_000_000)
     parser.add_argument("--batch-size", type=int, default=None)
-    parser.add_argument("--loss-backend", choices=("torch", "liger"), default=None)
+    parser.add_argument("--loss-backend", choices=("torch", "liger", "liger_aligned"), default=None)
     parser.add_argument("--rope-scaling-factor", type=float, default=None)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--no-compile", action="store_true")

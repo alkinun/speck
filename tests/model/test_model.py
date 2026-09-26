@@ -137,12 +137,13 @@ def test_model_rejects_unknown_loss_backend():
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="Liger requires CUDA")
+@pytest.mark.parametrize("backend", ("liger", "liger_aligned"))
 @pytest.mark.parametrize("reduction", ("mean", "sum"))
-def test_liger_loss_and_gradients_match_torch(reduction):
+def test_liger_loss_and_gradients_match_torch(reduction, backend):
     pytest.importorskip("liger_kernel")
     torch.manual_seed(5)
     reference = model_with(SwiGLUSpec(16)).cuda()
-    fused = SpeckForCausalLM(reference.config, loss_backend="liger").cuda()
+    fused = SpeckForCausalLM(reference.config, loss_backend=backend).cuda()
     fused.load_state_dict(reference.state_dict())
     tokens = torch.randint(0, 16, (2, 8), device="cuda")
     targets = tokens.clone()

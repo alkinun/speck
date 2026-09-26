@@ -7,22 +7,38 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.attention.bias import causal_lower_right
 
-_LOSS_BACKENDS = {"torch", "liger"}
+_LOSS_BACKENDS = {"torch", "liger", "liger_aligned"}
+_VOCAB_ALIGNMENT = 64
 
 
 @torch.compiler.disable
-def liger_linear_cross_entropy(hidden, weight, targets, reduction):
+def liger_linear_cross_entropy(hidden, weight, targets, reduction, aligned=False):
     try:
         from liger_kernel.transformers.functional import liger_fused_linear_cross_entropy
     except ImportError as exception:
         raise RuntimeError(
             "the Liger loss backend requires the GPU dependencies; run `uv sync --extra gpu`"
         ) from exception
+    if not aligned:
+        return liger_fused_linear_cross_entropy(hidden, weight, targets, reduction=reduction)
+    # Pad the vocabulary to a multiple of 64 so the head GEMMs use aligned tensor-core kernels;
+    # a -inf bias gives padded rows zero probability, leaving the loss and gradients unchanged.
+    # The chunked weight gradient, the whole embedding gradient with tied embeddings,
+    # accumulates in FP32.
+    vocab = weight.size(0)
+    padding = -vocab % _VOCAB_ALIGNMENT
+    bias = None
+    if padding:
+        weight = F.pad(weight, (0, 0, 0, padding))
+        bias = torch.zeros(vocab + padding, dtype=weight.dtype, device=weight.device)
+        bias[vocab:] = float("-inf")
     return liger_fused_linear_cross_entropy(
         hidden,
         weight,
         targets,
+        bias=bias,
         reduction=reduction,
+        accum_dtype=torch.float32,
     )
 
 
@@ -33,7 +49,9 @@ def linear_cross_entropy(hidden, weight, targets, reduction, backend):
     if backend == "torch":
         logits = F.linear(hidden, compute_weight).float()
         return F.cross_entropy(logits, targets, reduction=reduction)
-    return liger_linear_cross_entropy(hidden, compute_weight, targets, reduction)
+    return liger_linear_cross_entropy(
+        hidden, compute_weight, targets, reduction, aligned=backend == "liger_aligned"
+    )
 
 
 class Linear(nn.Linear):
