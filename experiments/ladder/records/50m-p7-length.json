@@ -38,7 +38,7 @@
     "P1 has run, fixing the all-strict corpus.",
     "Enough stock for the long horizon; math is the scarcest bank and will repeat."
   ],
-  "cost": "Projected 0.9 GH200 GPU-hours per full-horizon run (program design): about 0.2 at a quarter horizon and 3.6 at four times, or about 1.9 and 30 hours on the local RTX 3090 at its synthetic compiled rate of 97,000 tokens per second.",
+  "cost": "Projected 2.3 GPU-hours per full-horizon run (program design): about 0.6 at a quarter horizon and 9.1 at four times, or about 1.9 and 30 hours on the local RTX 3090 at its synthetic compiled rate of 97,000 tokens per second.",
   "horizon_tokens": {
     "short": 658636800,
     "long": 10528358400

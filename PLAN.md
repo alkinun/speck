@@ -1,6 +1,6 @@
 # SpeckLabs: status and next work
 
-Updated 2026-09-25. The [program design](docs/program.md) defines the goal, method, experiments and
+Updated 2026-09-26. The [program design](docs/program.md) defines the goal, method, experiments and
 budget, and [plan.json](experiments/main-data/plan.json) holds the numbers.
 
 This release is SpeckLabs' first scaling step, and it targets the data of pretraining and
@@ -44,6 +44,7 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
 | Runtime: full-size H100 restart, recovery, generation and export | [H100 receipt](experiments/qualification/h100-result.json) |
 | Engineering pilot: 105M tokens, 12,859 tokens/s full trainer, weak development scores | [Run](experiments/pilot/h100-run.json), [scores](experiments/pilot/development-result.json) |
 | Throughput recipe: 2.084x on a 318M proxy, compiled restart parity | [Sweep](experiments/qualification/throughput-3090/sweep.json), [base](experiments/qualification/compiled-recovery-descent-3090.json), [SFT](experiments/qualification/compiled-sft-recovery-3090.json) |
+| H100 throughput: parent 35,424 tokens/s at microbatch 4 (26.9% MFU, 3.69x the pilot recipe), every rung, `liger_aligned` +11% on the parent | [Sweep](experiments/qualification/throughput-h100/sweep.json) |
 | Source use: nine selected sources approved for research training, publication and Apache-2.0 weight release, including commercial use | [Acceptance](experiments/main-data/source-rights-acceptance.json) |
 | Code supply: census of all 42 Stack-Edu files, `int_score` 4+ acquisition (680M tokens), `int_score` 3 yield probe | [Census](experiments/corpus-audit/stack-edu-metadata-census.json), [acquisition](experiments/corpus-audit/stack-edu-acquisition.json), [probe](experiments/corpus-audit/stack-edu-yield-probe.json) |
 | Web supply: HQ listing by crawl, stratified audit, extraction follow-up | [Listing](experiments/corpus-audit/ultrafineweb-hq-listing.json), [audit](experiments/corpus-audit/web-hq-stratified.json) |
@@ -64,9 +65,9 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
      reconvert code and the crawl so records carry their classifier scores, and decide on FineMath
      3+. Then prepare the data variants.
    - Freeze the SFT probe recipe and dataset from the retained assistant stock.
-   - Run the [H100 throughput rental](docs/throughput-rental.md) on one H100 SXM: parent and rung
-     throughput and utilization, and the `liger_aligned` loss A/B, to replace the plan's assumed 25%
-     utilization before any budget line becomes run counts.
+   - Find why `liger_aligned` fails restart parity: it is 11% faster on the parent. It both pads the
+     32,003-token head to a multiple of 64 and accumulates in FP32; test each alone for speed and
+     parity. The Hopper profile's unaligned head GEMM (4.9% of kernel time) points at the padding.
 2. **On access,** qualify one worker then four, measure every rung, and convert each budget line
    into run counts.
 3. **Pretraining ladder:** the [families](docs/program.md#pretraining-the-ladder-1900-gpu-hours) LR
