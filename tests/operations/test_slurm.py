@@ -11,6 +11,7 @@ import torch
 from speck.operations import trainer as slurm_base_train
 from speck.operations.slurm import (
     MANDATORY_GPU_HOURS,
+    MAX_RETRIES,
     RESERVE_GPU_HOURS,
     TOTAL_GPU_HOURS,
     _budget_lines,
@@ -491,6 +492,7 @@ def _requeue_trainer(monkeypatch, eval_every=0):
     trainer.inputs = trainer.targets = trainer.data_state = object()
     trainer.accumulation = 1
     trainer.distributed = False
+    trainer.master = True
     trainer.device = torch.device("cpu")
     trainer.milestones = {}
     trainer.stop_step = None
@@ -514,7 +516,9 @@ def _requeue_trainer(monkeypatch, eval_every=0):
     return trainer, checkpoints
 
 
-def test_slurm_trainer_checkpoints_usr1_at_optimizer_boundary(monkeypatch):
+def test_slurm_trainer_checkpoints_usr1_at_optimizer_boundary(monkeypatch, tmp_path):
+    ready = tmp_path / "signal.ready"
+    monkeypatch.setenv("SPECK_REQUEUE_READY_FILE", str(ready))
     trainer, checkpoints = _requeue_trainer(monkeypatch)
     trainer._run_steps()
 
@@ -523,6 +527,7 @@ def test_slurm_trainer_checkpoints_usr1_at_optimizer_boundary(monkeypatch):
     assert checkpoints[0][0][0] == 1
     assert checkpoints[0][1] == {"partial": True}
     assert len(checkpoints) == 1
+    assert json.loads(ready.read_text()) == {"step": 1}
 
 
 def test_requeue_at_a_validation_step_validates_before_its_checkpoint(monkeypatch):
@@ -585,3 +590,56 @@ def test_distributed_requeue_polls_only_on_shared_check_steps(monkeypatch):
     trainer.completed_step = 2 * slurm_base_train.REQUEUE_CHECK_STEPS
     assert trainer._optimizer_boundary_stop_requested() is True
     assert polled == [1]
+
+
+@pytest.mark.parametrize(
+    ("ranks", "requeued", "status"),
+    [
+        # torchrun reports ranks that exit 99 as its own status 1.
+        (': > "${SPECK_REQUEUE_READY_FILE}"; exit 1', True, 0),
+        ("exit 1", False, 1),
+        (': > "${SPECK_REQUEUE_READY_FILE}"; exit 99', True, 0),
+    ],
+)
+def test_four_gpu_script_requeues_on_the_ready_marker_not_torchrun_status(
+    wave, tmp_path, ranks, requeued, status
+):
+    path, _, _, _ = wave
+    rendered = render_wave(path, tmp_path / "runtime")
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    calls = tmp_path / "scontrol.calls"
+    for name, body in (("torchrun", ranks), ("scontrol", f'echo "$@" >> {calls}')):
+        (bin_dir / name).write_text(f"#!/usr/bin/env bash\n{body}\n")
+        (bin_dir / name).chmod(0o755)
+    script = rendered["scripts"]["flagship"]
+    text = Path(script).read_text()
+    for variable in ("signal_dir", "attempt_dir"):
+        line = next(item for item in text.splitlines() if item.startswith(f"readonly {variable}="))
+        Path(line.split("=", 1)[1].strip("'")).mkdir(parents=True, exist_ok=True)
+
+    result = subprocess.run(
+        ["bash", script],
+        env={"PATH": f"{bin_dir}:/usr/bin:/bin", "SLURM_JOB_ID": "7"},
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == status, result.stderr
+    assert calls.is_file() is requeued
+    if requeued:
+        assert calls.read_text() == "requeue 7\n"
+
+
+def test_a_long_run_may_requeue_across_many_windows_but_not_without_bound(wave):
+    path, _, _, _ = wave
+    for retries, accepted in ((MAX_RETRIES, True), (MAX_RETRIES + 1, False)):
+        value = json.loads(path.read_text())
+        job = next(item for item in value["jobs"] if item["id"] == "flagship")
+        job["max_retries"] = retries
+        path.write_text(json.dumps(value))
+        if accepted:
+            assert load_wave(path)
+        else:
+            with pytest.raises(ValueError, match="max_retries must be <="):
+                load_wave(path)

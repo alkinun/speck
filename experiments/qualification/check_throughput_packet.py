@@ -82,7 +82,10 @@ def _materialize(run: dict, config: dict) -> tuple[list[str], list[str]]:
 def validate(packet_path: str | Path) -> dict:
     packet_path = Path(packet_path).resolve()
     packet = json.loads(packet_path.read_text())
-    if packet.get("format") != "speck_gh200_throughput_confirmation":
+    if packet.get("format") not in {
+        "speck_h100_throughput_rental",
+        "speck_gh200_throughput_confirmation",
+    }:
         raise ValueError(f"unsupported throughput packet format: {packet.get('format')}")
 
     common = packet["common"]

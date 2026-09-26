@@ -106,6 +106,7 @@ def _settings(value):
     if type(args.activation_checkpointing) is not bool or args.loss_backend not in {
         "torch",
         "liger",
+        "liger_aligned",
     }:
         raise ValueError("invalid SFT activation checkpointing or loss backend")
     integer_positive = (

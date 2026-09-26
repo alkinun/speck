@@ -38,6 +38,7 @@ follows the [qualification runbook](docs/compute-qualification.md).
 | Prepare and reuse data | [Data](docs/data.md) |
 | Train, resume, fine-tune, generate | [Training](docs/training.md) |
 | Measure capability and cost | [Evaluation](docs/evaluation.md) |
+| Measure throughput on a rented H100 | [H100 rental](docs/throughput-rental.md) |
 | Qualify GH200 access | [Qualification](docs/compute-qualification.md) |
 | Run scheduler-managed training | [Slurm](docs/slurm.md) |
 | Export a checkpoint | [Releasing](docs/releasing.md) |

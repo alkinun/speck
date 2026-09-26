@@ -6,7 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from speck.operations.gh200 import bind, bundle, export_arguments
+from speck.operations.gh200 import bind, bundle, export_arguments, replay_arguments
+from speck.operations.training_replay import _train_command
 
 
 @pytest.mark.parametrize("phase", ["base", "sft"])
@@ -118,3 +119,13 @@ def test_portable_bundle_relocates_clean_checkout_and_detects_tampering(tmp_path
     (output / "pilot-data/payload.bin").write_bytes(b"changed")
     with pytest.raises(ValueError, match="identity mismatch"):
         bind(output)
+
+
+@pytest.mark.parametrize("phase", ["base", "sft"])
+def test_replay_arguments_carry_every_replay_option_and_stay_eager(phase, tmp_path):
+    args = replay_arguments(tmp_path / "experiment", tmp_path / phase, phase, 900.0)
+
+    assert (args.phase, args.device, args.workers, args.allocated_gpus) == (phase, "cuda", 1, 1)
+    assert (args.steps, args.checkpoint_step, args.seconds) == (4, 2, 900.0)
+    assert args.compile is False and args.accumulation == 2
+    assert _train_command(args, tmp_path / "experiment")[-1] == "--no-compile"

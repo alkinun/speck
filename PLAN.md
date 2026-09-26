@@ -64,6 +64,9 @@ P3 mixture and P4 repetition families decide how much math the parent actually n
      reconvert code and the crawl so records carry their classifier scores, and decide on FineMath
      3+. Then prepare the data variants.
    - Freeze the SFT probe recipe and dataset from the retained assistant stock.
+   - Run the [H100 throughput rental](docs/throughput-rental.md) on one H100 SXM: parent and rung
+     throughput and utilization, and the `liger_aligned` loss A/B, to replace the plan's assumed 25%
+     utilization before any budget line becomes run counts.
 2. **On access,** qualify one worker then four, measure every rung, and convert each budget line
    into run counts.
 3. **Pretraining ladder:** the [families](docs/program.md#pretraining-the-ladder-1900-gpu-hours) LR
