@@ -211,7 +211,7 @@ def _optional_float(text):
 
 
 _MIXER_MARKERS = ("chunkkda", "kda", "flash", "attention", "fused_recurrent")
-_GEMM_MARKERS = ("gemm", "cutlass", "s16816", "s1688", "wgmma", "_mm", "mm_", "bmm", "dot")
+_GEMM_MARKERS = ("gemm", "cutlass", "nvjet", "s16816", "s1688", "wgmma", "_mm", "mm_", "bmm", "dot")
 _LAUNCH_MARKERS = ("command buffer", "cudalaunch", "cudastream", "cudaevent")
 
 

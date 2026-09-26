@@ -73,15 +73,18 @@ so there is no separate production track.
 
 | Rung | Shape | Parameters | Tokens per run at 50 per parameter | Projected GPU-hours per run |
 | --- | --- | ---: | ---: | ---: |
-| 50m | width 512, 12 layers | 52,636,068 | 2.6B | 0.9 |
-| 130m | width 768, 16 layers | 131,699,272 | 6.6B | 5.8 |
-| 410m | width 1280, 20 layers | 410,024,470 | 20.5B | 56.6 |
-| Parent | width 2048, 24 layers | 1,195,884,576 | 60B | 483.4 |
+| 50m | width 512, 12 layers | 52,636,068 | 2.6B | 2.3 |
+| 130m | width 768, 16 layers | 131,699,272 | 6.6B | 11.4 |
+| 410m | width 1280, 20 layers | 410,024,470 | 20.5B | 77.3 |
+| Parent | width 2048, 24 layers | 1,195,884,576 | 60B | 497.4 |
 
-Projections use 6 × parameters FLOPs per token at 25% utilization of a 989.5-TFLOPs GPU, with
-unmeasured cost factors of 1.3 at 16K and 1.7 at 32K context. They size the plan only: the GH200
-qualification measures each rung, and run counts then follow from the budget lines. The 50m rung
-also runs on a local RTX 3090 before access, which costs no grant hours.
+Projections use each size's single-H100 rate from the
+[throughput measurement](../experiments/qualification/throughput-h100/sweep.json), derated for
+startup, validation and saves, with unmeasured cost factors of 1.3 at 16K and 1.7 at 32K context.
+The parent runs at about 27% utilization; the rungs are too small to fill the card, down to about
+12% at 50m. Projections size the plan only: the GH200 qualification remeasures each rung, and run
+counts then follow from the budget lines. The 50m rung also runs on a local RTX 3090 before access,
+which costs no grant hours.
 
 ## Experiments
 
@@ -93,18 +96,18 @@ the results call for, recorded the same way.
 
 | Family | Question | Arms | Runs | Projected GPU-hours |
 | --- | --- | --- | --- | ---: |
-| LR | Which learning rate per rung? | Four rates at 50m and 130m, three at 410m, each at a quarter horizon | 50m 4, 130m 4, 410m 3 at 0.25 | 49.3 |
-| P0 | How large is seed-to-seed variation per metric and rung? | Baseline seeds | 50m 5, 130m 3, 410m 3 | 192.1 |
-| P1 | How strict should classifier floors be? | Stack-Edu score 3 versus 4+; a stricter web HQ floor; FineMath 3+ versus 4+ | 50m 4 | 3.7 |
-| P2 | How much do exact and near deduplication matter? | No deduplication; exact only | 50m 2 | 1.9 |
-| P3 | Which code, math and general shares? | Six mixtures around the starting 35/25/40 | 50m 6 | 5.6 |
-| P4 | How many passes over a scarce bank match fresh data? | Code at 2, 4 and 8 passes; math at 4 | 50m 4 | 3.7 |
-| P5 | Which source per bank? | FineWeb-Edu for HQ web; Stack v3 for Stack-Edu | 50m 2 | 1.9 |
-| P6 | How much synthetic educational text? | 0, 15 and 30% | 50m 3 | 2.8 |
-| P7 | Do filtering and repetition conclusions survive longer training? | Baseline and the strictest P1 arm at 12.5 and 200 tokens per parameter | 50m and 130m, 2 each at 0.25 and at 4 | 57.6 |
-| C | Do 50m effects repeat on a new seed? | Second seeds of the arms that cross the minimum detectable effect | 50m 10 | 9.3 |
-| T | Do 50m rankings hold at larger scale? | Best and worst arm of P1 to P6 | 130m 12; 410m 24 (two seeds each) | 1,429.3 |
-| DR | Do decay conclusions hold below the parent? | One stable run to 80%, then three D1 decay arms | 130m and 410m, 1 at 0.8 and 3 at 0.2 each | 87.5 |
+| LR | Which learning rate per rung? | Four rates at 50m and 130m, three at 410m, each at a quarter horizon | 50m 4, 130m 4, 410m 3 at 0.25 | 71.6 |
+| P0 | How large is seed-to-seed variation per metric and rung? | Baseline seeds | 50m 5, 130m 3, 410m 3 | 277.4 |
+| P1 | How strict should classifier floors be? | Stack-Edu score 3 versus 4+; a stricter web HQ floor; FineMath 3+ versus 4+ | 50m 4 | 9.1 |
+| P2 | How much do exact and near deduplication matter? | No deduplication; exact only | 50m 2 | 4.6 |
+| P3 | Which code, math and general shares? | Six mixtures around the starting 35/25/40 | 50m 6 | 13.7 |
+| P4 | How many passes over a scarce bank match fresh data? | Code at 2, 4 and 8 passes; math at 4 | 50m 4 | 9.1 |
+| P5 | Which source per bank? | FineWeb-Edu for HQ web; Stack v3 for Stack-Edu | 50m 2 | 4.6 |
+| P6 | How much synthetic educational text? | 0, 15 and 30% | 50m 3 | 6.8 |
+| P7 | Do filtering and repetition conclusions survive longer training? | Baseline and the strictest P1 arm at 12.5 and 200 tokens per parameter | 50m and 130m, 2 each at 0.25 and at 4 | 115.9 |
+| C | Do 50m effects repeat on a new seed? | Second seeds of the arms that cross the minimum detectable effect | 50m 10 | 22.8 |
+| T | Do 50m rankings hold at larger scale? | Best and worst arm of P1 to P6 | 130m 12; 410m 12 | 1,064.1 |
+| DR | Do decay conclusions hold below the parent? | One stable run to 80%, then three D1 decay arms | 130m and 410m, 1 at 0.8 and 3 at 0.2 each | 124.1 |
 
 Before the parent launches, fit loss against size and tokens over the ladder and record a predicted
 parent loss; the parent tests that prediction.
@@ -115,9 +118,9 @@ Branches of the parent's stable run. The parent's final stable checkpoint is at 
 
 | Family | Question | Arms | Projected GPU-hours |
 | --- | --- | --- | ---: |
-| D1 | Does a late shift to higher-quality math, code and web beat ordinary decay? | Unchanged mixture, quality-enriched, enriched plus verified derived data; 6B tokens each | 145.0 |
-| D2 | Does a longer decay help? | The D1 winner at 12B tokens | 96.7 |
-| D3 | Does the decay effect depend on how long the base trained? | Unchanged and enriched from the 30B checkpoint, 3B tokens each | 48.3 |
+| D1 | Does a late shift to higher-quality math, code and web beat ordinary decay? | Unchanged mixture, quality-enriched, enriched plus verified derived data; 6B tokens each | 149.2 |
+| D2 | Does a longer decay help? | The D1 winner at 12B tokens | 99.5 |
+| D3 | Does the decay effect depend on how long the base trained? | Unchanged and enriched from the 30B checkpoint, 3B tokens each | 49.7 |
 
 ### Mid-training (800 GPU-hours)
 
@@ -126,10 +129,10 @@ retention.
 
 | Family | Question | Arms | Projected GPU-hours |
 | --- | --- | --- | ---: |
-| M1 | How much general replay keeps short-task ability while adding code and math capability? | 10, 25 and 50% replay, two seeds, 5B tokens each | 241.7 |
-| M2 | Does repository-ordered code beat file-level code? | Repository-ordered with dependencies against the M1 winner, 5B tokens | 40.3 |
-| M3 | What data extends context usefully at 16K? | Repacked baseline, long documents with distant dependencies, long chain-of-thought QA; two seeds, 5B tokens each | 314.2 |
-| M4 | Does 32K add useful context beyond 16K? | The M3 winner continued at 32K for 3B tokens, only if 16K helped and runtime qualifies | 41.1 |
+| M1 | How much general replay keeps short-task ability while adding code and math capability? | 10, 25 and 50% replay, two seeds, 5B tokens each | 248.7 |
+| M2 | Does repository-ordered code beat file-level code? | Repository-ordered with dependencies against the M1 winner, 5B tokens | 41.5 |
+| M3 | What data extends context usefully at 16K? | Repacked baseline, long documents with distant dependencies, long chain-of-thought QA; two seeds, 5B tokens each | 323.3 |
+| M4 | Does 32K add useful context beyond 16K? | The M3 winner continued at 32K for 3B tokens, only if 16K helped and runtime qualifies | 42.3 |
 
 Useful context is measured by retrieval across positions, loss on a fixed suffix as related context
 grows, and multi-file tasks, never by the configured maximum length.
@@ -139,7 +142,7 @@ grows, and multi-file tasks, never by the configured maximum length.
 One frozen recipe: 75,000 conversations (about 150M tokens) from the retained assistant stock,
 fixed data, masks, schedule and serialization. It runs twice (two data-order seeds) on every decay
 and mid-training arm, 40 runs at a projected 1.2 GPU-hours each, and once on each 410m transfer and
-seed run, 27 runs at 0.4 each. The probe's own data is never varied here; its scores are
+seed run, 15 runs at 0.6 each. The probe's own data is never varied here; its scores are
 comparisons between the checkpoints it probes.
 
 ## Compute
@@ -159,10 +162,10 @@ Four GH200s, 5,000 GPU-hours. Every line is a ceiling, and each operation is cha
 | **Total** | **5,000** |
 
 More than three quarters of the budget is experiments. The parent line covers 60B tokens at the
-projected rate with margin; the only 1.2B rate measured so far is the H100 pilot's 12,859 tokens/s,
-an eager, checkpointed recipe at about 10% utilization, which is an upper bound on cost rather than
-an estimate. [plan.json](../experiments/main-data/plan.json) records the rules for a faster or
-slower measured rate; a surplus buys experiments, never a longer parent run.
+measured rate with margin, about five days on four GPUs. The rungs measured slower than first
+projected, so, as [plan.json](../experiments/main-data/plan.json)'s rules require, T trims the 410m
+transfer runs to one seed per arm; P0's three 410m seeds still measure the noise it is read
+against. A surplus buys experiments, never a longer parent run.
 
 ## Model
 

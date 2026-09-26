@@ -180,7 +180,7 @@
           },
           {
             "rung": "410m",
-            "count": 24,
+            "count": 12,
             "horizon": 1
           }
         ]
@@ -312,7 +312,7 @@
       },
       {
         "model": "410m",
-        "count": 27
+        "count": 15
       }
     ],
     "recipe": "One frozen recipe and dataset drawn from the retained assistant stock, applied unchanged to every probed checkpoint with two data-order seeds on parent branches.",
@@ -332,10 +332,14 @@
       "reserve": 580
     },
     "projection": {
-      "peak_dense_bf16_flops_per_gpu": 989500000000000,
-      "planning_model_flops_utilization": 0.25,
-      "flops_per_token": "6 x parameters",
-      "boundary": "Projections for sizing only. Context cost factors are unmeasured planning assumptions for the six global-attention layers. The GH200 qualification replaces the utilization and factors with measured rates; run counts then follow from the budget lines, never the reverse.",
+      "measurement": "experiments/qualification/throughput-h100/sweep.json",
+      "tokens_per_second_per_gpu": {
+        "50m": 338580.51833038306,
+        "130m": 170342.29906423038,
+        "410m": 77860.17477739381,
+        "parent": 35424.35545722015
+      },
+      "boundary": "Projections for sizing only: single-H100 compute rates at each size's fastest measured microbatch, times the overhead derate. GH200 should run at or above them, and its four-GPU qualification replaces them. Context cost factors are unmeasured planning assumptions for the six global-attention layers. Run counts follow from the budget lines, never the reverse.",
       "context_cost_factor": {
         "4096": 1.0,
         "16384": 1.3,
@@ -346,7 +350,7 @@
       "h100_full_trainer_tokens_per_second_1_2b": 12859.198189903878,
       "h100_steady_optimizer_tokens_per_second_1_2b": 13594.900661275025,
       "overhead_derate": 0.945884,
-      "boundary": "The frozen H100 pilot recipe: eager, activation checkpointing on, microbatch one, about 10% utilization. It bounds the parent cost from above and is replaced by the GH200 measurement."
+      "boundary": "The H100 pilot's full-trainer and steady optimizer rates. Their ratio, the overhead derate, charges the startup, validation and saves that compute-mode rates exclude."
     },
     "rules": [
       "A budget line is a ceiling. Unused hours return to the reserve; lines never borrow from each other without a recorded revision.",

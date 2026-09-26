@@ -39,7 +39,7 @@
     "The 130m learning-rate sweep has run.",
     "Enough stock for the long horizon; math is the scarcest bank and will repeat."
   ],
-  "cost": "Projected 5.8 GH200 GPU-hours per full-horizon run (program design): about 1.5 at a quarter horizon and 23 at four times.",
+  "cost": "Projected 11.4 GPU-hours per full-horizon run (program design): about 2.8 at a quarter horizon and 45 at four times.",
   "horizon_tokens": {
     "short": 1644953600,
     "long": 26338918400

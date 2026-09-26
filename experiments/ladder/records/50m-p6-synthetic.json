@@ -29,5 +29,5 @@
   "prerequisites": [
     "The 50m baseline corpus is configured and P0 has run, so the minimum useful effect is known."
   ],
-  "cost": "Projected 0.9 GH200 GPU-hours per run (program design), or about 7.5 hours on the local RTX 3090 at its synthetic compiled rate of 97,000 tokens per second, before validation and saves."
+  "cost": "Projected 2.3 GPU-hours per run (program design), or about 7.5 hours on the local RTX 3090 at its synthetic compiled rate of 97,000 tokens per second, before validation and saves."
 }

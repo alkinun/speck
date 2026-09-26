@@ -1,10 +1,11 @@
 """Validate the program plan and the tables that restate it, without authorizing any run.
 
-`plan.json` owns the numbers. This check verifies its arithmetic, that the ladder configurations
-follow the shape rule and match the declared sizes, that every experiment family's projected cost
-fits its stage's budget line, that the supply gap is current, that the scheduler enforces the same
-total and reserve, and that the tables in docs/program.md and the supply table in PLAN.md render
-the same numbers. Those tables are the only prose copies of these figures.
+`plan.json` owns the numbers. This check verifies its arithmetic, that its projected rates are the
+measured ones, that the ladder configurations follow the shape rule and match the declared sizes,
+that every experiment family's projected cost fits its stage's budget line, that the supply gap is
+current, that the scheduler enforces the same total and reserve, and that the tables in
+docs/program.md and the supply table in PLAN.md render the same numbers. Those tables are the only
+prose copies of these figures.
 """
 
 from __future__ import annotations
@@ -64,14 +65,13 @@ def _number(cell: str) -> float:
     return float(cell.replace(",", "").removesuffix("%").removesuffix("B"))
 
 
-def projected_gpu_hours(plan: dict, parameters: int, tokens: float) -> float:
-    projection = plan["compute"]["projection"]
+def projected_gpu_hours(plan: dict, size: str, tokens: float) -> float:
+    compute = plan["compute"]
     rate = (
-        projection["peak_dense_bf16_flops_per_gpu"]
-        * projection["planning_model_flops_utilization"]
-        * 3600
+        compute["projection"]["tokens_per_second_per_gpu"][size]
+        * compute["measured_anchor"]["overhead_derate"]
     )
-    return 6 * parameters * tokens / rate
+    return tokens / rate / 3600
 
 
 def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -> dict:
@@ -96,6 +96,10 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
     )
     if round(derate, 6) != anchor["overhead_derate"]:
         raise ValueError("overhead derate drifts from the measured pilot rates")
+    projection = compute["projection"]
+    measured = _load(projection["measurement"])["planning_rates_tokens_per_second"]
+    if projection["tokens_per_second_per_gpu"] != measured:
+        raise ValueError("projected rates differ from the throughput measurement")
 
     # Every rung follows the shape rule and has the declared size; the rule reproduces the parent.
     shapes = _shapes()
@@ -109,14 +113,14 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
         if config["expected_parameters"] != rung["parameters"]:
             raise ValueError(f"rung {rung['id']} size differs from its configuration")
         tokens = rung["parameters"] * per_token
-        rungs[rung["id"]] = (rung, tokens, projected_gpu_hours(plan, rung["parameters"], tokens))
+        rungs[rung["id"]] = (rung, tokens, projected_gpu_hours(plan, rung["id"], tokens))
     parent = plan["parent"]
     parent_config = json.loads((ROOT / parent["configuration"]).read_text())
     if parent_config != shapes.shape(*shapes.REFERENCE):
         raise ValueError("the shape rule no longer reproduces the parent configuration")
     if parent_config["expected_parameters"] != parent["parameters"]:
         raise ValueError("parent size differs from its configuration")
-    parent_hours = projected_gpu_hours(plan, parent["parameters"], parent["target_tokens"])
+    parent_hours = projected_gpu_hours(plan, "parent", parent["target_tokens"])
     if parent_hours > budget["parent_stable_run"]:
         raise ValueError("the projected parent run exceeds its budget line")
     families = {}
@@ -135,15 +139,12 @@ def validate(plan_path: str | Path = ROOT / "experiments/main-data/plan.json") -
             tokens = (
                 family["arms"] * family["tokens_per_arm"] * factors[str(family["context_tokens"])]
             )
-            families[family["id"]] = projected_gpu_hours(plan, parent["parameters"], tokens)
+            families[family["id"]] = projected_gpu_hours(plan, "parent", tokens)
             hours += families[family["id"]]
         stages[line] = hours
     probe = plan["sft_probe"]
-    sizes = {"parent": parent["parameters"]} | {
-        rung_id: run["parameters"] for rung_id, (run, _, _) in rungs.items()
-    }
     stages["sft_probe"] = sum(
-        run["count"] * projected_gpu_hours(plan, sizes[run["model"]], probe["tokens_per_run"])
+        run["count"] * projected_gpu_hours(plan, run["model"], probe["tokens_per_run"])
         for run in probe["runs"]
     )
     for line, hours in stages.items():

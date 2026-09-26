@@ -5,7 +5,8 @@ A rented 80 GiB H100 SXM, run before grant access, that measures what the plan n
 against `liger`. Its packet is
 [`throughput-h100.json`](../experiments/qualification/throughput-h100.json). It spends no grant
 GPU-hours and is charged to the external rental ledger, as the [H100 pilot](../experiments/pilot/h100-run.json)
-was.
+was. It ran on 2026-09-26; the result is
+[`throughput-h100/sweep.json`](../experiments/qualification/throughput-h100/sweep.json).
 
 It does not replace the [GH200 qualification](compute-qualification.md). `device_batch_size`,
 activation checkpointing and determinism are immutable on resume and are frozen on the grant
@@ -90,8 +91,10 @@ Stop and diagnose rather than explore:
 
 ## What to bring back
 
-Copy the whole `../results/` directory, including the profile trace, before deleting the instance.
-Then record in the repository:
+Copy `../results/`, including the profile trace, and verify it by SHA-256 before deleting the
+instance. Leave out the one-worker check's checkpoints and exports (about 83 GB; its receipt already
+holds their parity comparison) and bring back a manifest of their names and sizes. Then record in the
+repository:
 
 - The parent's tokens/s and MFU at each microbatch, and its speedup over the pilot recipe on the same
   host.

@@ -81,3 +81,9 @@ def test_a_mixture_that_does_not_sum_is_rejected(tmp_path, plan):
     plan["parent"]["starting_mixture"][0]["weight_percent"] += 5
     with pytest.raises(ValueError, match="sum to 100"):
         validate(tmp_path, plan)
+
+
+def test_projected_rates_must_match_the_throughput_measurement(tmp_path, plan):
+    plan["compute"]["projection"]["tokens_per_second_per_gpu"]["410m"] *= 1.5
+    with pytest.raises(ValueError, match="differ from the throughput measurement"):
+        validate(tmp_path, plan)
