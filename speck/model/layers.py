@@ -21,6 +21,9 @@ def liger_linear_cross_entropy(hidden, weight, targets, reduction, aligned=False
         ) from exception
     if not aligned:
         return liger_fused_linear_cross_entropy(hidden, weight, targets, reduction=reduction)
+    # Not for production: a compiled 1.2B restart replay on an RTX 3090 corrupts one or two whole
+    # weight tensors after the resume, a different one per run, with or without deterministic
+    # memory fills; the default `liger` backend replays bitwise. It stays for throughput A/Bs.
     # Pad the vocabulary to a multiple of 64 so the head GEMMs use aligned tensor-core kernels;
     # a -inf bias gives padded rows zero probability, leaving the loss and gradients unchanged.
     # The chunked weight gradient, the whole embedding gradient with tied embeddings,

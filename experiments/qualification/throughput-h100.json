@@ -20,7 +20,7 @@
   "decisions_to_record": [
     "Parent tokens per second and model FLOPs utilization at each microbatch, and the speedup over the pilot recipe on the same host.",
     "The fastest microbatch that fits 80 GiB, for the parent and each rung. It is a candidate only: device_batch_size is frozen on GH200.",
-    "Whether liger_aligned is faster than liger by more than the noise band, at the parent and at each rung.",
+    "Whether liger_aligned is faster than liger by more than the noise band, at the parent and at each rung. It fails restart parity (see speck/model/layers.py), so a gain only decides whether finding that cause is worth the work.",
     "Tokens per second per rung, which replaces the plan's 25% utilization assumption when the budget lines are converted into run counts.",
     "Whether the KDA custom-op work is worth funding, judged from the Hopper profile."
   ],
