@@ -8,7 +8,6 @@ import torch.nn.functional as F
 from torch.nn.attention.bias import causal_lower_right
 
 _LOSS_BACKENDS = {"torch", "liger"}
-_VOCAB_ALIGNMENT = 64
 
 
 @torch.compiler.disable
@@ -19,24 +18,11 @@ def liger_linear_cross_entropy(hidden, weight, targets, reduction):
         raise RuntimeError(
             "the Liger loss backend requires the GPU dependencies; run `uv sync --extra gpu`"
         ) from exception
-    # Pad the vocabulary to a multiple of 64 so the head GEMMs use aligned tensor-core kernels;
-    # a -inf bias gives padded rows zero probability, leaving the loss and gradients unchanged.
-    vocab = weight.size(0)
-    padding = -vocab % _VOCAB_ALIGNMENT
-    bias = None
-    if padding:
-        weight = F.pad(weight, (0, 0, 0, padding))
-        bias = torch.zeros(vocab + padding, dtype=weight.dtype, device=weight.device)
-        bias[vocab:] = float("-inf")
-    # Accumulate the chunked weight gradient in FP32: with tied embeddings it is the whole
-    # embedding gradient, summed over every chunk of the microbatch.
     return liger_fused_linear_cross_entropy(
         hidden,
         weight,
         targets,
-        bias=bias,
         reduction=reduction,
-        accum_dtype=torch.float32,
     )
 
 
