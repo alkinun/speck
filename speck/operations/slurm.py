@@ -18,6 +18,10 @@ TOTAL_GPU_HOURS = 5_000
 MANDATORY_GPU_HOURS = 4_420
 RESERVE_GPU_HOURS = 580
 REQUEUE_EXIT_CODE = 99
+# Requeues continue a run across walltime windows. Fifteen give sixteen windows: the
+# 1.2B parent at the H100 pilot's rate is about 324 hours on four GPUs, fourteen
+# 24-hour windows. Every window is still charged in full to the wave's commitment.
+MAX_RETRIES = 15
 
 _SHA256 = re.compile(r"[0-9a-f]{64}")
 _COMMIT = re.compile(r"[0-9a-f]{40}")
@@ -173,7 +177,7 @@ def _validate_job(raw, base, lines):
         raise ValueError(f"array job {raw['id']} command must use {{array_index}}")
     if resources["gpus"] == 4 and placeholders:
         raise ValueError(f"four-GPU job {raw['id']} cannot use {{array_index}}")
-    _integer(raw["max_retries"], "max_retries", 0, 2)
+    _integer(raw["max_retries"], "max_retries", 0, MAX_RETRIES)
     if raw["allocation"] == "reserve" and raw["max_retries"]:
         raise ValueError(f"reserve job {raw['id']} cannot automate retry spending")
     if raw["kind"] == "train" and (

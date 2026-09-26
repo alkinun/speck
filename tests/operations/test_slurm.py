@@ -11,6 +11,7 @@ import torch
 from speck.operations import trainer as slurm_base_train
 from speck.operations.slurm import (
     MANDATORY_GPU_HOURS,
+    MAX_RETRIES,
     RESERVE_GPU_HOURS,
     TOTAL_GPU_HOURS,
     _budget_lines,
@@ -628,3 +629,17 @@ def test_four_gpu_script_requeues_on_the_ready_marker_not_torchrun_status(
     assert calls.is_file() is requeued
     if requeued:
         assert calls.read_text() == "requeue 7\n"
+
+
+def test_a_long_run_may_requeue_across_many_windows_but_not_without_bound(wave):
+    path, _, _, _ = wave
+    for retries, accepted in ((MAX_RETRIES, True), (MAX_RETRIES + 1, False)):
+        value = json.loads(path.read_text())
+        job = next(item for item in value["jobs"] if item["id"] == "flagship")
+        job["max_retries"] = retries
+        path.write_text(json.dumps(value))
+        if accepted:
+            assert load_wave(path)
+        else:
+            with pytest.raises(ValueError, match="max_retries must be <="):
+                load_wave(path)
