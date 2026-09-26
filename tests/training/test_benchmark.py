@@ -75,3 +75,10 @@ def test_selected_benchmark_mode_compiles_the_reproducible_production_options():
     assert "coordinate_descent_tuning" not in COMPILE_OPTIONS
     selected = {**_COMPILE_MODE_OPTIONS["max-autotune-no-cudagraphs"], "aggressive_fusion": True}
     assert selected == COMPILE_OPTIONS
+
+
+def test_hopper_cublas_kernels_count_as_gemm():
+    from speck.training.benchmark import classify_kernel
+
+    assert classify_kernel("nvjet_tst_256x128_64x4_1x2_h_bz_coopA_NNT") == "gemm"
+    assert classify_kernel("chunk_kda_bwd_kernel_intra") == "mixer"
